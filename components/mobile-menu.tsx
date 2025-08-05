@@ -15,21 +15,25 @@ export function MobileMenu() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button - Show on mobile and tablet */}
       <Button
         variant='ghost'
         size='icon'
-        className='lg:hidden'
+        className='xl:hidden flex-shrink-0'
         onClick={toggleMenu}
         aria-label='Toggle menu'
       >
-        {isOpen ? <X className='h-6 w-6' /> : <Menu className='h-6 w-6' />}
+        {isOpen ? (
+          <X className='h-5 w-5 sm:h-6 sm:w-6' />
+        ) : (
+          <Menu className='h-5 w-5 sm:h-6 sm:w-6' />
+        )}
       </Button>
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div
-          className='fixed inset-0 bg-black/50 z-40 lg:hidden'
+          className='fixed inset-0 bg-black/50 z-40 xl:hidden'
           onClick={closeMenu}
         />
       )}
@@ -38,7 +42,7 @@ export function MobileMenu() {
       <div
         className={`
         fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white dark:bg-background 
-        border-l shadow-xl z-50 lg:hidden transform transition-transform duration-300 ease-in-out
+        border-l shadow-xl z-50 xl:hidden transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : 'translate-x-full'}
       `}
       >

@@ -4,12 +4,11 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock } from 'lucide-react';
 
-// 1. Definimos una interfaz para las nuevas propiedades opcionales
 interface BookingCTAProps {
   heading?: string;
   text?: string;
   mainButtonText?: string;
-  showExpressButton?: boolean; // Para mostrar/ocultar el segundo botón
+  showExpressButton?: boolean;
 }
 
 // 2. Aplicamos las props al componente
@@ -17,13 +16,13 @@ export function BookingCTA({
   heading,
   text,
   mainButtonText,
-  showExpressButton = true, // Por defecto se muestra para no romper donde ya lo uses
+  showExpressButton = true,
 }: BookingCTAProps) {
   // Siempre obtenemos las traducciones por defecto como fallback
   const t = useTranslations('booking');
 
   return (
-    <section className='py-20 bg-gradient-to-br from-primary/10 via-primary/5 to-background'>
+    <section className='py-20'>
       <div className='container mx-auto px-4'>
         <div className='max-w-4xl mx-auto text-center'>
           {/* Title with icon */}
@@ -47,10 +46,10 @@ export function BookingCTA({
               className='px-8 py-3 text-lg'
               asChild
             >
-              <a 
-                href="https://merygarciabooking.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
+              <a
+                href='https://merygarciabooking.com/'
+                target='_blank'
+                rel='noopener noreferrer'
               >
                 <Calendar className='h-5 w-5 mr-2' />
                 {mainButtonText || t('reserve')}

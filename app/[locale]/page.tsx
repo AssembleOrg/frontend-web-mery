@@ -72,22 +72,20 @@ export default function HomePage() {
       </section>
 
       {/* Combined Section: Booking CTA + Learn More */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
+      <section className='py-16'>
+        <div className='container mx-auto px-4'>
+          <div className='max-w-7xl mx-auto'>
             {/* Mobile: Stack vertically, Desktop: 2 columns */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-              
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start'>
               {/* Booking CTA Column */}
-              <div className="order-1">
+              <div className='order-1'>
                 <BookingCTA showExpressButton={false} />
               </div>
-              
+
               {/* Learn More Column */}
-              <div className="order-2">
+              <div className='order-2'>
                 <LearnMoreSection />
               </div>
-              
             </div>
           </div>
         </div>
