@@ -1,0 +1,194 @@
+"use client"
+
+import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
+import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+
+interface Service {
+  key: string
+  href: string
+  image: string
+}
+
+interface ExpandableServiceGalleryProps {
+  services: Service[]
+}
+
+export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const t = useTranslations('home')
+
+  // Detect mobile/touch devices
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 1024) // lg breakpoint
+    }
+    
+    checkIsMobile()
+    window.addEventListener('resize', checkIsMobile)
+    
+    return () => window.removeEventListener('resize', checkIsMobile)
+  }, [])
+
+  // Mobile/Tablet view - Grid layout
+  if (isMobile) {
+    return (
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          {services.map((service) => (
+            <div
+              key={service.key}
+              className="group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30 h-64 sm:h-72"
+            >
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <Link href={service.href as any}>
+                {/* Image Container */}
+                <div className="relative h-full bg-muted overflow-hidden">
+                  <Image
+                    src={service.image}
+                    alt={t(`services.${service.key}`)}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  
+                  {/* Content */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <h3 className="text-lg font-semibold mb-2 text-white">
+                      {t(`services.${service.key}`)}
+                    </h3>
+                    <p className="text-sm text-white/90 mb-3">
+                      Tratamiento profesional especializado
+                    </p>
+                    <Button 
+                      variant="secondary" 
+                      size="sm"
+                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm"
+                    >
+                      Ver más
+                    </Button>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // Desktop view - Expandable horizontal layout
+  return (
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="flex h-96 gap-2 overflow-hidden rounded-xl">
+        {services.map((service, index) => {
+          const isHovered = hoveredIndex === index
+          const isOtherHovered = hoveredIndex !== null && hoveredIndex !== index
+
+          return (
+            <div
+              key={service.key}
+              className={`
+                relative group cursor-pointer overflow-hidden rounded-lg
+                transition-all duration-500 ease-out
+                ${isHovered 
+                  ? 'flex-[3] md:flex-[4]' 
+                  : isOtherHovered 
+                    ? 'flex-[0.5]' 
+                    : 'flex-1'
+                }
+              `}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <Image
+                  src={service.image}
+                  alt={t(`services.${service.key}`)}
+                  fill
+                  className={`
+                    object-cover
+                    transition-transform duration-500 ease-out
+                    ${isHovered ? 'scale-105' : 'scale-100'}
+                  `}
+                />
+                
+                {/* Overlay */}
+                <div className={`
+                  absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent
+                  transition-opacity duration-300
+                  ${isHovered ? 'opacity-100' : 'opacity-60'}
+                `} />
+              </div>
+
+              {/* Content */}
+              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
+                {/* Title - Always visible */}
+                <h3 className={`
+                  text-white font-bold mb-2 text-center
+                  transition-all duration-300
+                  ${isHovered 
+                    ? 'text-xl md:text-2xl opacity-100' 
+                    : isOtherHovered 
+                      ? 'text-sm opacity-70 writing-mode-vertical' 
+                      : 'text-base md:text-lg opacity-90'
+                  }
+                `}>
+                  {isOtherHovered ? (
+                    <span className="transform rotate-90 whitespace-nowrap block origin-center">
+                      {t(`services.${service.key}`)}
+                    </span>
+                  ) : (
+                    t(`services.${service.key}`)
+                  )}
+                </h3>
+
+                {/* Expanded Content - Only on hover */}
+                <div className={`
+                  transition-all duration-300 text-center
+                  ${isHovered 
+                    ? 'opacity-100 transform translate-y-0' 
+                    : 'opacity-0 transform translate-y-4 pointer-events-none'
+                  }
+                `}>
+                  <p className="text-white/90 text-sm md:text-base mb-4 line-clamp-2">
+                    Tratamiento profesional especializado en {t(`services.${service.key}`).toLowerCase()}
+                  </p>
+                  
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  <Link href={service.href as any}>
+                    <Button 
+                      variant="secondary" 
+                      size="sm"
+                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm"
+                    >
+                      Ver más
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Hover indicator */}
+              <div className={`
+                absolute top-4 right-4 w-3 h-3 rounded-full bg-primary
+                transition-all duration-300
+                ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
+              `} />
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Mobile fallback text */}
+      <div className="mt-4 text-center text-sm text-muted-foreground md:hidden">
+        Deslizá horizontalmente para explorar todos los servicios
+      </div>
+    </div>
+  )
+}
