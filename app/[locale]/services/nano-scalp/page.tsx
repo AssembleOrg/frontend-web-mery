@@ -26,10 +26,10 @@ export default function NanoScalpPage() {
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
           <div className='text-center text-white'>
-            <h1 className='text-4xl md:text-5xl font-bold mb-4'>
+            <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
           </div>
         </div>
       </section>
@@ -39,13 +39,13 @@ export default function NanoScalpPage() {
         <div className='max-w-4xl mx-auto'>
           {/* What is it Section */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold text-foreground mb-6 flex items-center'>
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
               <Star className='h-8 w-8 text-primary mr-3' />
               {t('whatIsIt.heading')}
             </h2>
-            <div className='prose prose-lg max-w-none text-muted-foreground space-y-4'>
-              <p>{t('whatIsIt.p1')}</p>
-              <p>{t('whatIsIt.p2')}</p>
+            <div className='prose prose-lg max-w-none text-muted-foreground font-secondary space-y-4'>
+              <p className='font-secondary'>{t('whatIsIt.p1')}</p>
+              <p className='font-secondary'>{t('whatIsIt.p2')}</p>
             </div>
           </section>
 
@@ -53,15 +53,15 @@ export default function NanoScalpPage() {
           <section className='mb-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-start'>
             {/* Pricing */}
             <div className='bg-card p-6 rounded-lg border'>
-              <h3 className='text-xl font-bold text-foreground mb-4'>
+              <h3 className='text-xl font-bold font-primary text-foreground mb-4'>
                 {t('pricing.heading')}
               </h3>
-              <div className='space-y-3 text-muted-foreground'>
-                <p>{t('pricing.deposit')}</p>
-                <p>{t('pricing.session1')}</p>
-                <p>{t('pricing.session2')}</p>
+              <div className='space-y-3 text-muted-foreground font-secondary'>
+                <p className='font-secondary'>{t('pricing.deposit')}</p>
+                <p className='font-secondary'>{t('pricing.session1')}</p>
+                <p className='font-secondary'>{t('pricing.session2')}</p>
               </div>
-              <p className='text-sm italic text-muted-foreground mt-4'>
+              <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                 {t('pricing.note')}
               </p>
             </div>
@@ -71,10 +71,10 @@ export default function NanoScalpPage() {
               <div className='flex items-start space-x-3'>
                 <AlertTriangle className='h-6 w-6 text-amber-600 dark:text-amber-400 mt-1 flex-shrink-0' />
                 <div>
-                  <h3 className='text-xl font-bold text-amber-800 dark:text-amber-200 mb-2'>
+                  <h3 className='text-xl font-bold font-primary text-amber-800 dark:text-amber-200 mb-2'>
                     {t('importantInfo.heading')}
                   </h3>
-                  <p className='text-amber-700 dark:text-amber-300 mb-4'>
+                  <p className='text-amber-700 dark:text-amber-300 font-secondary mb-4'>
                     {t('importantInfo.text')}
                   </p>
                 </div>
@@ -85,18 +85,18 @@ export default function NanoScalpPage() {
           {/* Procedure & Biosecurity Grid */}
           <section className='mb-12 grid grid-cols-1 md:grid-cols-2 gap-8'>
             <div>
-              <h2 className='text-2xl font-bold text-foreground mb-4 flex items-center'>
+              <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
                 <Clock className='h-7 w-7 text-primary mr-3' />
                 {t('procedure.heading')}
               </h2>
-              <p className='text-muted-foreground'>{t('procedure.text')}</p>
+              <p className='text-muted-foreground font-secondary'>{t('procedure.text')}</p>
             </div>
             <div>
-              <h2 className='text-2xl font-bold text-foreground mb-4 flex items-center'>
+              <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
                 <Shield className='h-7 w-7 text-primary mr-3' />
                 {t('biosecurity.heading')}
               </h2>
-              <p className='text-muted-foreground'>{t('biosecurity.text')}</p>
+              <p className='text-muted-foreground font-secondary'>{t('biosecurity.text')}</p>
             </div>
           </section>
 

@@ -28,14 +28,14 @@ export function BookingCTA({
           {/* Title with icon */}
           <div className='flex items-center justify-center mb-6'>
             <Calendar className='h-8 w-8 text-primary mr-3' />
-            <h2 className='text-3xl font-bold text-foreground'>
+            <h2 className='text-3xl font-primary font-bold text-foreground'>
               {/* 3. Usamos la prop si existe, si no, usamos la traducción por defecto */}
               {heading || t('title')}
             </h2>
           </div>
 
           {/* Description */}
-          <p className='text-lg text-muted-foreground mb-8 max-w-2xl mx-auto'>
+          <p className='text-lg font-secondary text-muted-foreground mb-8 max-w-2xl mx-auto'>
             {text || t('description')}
           </p>
 
@@ -71,7 +71,7 @@ export function BookingCTA({
 
           {/* Additional info */}
           {showExpressButton && (
-            <p className='text-sm text-muted-foreground'>{t('info')}</p>
+            <p className='text-sm font-secondary text-muted-foreground'>{t('info')}</p>
           )}
         </div>
       </div>

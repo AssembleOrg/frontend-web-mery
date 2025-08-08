@@ -32,10 +32,10 @@ export default function EyebrowStylingPage() {
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
           <div className='text-center text-white'>
-            <h1 className='text-4xl md:text-5xl font-bold mb-4'>
+            <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
           </div>
         </div>
       </section>
@@ -45,7 +45,7 @@ export default function EyebrowStylingPage() {
         <div className='max-w-4xl mx-auto'>
           {/* Services List Section */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold text-foreground mb-8 text-center'>
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-8 text-center'>
               {t('intro.heading')}
             </h2>
             <div className='space-y-8'>
@@ -55,14 +55,14 @@ export default function EyebrowStylingPage() {
                   className='bg-card p-6 rounded-lg border'
                 >
                   <div className='flex flex-col sm:flex-row justify-between sm:items-center mb-2'>
-                    <h3 className='text-xl font-bold text-foreground'>
+                    <h3 className='text-xl font-bold font-primary text-foreground'>
                       {t(`services.${service.key}.title`)}
                     </h3>
-                    <p className='text-lg font-semibold text-primary mt-2 sm:mt-0'>
+                    <p className='text-lg font-semibold font-primary text-primary mt-2 sm:mt-0'>
                       {t(`services.${service.key}.price`)}
                     </p>
                   </div>
-                  <p className='text-muted-foreground'>
+                  <p className='text-muted-foreground font-secondary'>
                     {t(`services.${service.key}.description`)}
                   </p>
                 </div>

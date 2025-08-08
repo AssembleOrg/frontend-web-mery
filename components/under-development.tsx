@@ -17,13 +17,13 @@ export function UnderDevelopment({ pageTitle }: UnderDevelopmentProps) {
           <div className="text-center max-w-md">
             <div className="mb-8">
               <Construction className="h-24 w-24 text-primary mx-auto mb-6" />
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h1 className="text-3xl md:text-4xl font-primary font-bold text-foreground mb-4">
                 {pageTitle}
               </h1>
-              <h2 className="text-xl font-semibold text-muted-foreground mb-6">
+              <h2 className="text-xl font-primary font-semibold text-muted-foreground mb-6">
                 {t('title')}
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              <p className="text-lg font-secondary text-muted-foreground leading-relaxed mb-8">
                 {t('message')}
               </p>
             </div>

@@ -28,10 +28,10 @@ export default function NanobladingCamouflagePage() {
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
           <div className='text-center text-white'>
-            <h1 className='text-4xl md:text-5xl font-bold mb-4'>
+            <h1 className='text-4xl md:text-5xl font-primary font-bold mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90'>{t('hero.subtitle')}</p>
+            <p className='text-xl font-secondary text-white/90'>{t('hero.subtitle')}</p>
           </div>
         </div>
       </section>
@@ -41,10 +41,10 @@ export default function NanobladingCamouflagePage() {
         <div className='max-w-7xl mx-auto'>
           {/* Deposit Info */}
           <section className='mb-12 text-center bg-muted/30 p-6 rounded-lg'>
-            <p className='text-muted-foreground mb-3'>
+            <p className='font-secondary text-muted-foreground mb-3'>
               {t('pricingInfo.depositText')}
             </p>
-            <p className='text-xl font-bold text-primary'>
+            <p className='text-xl font-primary font-bold text-primary'>
               {t('pricingInfo.depositAmount')}
             </p>
           </section>
@@ -53,20 +53,20 @@ export default function NanobladingCamouflagePage() {
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-16'>
             {/* Nanoblading Column */}
             <article className='mb-12 lg:mb-0'>
-              <h2 className='text-3xl font-bold text-foreground mb-6'>
+              <h2 className='text-3xl font-primary font-bold text-foreground mb-6'>
                 {t('nanoblading.heading')}
               </h2>
-              <div className='prose prose-lg max-w-none text-muted-foreground space-y-4'>
+              <div className='prose prose-lg max-w-none font-secondary text-muted-foreground space-y-4'>
                 <p>{t('nanoblading.p1')}</p>
                 <p>{t('nanoblading.p2')}</p>
                 <p>{t('nanoblading.p3')}</p>
               </div>
 
               <div className='mt-8 bg-card p-6 rounded-lg border'>
-                <h3 className='text-xl font-bold text-foreground mb-4'>
+                <h3 className='text-xl font-primary font-bold text-foreground mb-4'>
                   {t('nanoblading.pricing.heading')}
                 </h3>
-                <div className='space-y-2 text-muted-foreground'>
+                <div className='space-y-2 font-secondary text-muted-foreground'>
                   <p>{t('nanoblading.pricing.session1')}</p>
                   <p>{t('nanoblading.pricing.touchUp')}</p>
                   <p className='text-sm italic'>
@@ -89,16 +89,16 @@ export default function NanobladingCamouflagePage() {
 
             {/* Camouflage Column */}
             <article>
-              <h2 className='text-3xl font-bold text-foreground mb-6'>
+              <h2 className='text-3xl font-primary font-bold text-foreground mb-6'>
                 {t('camouflage.heading')}
               </h2>
               <p className='text-muted-foreground mb-6'>{t('camouflage.p1')}</p>
 
               <div className='mt-8 bg-card p-6 rounded-lg border'>
-                <h3 className='text-xl font-bold text-foreground mb-4'>
+                <h3 className='text-xl font-primary font-bold text-foreground mb-4'>
                   {t('camouflage.pricing.heading')}
                 </h3>
-                <div className='space-y-2 text-muted-foreground'>
+                <div className='space-y-2 font-secondary text-muted-foreground'>
                   <p>{t('camouflage.pricing.technique')}</p>
                   <p className='text-sm italic'>
                     {t('camouflage.pricing.kitNote')}

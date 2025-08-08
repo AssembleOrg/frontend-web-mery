@@ -3,6 +3,14 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-secondary',
+  display: 'swap',
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -32,7 +40,7 @@ export default async function LocaleLayout({
       lang={locale}
       suppressHydrationWarning
     >
-      <body className='antialiased'>
+      <body className={`antialiased ${poppins.variable}`}>
         <ThemeProvider
           attribute='class'
           defaultTheme='light'

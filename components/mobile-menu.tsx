@@ -63,42 +63,42 @@ export function MobileMenu() {
           <nav className='space-y-6'>
             <Link
               href='/'
-              className='block text-lg font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
             >
               HOME
             </Link>
             <Link
               href='/about'
-              className='block text-lg font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
             >
               MERY GARCIA
             </Link>
             <Link
               href='/trainings'
-              className='block text-lg font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
             >
               FORMACIONES
             </Link>
             <Link
               href='/gift-card'
-              className='block text-lg font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
             >
               GIFTCARD
             </Link>
             <Link
               href='/press'
-              className='block text-lg font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
             >
               PRENSA
             </Link>
             <Link
               href='/contact'
-              className='block text-lg font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
             >
               CONTACTO

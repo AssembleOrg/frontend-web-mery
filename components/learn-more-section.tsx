@@ -26,16 +26,16 @@ export function LearnMoreSection() {
         
         {/* Content Column */}
         <div className="order-1 md:order-2 text-center md:text-left">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl md:text-3xl font-primary font-bold text-foreground mb-4">
             {t('title')}{' '}
             <span className="text-primary">{t('titleHighlight')}</span>
           </h2>
-          <p className="text-muted-foreground leading-relaxed mb-6">
+          <p className="font-secondary text-muted-foreground leading-relaxed mb-6">
             {t('description')}
           </p>
           <Button 
             asChild
-            className="bg-primary hover:bg-primary/90 text-white px-6 py-2 font-medium group"
+            className="bg-primary hover:bg-primary/90 text-white px-6 py-2 font-primary font-medium group"
           >
             <Link href="/about">
               {t('button')}

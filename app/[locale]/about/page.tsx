@@ -23,10 +23,10 @@ export default async function AboutPage() {
       <section className='relative py-20 bg-gradient-to-b from-primary/5 to-background'>
         <div className='container mx-auto px-4 text-center'>
           <div className='max-w-4xl mx-auto'>
-            <h1 className='text-4xl md:text-5xl font-bold text-foreground mb-4'>
+            <h1 className='text-4xl md:text-5xl font-primary font-bold text-foreground mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-muted-foreground'>
+            <p className='text-xl font-secondary text-muted-foreground'>
               {t('hero.subtitle')}
             </p>
           </div>
@@ -54,7 +54,7 @@ export default async function AboutPage() {
               <div className='space-y-6'>
                 <div>
                   <p
-                    className='text-lg text-muted-foreground leading-relaxed'
+                    className='text-lg font-secondary text-muted-foreground leading-relaxed'
                     dangerouslySetInnerHTML={{
                       __html: processStrongTags(content.raw('paragraph1')),
                     }}
@@ -63,7 +63,7 @@ export default async function AboutPage() {
 
                 <div>
                   <p
-                    className='text-muted-foreground leading-relaxed'
+                    className='font-secondary text-muted-foreground leading-relaxed'
                     dangerouslySetInnerHTML={{
                       __html: processStrongTags(content.raw('paragraph2')),
                     }}
@@ -71,19 +71,19 @@ export default async function AboutPage() {
                 </div>
 
                 <div>
-                  <p className='text-muted-foreground leading-relaxed'>
+                  <p className='font-secondary text-muted-foreground leading-relaxed'>
                     {content('paragraph3')}{' '}
                   </p>
                 </div>
 
                 <div className='pt-4'>
-                  <p className='text-muted-foreground mb-2'>
+                  <p className='font-secondary text-muted-foreground mb-2'>
                     {content('signature.invitation')}
                   </p>
-                  <p className='font-semibold text-foreground mb-1'>
+                  <p className='font-secondary font-semibold text-foreground mb-1'>
                     {content('signature.closing')}
                   </p>
-                  <p className='text-primary font-medium'>
+                  <p className='text-primary font-custom font-medium'>
                     {content('signature.name')}
                   </p>
                 </div>

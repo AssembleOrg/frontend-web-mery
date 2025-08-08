@@ -26,37 +26,37 @@ export function Navigation() {
           <div className='hidden xl:flex items-center space-x-4 2xl:space-x-6'>
             <Link
               href='/'
-              className='text-sm font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               HOME
             </Link>
             <Link
               href='/about'
-              className='text-sm font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               MERY GARCIA
             </Link>
             <Link
               href='/trainings'
-              className='text-sm font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               FORMACIONES
             </Link>
             <Link
               href='/gift-card'
-              className='text-sm font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               GIFTCARD
             </Link>
             <Link
               href='/press'
-              className='text-sm font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               PRENSA
             </Link>
             <Link
               href='/contact'
-              className='text-sm font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               CONTACTO
             </Link>
@@ -67,7 +67,7 @@ export function Navigation() {
             <div className='hidden xl:flex items-center'>
               <Button
                 size='sm'
-                className='bg-primary hover:bg-primary/90 text-white text-xs xl:text-sm font-medium whitespace-nowrap px-3 xl:px-4'
+                className='bg-primary hover:bg-primary/90 text-white text-xs xl:text-sm font-primary font-medium whitespace-nowrap px-3 xl:px-4'
                 asChild
               >
                 <a
@@ -84,7 +84,7 @@ export function Navigation() {
               <Button
                 variant='outline'
                 size='sm'
-                className='border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium whitespace-nowrap px-4'
+                className='border-primary text-primary hover:bg-primary hover:text-white text-sm font-primary font-medium whitespace-nowrap px-4'
               >
                 INGRESO DE ALUMNOS
               </Button>

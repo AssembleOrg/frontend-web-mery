@@ -59,10 +59,10 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
                   
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <h3 className="text-lg font-semibold mb-2 text-white">
+                    <h3 className="text-lg font-primary font-semibold mb-2 text-white">
                       {t(`services.${service.key}`)}
                     </h3>
-                    <p className="text-sm text-white/90 mb-3">
+                    <p className="text-sm font-secondary text-white/90 mb-3">
                       Tratamiento profesional especializado
                     </p>
                     <Button 
@@ -131,7 +131,7 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
               <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
                 {/* Title - Always visible */}
                 <h3 className={`
-                  text-white font-bold mb-2 text-center
+                  text-white font-primary font-bold mb-2 text-center
                   transition-all duration-300
                   ${isHovered 
                     ? 'text-xl md:text-2xl opacity-100' 
@@ -157,7 +157,7 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
                     : 'opacity-0 transform translate-y-4 pointer-events-none'
                   }
                 `}>
-                  <p className="text-white/90 text-sm md:text-base mb-4 line-clamp-2">
+                  <p className="font-secondary text-white/90 text-sm md:text-base mb-4 line-clamp-2">
                     Tratamiento profesional especializado en {t(`services.${service.key}`).toLowerCase()}
                   </p>
                   

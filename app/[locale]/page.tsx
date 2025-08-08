@@ -56,7 +56,7 @@ export default function HomePage() {
       <section className='relative py-20 bg-gradient-to-b from-primary/5 to-background'>
         <div className='container mx-auto px-4 text-center'>
           <div className='max-w-4xl mx-auto'>
-            <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-wide mt-6'>
+            <h1 className='text-2xl md:text-3xl lg:text-4xl font-primary font-bold text-foreground tracking-wide mt-6'>
               I DIDN&apos;T CHOOSE THE BROW LIFE. THE BROW LIFE{' '}
               <span className='text-primary'>CHOSE ME</span>
             </h1>

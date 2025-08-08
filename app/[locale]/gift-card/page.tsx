@@ -27,10 +27,10 @@ export default async function GiftCardPage() {
             <div className="mb-6">
               <Gift className="h-16 w-16 mx-auto text-primary mb-4" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="text-4xl md:text-5xl font-primary font-bold text-foreground mb-4">
               {t('hero.title')}
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl font-secondary text-muted-foreground">
               {t('hero.subtitle')}
             </p>
           </div>
@@ -102,7 +102,7 @@ export default async function GiftCardPage() {
 
                 {/* Occasions */}
                 <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-6">
+                  <h2 className="text-2xl font-primary font-bold text-foreground mb-6">
                     {content('occasions.title')}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -126,10 +126,10 @@ export default async function GiftCardPage() {
       <section className="py-20 bg-gradient-to-r from-primary/10 to-primary/5">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold text-foreground mb-6">
+            <h2 className="text-3xl font-primary font-bold text-foreground mb-6">
               {t('cta.title')}
             </h2>
-            <p className="text-muted-foreground mb-8 text-lg">
+            <p className="font-secondary text-muted-foreground mb-8 text-lg">
               {t('cta.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

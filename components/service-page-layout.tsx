@@ -32,8 +32,8 @@ export function ServicePageLayout({
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
           <div className='text-center text-white'>
-            <h1 className='text-4xl md:text-5xl font-bold mb-4'>{title}</h1>
-            <p className='text-xl text-white/90'>
+            <h1 className='text-4xl md:text-5xl font-primary font-bold mb-4'>{title}</h1>
+            <p className='text-xl font-secondary text-white/90'>
               Tratamiento profesional especializado
             </p>
           </div>
@@ -45,7 +45,7 @@ export function ServicePageLayout({
         <div className='max-w-4xl mx-auto'>
           {/* What is it Section */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold text-foreground mb-6 flex items-center'>
+            <h2 className='text-3xl font-primary font-bold text-foreground mb-6 flex items-center'>
               <Star className='h-8 w-8 text-primary mr-3' />
               ¿Qué es {title}?
             </h2>
@@ -62,7 +62,7 @@ export function ServicePageLayout({
 
           {/* Process Section */}
           <section className='mb-12 bg-muted/30 rounded-lg p-8'>
-            <h2 className='text-3xl font-bold text-foreground mb-6 flex items-center'>
+            <h2 className='text-3xl font-primary font-bold text-foreground mb-6 flex items-center'>
               <Clock className='h-8 w-8 text-primary mr-3' />
               Proceso del Tratamiento
             </h2>
@@ -128,7 +128,7 @@ export function ServicePageLayout({
 
           {/* Biosecurity Section */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold text-foreground mb-6 flex items-center'>
+            <h2 className='text-3xl font-primary font-bold text-foreground mb-6 flex items-center'>
               <Shield className='h-8 w-8 text-primary mr-3' />
               Normas de Bioseguridad
             </h2>

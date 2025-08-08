@@ -39,13 +39,13 @@ export default async function PressPage() {
       <section className="relative py-20 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="text-4xl md:text-5xl font-primary font-bold text-foreground mb-4">
               {t('hero.title')}
             </h1>
-            <p className="text-xl text-muted-foreground mb-6">
+            <p className="text-xl font-secondary text-muted-foreground mb-6">
               {t('hero.subtitle')}
             </p>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg font-secondary text-muted-foreground max-w-3xl mx-auto">
               {t('content.description')}
             </p>
           </div>

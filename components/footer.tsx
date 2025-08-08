@@ -21,7 +21,7 @@ export function Footer() {
                 className='h-16 w-auto mb-6'
               />
             </Link>
-            <p className='text-muted-foreground text-sm leading-relaxed'>
+            <p className='font-secondary text-muted-foreground text-sm leading-relaxed'>
               Especialista en tatuaje cosmético con más de 20 años de
               experiencia. Formaciones profesionales y servicios de alta
               calidad.
@@ -30,18 +30,20 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className='font-semibold text-foreground mb-4'>Contacto</h3>
+            <h3 className='font-primary font-semibold text-foreground mb-4'>
+              Contacto
+            </h3>
             <div className='space-y-3'>
               <div className='flex items-start space-x-3'>
                 <MapPin className='h-4 w-4 text-primary mt-1 flex-shrink-0' />
                 <div className='text-sm text-muted-foreground'>
-                  <p>Av. Melián 3646 PB 1</p>
-                  <p>CABA, Argentina</p>
+                  <p className='font-secondary'>Av. Melián 3646 PB 1</p>
+                  <p className='font-secondary'>CABA, Argentina</p>
                 </div>
               </div>
               <div className='flex items-center space-x-3'>
                 <Clock className='h-4 w-4 text-primary flex-shrink-0' />
-                <p className='text-sm text-muted-foreground'>
+                <p className='font-secondary text-sm text-muted-foreground'>
                   Martes a Sábado, 10hs a 18hs
                 </p>
               </div>
@@ -59,35 +61,37 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className='font-semibold text-foreground mb-4'>Enlaces</h3>
+            <h3 className='font-primary font-semibold text-foreground mb-4'>
+              Enlaces
+            </h3>
             <div className='space-y-2'>
               <Link
                 href='/services'
-                className='block text-sm text-muted-foreground hover:text-primary transition-colors'
+                className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Servicios
               </Link>
               <Link
                 href='/trainings'
-                className='block text-sm text-muted-foreground hover:text-primary transition-colors'
+                className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Formaciones
               </Link>
               <Link
                 href='/gift-card'
-                className='block text-sm text-muted-foreground hover:text-primary transition-colors'
+                className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Gift Card
               </Link>
               <Link
                 href='/press'
-                className='block text-sm text-muted-foreground hover:text-primary transition-colors'
+                className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Prensa
               </Link>
               <Link
                 href='/contact'
-                className='block text-sm text-muted-foreground hover:text-primary transition-colors'
+                className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Contacto
               </Link>
@@ -115,10 +119,23 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className='border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground'>
-          <p>© 2025 Mery García. Todos los derechos reservados.</p>
-          <p className='mt-2 md:mt-0'>
-            Desarrollado con ❤️ para la comunidad del tatuaje cosmético
+          <p className='font-secondary'>
+            © 2025 Mery García. Todos los derechos reservados.
           </p>
+          <div className='flex items-center mt-2 md:mt-0'>
+            <p className='font-secondary mr-2'>
+              Desarrollado con ❤️ para la comunidad del tatuaje cosmético by
+            </p>
+            <a
+              href='https://wa.me/5491138207230?text=Hola%20Pistech,%20me%20comunico%20a%20través%20de%20merygarcia%20web.%20Me%20gustaría%20saber%20más%20sobre%20sus%20servicios%20digitales%20que%20ofrecen.'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='font-secondary font-semibold text-green-600 hover:text-green-500 transition-colors'
+              title='Contactar a Pistech por WhatsApp'
+            >
+              Pistech
+            </a>
+          </div>
         </div>
       </div>
     </footer>
