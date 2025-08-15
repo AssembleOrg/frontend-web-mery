@@ -4,7 +4,7 @@ import { Link } from '@/i18n/routing';
 import { ModeToggle } from './mode-toggle';
 import { LanguageToggle } from './language-toggle';
 import { Button } from './ui/button';
-import { ThemeAwareLogo } from './theme-aware-logo';
+import { Logo } from './logo';
 import { MobileMenu } from './mobile-menu';
 
 export function Navigation() {
@@ -16,10 +16,8 @@ export function Navigation() {
             href='/'
             className='flex items-center flex-shrink-0'
           >
-            <ThemeAwareLogo
-              width={200}
-              height={60}
-              className='h-8 sm:h-10 md:h-12 lg:h-14 w-auto'
+            <Logo
+              className='h-8 w-40 sm:h-10 sm:w-auto md:h-12 lg:h-14'
               priority
             />
           </Link>
@@ -47,12 +45,6 @@ export function Navigation() {
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               GIFTCARD
-            </Link>
-            <Link
-              href='/press'
-              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
-            >
-              PRENSA
             </Link>
             <Link
               href='/contact'

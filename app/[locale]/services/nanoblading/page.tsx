@@ -4,8 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
-import { Button } from '@/components/ui/button';
-import { Shield, AlertTriangle, Info, CreditCard } from 'lucide-react';
+import { Shield, AlertTriangle, CreditCard } from 'lucide-react';
 import Image from 'next/image';
 
 export default function NanobladingCamouflagePage() {
@@ -31,7 +30,9 @@ export default function NanobladingCamouflagePage() {
             <h1 className='text-4xl md:text-5xl font-primary font-bold mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl font-secondary text-white/90'>{t('hero.subtitle')}</p>
+            <p className='text-xl font-secondary text-white/90'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>

@@ -70,13 +70,17 @@ export const routing = defineRouting({
       es: '/gift-card',
       en: '/gift-card',
     },
-    '/press': {
-      es: '/prensa',
-      en: '/press',
-    },
     '/contact': {
       es: '/contacto',
       en: '/contact',
+    },
+    '/politica-de-cancelaciones': {
+      es: '/politica-de-cancelaciones',
+      en: '/cancellation-policy',
+    },
+    '/asesoramiento-express': {
+      es: '/asesoramiento-express',
+      en: '/express-consultation',
     },
     '/client-portal': {
       es: '/portal-cliente',

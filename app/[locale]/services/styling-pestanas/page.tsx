@@ -28,7 +28,9 @@ export default function LashesLinePage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -62,7 +64,6 @@ export default function LashesLinePage() {
                 </p>
               </div>
 
-              {/* Price List */}
               <div className='pt-6'>
                 <h3 className='text-xl font-bold text-foreground mb-4'>
                   {t('pricing.priceListTitle')}
@@ -77,7 +78,9 @@ export default function LashesLinePage() {
                     </p>
                   </div>
                   <div className='bg-muted/40 p-4 rounded-lg'>
-                    <p className='font-semibold font-primary text-foreground'>Retoque</p>
+                    <p className='font-semibold font-primary text-foreground'>
+                      Retoque
+                    </p>
                     <p className='text-muted-foreground font-secondary'>
                       {t('pricing.touchUp').split(': ')[1]}
                     </p>
@@ -93,7 +96,9 @@ export default function LashesLinePage() {
                 </div>
                 <div className='mt-6 flex items-center justify-center text-sm text-primary bg-primary/10 p-3 rounded-lg'>
                   <CreditCard className='h-4 w-4 mr-2 flex-shrink-0' />
-                  <span className='font-secondary'>{t('pricing.creditCardNote')}</span>
+                  <span className='font-secondary'>
+                    {t('pricing.creditCardNote')}
+                  </span>
                 </div>
               </div>
             </div>

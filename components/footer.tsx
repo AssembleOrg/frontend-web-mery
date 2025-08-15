@@ -1,8 +1,8 @@
 'use client';
 
 import { Link } from '@/i18n/routing';
-import { MapPin, Clock, Mail, Instagram, Facebook } from 'lucide-react';
-import { ThemeAwareLogo } from './theme-aware-logo';
+import { MapPin, Clock, Mail, Instagram } from 'lucide-react';
+import { Logo } from './logo';
 
 export function Footer() {
   return (
@@ -15,10 +15,9 @@ export function Footer() {
               href='/'
               className='flex items-center'
             >
-              <ThemeAwareLogo
-                width={200}
-                height={60}
-                className='h-16 w-auto mb-6'
+              <Logo
+                size='xl'
+                className='mb-6'
               />
             </Link>
             <p className='font-secondary text-muted-foreground text-sm leading-relaxed'>
@@ -84,12 +83,6 @@ export function Footer() {
                 Gift Card
               </Link>
               <Link
-                href='/press'
-                className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
-              >
-                Prensa
-              </Link>
-              <Link
                 href='/contact'
                 className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
@@ -107,12 +100,6 @@ export function Footer() {
               >
                 <Instagram className='h-5 w-5' />
               </a>
-              <a
-                href='#'
-                className='text-muted-foreground hover:text-primary transition-colors'
-              >
-                <Facebook className='h-5 w-5' />
-              </a>
             </div>
           </div>
         </div>
@@ -123,9 +110,7 @@ export function Footer() {
             © 2025 Mery García. Todos los derechos reservados.
           </p>
           <div className='flex items-center mt-2 md:mt-0'>
-            <p className='font-secondary mr-2'>
-              Desarrollado con ❤️ para la comunidad del tatuaje cosmético by
-            </p>
+            <p className='font-secondary mr-2'>Desarrollado by</p>
             <a
               href='https://wa.me/5491138207230?text=Hola%20Pistech,%20me%20comunico%20a%20través%20de%20merygarcia%20web.%20Me%20gustaría%20saber%20más%20sobre%20sus%20servicios%20digitales%20que%20ofrecen.'
               target='_blank'

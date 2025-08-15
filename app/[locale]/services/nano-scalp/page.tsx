@@ -4,8 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
-import { Shield, AlertTriangle, Star, Clock, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Shield, AlertTriangle, Star, Clock } from 'lucide-react';
 import Image from 'next/image';
 
 export default function NanoScalpPage() {
@@ -29,7 +28,9 @@ export default function NanoScalpPage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -89,14 +90,18 @@ export default function NanoScalpPage() {
                 <Clock className='h-7 w-7 text-primary mr-3' />
                 {t('procedure.heading')}
               </h2>
-              <p className='text-muted-foreground font-secondary'>{t('procedure.text')}</p>
+              <p className='text-muted-foreground font-secondary'>
+                {t('procedure.text')}
+              </p>
             </div>
             <div>
               <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
                 <Shield className='h-7 w-7 text-primary mr-3' />
                 {t('biosecurity.heading')}
               </h2>
-              <p className='text-muted-foreground font-secondary'>{t('biosecurity.text')}</p>
+              <p className='text-muted-foreground font-secondary'>
+                {t('biosecurity.text')}
+              </p>
             </div>
           </section>
 

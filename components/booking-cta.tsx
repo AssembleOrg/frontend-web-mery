@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock } from 'lucide-react';
+import { Link } from '@/i18n/routing';
 
 interface BookingCTAProps {
   heading?: string;
@@ -35,9 +36,19 @@ export function BookingCTA({
           </div>
 
           {/* Description */}
-          <p className='text-lg font-secondary text-muted-foreground mb-8 max-w-2xl mx-auto'>
+          <p className='text-lg font-secondary text-muted-foreground mb-6 max-w-2xl mx-auto'>
             {text || t('description')}
           </p>
+
+          {/* Policy Link */}
+          <div className='mb-8'>
+            <Link
+              href='/politica-de-cancelaciones'
+              className='font-secondary text-sm text-primary hover:text-primary/80 transition-colors underline'
+            >
+              {t('policyLink')}
+            </Link>
+          </div>
 
           {/* CTA Buttons */}
           <div className='flex flex-col sm:flex-row gap-4 justify-center items-center mb-12'>
@@ -62,16 +73,21 @@ export function BookingCTA({
                 variant='outline'
                 size='lg'
                 className='px-8 py-3 text-lg'
+                asChild
               >
-                <Clock className='h-5 w-5 mr-2' />
-                {t('express')}
+                <Link href='/asesoramiento-express'>
+                  <Clock className='h-5 w-5 mr-2' />
+                  {t('express')}
+                </Link>
               </Button>
             )}
           </div>
 
           {/* Additional info */}
           {showExpressButton && (
-            <p className='text-sm font-secondary text-muted-foreground'>{t('info')}</p>
+            <p className='text-sm font-secondary text-muted-foreground'>
+              {t('info')}
+            </p>
           )}
         </div>
       </div>

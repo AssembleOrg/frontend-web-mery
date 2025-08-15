@@ -79,7 +79,7 @@ export default function HomePage() {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start'>
               {/* Booking CTA Column */}
               <div className='order-1'>
-                <BookingCTA showExpressButton={false} />
+                <BookingCTA showExpressButton={true} />
               </div>
 
               {/* Learn More Column */}

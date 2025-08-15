@@ -5,7 +5,6 @@
     "services": "Services",
     "trainings": "Trainings",
     "giftCard": "Gift Card",
-    "press": "Press",
     "contact": "Contact",
     "clientPortal": "Client Portal",
     "booking": "Book Appointment"
@@ -72,10 +71,11 @@
   },
   "booking": {
     "title": "How to book your appointment?",
-    "description": "You can do it by accessing our booking platform",
+    "description": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
     "reserve": "Book Now",
     "express": "Express Consultation",
-    "info": "Once you enter, you'll have the calendar with available appointment slots for each service."
+    "info": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
+    "policyLink": "Cancellation policy"
   },
   "giftCard": {
     "page": {
@@ -106,17 +106,6 @@
         "description": "Contact us to purchase your Gift Card and surprise someone special with the gift of beauty.",
         "contactButton": "Request Gift Card",
         "emailText": "Write to us at info@merygarcia.com.ar"
-      }
-    }
-  },
-  "press": {
-    "page": {
-      "hero": {
-        "title": "Press Coverage",
-        "subtitle": "Mery García in the media"
-      },
-      "content": {
-        "description": "Discover Mery García's recognition in beauty and cosmetic tattoo publications, magazines, and media coverage showcasing her expertise and innovative techniques."
       }
     }
   },
@@ -498,6 +487,87 @@
           "button": "Schedule Confidential Consultation"
         }
       }
+    }
+  },
+  "cancellationPolicy": {
+    "title": "Cancellation Policy",
+    "subtitle": "Committed to providing the best service to all our clients",
+    "commitmentTitle": "Reservation Commitment",
+    "commitmentText1": "Making a reservation means committing to the service. To cancel your appointment, you must do so at least 24 hours in advance.",
+    "commitmentText2": "Cancellations must be made exclusively through the official web or app. Cancellations via social media or email are not accepted.",
+    "consequencesTitle": "Consequences of No-Show",
+    "consequencesText": "If you don't cancel 24 hours in advance or don't show up for your appointment, your next reservation will have the following conditions:",
+    "consequence1": "50% additional cost on top of the original service value",
+    "consequence2": "Possible denial of new appointment at team's discretion",
+    "cosmeticRulesTitle": "Specific Rules for Cosmetic Tattoo",
+    "cosmeticRulesText": "For cosmetic tattoo services (nanoblading, lip blush, etc.):",
+    "cosmeticRule1": "The deposit is non-refundable under any circumstances",
+    "cosmeticRule2": "To reschedule after a no-show, you must pay the deposit again",
+    "exceptionalTitle": "Exceptional Circumstances",
+    "exceptionalText1": "We understand that emergencies or unforeseen last-minute situations may arise.",
+    "exceptionalText2": "In exceptional cases, you can contact us at:",
+    "exceptionalNote": "Our team will evaluate each case individually and with understanding.",
+    "closingTitle": "Let's Work Together",
+    "closingText": "This policy helps us better organize our schedules and provide excellent service to all our clients. We appreciate your understanding and cooperation so that more women can enjoy our services."
+  },
+  "expressConsultation": {
+    "title": "Express Consultation",
+    "subtitle": "Professional beauty and cosmetic tattoo services",
+    "validFrom": "Valid from 23/11/2024",
+    "beautyServicesTitle": "Beauty Services",
+    "cosmeticTattooTitle": "Professional Cosmetic Tattoo",
+    "paymentTitle": "UP TO 6 CREDIT CARD PAYMENTS",
+    "paymentNote": "Prices not applicable to Special Pass schedule",
+    "services": {
+      "eyebrowModeling": {
+        "title": "Eyebrow Modeling",
+        "description": "To enhance the shape of your eyebrows. Careful cutting and plucking to enhance your look.",
+        "recommendation": "Recommended every 20-30 days"
+      },
+      "browRefill": {
+        "title": "Brow Refill",
+        "description": "Reactivates microblading density by tinting eyebrow skin with hyper-realistic shadow effect."
+      },
+      "eyebrowLamination": {
+        "title": "Eyebrow Lamination",
+        "description": "Disciplines wavy and voluminous eyebrow hairs. Useful for correcting volume and implants."
+      },
+      "eyebrowTint": {
+        "title": "Eyebrow Tint",
+        "description": "For people with gray or very light eyebrow hairs. Hand-dyed hair by hair."
+      },
+      "eyelashTint": {
+        "title": "Eyelash Tint",
+        "description": "Darkens very light eyelashes, adds color and length. Lasts approximately one month."
+      },
+      "nanoblading": {
+        "title": "NANOBLADING By MERY GARCIA",
+        "description": "The most advanced eyebrow cosmetic tattoo technique. Ideal for improving brow shape, filling sparse areas or covering scars."
+      },
+      "lashesLines": {
+        "title": "LASHES LINES",
+        "description": "Creates super natural volume and density effect for eyelashes."
+      },
+      "lipBlush": {
+        "title": "LIP BLUSH",
+        "description": "Semi-permanent makeup that lasts approximately 8 months. Consists of giving color to the lips while respecting natural colorimetry."
+      },
+      "camouflage": {
+        "title": "Camouflage",
+        "description": "Indicated for people who have previous work and want to improve the appearance of their eyebrows.",
+        "note": "The number of sessions cannot be predetermined. Depends on previous work, ink quality, depth and skin type."
+      }
+    },
+    "pricing": {
+      "cash": "Cash:",
+      "firstSession": "First session:",
+      "retouch": "Retouch:",
+      "maintenance": "Maintenance:",
+      "mixedService": "Mixed Service:",
+      "discount": "10% OFF Cash"
+    },
+    "badges": {
+      "new": "NEW"
     }
   }
 }

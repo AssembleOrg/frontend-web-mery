@@ -35,7 +35,6 @@
   font-display: swap;
 }
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -48,7 +47,7 @@
 
   --font-sans: 'DIN', var(--font-secondary), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
+
   /* Default font families for Tailwind */
   --default-font-family: 'DIN', 'AvantGarde LT', sans-serif;
   --default-mono-font-family: var(--font-geist-mono), 'Courier New', monospace;
@@ -179,6 +178,24 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-primary;
+    @apply bg-background text-foreground font-primary font-light;
+  }
+}
+
+@layer utilities {
+  /* DIN Font Weight Utilities */
+  .font-primary {
+    font-family: 'DIN', 'AvantGarde LT', sans-serif;
+    font-weight: 300; /* Use Light as default */
+  }
+
+  .font-primary-regular {
+    font-family: 'DIN', 'AvantGarde LT', sans-serif;
+    font-weight: 400; /* Regular when explicitly needed */
+  }
+
+  .font-primary-medium {
+    font-family: 'DIN', 'AvantGarde LT', sans-serif;
+    font-weight: 500; /* Medium for emphasis */
   }
 }

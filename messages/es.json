@@ -5,7 +5,6 @@
     "services": "Servicios",
     "trainings": "Formaciones",
     "giftCard": "Gift Card",
-    "press": "Prensa",
     "contact": "Contacto",
     "clientPortal": "Portal Cliente",
     "booking": "Reservar Turno"
@@ -76,10 +75,11 @@
   },
   "booking": {
     "title": "¿Cómo reservar tu cita?",
-    "description": "Podés hacerlo ingresando a nuestra plataforma de reservas",
+    "description": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
     "reserve": "Reservar",
     "express": "Asesoramiento Express",
-    "info": "Al ingresar ten el día escrito el calendario de turnos disponibles de cada servicio."
+    "info": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
+    "policyLink": "Política de cancelaciones"
   },
   "giftCard": {
     "page": {
@@ -110,17 +110,6 @@
         "description": "Contactanos para adquirir tu Gift Card y sorprender a alguien especial con el regalo de la belleza.",
         "contactButton": "Solicitar Gift Card",
         "emailText": "Escribinos a info@merygarcia.com.ar"
-      }
-    }
-  },
-  "press": {
-    "page": {
-      "hero": {
-        "title": "Cobertura de Prensa",
-        "subtitle": "Mery García en los medios"
-      },
-      "content": {
-        "description": "Descubrí el reconocimiento de Mery García en publicaciones de belleza, revistas y medios especializados en tatuaje cosmético que destacan su experiencia y técnicas innovadoras."
       }
     }
   },
@@ -496,6 +485,87 @@
           "button": "Agendar Consulta Confidencial"
         }
       }
+    }
+  },
+  "cancellationPolicy": {
+    "title": "Política de Cancelaciones",
+    "subtitle": "Comprometidas con brindar el mejor servicio a todas nuestras clientas",
+    "commitmentTitle": "Compromiso de Reserva",
+    "commitmentText1": "Hacer una reserva significa comprometerse con el servicio. Para cancelar tu cita, debes hacerlo con al menos 24 horas de anticipación.",
+    "commitmentText2": "Las cancelaciones deben realizarse exclusivamente a través de la web o aplicación oficial. No se aceptan cancelaciones por redes sociales o email.",
+    "consequencesTitle": "Consecuencias de No Presentarse",
+    "consequencesText": "Si no cancelas con 24 horas de anticipación o no te presentas a tu cita, tu próxima reserva tendrá las siguientes condiciones:",
+    "consequence1": "50% de costo adicional sobre el valor original del servicio",
+    "consequence2": "Posible negación de nueva cita a criterio del equipo",
+    "cosmeticRulesTitle": "Reglas Específicas para Tatuaje Cosmético",
+    "cosmeticRulesText": "Para servicios de tatuaje cosmético (nanoblading, lip blush, etc.):",
+    "cosmeticRule1": "El depósito no es reembolsable bajo ninguna circunstancia",
+    "cosmeticRule2": "Para reagendar después de un no-show, deberás pagar el depósito nuevamente",
+    "exceptionalTitle": "Circunstancias Excepcionales",
+    "exceptionalText1": "Entendemos que pueden surgir emergencias o situaciones imprevistas de último momento.",
+    "exceptionalText2": "En casos excepcionales, puedes contactarnos a:",
+    "exceptionalNote": "Nuestro equipo evaluará cada caso de manera individual y comprensiva.",
+    "closingTitle": "Trabajemos Juntas",
+    "closingText": "Esta política nos ayuda a organizar mejor nuestros horarios y brindar un servicio de excelencia a todas nuestras clientas. Agradecemos tu comprensión y colaboración para que más mujeres puedan disfrutar de nuestros servicios."
+  },
+  "expressConsultation": {
+    "title": "Asesoramiento Express",
+    "subtitle": "Servicios profesionales de belleza y tatuaje cosmético",
+    "validFrom": "Vigencia desde 23/11/2024",
+    "beautyServicesTitle": "Servicios de Belleza",
+    "cosmeticTattooTitle": "Tatuaje Cosmético Profesional",
+    "paymentTitle": "HASTA 6 PAGOS CON TARJETA DE CRÉDITO",
+    "paymentNote": "Valores no aplicables a agenda de Special Pass",
+    "services": {
+      "eyebrowModeling": {
+        "title": "Modelado de Cejas",
+        "description": "Para potenciar la forma de tus cejas. Cortado y depilación cuidadosa para realzar tu mirada.",
+        "recommendation": "Recomendado cada 20-30 días"
+      },
+      "browRefill": {
+        "title": "Brow Refill",
+        "description": "Reactiva la densidad del microblading tiñendo la piel de las cejas con efecto sombra hiperrealista."
+      },
+      "eyebrowLamination": {
+        "title": "Laminado de cejas",
+        "description": "Disciplina tus vellos ondulados y el volumen. Útil para corregir volumen e implantes."
+      },
+      "eyebrowTint": {
+        "title": "Tinte de cejas",
+        "description": "Para personas con canas o vellos muy claros en las cejas. Teñido pelo a pelo."
+      },
+      "eyelashTint": {
+        "title": "Tinte de pestañas",
+        "description": "Oscurece pestañas muy claras, aporta color y longitud. Dura aproximadamente un mes."
+      },
+      "nanoblading": {
+        "title": "NANOBLADING By MERY GARCIA",
+        "description": "La técnica más avanzada de tatuaje cosmético en cejas. Ideal para mejorar la forma, rellenar zonas despobladas o cubrir cicatrices."
+      },
+      "lashesLines": {
+        "title": "LASHES LINES",
+        "description": "Crea un efecto de volumen y densidad súper natural para las pestañas."
+      },
+      "lipBlush": {
+        "title": "LIP BLUSH",
+        "description": "Maquillaje semipermanente que dura aproximadamente 8 meses. Consiste en darle color a los labios respetando la colorimetría natural."
+      },
+      "camouflage": {
+        "title": "Camuflaje",
+        "description": "Indicado para personas que tienen un trabajo previo y quieran mejorar el aspecto de sus cejas.",
+        "note": "El número de sesiones no puede predeterminarse. Depende del trabajo previo, calidad de tinta, profundidad y tipo de piel."
+      }
+    },
+    "pricing": {
+      "cash": "Efectivo:",
+      "firstSession": "Primera sesión:",
+      "retouch": "Retoque:",
+      "maintenance": "Mantenimiento:",
+      "mixedService": "Servicio Mixto:",
+      "discount": "10% OFF Efectivo"
+    },
+    "badges": {
+      "new": "NUEVO"
     }
   }
 }
