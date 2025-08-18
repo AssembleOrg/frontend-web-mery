@@ -35,7 +35,7 @@ export function Navigation() {
               MERY GARCIA
             </Link>
             <Link
-              href='/trainings'
+              href='/formaciones'
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               FORMACIONES
@@ -77,8 +77,11 @@ export function Navigation() {
                 variant='outline'
                 size='sm'
                 className='border-primary text-primary hover:bg-primary hover:text-white text-sm font-primary font-medium whitespace-nowrap px-4'
+                asChild
               >
-                INGRESO DE ALUMNOS
+                <Link href='/mi-cuenta'>
+                  INGRESO DE ALUMNOS
+                </Link>
               </Button>
             </div>
 

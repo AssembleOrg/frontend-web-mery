@@ -40,7 +40,9 @@ export default function PecasLunaresPage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -55,8 +57,9 @@ export default function PecasLunaresPage() {
               {t('whatIsIt.heading')}
             </h2>
             <div className='prose prose-lg max-w-none text-muted-foreground font-secondary space-y-4'>
-              <p className='text-lg leading-relaxed font-secondary'>{t('whatIsIt.p1')}</p>
-              {/* Para texto con HTML (como <strong>), usamos t.rich */}
+              <p className='text-lg leading-relaxed font-secondary'>
+                {t('whatIsIt.p1')}
+              </p>
               <p
                 className='text-lg leading-relaxed font-secondary'
                 dangerouslySetInnerHTML={{ __html: t.raw('whatIsIt.p2') }}
@@ -132,7 +135,9 @@ export default function PecasLunaresPage() {
                 </div>
                 <div className='mt-4 flex items-center text-sm text-primary'>
                   <CreditCard className='h-4 w-4 mr-2' />
-                  <span className='font-secondary'>{t('pricing.creditCard')}</span>
+                  <span className='font-secondary'>
+                    {t('pricing.creditCard')}
+                  </span>
                 </div>
               </div>
               <div className='bg-card p-6 rounded-lg border'>

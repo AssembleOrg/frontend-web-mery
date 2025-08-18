@@ -40,7 +40,7 @@ export default async function LocaleLayout({
       lang={locale}
       suppressHydrationWarning
     >
-      <body className={`antialiased ${poppins.variable}`}>
+      <body className={`antialiased ${poppins.variable}`} suppressHydrationWarning>
         <ThemeProvider
           attribute='class'
           defaultTheme='light'

@@ -71,7 +71,7 @@ export function Footer() {
                 Servicios
               </Link>
               <Link
-                href='/trainings'
+                href='/formaciones'
                 className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Formaciones

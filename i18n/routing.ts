@@ -58,14 +58,7 @@ export const routing = defineRouting({
       es: '/servicios/tatuaje-paramedico',
       en: '/services/paramedical-tattoo',
     },
-    '/trainings': {
-      es: '/formaciones',
-      en: '/trainings',
-    },
-    '/trainings/[course]': {
-      es: '/formaciones/[course]',
-      en: '/trainings/[course]',
-    },
+    '/formaciones': '/formaciones',
     '/gift-card': {
       es: '/gift-card',
       en: '/gift-card',
@@ -85,6 +78,22 @@ export const routing = defineRouting({
     '/client-portal': {
       es: '/portal-cliente',
       en: '/client-portal',
+    },
+    '/mi-cuenta': {
+      es: '/mi-cuenta',
+      en: '/my-account',
+    },
+    '/compra-de-cursos': {
+      es: '/compra-de-cursos',
+      en: '/course-purchase',
+    },
+    '/finalizar-compra': {
+      es: '/finalizar-compra',
+      en: '/checkout',
+    },
+    '/first-masterclass-nanoblading': {
+      es: '/first-masterclass-nanoblading',
+      en: '/first-masterclass-nanoblading',
     },
   },
 });
