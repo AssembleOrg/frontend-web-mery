@@ -6,6 +6,24 @@ export interface CourseIncludeItem {
   text: string;
 }
 
+export interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  vimeoVideoId: string;
+  duration?: string;
+  order: number;
+  isCompleted?: boolean;
+}
+
+export interface CourseProgress {
+  courseId: string;
+  lessonsCompleted: string[];
+  totalLessons: number;
+  progressPercentage: number;
+  lastAccessed?: Date;
+}
+
 export interface CourseModalContent {
   videoId?: string;
   detailedDescription: string;
@@ -28,4 +46,13 @@ export interface Course {
   description?: string;
   currency: 'USD' | 'ARS';
   modalContent?: CourseModalContent;
+  lessons?: Lesson[];
+}
+
+export interface UserCourse {
+  courseId: string;
+  course: Course;
+  enrolledAt: Date;
+  progress: CourseProgress;
+  hasAccess: boolean;
 }

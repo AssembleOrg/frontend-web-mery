@@ -116,9 +116,11 @@ export function MobileMenu() {
             <Button
               variant='outline'
               className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
-              onClick={closeMenu}
+              asChild
             >
-              INGRESO DE ALUMNOS
+              <Link href='/mi-cuenta' onClick={closeMenu}>
+                INGRESO DE ALUMNOS
+              </Link>
             </Button>
           </div>
 
