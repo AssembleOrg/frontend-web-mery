@@ -151,7 +151,7 @@ export default function NanobladingCamouflagePage() {
               </div>
               <div>
                 <h2 className='text-2xl font-bold text-foreground mb-4 flex items-center'>
-                  <AlertTriangle className='h-7 w-7 text-amber-500 mr-3' />
+                  <AlertTriangle className='h-7 w-7 burgundy-text mr-3' />
                   {t('shared.pregnantWomenHeading')}
                 </h2>
                 <p className='text-muted-foreground'>

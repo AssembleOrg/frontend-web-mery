@@ -96,6 +96,21 @@
   --mg-dark: #2b2b2b;
   --mg-gray: #545454;
 
+  /* Burgundy Alert System - Following Brand Guidelines */
+  --mg-burgundy: #8B1538; /* Main burgundy color */
+  --mg-burgundy-light: #B8698A; /* Lighter burgundy */
+  --mg-burgundy-dark: #5C0E24; /* Darker burgundy */
+
+  /* Alert Patterns */
+  --mg-alert-high: var(--mg-burgundy); /* High attention: burgundy bg, pink text */
+  --mg-alert-high-text: var(--mg-pink);
+  --mg-alert-low: var(--mg-pink-light); /* Low attention: pink bg, burgundy text */
+  --mg-alert-low-text: var(--mg-burgundy);
+
+  /* Success/WhatsApp replacement */
+  --mg-success: var(--mg-burgundy-light);
+  --mg-success-hover: var(--mg-burgundy);
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -138,6 +153,21 @@
   --mg-pink-lighter: #2d2428; /* Even darker for backgrounds */
   --mg-dark: #1a1a1a; /* Very dark for backgrounds */
   --mg-gray: #a0a0a0; /* Lighter gray for text */
+
+  /* Burgundy Alert System - Dark Mode */
+  --mg-burgundy: #D4749C; /* Lighter burgundy for dark mode */
+  --mg-burgundy-light: #E8A5C1; /* Even lighter for dark mode */
+  --mg-burgundy-dark: #B85A84; /* Darker variant */
+
+  /* Alert Patterns - Dark Mode */
+  --mg-alert-high: var(--mg-burgundy); /* High attention: burgundy bg, pink text */
+  --mg-alert-high-text: var(--mg-pink-light);
+  --mg-alert-low: var(--mg-pink-lighter); /* Low attention: dark pink bg, burgundy text */
+  --mg-alert-low-text: var(--mg-burgundy-light);
+
+  /* Success/WhatsApp replacement - Dark Mode */
+  --mg-success: var(--mg-burgundy);
+  --mg-success-hover: var(--mg-burgundy-light);
 
   --background: oklch(0.125 0 0); /* Very dark background */
   --foreground: oklch(0.985 0 0);
@@ -197,5 +227,46 @@
   .font-primary-medium {
     font-family: 'DIN', 'AvantGarde LT', sans-serif;
     font-weight: 500; /* Medium for emphasis */
+  }
+
+  /* Brand Alert Utilities */
+  .alert-high {
+    background-color: var(--mg-alert-high);
+    color: var(--mg-alert-high-text);
+  }
+
+  .alert-low {
+    background-color: var(--mg-alert-low);
+    color: var(--mg-alert-low-text);
+  }
+
+  .success-color {
+    color: var(--mg-success);
+  }
+
+  .success-bg {
+    background-color: var(--mg-success);
+  }
+
+  .success-hover:hover {
+    color: var(--mg-success-hover);
+  }
+
+  .burgundy-text {
+    color: var(--mg-burgundy);
+  }
+
+  .burgundy-bg {
+    background-color: var(--mg-burgundy);
+  }
+
+  /* WhatsApp Button Replacement */
+  .whatsapp-button {
+    color: var(--mg-success);
+    transition: color 0.3s ease;
+  }
+
+  .whatsapp-button:hover {
+    color: var(--mg-success-hover);
   }
 }

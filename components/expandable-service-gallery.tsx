@@ -1,77 +1,105 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
-import { Link } from '@/i18n/routing'
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 interface Service {
-  key: string
-  href: string
-  image: string
+  key: string;
+  href: string;
+  image: string;
 }
 
 interface ExpandableServiceGalleryProps {
-  services: Service[]
+  services: Service[];
 }
 
-export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const t = useTranslations('home')
+export function ExpandableServiceGallery({
+  services,
+}: ExpandableServiceGalleryProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const t = useTranslations('home');
+
+  const beforeAfterUrls: Record<string, string> = {
+    eyebrowStyling:
+      'https://www.instagram.com/stories/highlights/17904023200243157/',
+    nanoblading:
+      'https://www.instagram.com/stories/highlights/18023006104657516/',
+    scalp: 'https://www.instagram.com/merygarciaoficial/',
+    freckles: 'https://www.instagram.com/merygarciaoficial/',
+    nanoscalp:
+      'https://www.instagram.com/stories/highlights/17879544007940692/',
+    lashesLine:
+      'https://www.instagram.com/stories/highlights/18019224445291012/',
+    paramedical: 'https://www.instagram.com/merygarciaoficial/',
+  };
 
   // Detect mobile/touch devices
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1024) // lg breakpoint
-    }
-    
-    checkIsMobile()
-    window.addEventListener('resize', checkIsMobile)
-    
-    return () => window.removeEventListener('resize', checkIsMobile)
-  }, [])
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // Mobile/Tablet view - Grid layout
   if (isMobile) {
     return (
-      <div className="w-full max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+      <div className='w-full max-w-7xl mx-auto'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6'>
           {services.map((service) => (
             <div
               key={service.key}
-              className="group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30 h-64 sm:h-72"
+              className='group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30 h-64 sm:h-72'
             >
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {}
               <Link href={service.href as any}>
                 {/* Image Container */}
-                <div className="relative h-full bg-muted overflow-hidden">
+                <div className='relative h-full bg-muted overflow-hidden'>
                   <Image
                     src={service.image}
                     alt={t(`services.${service.key}`)}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className='object-cover transition-transform duration-300 group-hover:scale-105'
                   />
-                  
+
                   {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent' />
+
                   {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <h3 className="text-lg font-primary font-semibold mb-2 text-white">
+                  <div className='absolute bottom-0 left-0 right-0 p-4 text-white'>
+                    <h3 className='text-lg font-primary font-semibold mb-2 text-white'>
                       {t(`services.${service.key}`)}
                     </h3>
-                    <p className="text-sm font-secondary text-white/90 mb-3">
+                    <p className='text-sm font-secondary text-white/90 mb-3'>
                       Tratamiento profesional especializado
                     </p>
-                    <Button 
-                      variant="secondary" 
-                      size="sm"
-                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm"
-                    >
-                      Ver más
-                    </Button>
+                    <div className='flex gap-2'>
+                      <Button
+                        variant='secondary'
+                        size='sm'
+                        className='bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm'
+                      >
+                        Ver más
+                      </Button>
+                      <Button
+                        size='sm'
+                        className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(beforeAfterUrls[service.key], '_blank');
+                        }}
+                      >
+                        Before & After
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -79,16 +107,17 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   // Desktop view - Expandable horizontal layout
   return (
-    <div className="w-full max-w-7xl mx-auto">
-      <div className="flex h-96 gap-2 overflow-hidden rounded-xl">
+    <div className='w-full max-w-7xl mx-auto'>
+      <div className='flex h-96 gap-2 overflow-hidden rounded-xl'>
         {services.map((service, index) => {
-          const isHovered = hoveredIndex === index
-          const isOtherHovered = hoveredIndex !== null && hoveredIndex !== index
+          const isHovered = hoveredIndex === index;
+          const isOtherHovered =
+            hoveredIndex !== null && hoveredIndex !== index;
 
           return (
             <div
@@ -96,10 +125,11 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
               className={`
                 relative group cursor-pointer overflow-hidden rounded-lg
                 transition-all duration-500 ease-out
-                ${isHovered 
-                  ? 'flex-[3] md:flex-[4]' 
-                  : isOtherHovered 
-                    ? 'flex-[0.5]' 
+                ${
+                  isHovered
+                    ? 'flex-[3] md:flex-[4]'
+                    : isOtherHovered
+                    ? 'flex-[0.5]'
                     : 'flex-1'
                 }
               `}
@@ -107,7 +137,7 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
               onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Background Image */}
-              <div className="absolute inset-0">
+              <div className='absolute inset-0'>
                 <Image
                   src={service.image}
                   alt={t(`services.${service.key}`)}
@@ -118,30 +148,35 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
                     ${isHovered ? 'scale-105' : 'scale-100'}
                   `}
                 />
-                
+
                 {/* Overlay */}
-                <div className={`
+                <div
+                  className={`
                   absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent
                   transition-opacity duration-300
                   ${isHovered ? 'opacity-100' : 'opacity-60'}
-                `} />
+                `}
+                />
               </div>
 
               {/* Content */}
-              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
+              <div className='absolute inset-0 flex flex-col justify-end p-4 md:p-6'>
                 {/* Title - Always visible */}
-                <h3 className={`
+                <h3
+                  className={`
                   text-white font-primary font-bold mb-2 text-center
                   transition-all duration-300
-                  ${isHovered 
-                    ? 'text-xl md:text-2xl opacity-100' 
-                    : isOtherHovered 
-                      ? 'text-sm opacity-70 writing-mode-vertical' 
+                  ${
+                    isHovered
+                      ? 'text-xl md:text-2xl opacity-100'
+                      : isOtherHovered
+                      ? 'text-sm opacity-70 writing-mode-vertical'
                       : 'text-base md:text-lg opacity-90'
                   }
-                `}>
+                `}
+                >
                   {isOtherHovered ? (
-                    <span className="transform rotate-90 whitespace-nowrap block origin-center">
+                    <span className='transform rotate-90 whitespace-nowrap block origin-center'>
                       {t(`services.${service.key}`)}
                     </span>
                   ) : (
@@ -150,45 +185,63 @@ export function ExpandableServiceGallery({ services }: ExpandableServiceGalleryP
                 </h3>
 
                 {/* Expanded Content - Only on hover */}
-                <div className={`
+                <div
+                  className={`
                   transition-all duration-300 text-center
-                  ${isHovered 
-                    ? 'opacity-100 transform translate-y-0' 
-                    : 'opacity-0 transform translate-y-4 pointer-events-none'
+                  ${
+                    isHovered
+                      ? 'opacity-100 transform translate-y-0'
+                      : 'opacity-0 transform translate-y-4 pointer-events-none'
                   }
-                `}>
-                  <p className="font-secondary text-white/90 text-sm md:text-base mb-4 line-clamp-2">
-                    Tratamiento profesional especializado en {t(`services.${service.key}`).toLowerCase()}
+                `}
+                >
+                  <p className='font-secondary text-white/90 text-sm md:text-base mb-4 line-clamp-2'>
+                    Tratamiento profesional especializado en{' '}
+                    {t(`services.${service.key}`).toLowerCase()}
                   </p>
-                  
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <Link href={service.href as any}>
-                    <Button 
-                      variant="secondary" 
-                      size="sm"
-                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm"
+
+                  <div className='flex gap-2 justify-center'>
+                    {}
+                    <Link href={service.href as any}>
+                      <Button
+                        variant='secondary'
+                        size='sm'
+                        className='bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm'
+                      >
+                        Ver más
+                      </Button>
+                    </Link>
+                    <Button
+                      size='sm'
+                      className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open(beforeAfterUrls[service.key], '_blank');
+                      }}
                     >
-                      Ver más
+                      Before & After
                     </Button>
-                  </Link>
+                  </div>
                 </div>
               </div>
 
               {/* Hover indicator */}
-              <div className={`
+              <div
+                className={`
                 absolute top-4 right-4 w-3 h-3 rounded-full bg-primary
                 transition-all duration-300
                 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
-              `} />
+              `}
+              />
             </div>
-          )
+          );
         })}
       </div>
 
       {/* Mobile fallback text */}
-      <div className="mt-4 text-center text-sm text-muted-foreground md:hidden">
+      <div className='mt-4 text-center text-sm text-muted-foreground md:hidden'>
         Deslizá horizontalmente para explorar todos los servicios
       </div>
     </div>
-  )
+  );
 }

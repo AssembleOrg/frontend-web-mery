@@ -110,7 +110,7 @@ export default function MicrobladingCamouflagePage() {
               </div>
               <div>
                 <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-                  <AlertTriangle className='h-7 w-7 text-amber-500 mr-3' />
+                  <AlertTriangle className='h-7 w-7 burgundy-text mr-3' />
                   {tShared('pregnantWomenHeading')}
                 </h2>
                 <p className='text-muted-foreground font-secondary'>

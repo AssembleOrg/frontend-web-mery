@@ -118,7 +118,10 @@ export function MobileMenu() {
               className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
               asChild
             >
-              <Link href='/mi-cuenta' onClick={closeMenu}>
+              <Link
+                href='/mi-cuenta'
+                onClick={closeMenu}
+              >
                 INGRESO DE ALUMNOS
               </Link>
             </Button>

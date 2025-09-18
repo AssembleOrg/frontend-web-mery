@@ -180,7 +180,7 @@ function ServiceCardUSD({
       </p>
 
       {servicio.hasNote && (
-        <p className='font-secondary text-xs text-amber-600 italic bg-amber-50 p-2 rounded'>
+        <p className='font-secondary text-xs alert-low p-2 rounded'>
           {serviceTranslations('note')}
         </p>
       )}

@@ -1,12 +1,20 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
-import { Mail, Gift } from 'lucide-react';
+import { MessageCircle, Gift } from 'lucide-react';
 
-export default async function GiftCardPage() {
-  const t = await getTranslations('giftCard.page');
-  const content = await getTranslations('giftCard.page.content');
+export default function GiftCardPage() {
+  const t = useTranslations('giftCard.page');
+  const content = useTranslations('giftCard.page.content');
+
+  const handleWhatsApp = () => {
+    const message = "Hola, quiero regalar mi giftcard física y giftcard virtual. Consulta por bases y condiciones.";
+    const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   // Function to process strong tags with custom styling
   const processStrongTags = (text: string) => {
@@ -92,16 +100,6 @@ export default async function GiftCardPage() {
                   />
                 </div>
 
-                {/* Consultation */}
-                <div className='bg-card rounded-lg p-6 border'>
-                  <p
-                    className='text-lg font-semibold text-foreground text-center'
-                    dangerouslySetInnerHTML={{
-                      __html: processStrongTags(content.raw('consultation')),
-                    }}
-                  />
-                </div>
-
                 {/* Occasions */}
                 <div>
                   <h2 className='text-2xl font-primary font-bold text-foreground mb-6'>
@@ -123,6 +121,25 @@ export default async function GiftCardPage() {
                       ))}
                   </div>
                 </div>
+
+                {/* Consultation */}
+                <div className='bg-card rounded-lg p-6 border'>
+                  <p
+                    className='text-lg font-semibold text-foreground text-center mb-4'
+                    dangerouslySetInnerHTML={{
+                      __html: processStrongTags(content.raw('consultation')),
+                    }}
+                  />
+                  <div className='flex justify-center'>
+                    <button
+                      onClick={handleWhatsApp}
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-2 px-6 rounded-full font-primary font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2'
+                    >
+                      <MessageCircle className='h-4 w-4' />
+                      Consultar
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -139,20 +156,14 @@ export default async function GiftCardPage() {
             <p className='font-secondary text-muted-foreground mb-8 text-lg'>
               {t('cta.description')}
             </p>
-            <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
-              <Button
-                size='lg'
-                className='px-8'
-                asChild
+            <div className='flex justify-center'>
+              <button
+                onClick={handleWhatsApp}
+                className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-medium transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 text-lg'
               >
-                <a href='mailto:info@merygarcia.com.ar?subject=Consulta Gift Card'>
-                  <Mail className='h-5 w-5 mr-2' />
-                  {t('cta.contactButton')}
-                </a>
-              </Button>
-              <p className='text-sm text-muted-foreground'>
-                {t('cta.emailText')}
-              </p>
+                <MessageCircle className='h-5 w-5' />
+                {t('cta.contactButton')}
+              </button>
             </div>
           </div>
         </div>

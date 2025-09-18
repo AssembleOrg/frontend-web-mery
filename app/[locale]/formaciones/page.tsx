@@ -23,6 +23,46 @@ export default function FormacionesPage() {
     setIsModalOpen(false);
     setSelectedCourse(null);
   };
+
+  const autoStylingCourse: Course = {
+    id: 'auto-styling-cejas',
+    title: 'AUTO STYLING ESTILISMO DE CEJAS ®',
+    image: '/formacion/estilismo.webp',
+    price: 280000,
+    priceDisplay: '$280.000',
+    slug: 'auto-styling-cejas',
+    currency: 'ARS',
+    description: 'Aprende a diseñar, cuidar y potenciar tus cejas por ti misma',
+    modalContent: {
+      detailedDescription:
+        'Con más de 20 años de experiencia en Estilismo de Cejas, una estética hiperrealista y el reconocimiento de talentosas colegas y celebridades influyentes del país, Mery Garcia te abre las puertas de su oficio.\n\nSu técnica impecable, su visión de las proporciones del rostro, su criterio estético. Con los contenidos totalmente actualizados y nuevas técnicas, resumidas para vos!.\n\n¿Por qué focalizarse en una minúscula parte del rostro?\nPorque lograras transformaciones INCREIBLES.\n\nQuedan especialmente invitad@s a nuestro mundo, donde queda claro que aquí, los detalles son TODO.',
+      includes: [
+        { iconImage: '/intro-icon.png', text: 'INTRODUCCIÓN' },
+        {
+          iconImage: '/video-icon.png',
+          text: 'VIDEOS EXPLICATIVOS DE LA TEORÍA',
+        },
+        { iconImage: '/pdf-icon.png', text: 'CONTENIDOS PDF' },
+        {
+          iconImage: '/video-icon.png',
+          text: 'VIDEO TUTORIAL DE LOS SERVICIOS',
+        },
+        { iconImage: '/video-icon.png', text: 'ACCESO A CLASE GRABADA' },
+      ],
+      targetAudience:
+        'A cualquier persona con o sin experiencia que desee aprender a diseñar, cuidar y potenciar sus cejas con estética MG.\n\nPara aquellas clientas que nos visitan anualmente desde otras ciudades que quieran complementar su cejas con Cosmetic Tattoo, Alopecias y clientas que requieran servicios más seguido y su agenda no les permita visitarnos mensualmente.\n\nEsta formación les dará la posibilidad de tener herramientas para no depender 100% de nuestro equipo. Manteniendo un diseño hipernatural y elegante.',
+      specialNotes:
+        'Modalidad ONLINE con acceso ilimitado por 6 meses a videos explicativos, teóricos y prácticos.\n\nOptativo: Posibilidad de sumar practicas ONLINE o PRESENCIAL con Mery Garcia o Staff MG.\n\nNo necesitas experiencia previa.',
+      additionalInfo:
+        'Si no residís en Argentina, el valor es de U$S 300.- y el medio de pago es a través de PayPal.',
+    },
+  };
+
+  const handleAutoStylingClick = () => {
+    setSelectedCourse(autoStylingCourse);
+    setIsModalOpen(true);
+  };
+
   const courses: Course[] = [
     {
       id: 'estilismo-cejas',
@@ -278,7 +318,51 @@ export default function FormacionesPage() {
         </div>
       </section>
 
+      {/* Auto Styling Banner */}
       <section className='container mx-auto px-4 py-8 max-w-7xl'>
+        <div className='relative bg-gradient-to-r from-[#fbe8ea] to-[#f9bbc4] p-6 md:p-8 rounded-lg border-2 border-[#eba2a8] shadow-lg'>
+          {/* Badge "NUEVO" */}
+          <div className='absolute -top-3 left-6 bg-[#660e1b] text-white px-4 py-1 text-sm font-bold rounded-full'>
+            NUEVO
+          </div>
+
+          <div className='flex flex-col md:flex-row items-center justify-between gap-6'>
+            {/* Contenido del Banner */}
+            <div className='text-center md:text-left flex-1'>
+              <h2 className='text-2xl md:text-3xl font-primary font-semibold text-[#660e1b]/80 mb-3'>
+                ¿Querés aprender a diseñar tus propias cejas?
+              </h2>
+              <p className='text-xl md:text-2xl lg:text-3xl font-primary font-black text-[#660e1b] mb-2'>
+                Auto Styling Estilismo de Cejas ®
+              </p>
+              <p className='text-sm text-[#660e1b]/70 font-medium'>
+                ✨ Sin experiencia requerida • 📱 100% Online • ⏰ 6 meses de
+                acceso
+              </p>
+            </div>
+
+            {/* CTA Button */}
+            <div className='text-center'>
+              <div className='mb-3'>
+                <span className='text-2xl font-primary font-bold text-[#660e1b]'>
+                  $280.000
+                </span>
+                <p className='text-xs text-[#660e1b]/70'>
+                  Incluye certificación y materiales
+                </p>
+              </div>
+              <button
+                onClick={handleAutoStylingClick}
+                className='bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-3 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
+              >
+                🎯 Quiero Aprender
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* <section className='container mx-auto px-4 py-8 max-w-7xl'>
         <div className='relative bg-card p-4 md:p-8 rounded-lg border-2 border-dashed border-[#660e1b]'>
           <div className='flex justify-center items-center relative'>
             <div className='absolute left-0 bottom-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 bg-[#660e1b] text-white px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm font-bold rounded-full z-10'>
@@ -301,9 +385,9 @@ export default function FormacionesPage() {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section className='container mx-auto px-4 pb-16 max-w-7xl'>
+      <section className='container mx-auto px-4 pb-16 py-8 max-w-7xl'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
           {courses.map((course) => (
             <SimpleCourseCard

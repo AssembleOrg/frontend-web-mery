@@ -90,7 +90,7 @@
       "content": {
         "intro": "Amamos los detalles! Por eso si pensaste regalar una <strong>Experiencia #ByMeryGarcia</strong>, te invitamos a que conozcas nuestra Gift Card diseñada para agasajar a alguien muy especial.",
         "description": "Está especialmente creada para que quien la reciba pueda elegir el servicio que prefiera. <strong>Podes obsequiar un importe</strong>, o aquellos servicios que más te hayan gustado y tengas ganas de regalar.",
-        "consultation": "CONSULTA POR BASES Y CONDICIONES A <strong>info@merygarcia.com.ar</strong>",
+        "consultation": "CONSULTA POR BASES Y CONDICIONES",
         "occasions": {
           "title": "¿CUÁNDO ES UN BUEN MOMENTO PARA UNA GIFTCARD?",
           "list": [
@@ -108,8 +108,7 @@
       "cta": {
         "title": "¿Lista para regalar una experiencia única?",
         "description": "Contactanos para adquirir tu Gift Card y sorprender a alguien especial con el regalo de la belleza.",
-        "contactButton": "Solicitar Gift Card",
-        "emailText": "Escribinos a info@merygarcia.com.ar"
+        "contactButton": "💬 Solicitar Gift Card"
       }
     }
   },

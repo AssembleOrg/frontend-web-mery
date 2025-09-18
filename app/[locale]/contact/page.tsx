@@ -2,9 +2,25 @@
 
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import { MapPin, Phone, Mail, GraduationCap } from 'lucide-react';
+import { MapPin, MessageCircle, Mail, GraduationCap } from 'lucide-react';
 
 export default function ContactPage() {
+  const handleWhatsAppGeneral = () => {
+    const message = 'Hola, me interesan sus servicios. ¿Puedo tener más info?';
+    const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleWhatsAppFormaciones = () => {
+    const message = 'Hola, me interesan sus servicios. ¿Puedo tener más info?';
+    const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <div className='min-h-screen bg-background'>
       <Navigation />
@@ -66,19 +82,19 @@ export default function ContactPage() {
                   {/* Reception Contact */}
                   <div className='bg-card p-6 rounded-lg border mb-6'>
                     <h3 className='font-primary font-semibold text-foreground mb-4 flex items-center'>
-                      <Phone className='h-5 w-5 text-primary mr-2' />
+                      <MessageCircle className='h-5 w-5 text-primary mr-2' />
                       Recepción General
                     </h3>
                     <div className='space-y-3'>
-                      <div className='flex items-center space-x-3'>
-                        <Phone className='h-4 w-4 text-primary flex-shrink-0' />
-                        <a
-                          href='tel:1161592591'
-                          className='font-secondary text-muted-foreground hover:text-primary transition-colors'
-                        >
-                          11 6159-2591
-                        </a>
-                      </div>
+                      <button
+                        onClick={handleWhatsAppGeneral}
+                        className='flex items-center space-x-3 w-full text-left hover:bg-muted/50 py-1 rounded transition-colors'
+                      >
+                        <MessageCircle className='h-4 w-4 text-primary flex-shrink-0' />
+                        <span className='font-secondary text-muted-foreground hover:text-primary transition-colors'>
+                          WhatsApp: 11 6159-2591
+                        </span>
+                      </button>
                       <div className='flex items-center space-x-3'>
                         <Mail className='h-4 w-4 text-primary flex-shrink-0' />
                         <a
@@ -98,15 +114,15 @@ export default function ContactPage() {
                       Contacto para Formaciones
                     </h3>
                     <div className='space-y-3'>
-                      <div className='flex items-center space-x-3'>
-                        <Phone className='h-4 w-4 text-primary flex-shrink-0' />
-                        <a
-                          href='tel:1153336627'
-                          className='font-secondary text-muted-foreground hover:text-primary transition-colors'
-                        >
-                          11 5333-6627
-                        </a>
-                      </div>
+                      <button
+                        onClick={handleWhatsAppFormaciones}
+                        className='flex items-center space-x-3 w-full text-left hover:bg-muted/50 py-1  rounded transition-colors'
+                      >
+                        <MessageCircle className='h-4 w-4 text-primary flex-shrink-0' />
+                        <span className='font-secondary text-muted-foreground hover:text-primary transition-colors'>
+                          WhatsApp: 11 5333-6627
+                        </span>
+                      </button>
                       <div className='flex items-center space-x-3'>
                         <Mail className='h-4 w-4 text-primary flex-shrink-0' />
                         <a

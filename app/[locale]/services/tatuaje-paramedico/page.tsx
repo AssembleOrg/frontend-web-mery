@@ -84,13 +84,13 @@ export default function ParamedicalTattooPage() {
 
           {/* Shared Information Section */}
           <section className='mt-16 pt-12 border-t space-y-12'>
-            <div className='bg-amber-100 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-800 rounded-lg p-6 text-center max-w-4xl mx-auto'>
+            <div className='alert-low border rounded-lg p-6 text-center max-w-4xl mx-auto'>
               <div className='flex flex-col items-center'>
-                <AlertTriangle className='h-8 w-8 text-amber-600 dark:text-amber-400 mb-3' />
-                <h3 className='text-xl font-bold font-primary text-amber-800 dark:text-amber-200 mb-2'>
+                <AlertTriangle className='h-8 w-8 burgundy-text mb-3' />
+                <h3 className='text-xl font-bold font-primary mb-2'>
                   {tShared('importantInfoHeading')}
                 </h3>
-                <p className='text-amber-700 dark:text-amber-300 font-secondary'>
+                <p className='font-secondary'>
                   {tShared('importantInfoText')}
                 </p>
               </div>

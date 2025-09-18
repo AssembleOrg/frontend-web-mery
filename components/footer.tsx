@@ -55,6 +55,25 @@ export function Footer() {
                   info@merygarcia.com.ar
                 </a>
               </div>
+              <div className='flex items-center space-x-3'>
+                <Instagram className='h-4 w-4 text-primary flex-shrink-0' />
+                <a
+                  href='https://instagram.com/merygarciaoficial'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-sm text-muted-foreground hover:text-primary transition-colors'
+                >
+                  @merygarciaoficial
+                </a>
+              </div>
+            </div>
+            <div className='mt-4'>
+              <Link
+                href='/contact'
+                className='inline-flex items-center px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-primary font-medium rounded-full transition-all duration-300'
+              >
+                Quiero saber más
+              </Link>
             </div>
           </div>
 
@@ -90,17 +109,6 @@ export function Footer() {
               </Link>
             </div>
 
-            {/* Social Media */}
-            <div className='flex space-x-4 mt-6'>
-              <a
-                href='https://instagram.com/merygarciaoficial'
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-muted-foreground hover:text-primary transition-colors'
-              >
-                <Instagram className='h-5 w-5' />
-              </a>
-            </div>
           </div>
         </div>
 
@@ -115,7 +123,7 @@ export function Footer() {
               href='https://wa.me/5491138207230?text=Hola%20Pistech,%20me%20comunico%20a%20través%20de%20merygarcia%20web.%20Me%20gustaría%20saber%20más%20sobre%20sus%20servicios%20digitales%20que%20ofrecen.'
               target='_blank'
               rel='noopener noreferrer'
-              className='font-secondary font-semibold text-green-600 hover:text-green-500 transition-colors'
+              className='font-secondary font-semibold whatsapp-button'
               title='Contactar a Pistech por WhatsApp'
             >
               Pistech

@@ -54,7 +54,7 @@ export default function CancellationPolicyPage() {
             {/* Consequences Section */}
             <div className='bg-card p-6 rounded-lg border shadow-sm'>
               <div className='flex items-start space-x-4'>
-                <AlertTriangle className='h-6 w-6 text-amber-500 mt-1 flex-shrink-0' />
+                <AlertTriangle className='h-6 w-6 burgundy-text mt-1 flex-shrink-0' />
                 <div>
                   <h2 className='text-2xl font-primary font-bold text-foreground mb-4'>
                     {t('consequencesTitle')}

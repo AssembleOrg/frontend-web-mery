@@ -83,7 +83,7 @@ export default function SimpleCourseModal({
                   Video del Curso
                 </p>
                 <p className='text-sm text-[#6c757d] mt-1'>
-                  [Falta acceder a Vimeo]
+                  [Creando containers]
                 </p>
               </div>
             </div>
@@ -123,13 +123,13 @@ export default function SimpleCourseModal({
             <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-6 rounded-lg shadow-lg'>
               <div
                 className={`hidden md:flex items-center ${
-                  isUSDCourse ? 'justify-center' : 'justify-between'
+                  isUSDCourse ? 'flex-col space-y-4' : 'justify-between'
                 }`}
               >
                 {!isUSDCourse && (
                   <button
                     onClick={handleWhatsApp}
-                    className='bg-[#25D366] hover:bg-[#20B95C] text-white py-3 px-6 rounded-full font-primary font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2'
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
                   >
                     <MessageCircle className='w-4 h-4' />
                     WhatsApp
@@ -148,16 +148,21 @@ export default function SimpleCourseModal({
                   </p>
                 </div>
 
-                <button
-                  onClick={handleBuyCourse}
-                  className={`py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform ${
-                    isUSDCourse
-                      ? 'bg-[#25D366] hover:bg-[#20B95C] text-white'
-                      : 'bg-[#660e1b] hover:bg-[#4a0a14] text-white'
-                  }`}
-                >
-                  {isUSDCourse ? '💬 Consultar' : '🛒 Comprar'}
-                </button>
+                {!isUSDCourse ? (
+                  <button
+                    onClick={handleBuyCourse}
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
+                  >
+                    🛒 Comprar
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleBuyCourse}
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
+                  >
+                    💬 Consultar
+                  </button>
+                )}
               </div>
 
               <div className='md:hidden space-y-4'>
@@ -178,7 +183,7 @@ export default function SimpleCourseModal({
                     onClick={handleBuyCourse}
                     className={`py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl ${
                       isUSDCourse
-                        ? 'bg-[#25D366] hover:bg-[#20B95C] text-white'
+                        ? 'bg-[#660e1b] hover:bg-[#4a0a14] text-white'
                         : 'bg-[#660e1b] hover:bg-[#4a0a14] text-white'
                     }`}
                   >
@@ -188,7 +193,7 @@ export default function SimpleCourseModal({
                   {!isUSDCourse && (
                     <button
                       onClick={handleWhatsApp}
-                      className='bg-[#25D366] hover:bg-[#20B95C] text-white py-3 px-6 rounded-full font-primary font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2 justify-center'
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
                     >
                       <MessageCircle className='w-4 h-4' />
                       WhatsApp

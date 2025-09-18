@@ -168,7 +168,7 @@ export default function PecasLunaresPage() {
           {/* Sección: Consideraciones */}
           <section className='mb-12'>
             <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
-              <AlertTriangle className='h-8 w-8 text-amber-500 mr-3' />
+              <AlertTriangle className='h-8 w-8 burgundy-text mr-3' />
               {t('importantInfo.heading')}
             </h2>
             <div className='bg-card p-6 rounded-lg border'>

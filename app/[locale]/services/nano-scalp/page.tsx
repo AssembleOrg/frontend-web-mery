@@ -68,14 +68,14 @@ export default function NanoScalpPage() {
             </div>
 
             {/* Important Info */}
-            <div className='bg-amber-100 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-800 rounded-lg p-6'>
+            <div className='alert-low border rounded-lg p-6'>
               <div className='flex items-start space-x-3'>
-                <AlertTriangle className='h-6 w-6 text-amber-600 dark:text-amber-400 mt-1 flex-shrink-0' />
+                <AlertTriangle className='h-6 w-6 burgundy-text mt-1 flex-shrink-0' />
                 <div>
-                  <h3 className='text-xl font-bold font-primary text-amber-800 dark:text-amber-200 mb-2'>
+                  <h3 className='text-xl font-bold font-primary mb-2'>
                     {t('importantInfo.heading')}
                   </h3>
-                  <p className='text-amber-700 dark:text-amber-300 font-secondary mb-4'>
+                  <p className='font-secondary mb-4'>
                     {t('importantInfo.text')}
                   </p>
                 </div>

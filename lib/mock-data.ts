@@ -12,8 +12,8 @@ export const mockLessons: Record<string, Lesson[]> = {
       order: 1,
     },
     {
-      id: 'lesson-2', 
-      title: 'Higiene, armado y desarmado',
+      id: 'lesson-2',
+      title: 'Practica',
       description: 'Preparación del área de trabajo y protocolos de seguridad',
       vimeoVideoId: '826655207',
       duration: '03:50', // Duración aproximada del video placeholder
@@ -39,7 +39,7 @@ export const mockLessons: Record<string, Lesson[]> = {
     },
     {
       id: 'lesson-5',
-      title: 'Higiene, armado y desarmado',
+      title: 'Practica',
       description: 'Preparación y protocolos específicos para nanoblading',
       vimeoVideoId: '826655207',
       duration: '03:50',
@@ -71,7 +71,7 @@ export const mockLessons: Record<string, Lesson[]> = {
     },
     {
       id: 'lesson-9',
-      title: 'Preparación (caja y anestesia)',
+      title: 'Preparación)',
       description: 'Preparación completa del equipo y anestesia',
       vimeoVideoId: '826655207',
       duration: '04:17',
@@ -79,19 +79,19 @@ export const mockLessons: Record<string, Lesson[]> = {
     },
     {
       id: 'lesson-10',
-      title: 'Experiencia Microblading',
+      title: 'Experiencia',
       description: 'Demostración práctica completa',
       vimeoVideoId: '869659871',
       duration: '15:11',
       order: 7,
     },
   ],
-  'microblading': [
+  microblading: [
     {
       id: 'lesson-11',
       title: 'Técnica Básica',
       description: 'Fundamentos del microblading tradicional',
-      vimeoVideoId: '869659871', 
+      vimeoVideoId: '869659871',
       duration: '05:23',
       order: 1,
     },
@@ -116,10 +116,12 @@ export const mockCoursesWithLessons: Course[] = [
     image: '/formacion/nanoblading-exclusive.webp',
     slug: 'tatuaje-cosmetico',
     currency: 'USD',
-    description: 'Curso completo de tatuaje cosmético desde cero hasta nivel avanzado',
+    description:
+      'Curso completo de tatuaje cosmético desde cero hasta nivel avanzado',
     lessons: mockLessons['tatuaje-cosmetico'],
     modalContent: {
-      detailedDescription: 'Aprende las técnicas más avanzadas de tatuaje cosmético con Mery García',
+      detailedDescription:
+        'Aprende las técnicas más avanzadas de tatuaje cosmético con Mery García',
       includes: [
         { text: 'Kit completo de herramientas' },
         { text: 'Certificado internacional' },
@@ -131,17 +133,19 @@ export const mockCoursesWithLessons: Course[] = [
     },
   },
   {
-    id: 'nanoblading-exclusive', 
+    id: 'nanoblading-exclusive',
     title: 'Nanoblading Exclusive',
     price: 1500,
     priceDisplay: '$1,500',
     image: '/formacion/nanoblading-exclusive.webp',
     slug: 'nanoblading-exclusive',
     currency: 'USD',
-    description: 'Técnica exclusiva de nanoblading para resultados ultra naturales',
+    description:
+      'Técnica exclusiva de nanoblading para resultados ultra naturales',
     lessons: mockLessons['nanoblading-exclusive'],
     modalContent: {
-      detailedDescription: 'Domina la técnica más avanzada de cejas con nanoblading',
+      detailedDescription:
+        'Domina la técnica más avanzada de cejas con nanoblading',
       includes: [
         { text: 'Técnica exclusiva de Mery García' },
         { text: 'Kit premium incluido' },
@@ -157,13 +161,14 @@ export const mockCoursesWithLessons: Course[] = [
     title: 'Microblading Clásico',
     price: 800,
     priceDisplay: '$800',
-    image: '/formacion/microblading.webp', 
+    image: '/formacion/microblading.webp',
     slug: 'microblading',
     currency: 'USD',
     description: 'Aprende la técnica clásica de microblading paso a paso',
     lessons: mockLessons['microblading'],
     modalContent: {
-      detailedDescription: 'Curso fundamental de microblading para principiantes',
+      detailedDescription:
+        'Curso fundamental de microblading para principiantes',
       includes: [
         { text: 'Manual técnico completo' },
         { text: 'Kit básico de inicio' },
@@ -186,7 +191,7 @@ export const mockUserProgress: Record<string, CourseProgress> = {
     lastAccessed: new Date('2024-08-20'),
   },
   'nanoblading-exclusive': {
-    courseId: 'nanoblading-exclusive', 
+    courseId: 'nanoblading-exclusive',
     lessonsCompleted: [],
     totalLessons: 2,
     progressPercentage: 0,
@@ -205,7 +210,7 @@ export const mockUserCourses: UserCourse[] = [
   },
   {
     courseId: 'nanoblading-exclusive',
-    course: mockCoursesWithLessons[1], 
+    course: mockCoursesWithLessons[1],
     enrolledAt: new Date('2024-08-10'),
     progress: mockUserProgress['nanoblading-exclusive'],
     hasAccess: true,
@@ -214,7 +219,7 @@ export const mockUserCourses: UserCourse[] = [
 
 // Función helper para obtener curso por ID
 export const getCourseById = (courseId: string): Course | undefined => {
-  return mockCoursesWithLessons.find(course => course.id === courseId);
+  return mockCoursesWithLessons.find((course) => course.id === courseId);
 };
 
 // Función helper para obtener lecciones de un curso

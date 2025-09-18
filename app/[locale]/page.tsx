@@ -17,11 +17,6 @@ export default function HomePage() {
       image: '/Img-home/nanoblading.webp',
     },
     {
-      key: 'microblading',
-      href: '/services/microblading-camuflaje',
-      image: '/Img-home/home-2.webp',
-    },
-    {
       key: 'scalp',
       href: '/services/scalp',
       image: '/Img-home/home-3.webp',
