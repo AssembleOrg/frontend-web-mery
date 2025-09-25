@@ -1,56 +1,50 @@
+// File: app/api/webhook/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { grantCourseAccess } from '@/lib/api-server';
 
 const client = new MercadoPagoConfig({
-  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
+  accessToken: process.env.MERCADOPOPAGO_ACCESS_TOKEN!,
 });
 
 export async function POST(request: NextRequest) {
-  console.log('Webhook de Mercado Pago recibido!');
+  console.log('--- Webhook de Mercado Pago Recibido ---');
 
   try {
     const body = await request.json();
+
     if (body.type === 'payment') {
       const paymentId = body.data.id;
-
-      console.log(`Procesando notificación para el pago ID: ${paymentId}`);
-
       const payment = await new Payment(client).get({ id: paymentId });
 
-      //payment logic
       if (payment.status === 'approved') {
-        console.log(`¡Pago APROBADO! ID: ${payment.id}`);
+        console.log(`[Webhook] ¡PAGO APROBADO! ID: ${payment.id}`);
 
         const userEmail = payment.payer?.email;
         const purchasedItems = payment.additional_info?.items;
 
-        console.log(`Email del comprador: ${userEmail}`);
-        console.log('Items comprados:', purchasedItems);
+        if (userEmail && purchasedItems && purchasedItems.length > 0) {
+          const courseIds = purchasedItems.map((item) => item.id!);
 
-        //
-        // Ejemplo cuando este Vimeo:
-        // const ordenYaExiste = await tuBaseDeDatos.findOrdenById(payment.id);
-        // if (ordenYaExiste) {
-        //   console.log("Esta orden ya fue procesada. Ignorando.");
-        //   return NextResponse.json({ received: true }, { status: 200 });
-        // }
-
-        // - Marca la orden como pagada.
-        // - Otorga acceso a los cursos al usuario con el email 'userEmail'.
-        // Ejemplo conceptual:
-        // await tuBaseDeDatos.otorgarAccesoACursos(userEmail, purchasedItems);
-
-        // 4. ENVIAR UN EMAIL DE CONFIRMACIÓN
-        // (Usando un servicio como Resend, SendGrid, etc.)
-        // await enviarEmailDeConfirmacion(userEmail, purchasedItems);
+          console.log(
+            `[Webhook] Llamando a la lógica de negocio para ${userEmail} con los cursos:`,
+            courseIds
+          );
+          //damos access:
+          await grantCourseAccess(userEmail, courseIds);
+        } else {
+          console.warn(
+            '[Webhook] Pago aprobado pero sin email o items para procesar.'
+          );
+        }
       } else {
-        console.log(`Estado del pago no aprobado: ${payment.status}`);
+        console.log(`[Webhook] Estado del pago no aprobado: ${payment.status}`);
       }
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error: any) {
-    console.error('Error al procesar el webhook de Mercado Pago:', error);
+    console.error('[Webhook] Error al procesar el webhook:', error);
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }
