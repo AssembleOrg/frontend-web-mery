@@ -9,7 +9,8 @@ import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 
 export default function CompraPage() {
   const router = useRouter();
-  const { items, removeFromCart, updateQuantity, getTotal, clearCart } = useCartStore();
+  const { items, removeFromCart, updateQuantity, getTotal, clearCart } =
+    useCartStore();
 
   const handleContinueShopping = () => {
     router.push('/es/formaciones');
@@ -98,18 +99,26 @@ export default function CompraPage() {
                     {/* Quantity and Remove */}
                     <div className='flex items-center justify-between'>
                       <div className='flex items-center gap-3'>
-                        <span className='text-sm text-muted-foreground'>Cantidad:</span>
+                        <span className='text-sm text-muted-foreground'>
+                          Cantidad:
+                        </span>
                         <div className='flex items-center gap-2'>
                           <button
-                            onClick={() => decreaseQuantity(item.course.id, item.quantity)}
+                            onClick={() =>
+                              decreaseQuantity(item.course.id, item.quantity)
+                            }
                             className='w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors'
                             disabled={item.quantity <= 1}
                           >
                             <Minus className='w-4 h-4' />
                           </button>
-                          <span className='w-8 text-center font-medium'>{item.quantity}</span>
+                          <span className='w-8 text-center font-medium'>
+                            {item.quantity}
+                          </span>
                           <button
-                            onClick={() => increaseQuantity(item.course.id, item.quantity)}
+                            onClick={() =>
+                              increaseQuantity(item.course.id, item.quantity)
+                            }
                             className='w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors'
                           >
                             <Plus className='w-4 h-4' />
@@ -139,7 +148,9 @@ export default function CompraPage() {
 
               <div className='space-y-4 mb-6'>
                 <div className='flex justify-between text-muted-foreground'>
-                  <span>Subtotal ({items.length} curso{items.length > 1 ? 's' : ''})</span>
+                  <span>
+                    Subtotal ({items.length} curso{items.length > 1 ? 's' : ''})
+                  </span>
                   <span>${total.toLocaleString()}</span>
                 </div>
                 <div className='border-t pt-4'>
@@ -157,7 +168,7 @@ export default function CompraPage() {
                 >
                   Finalizar Compra
                 </button>
-                
+
                 <button
                   onClick={handleContinueShopping}
                   className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-white py-2 px-6 rounded-lg font-primary font-medium transition-colors duration-200'

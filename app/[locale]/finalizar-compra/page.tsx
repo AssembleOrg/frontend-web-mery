@@ -3,15 +3,26 @@
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useCartStore } from '@/stores/cart-store';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
 import { CreditCard, User, Mail, Phone, MapPin } from 'lucide-react';
+// import { MercadoPagoButton } from '@/components/mercadopago/mercado-pago-button';
+// import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
+
+//init
+// if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+//   initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY);
+// }
 
 export default function FinalizarCompraPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const [isProcessing, setIsProcessing] = useState(false);
+  // const [preferenceId, setPreferenceId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const params = useParams();
+  const locale = params.locale;
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -24,28 +35,61 @@ export default function FinalizarCompraPage() {
 
   const total = getTotal();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
+    setError(null);
 
-    // Mock payment processing
-    setTimeout(() => {
+    const itemsForAPI = items.map((item) => ({
+      id: item.course.id,
+      title: item.course.title,
+      description: item.course.description || `Curso: ${item.course.title}`,
+      price: item.course.price,
+      quantity: item.quantity,
+    }));
+
+    try {
+      const response = await fetch('/api/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: itemsForAPI,
+          payerData: formData,
+          locale: locale,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en el servidor al crear la preferencia.');
+      }
+
+      const { url } = await response.json();
+      if (url) {
+        router.push(url);
+      } else {
+        throw new Error('No se recibió una URL de pago.');
+      }
+    } catch (err: any) {
+      setError(
+        'No se pudo procesar el pago. Por favor, intenta de nuevo más tarde.'
+      );
+      console.error(err);
       setIsProcessing(false);
-      clearCart();
-      alert('¡Compra procesada exitosamente! Te enviaremos un email con los detalles de acceso.');
-      router.push('/es/mi-cuenta');
-    }, 2000);
+    }
   };
 
-  const isFormValid = formData.nombre && formData.apellido && formData.email && formData.telefono;
+  const isFormValid =
+    formData.nombre && formData.apellido && formData.email && formData.telefono;
 
   if (items.length === 0) {
     return (
@@ -84,7 +128,10 @@ export default function FinalizarCompraPage() {
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
           {/* Checkout Form */}
           <div>
-            <form onSubmit={handleSubmit} className='space-y-8'>
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-8'
+            >
               {/* Personal Information */}
               <div className='bg-card p-6 rounded-lg border'>
                 <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
@@ -122,7 +169,7 @@ export default function FinalizarCompraPage() {
                 </div>
 
                 <div className='mt-4'>
-                  <label className='block text-sm font-medium text-foreground mb-2 flex items-center gap-2'>
+                  <label className='block text-sm font-medium text-foreground mb-2 items-center gap-2'>
                     <Mail className='w-4 h-4 text-[#f9bbc4]' />
                     Email *
                   </label>
@@ -137,7 +184,7 @@ export default function FinalizarCompraPage() {
                 </div>
 
                 <div className='mt-4'>
-                  <label className='block text-sm font-medium text-foreground mb-2 flex items-center gap-2'>
+                  <label className='block text-sm font-medium text-foreground mb-2 items-center gap-2'>
                     <Phone className='w-4 h-4 text-[#f9bbc4]' />
                     Teléfono *
                   </label>
@@ -203,28 +250,26 @@ export default function FinalizarCompraPage() {
                 </h2>
 
                 <div className='bg-muted/50 p-4 rounded-lg'>
-                  <p className='text-muted-foreground text-sm mb-2'>
-                    Después de confirmar tu pedido, serás redirigido a la plataforma de pagos segura.
+                  <p className='text-muted-foreground text-sm'>
+                    Completa tus datos y haz clic en Confirmar y Pagar para ser
+                    redirigido a la plataforma de pagos segura.
                   </p>
-                  <div className='flex gap-4 text-sm text-muted-foreground'>
-                    <span>• Transferencia bancaria</span>
-                    <span>• Tarjeta de crédito</span>
-                    <span>• Efectivo (local)</span>
-                  </div>
                 </div>
+                <button
+                  type='submit'
+                  disabled={!isFormValid || isProcessing}
+                  className='w-full mt-6 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-muted disabled:text-muted-foreground text-white py-4 px-6 rounded-lg font-primary font-bold text-lg transition-colors duration-200'
+                >
+                  {isProcessing
+                    ? 'Procesando...'
+                    : `Confirmar y Pagar - $${total.toLocaleString()}`}
+                </button>
+                {error && (
+                  <p className='text-red-500 mt-2 text-center'>{error}</p>
+                )}
               </div>
-
-              {/* Submit Button */}
-              <button
-                type='submit'
-                disabled={!isFormValid || isProcessing}
-                className='w-full bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-muted disabled:text-muted-foreground text-white py-4 px-6 rounded-lg font-primary font-bold text-lg transition-colors duration-200'
-              >
-                {isProcessing ? 'Procesando...' : `Confirmar Pedido - $${total.toLocaleString()}`}
-              </button>
             </form>
           </div>
-
           {/* Order Summary */}
           <div>
             <div className='bg-card p-6 rounded-lg border sticky top-6'>
@@ -234,7 +279,10 @@ export default function FinalizarCompraPage() {
 
               <div className='space-y-4 mb-6'>
                 {items.map((item) => (
-                  <div key={item.course.id} className='flex gap-4'>
+                  <div
+                    key={item.course.id}
+                    className='flex gap-4'
+                  >
                     <div className='flex-shrink-0 w-16 h-16'>
                       <Image
                         src={item.course.image}
@@ -245,7 +293,9 @@ export default function FinalizarCompraPage() {
                       />
                     </div>
                     <div className='flex-1'>
-                      <h3 className='font-medium text-foreground'>{item.course.title}</h3>
+                      <h3 className='font-medium text-foreground'>
+                        {item.course.title}
+                      </h3>
                       <div className='flex justify-between items-center mt-1'>
                         <span className='text-sm text-muted-foreground'>
                           Cantidad: {item.quantity}
@@ -272,7 +322,8 @@ export default function FinalizarCompraPage() {
 
               <div className='mt-6 p-4 bg-[#f9bbc4]/10 rounded-lg border border-[#f9bbc4]'>
                 <p className='text-sm text-foreground'>
-                  <strong>¡Importante!</strong> Después de completar tu compra recibirás:
+                  <strong>¡Importante!</strong> Después de completar tu compra
+                  recibirás:
                 </p>
                 <ul className='text-sm text-muted-foreground mt-2 space-y-1'>
                   <li>• Email de confirmación</li>

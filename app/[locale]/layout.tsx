@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Poppins } from 'next/font/google';
+import Script from 'next/script';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -24,15 +25,10 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-
-  // Ensure that the incoming `locale` is valid
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
   const messages = await getMessages();
 
   return (
@@ -40,7 +36,10 @@ export default async function LocaleLayout({
       lang={locale}
       suppressHydrationWarning
     >
-      <body className={`antialiased ${poppins.variable}`} suppressHydrationWarning>
+      <body
+        className={`antialiased ${poppins.variable}`}
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute='class'
           defaultTheme='light'
@@ -49,6 +48,10 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             {children}
+            <Script
+              src='https://sdk.mercadopago.com/js/v2'
+              strategy='lazyOnload'
+            />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
