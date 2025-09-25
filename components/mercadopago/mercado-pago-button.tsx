@@ -64,15 +64,7 @@ export function MercadoPagoButton() {
 
       {preferenceId && (
         <div className='w-full mt-4'>
-          <Wallet
-            initialization={{ preferenceId }}
-            customization={{
-              visual: {
-                buttonLabel: 'Pagar ahora',
-                borderRadius: '8px',
-              },
-            }}
-          />
+          <Wallet initialization={{ preferenceId }} />
         </div>
       )}
     </div>
