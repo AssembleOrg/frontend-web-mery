@@ -64,7 +64,6 @@ export default function FinalizarCompraPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: itemsForAPI,
-          payerData: formData,
           locale: locale,
         }),
       });

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { items, payerData, locale } = await req.json();
+    const { items, locale } = await req.json();
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -35,18 +35,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (
-      !payerData ||
-      !payerData.nombre ||
-      !payerData.apellido ||
-      !payerData.email ||
-      !payerData.telefono
-    ) {
-      return NextResponse.json(
-        { error: 'Faltan datos del comprador.' },
-        { status: 400 }
-      );
-    }
+    // if (
+    //   !payerData ||
+    //   !payerData.nombre ||
+    //   !payerData.apellido ||
+    //   !payerData.email ||
+    //   !payerData.telefono
+    // ) {
+    //   return NextResponse.json(
+    //     { error: 'Faltan datos del comprador.' },
+    //     { status: 400 }
+    //   );
+    // }
 
     const preferenceItems = items.map((item: any) => ({
       id: item.id,
@@ -57,18 +57,13 @@ export async function POST(req: NextRequest) {
       currency_id: 'ARS',
     }));
 
-    const cleanedPhoneNumber = payerData.telefono.replace(/[\s()-]+/g, '');
+    // const cleanedPhoneNumber = payerData.telefono.replace(/[\s()-]+/g, '');
 
     const preference = await new Preference(client).create({
       body: {
         items: preferenceItems,
         payer: {
-          name: payerData.nombre,
-          surname: payerData.apellido,
-          email: payerData.email,
-          phone: {
-            number: cleanedPhoneNumber,
-          },
+          email: 'TESTUSER8883738017904117317@TESTUSER.COM',
         },
         back_urls: {
           success: `${baseUrl}/${effectiveLocale}/checkout/success`,
