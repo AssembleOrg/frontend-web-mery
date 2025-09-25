@@ -4,7 +4,7 @@ import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { grantCourseAccess } from '@/lib/api-server';
 
 const client = new MercadoPagoConfig({
-  accessToken: process.env.MERCADOPOPAGO_ACCESS_TOKEN!,
+  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
 });
 
 export async function POST(request: NextRequest) {
