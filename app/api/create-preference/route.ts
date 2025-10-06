@@ -25,12 +25,19 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { items, locale } = await req.json();
+    const { items, locale, userEmail } = await req.json();
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
       return NextResponse.json(
         { error: 'El carrito está vacío.' },
+        { status: 400 }
+      );
+    }
+
+    if (!userEmail) {
+      return NextResponse.json(
+        { error: 'Email de usuario requerido.' },
         { status: 400 }
       );
     }
@@ -63,7 +70,10 @@ export async function POST(req: NextRequest) {
       body: {
         items: preferenceItems,
         payer: {
-          email: 'TESTUSER8883738017904117317@TESTUSER.COM',
+          email: 'TESTUSER8883738017904117317@TESTUSER.COM', // Test user for sandbox
+        },
+        metadata: {
+          user_email: userEmail, // Real user email for our system
         },
         back_urls: {
           success: `${baseUrl}/${effectiveLocale}/checkout/success`,

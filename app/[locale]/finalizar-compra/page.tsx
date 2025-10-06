@@ -4,9 +4,10 @@ import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useCartStore } from '@/stores/cart-store';
 import { useRouter, useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { CreditCard, User, Mail, Phone, MapPin } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 // import { MercadoPagoButton } from '@/components/mercadopago/mercado-pago-button';
 // import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
 
@@ -18,6 +19,7 @@ import { CreditCard, User, Mail, Phone, MapPin } from 'lucide-react';
 export default function FinalizarCompraPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
+  const { user, isAuthenticated } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   // const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,11 +29,32 @@ export default function FinalizarCompraPage() {
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
-    email: '',
     telefono: '',
     pais: '',
     ciudad: '',
   });
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push(`/${locale}/login`);
+    }
+  }, [isAuthenticated, locale, router]);
+
+  // Auto-complete form with user data
+  useEffect(() => {
+    if (user?.name) {
+      const nameParts = user.name.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      setFormData((prev) => ({
+        ...prev,
+        nombre: firstName,
+        apellido: lastName,
+      }));
+    }
+  }, [user]);
 
   const total = getTotal();
 
@@ -47,6 +70,12 @@ export default function FinalizarCompraPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user?.email) {
+      setError('Debes iniciar sesión para continuar');
+      return;
+    }
+
     setIsProcessing(true);
     setError(null);
 
@@ -65,6 +94,7 @@ export default function FinalizarCompraPage() {
         body: JSON.stringify({
           items: itemsForAPI,
           locale: locale,
+          userEmail: user.email, // Pass user email to webhook
         }),
       });
 
@@ -88,7 +118,7 @@ export default function FinalizarCompraPage() {
   };
 
   const isFormValid =
-    formData.nombre && formData.apellido && formData.email && formData.telefono;
+    formData.nombre && formData.apellido && formData.telefono;
 
   if (items.length === 0) {
     return (
@@ -168,18 +198,19 @@ export default function FinalizarCompraPage() {
                 </div>
 
                 <div className='mt-4'>
-                  <label className='block text-sm font-medium text-foreground mb-2 items-center gap-2'>
+                  <label className='block text-sm font-medium text-foreground mb-2 flex items-center gap-2'>
                     <Mail className='w-4 h-4 text-[#f9bbc4]' />
-                    Email *
+                    Email
                   </label>
                   <input
                     type='email'
-                    name='email'
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
+                    value={user?.email || ''}
+                    disabled
+                    className='w-full px-4 py-2 border border-border rounded-lg bg-muted text-muted-foreground cursor-not-allowed'
                   />
+                  <p className='text-xs text-muted-foreground mt-1'>
+                    El acceso a los cursos será enviado a este email
+                  </p>
                 </div>
 
                 <div className='mt-4'>

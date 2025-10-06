@@ -6,6 +6,7 @@ import { Course } from '@/types/course';
 import { useCartStore } from '@/stores/cart-store';
 import { useRouter } from 'next/navigation';
 import { Play, MessageCircle } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -19,6 +20,7 @@ export default function SimpleCourseModal({
   onClose,
 }: SimpleCourseModalProps) {
   const { addToCart } = useCartStore();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   if (!course) return null;
@@ -35,6 +37,13 @@ export default function SimpleCourseModal({
     if (course.currency === 'USD') {
       // Cursos en USD van a WhatsApp
       handleWhatsApp();
+      return;
+    }
+
+    // Verificar autenticación antes de agregar al carrito
+    if (!isAuthenticated) {
+      onClose(); // Cerrar modal
+      router.push('/es/login');
       return;
     }
 

@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getUserCourses } from '@/lib/api-server';
 
 /**
  * MVP: Extract email from token
- * En producción, verificar JWT y extraer payload
+ * PRODUCCIÓN: Verificar JWT y extraer payload
  */
 function getUserEmailFromToken(token: string): string | null {
   try {
-    // MVP: Token is base64-encoded email
-    // Producción: jwt.verify(token, secret) y extraer email del payload
     const email = Buffer.from(token.replace('Bearer ', ''), 'base64').toString('utf-8');
     return email;
   } catch {
@@ -16,9 +13,14 @@ function getUserEmailFromToken(token: string): string | null {
   }
 }
 
+/**
+ * GET /api/auth/me
+ * Verify session and return user data
+ *
+ * PRODUCCIÓN: Verificar JWT token y retornar user desde DB
+ */
 export async function GET(request: Request) {
   try {
-    // Get token from Authorization header
     const authHeader = request.headers.get('Authorization');
 
     if (!authHeader) {
@@ -28,26 +30,32 @@ export async function GET(request: Request) {
       );
     }
 
-    const userEmail = getUserEmailFromToken(authHeader);
+    const email = getUserEmailFromToken(authHeader);
 
-    if (!userEmail) {
+    if (!email) {
       return NextResponse.json(
         { error: 'Token inválido' },
         { status: 401 }
       );
     }
 
-    // Simular delay de API real
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Simular delay de API
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-    // Get user courses from userAccessDB
-    const userCourses = getUserCourses(userEmail);
+    // MVP: Retornar user básico
+    // PRODUCCIÓN: Buscar user en DB por email
+    const user = {
+      id: Buffer.from(email).toString('base64').substring(0, 10),
+      email,
+      name: email.split('@')[0],
+      role: 'user' as const,
+    };
 
-    return NextResponse.json(userCourses);
+    return NextResponse.json({ user });
   } catch (error) {
-    console.error('[API /cursos] Error:', error);
+    console.error('[AUTH] Error en /me:', error);
     return NextResponse.json(
-      { error: 'Error al obtener los cursos del usuario' },
+      { error: 'Error en el servidor' },
       { status: 500 }
     );
   }

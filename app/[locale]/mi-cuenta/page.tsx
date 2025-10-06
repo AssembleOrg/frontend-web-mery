@@ -11,33 +11,44 @@ import {
   BookOpen,
   Clock,
   Trophy,
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
 } from 'lucide-react';
-import { useCourseStore } from '@/stores';
-import { getUserCourses } from '@/lib/api-client';
 import Link from 'next/link';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useAuth } from '@/hooks/useAuth';
+import { useUserCourses } from '@/hooks/useUserCourses';
 
 export default function MiCuentaPage() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState('mis-cursos');
-  const [loading, setLoading] = useState(true);
 
-  const { userCourses, setUserCourses } = useCourseStore();
+  const { logout, user, updateProfile, isLoading: authLoading } = useAuth();
+  const { courses: userCourses, isLoading: loading } = useUserCourses();
 
+  // Estado del formulario de perfil
+  const [profileForm, setProfileForm] = useState({
+    name: '',
+    phone: '',
+    country: '',
+    city: '',
+  });
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [profileError, setProfileError] = useState('');
+
+  // Cargar datos del usuario en el formulario
   useEffect(() => {
-    const loadUserCourses = async () => {
-      try {
-        setLoading(true);
-        const courses = await getUserCourses();
-        setUserCourses(courses);
-      } catch (error) {
-        console.error('Error loading user courses:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserCourses();
-  }, [setUserCourses]);
+    if (user) {
+      setProfileForm({
+        name: user.name || '',
+        phone: user.phone || '',
+        country: user.country || '',
+        city: user.city || '',
+      });
+    }
+  }, [user]);
 
   const menuItems = [
     { id: 'mis-cursos', label: 'Mis Cursos', icon: BookOpen },
@@ -45,8 +56,38 @@ export default function MiCuentaPage() {
     { id: 'detalles', label: 'Detalles de la Cuenta', icon: User },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     router.push('/es');
+  };
+
+  const handleProfileChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setProfileForm((prev) => ({ ...prev, [name]: value }));
+    setProfileSaved(false);
+    setProfileError('');
+  };
+
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfileSaved(false);
+    setProfileError('');
+
+    const result = await updateProfile({
+      name: profileForm.name,
+      phone: profileForm.phone || undefined,
+      country: profileForm.country || undefined,
+      city: profileForm.city || undefined,
+    });
+
+    if (result.success) {
+      setProfileSaved(true);
+      setTimeout(() => setProfileSaved(false), 3000);
+    } else {
+      setProfileError(result.error || 'Error al guardar cambios');
+    }
   };
 
   const renderContent = () => {
@@ -195,41 +236,145 @@ export default function MiCuentaPage() {
               Detalles de la Cuenta
             </h2>
             <div className='bg-card p-6 rounded-lg border'>
-              <div className='space-y-4'>
+              <form onSubmit={handleProfileSubmit} className='space-y-6'>
+                {/* Nombre Completo */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
-                    Nombre
+                    Nombre Completo *
                   </label>
-                  <input
-                    type='text'
-                    className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground'
-                    placeholder='Tu nombre'
-                  />
+                  <div className='relative'>
+                    <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                    <input
+                      type='text'
+                      name='name'
+                      value={profileForm.name}
+                      onChange={handleProfileChange}
+                      className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                      placeholder='Juan Pérez'
+                      required
+                    />
+                  </div>
                 </div>
+
+                {/* Email (readonly) */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
                     Email
                   </label>
-                  <input
-                    type='email'
-                    className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground'
-                    placeholder='tu@email.com'
-                  />
+                  <div className='relative'>
+                    <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                    <input
+                      type='email'
+                      value={user?.email || ''}
+                      className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-muted text-muted-foreground cursor-not-allowed'
+                      placeholder='tu@email.com'
+                      disabled
+                      readOnly
+                    />
+                  </div>
+                  <p className='text-xs text-muted-foreground mt-1'>
+                    El email no puede ser modificado
+                  </p>
                 </div>
+
+                {/* Grid para Teléfono y País */}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {/* Teléfono */}
+                  <div>
+                    <label className='block text-sm font-medium text-foreground mb-2'>
+                      Teléfono
+                    </label>
+                    <div className='relative'>
+                      <Phone className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                      <input
+                        type='tel'
+                        name='phone'
+                        value={profileForm.phone}
+                        onChange={handleProfileChange}
+                        className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                        placeholder='+54 11 1234-5678'
+                      />
+                    </div>
+                  </div>
+
+                  {/* País */}
+                  <div>
+                    <label className='block text-sm font-medium text-foreground mb-2'>
+                      País
+                    </label>
+                    <div className='relative'>
+                      <Globe className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                      <select
+                        name='country'
+                        value={profileForm.country}
+                        onChange={handleProfileChange}
+                        className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4] appearance-none'
+                      >
+                        <option value=''>Seleccionar país</option>
+                        <option value='Argentina'>Argentina</option>
+                        <option value='Brasil'>Brasil</option>
+                        <option value='Chile'>Chile</option>
+                        <option value='Uruguay'>Uruguay</option>
+                        <option value='Paraguay'>Paraguay</option>
+                        <option value='Bolivia'>Bolivia</option>
+                        <option value='Otro'>Otro</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Ciudad */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
-                    Teléfono
+                    Ciudad
                   </label>
-                  <input
-                    type='tel'
-                    className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground'
-                    placeholder='Tu teléfono'
-                  />
+                  <div className='relative'>
+                    <MapPin className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                    <input
+                      type='text'
+                      name='city'
+                      value={profileForm.city}
+                      onChange={handleProfileChange}
+                      className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                      placeholder='Buenos Aires'
+                    />
+                  </div>
                 </div>
-                <button className='bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-2 rounded-lg font-primary font-medium transition-colors duration-200'>
-                  Guardar Cambios
+
+                {/* Success Message */}
+                {profileSaved && (
+                  <div className='bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4'>
+                    <p className='text-sm text-green-600 dark:text-green-400'>
+                      ✓ Cambios guardados exitosamente
+                    </p>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {profileError && (
+                  <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4'>
+                    <p className='text-sm text-red-600 dark:text-red-400'>
+                      {profileError}
+                    </p>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <button
+                  type='submit'
+                  disabled={authLoading}
+                  className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-3 rounded-lg font-primary font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                >
+                  {authLoading ? (
+                    <span className='flex items-center justify-center'>
+                      <div className='animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2'></div>
+                      Guardando...
+                    </span>
+                  ) : (
+                    'Guardar Cambios'
+                  )}
                 </button>
-              </div>
+              </form>
             </div>
           </div>
         );
@@ -240,56 +385,58 @@ export default function MiCuentaPage() {
   };
 
   return (
-    <div className='min-h-screen bg-background'>
-      <Navigation />
+    <ProtectedRoute>
+      <div className='min-h-screen bg-background'>
+        <Navigation />
 
-      <div className='container mx-auto px-4 py-16 max-w-7xl'>
-        <h1 className='text-3xl font-primary font-bold text-foreground mb-8'>
-          Mi Cuenta
-        </h1>
+        <div className='container mx-auto px-4 py-16 max-w-7xl'>
+          <h1 className='text-3xl font-primary font-bold text-foreground mb-8'>
+            Mi Cuenta
+          </h1>
 
-        <div className='grid grid-cols-1 lg:grid-cols-4 gap-8'>
-          {/* Sidebar */}
-          <div className='lg:col-span-1'>
-            <div className='bg-card p-6 rounded-lg border'>
-              <nav className='space-y-2'>
-                {menuItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveSection(item.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
-                        activeSection === item.id
-                          ? 'bg-[#f9bbc4] text-white'
-                          : 'text-foreground hover:bg-muted'
-                      }`}
-                    >
-                      <Icon className='w-5 h-5' />
-                      {item.label}
-                    </button>
-                  );
-                })}
+          <div className='grid grid-cols-1 lg:grid-cols-4 gap-8'>
+            {/* Sidebar */}
+            <div className='lg:col-span-1'>
+              <div className='bg-card p-6 rounded-lg border'>
+                <nav className='space-y-2'>
+                  {menuItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveSection(item.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
+                          activeSection === item.id
+                            ? 'bg-[#f9bbc4] text-white'
+                            : 'text-foreground hover:bg-muted'
+                        }`}
+                      >
+                        <Icon className='w-5 h-5' />
+                        {item.label}
+                      </button>
+                    );
+                  })}
 
-                <hr className='my-4 border-border' />
+                  <hr className='my-4 border-border' />
 
-                <button
-                  onClick={handleLogout}
-                  className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-destructive hover:bg-destructive/10 transition-colors duration-200'
-                >
-                  <LogOut className='w-5 h-5' />
-                  Cerrar Sesión
-                </button>
-              </nav>
+                  <button
+                    onClick={handleLogout}
+                    className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-destructive hover:bg-destructive/10 transition-colors duration-200'
+                  >
+                    <LogOut className='w-5 h-5' />
+                    Cerrar Sesión
+                  </button>
+                </nav>
+              </div>
             </div>
+
+            {/* Main Content */}
+            <div className='lg:col-span-3'>{renderContent()}</div>
           </div>
-
-          {/* Main Content */}
-          <div className='lg:col-span-3'>{renderContent()}</div>
         </div>
-      </div>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ProtectedRoute>
   );
 }

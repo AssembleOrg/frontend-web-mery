@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
       if (payment.status === 'approved') {
         console.log(`[Webhook] ¡PAGO APROBADO! ID: ${payment.id}`);
 
-        const userEmail = payment.payer?.email;
+        // Get user email from metadata (set in create-preference)
+        const userEmail = payment.metadata?.user_email as string | undefined;
         const purchasedItems = payment.additional_info?.items;
 
         if (userEmail && purchasedItems && purchasedItems.length > 0) {
@@ -36,6 +37,9 @@ export async function POST(request: NextRequest) {
           console.warn(
             '[Webhook] Pago aprobado pero sin email o items para procesar.'
           );
+          if (!userEmail) {
+            console.error('[Webhook] No se encontró user_email en metadata');
+          }
         }
       } else {
         console.log(`[Webhook] Estado del pago no aprobado: ${payment.status}`);

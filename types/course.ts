@@ -6,6 +6,12 @@ export interface CourseIncludeItem {
   text: string;
 }
 
+export interface DownloadableFile {
+  name: string;
+  url: string;
+  type: 'pdf' | 'doc' | 'zip';
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -14,6 +20,7 @@ export interface Lesson {
   duration?: string;
   order: number;
   isCompleted?: boolean;
+  downloadableFiles?: DownloadableFile[];
 }
 
 export interface CourseProgress {
@@ -37,15 +44,27 @@ export interface CourseModalContent {
 }
 
 export interface Course {
+  // Identificación
   id: string;
+  slug: string;
+
+  // Información básica (para cards en /formaciones)
   title: string;
+  description: string;
+  image: string;
   price: number;
   priceDisplay: string;
-  image: string;
-  slug: string;
-  description?: string;
   currency: 'USD' | 'ARS';
+
+  // Metadata de publicación (para admin)
+  isPublished?: boolean;        // false = borrador, true = público
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  // Contenido del modal (detalles completos)
   modalContent?: CourseModalContent;
+
+  // Lecciones (para plataforma de aprendizaje)
   lessons?: Lesson[];
 }
 
@@ -55,4 +74,38 @@ export interface UserCourse {
   enrolledAt: Date;
   progress: CourseProgress;
   hasAccess: boolean;
+}
+
+// ============================================
+// Types for Admin Panel
+// ============================================
+
+/**
+ * Input para crear un curso nuevo (sin id, createdAt, updatedAt)
+ */
+export type CourseCreateInput = Omit<Course, 'id' | 'createdAt' | 'updatedAt'>;
+
+/**
+ * Input para actualizar un curso existente
+ */
+export type CourseUpdateInput = Partial<Omit<Course, 'id'>>;
+
+/**
+ * Estado del formulario multi-step del admin
+ */
+export interface CourseFormState {
+  step: number;                    // 1: Basic, 2: Modal, 3: Lessons, 4: Preview
+  basicInfo: Partial<Course>;
+  modalContent: Partial<CourseModalContent>;
+  lessons: Lesson[];
+  errors: Record<string, string>;
+}
+
+/**
+ * Response esperada del backend cuando se crea/actualiza un curso
+ */
+export interface CourseBackendResponse extends Course {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

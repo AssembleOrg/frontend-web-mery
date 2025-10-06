@@ -7,11 +7,12 @@ import { ArrowLeft, Clock, CheckCircle2, PlayCircle } from 'lucide-react';
 import { Course, Lesson } from '@/types/course';
 import { getCourseDetails } from '@/lib/api-client';
 import { useCourseStore } from '@/stores';
-import HTML5VideoPlayer from '@/components/html5-video-player';
+import VimeoPlayer from '@/components/vimeo-player';
 import LessonContent from '@/components/lesson-content';
 import CourseSidebar from '@/components/course-sidebar';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export default function CursoDetallePage() {
   const params = useParams();
@@ -96,9 +97,10 @@ export default function CursoDetallePage() {
     totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
   return (
-    <div className='min-h-screen bg-background'>
-      {/* Navigation */}
-      <Navigation />
+    <ProtectedRoute>
+      <div className='min-h-screen bg-background'>
+        {/* Navigation */}
+        <Navigation />
 
       {/* Main Content */}
       <div className='bg-[#1a1a1a] relative overflow-hidden'>
@@ -161,11 +163,11 @@ export default function CursoDetallePage() {
                       {/* Video Player centrado */}
                       <div className='flex justify-center'>
                         <div className='w-full max-w-4xl'>
-                          <HTML5VideoPlayer
+                          <VimeoPlayer
                             vimeoVideoId={selectedLesson.vimeoVideoId}
                             courseId={courseId}
                             lessonId={selectedLesson.id}
-                            className='w-full shadow-2xl'
+                            className='w-full shadow-2xl aspect-video'
                           />
                         </div>
                       </div>
@@ -227,8 +229,9 @@ export default function CursoDetallePage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        {/* Footer */}
+        <Footer />
+      </div>
+    </ProtectedRoute>
   );
 }
