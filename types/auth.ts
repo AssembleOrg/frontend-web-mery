@@ -34,7 +34,8 @@ export interface MeResponse {
 }
 
 export interface RegisterCredentials {
-  name: string; // Nombre completo (nombre + apellido)
+  firstName: string; // Nombre
+  lastName: string;  // Apellido
   email: string;
   password?: string; // Opcional para MVP
   phone?: string;

@@ -10,12 +10,19 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, password, phone, country, city } = body;
+    const { firstName, lastName, email, password, phone, country, city } = body;
 
     // Validar campos requeridos
-    if (!name || typeof name !== 'string') {
+    if (!firstName || typeof firstName !== 'string') {
       return NextResponse.json(
         { error: 'Nombre requerido' },
+        { status: 400 }
+      );
+    }
+
+    if (!lastName || typeof lastName !== 'string') {
+      return NextResponse.json(
+        { error: 'Apellido requerido' },
         { status: 400 }
       );
     }
@@ -45,17 +52,18 @@ export async function POST(request: Request) {
 
     // MVP: User completo con todos los datos
     // PRODUCCIÓN: Guardar en DB y retornar user creado
+    const fullName = `${firstName} ${lastName}`;
     const user = {
       id: Buffer.from(email).toString('base64').substring(0, 10),
       email,
-      name,
+      name: fullName,
       role: 'user' as const,
       phone: phone || undefined,
       country: country || undefined,
       city: city || undefined,
     };
 
-    console.log(`[AUTH] Registro exitoso: ${email} - ${name}`);
+    console.log(`[AUTH] Registro exitoso: ${email} - ${fullName}`);
 
     return NextResponse.json({
       user,

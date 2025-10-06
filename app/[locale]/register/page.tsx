@@ -14,7 +14,8 @@ export default function RegisterPage() {
   const { register, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     phone: '',
@@ -32,12 +33,13 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email) {
+    if (!formData.firstName || !formData.lastName || !formData.email) {
       return;
     }
 
     const result = await register({
-      name: formData.name,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       email: formData.email,
       password: formData.password || undefined,
       phone: formData.phone || undefined,
@@ -67,22 +69,44 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className='space-y-6'>
-            {/* Nombre Completo */}
-            <div>
-              <label className='block text-sm font-medium text-foreground mb-2'>
-                Nombre Completo *
-              </label>
-              <div className='relative'>
-                <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
-                <input
-                  type='text'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
-                  placeholder='Juan Pérez'
-                  required
-                />
+            {/* Nombre y Apellido */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              {/* Nombre */}
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-2'>
+                  Nombre *
+                </label>
+                <div className='relative'>
+                  <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                  <input
+                    type='text'
+                    name='firstName'
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                    placeholder='Juan'
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Apellido */}
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-2'>
+                  Apellido *
+                </label>
+                <div className='relative'>
+                  <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                  <input
+                    type='text'
+                    name='lastName'
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                    placeholder='Pérez'
+                    required
+                  />
+                </div>
               </div>
             </div>
 
@@ -200,7 +224,7 @@ export default function RegisterPage() {
             {/* Submit button */}
             <button
               type='submit'
-              disabled={isLoading || !formData.name || !formData.email}
+              disabled={isLoading || !formData.firstName || !formData.lastName || !formData.email}
               className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-3 rounded-lg font-primary font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
             >
               {isLoading ? (

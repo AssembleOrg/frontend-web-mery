@@ -87,3 +87,4 @@ export function getUserCourses(userEmail: string): UserCourse[] {
 
   return userCourses;
 }
+

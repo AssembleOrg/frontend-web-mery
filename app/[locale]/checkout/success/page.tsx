@@ -1,8 +1,12 @@
 'use client';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { CheckCircle } from 'lucide-react';
 
 export default function CheckoutSuccessPage() {
+  const params = useParams();
+  const locale = params.locale as string;
+
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-background text-center px-4'>
       <CheckCircle className='w-24 h-24 text-green-500 mb-6' />
@@ -13,10 +17,11 @@ export default function CheckoutSuccessPage() {
         Gracias por tu compra. Hemos recibido tu pago correctamente y en breve
         tendrás acceso a tus cursos.
       </p>
-      <Link href='/es/mi-cuenta'>
-        <a className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-8 py-3 rounded-lg font-primary font-bold transition-colors duration-200'>
-          Ir a Mis Cursos
-        </a>
+      <Link
+        href={`/${locale}/mi-cuenta`}
+        className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-8 py-3 rounded-lg font-primary font-bold transition-colors duration-200'
+      >
+        Ir a Mis Cursos
       </Link>
     </div>
   );

@@ -43,8 +43,8 @@ export default function FinalizarCompraPage() {
 
   // Auto-complete form with user data
   useEffect(() => {
-    if (user?.name) {
-      const nameParts = user.name.trim().split(' ');
+    if (user) {
+      const nameParts = user.name?.trim().split(' ') || [];
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
 
@@ -52,6 +52,9 @@ export default function FinalizarCompraPage() {
         ...prev,
         nombre: firstName,
         apellido: lastName,
+        telefono: user.phone || prev.telefono,
+        pais: user.country || prev.pais,
+        ciudad: user.city || prev.ciudad,
       }));
     }
   }, [user]);

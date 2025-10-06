@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_BASE_URL
   );
   console.log('======================================================');
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  if (!baseUrl) {
+  const rawBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!rawBaseUrl) {
     console.error(
       'Error Crítico: La variable de entorno NEXT_PUBLIC_BASE_URL no está definida.'
     );
@@ -23,6 +23,9 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+
+  // Remove trailing slash to avoid double slash in URLs
+  const baseUrl = rawBaseUrl.replace(/\/$/, '');
 
   try {
     const { items, locale, userEmail } = await req.json();
