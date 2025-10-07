@@ -1,14 +1,17 @@
 import { Course, UserCourse, Lesson, CourseProgress } from '@/types/course';
 
-// Datos de lecciones con duraciones reales de los videos placeholder
+/**
+ * Mock course data for development
+ * Replace with backend API when ready
+ */
 export const mockLessons: Record<string, Lesson[]> = {
   'tatuaje-cosmetico': [
     {
       id: 'lesson-1',
       title: 'Introducción',
       description: 'Conoce los fundamentos básicos del tatuaje cosmético',
-      vimeoVideoId: 'dQw4w9WgXcQ', // Video local Emilia
-      duration: '01:52', // Duración real del video de Emilia
+      vimeoVideoId: 'dQw4w9WgXcQ',
+      duration: '01:52',
       order: 1,
     },
     {
@@ -16,7 +19,7 @@ export const mockLessons: Record<string, Lesson[]> = {
       title: 'Practica',
       description: 'Preparación del área de trabajo y protocolos de seguridad',
       vimeoVideoId: '826655207',
-      duration: '03:50', // Duración aproximada del video placeholder
+      duration: '03:50',
       order: 2,
     },
     {
@@ -181,7 +184,10 @@ export const mockCoursesWithLessons: Course[] = [
   },
 ];
 
-// Progreso mock para cursos del usuario
+/**
+ * Mock user progress for development
+ * Replace with backend API when ready
+ */
 export const mockUserProgress: Record<string, CourseProgress> = {
   'tatuaje-cosmetico': {
     courseId: 'tatuaje-cosmetico',
@@ -199,7 +205,10 @@ export const mockUserProgress: Record<string, CourseProgress> = {
   },
 };
 
-// Cursos del usuario mock
+/**
+ * Mock user enrolled courses for development
+ * Replace with backend API when ready
+ */
 export const mockUserCourses: UserCourse[] = [
   {
     courseId: 'tatuaje-cosmetico',

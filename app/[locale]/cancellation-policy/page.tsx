@@ -30,7 +30,6 @@ export default function CancellationPolicyPage() {
       <section className='py-16'>
         <div className='container mx-auto px-4'>
           <div className='max-w-4xl mx-auto space-y-8'>
-            
             {/* Commitment Section */}
             <div className='bg-card p-6 rounded-lg border shadow-sm'>
               <div className='flex items-start space-x-4'>
@@ -40,12 +39,8 @@ export default function CancellationPolicyPage() {
                     {t('commitmentTitle')}
                   </h2>
                   <div className='space-y-3 font-secondary text-muted-foreground'>
-                    <p>
-                      {t('commitmentText1')}
-                    </p>
-                    <p>
-                      {t('commitmentText2')}
-                    </p>
+                    <p>{t('commitmentText1')}</p>
+                    <p>{t('commitmentText2')}</p>
                   </div>
                 </div>
               </div>
@@ -60,15 +55,17 @@ export default function CancellationPolicyPage() {
                     {t('consequencesTitle')}
                   </h2>
                   <div className='space-y-3 font-secondary text-muted-foreground'>
-                    <p>
-                      {t('consequencesText')}
-                    </p>
+                    <p>{t('consequencesText')}</p>
                     <ul className='list-disc list-inside space-y-2 ml-4'>
                       <li>
-                        <strong className='text-amber-600'>{t('consequence1')}</strong>
+                        <strong className='text-amber-600'>
+                          {t('consequence1')}
+                        </strong>
                       </li>
                       <li>
-                        <strong className='text-amber-600'>{t('consequence2')}</strong>
+                        <strong className='text-amber-600'>
+                          {t('consequence2')}
+                        </strong>
                       </li>
                     </ul>
                   </div>
@@ -85,15 +82,17 @@ export default function CancellationPolicyPage() {
                     {t('cosmeticRulesTitle')}
                   </h2>
                   <div className='space-y-3 font-secondary text-muted-foreground'>
-                    <p>
-                      {t('cosmeticRulesText')}
-                    </p>
+                    <p>{t('cosmeticRulesText')}</p>
                     <ul className='list-disc list-inside space-y-2 ml-4'>
                       <li>
-                        <strong className='text-primary'>{t('cosmeticRule1')}</strong>
+                        <strong className='text-primary'>
+                          {t('cosmeticRule1')}
+                        </strong>
                       </li>
                       <li>
-                        <strong className='text-foreground'>{t('cosmeticRule2')}</strong>
+                        <strong className='text-foreground'>
+                          {t('cosmeticRule2')}
+                        </strong>
                       </li>
                     </ul>
                   </div>
@@ -110,12 +109,8 @@ export default function CancellationPolicyPage() {
                     {t('exceptionalTitle')}
                   </h2>
                   <div className='space-y-3 font-secondary text-muted-foreground'>
-                    <p>
-                      {t('exceptionalText1')}
-                    </p>
-                    <p>
-                      {t('exceptionalText2')}
-                    </p>
+                    <p>{t('exceptionalText1')}</p>
+                    <p>{t('exceptionalText2')}</p>
                     <a
                       href='mailto:info@merygarcia.com.ar'
                       className='inline-flex items-center text-primary hover:text-primary/80 transition-colors font-medium'
@@ -123,9 +118,7 @@ export default function CancellationPolicyPage() {
                       <Mail className='h-4 w-4 mr-2' />
                       info@merygarcia.com.ar
                     </a>
-                    <p className='text-sm'>
-                      {t('exceptionalNote')}
-                    </p>
+                    <p className='text-sm'>{t('exceptionalNote')}</p>
                   </div>
                 </div>
               </div>
@@ -140,7 +133,6 @@ export default function CancellationPolicyPage() {
                 {t('closingText')}
               </p>
             </div>
-
           </div>
         </div>
       </section>

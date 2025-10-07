@@ -6,8 +6,16 @@ import { LanguageToggle } from './language-toggle';
 import { Button } from './ui/button';
 import { Logo } from './logo';
 import { MobileMenu } from './mobile-menu';
+import { UserMenu } from './user-menu';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter, useParams } from 'next/navigation';
 
 export function Navigation() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
+
   return (
     <nav className='sticky top-0 z-50 w-full bg-white dark:bg-background border-b'>
       <div className='container mx-auto px-4'>
@@ -72,17 +80,20 @@ export function Navigation() {
               </Button>
             </div>
 
+            {/* User Menu / Login Button */}
             <div className='hidden 2xl:flex items-center ml-2'>
-              <Button
-                variant='outline'
-                size='sm'
-                className='border-primary text-primary hover:bg-primary hover:text-white text-sm font-primary font-medium whitespace-nowrap px-4'
-                asChild
-              >
-                <Link href='/mi-cuenta'>
-                  INGRESO DE ALUMNOS
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <UserMenu />
+              ) : (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  className='border-primary text-primary hover:bg-primary hover:text-white text-sm font-primary font-medium whitespace-nowrap px-4'
+                  onClick={() => router.push(`/${locale}/login`)}
+                >
+                  INICIAR SESIÓN
+                </Button>
+              )}
             </div>
 
             <div className='hidden lg:flex items-center space-x-1 ml-3 border-l pl-3'>

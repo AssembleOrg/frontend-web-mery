@@ -35,7 +35,9 @@ export default function EyebrowStylingPage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -58,7 +60,7 @@ export default function EyebrowStylingPage() {
                     <h3 className='text-xl font-bold font-primary text-foreground'>
                       {t(`services.${service.key}.title`)}
                     </h3>
-                    <p className='text-lg font-semibold font-primary text-primary mt-2 sm:mt-0'>
+                    <p className='text-lg font-semibold font-primary/10 text-primary mt-2 sm:mt-0'>
                       {t(`services.${service.key}.price`)}
                     </p>
                   </div>

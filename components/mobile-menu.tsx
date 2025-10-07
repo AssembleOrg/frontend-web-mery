@@ -6,16 +6,22 @@ import { Link } from '@/i18n/routing';
 import { Button } from './ui/button';
 import { ModeToggle } from './mode-toggle';
 import { LanguageToggle } from './language-toggle';
+import { useAuth } from '@/hooks/useAuth';
+import { UserMenu } from './user-menu';
+import { useRouter, useParams } from 'next/navigation';
 
 export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
   return (
     <>
-      {/* Mobile Menu Button - Show on mobile and tablet */}
       <Button
         variant='ghost'
         size='icon'
@@ -41,7 +47,7 @@ export function MobileMenu() {
       {/* Mobile Menu Panel */}
       <div
         className={`
-        fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white dark:bg-background 
+        fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white dark:bg-background
         border-l shadow-xl z-50 xl:hidden transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : 'translate-x-full'}
       `}
@@ -113,18 +119,25 @@ export function MobileMenu() {
                 RESERVA TU CITA MG
               </a>
             </Button>
-            <Button
-              variant='outline'
-              className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
-              asChild
-            >
-              <Link
-                href='/mi-cuenta'
+            {isAuthenticated ? (
+              <div
+                className='w-full'
                 onClick={closeMenu}
               >
-                INGRESO DE ALUMNOS
-              </Link>
-            </Button>
+                <UserMenu />
+              </div>
+            ) : (
+              <Button
+                variant='outline'
+                className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
+                onClick={() => {
+                  router.push(`/${locale}/login`);
+                  closeMenu();
+                }}
+              >
+                INICIAR SESIÓN
+              </Button>
+            )}
           </div>
 
           {/* Theme and Language toggles */}

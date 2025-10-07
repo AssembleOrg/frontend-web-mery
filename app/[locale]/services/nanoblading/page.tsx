@@ -45,7 +45,7 @@ export default function NanobladingCamouflagePage() {
             <p className='font-secondary text-muted-foreground mb-3'>
               {t('pricingInfo.depositText')}
             </p>
-            <p className='text-xl font-primary font-bold text-primary'>
+            <p className='text-xl font-primary/10 font-bold text-primary'>
               {t('pricingInfo.depositAmount')}
             </p>
           </section>
@@ -74,7 +74,7 @@ export default function NanobladingCamouflagePage() {
                     {t('nanoblading.pricing.note')}
                   </p>
                 </div>
-                <div className='mt-4 flex items-center text-sm text-primary'>
+                <div className='mt-4 flex items-center text-sm font-primary/10 font-bold text-primary'>
                   <CreditCard className='h-4 w-4 mr-2' />
                   <span>{t('nanoblading.pricing.creditCardNote')}</span>
                 </div>

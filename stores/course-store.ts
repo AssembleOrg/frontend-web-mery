@@ -20,6 +20,7 @@ interface CourseActions {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
+  clearCourseData: () => void;
   getUserCourseProgress: (courseId: string) => CourseProgress | undefined;
   isLessonCompleted: (courseId: string, lessonId: string) => boolean;
 }
@@ -81,8 +82,16 @@ export const useCourseStore = create<CourseState & CourseActions>()(
           state.error = error;
         }),
 
-      clearError: () => 
+      clearError: () =>
         set((state) => {
+          state.error = null;
+        }),
+
+      clearCourseData: () =>
+        set((state) => {
+          state.userCourses = [];
+          state.currentCourse = null;
+          state.currentLesson = null;
           state.error = null;
         }),
 

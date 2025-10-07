@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import { Button } from '@/components/ui/button';
 import { MessageCircle, Gift } from 'lucide-react';
 
 export default function GiftCardPage() {
@@ -11,8 +10,11 @@ export default function GiftCardPage() {
   const content = useTranslations('giftCard.page.content');
 
   const handleWhatsApp = () => {
-    const message = "Hola, quiero regalar mi giftcard física y giftcard virtual. Consulta por bases y condiciones.";
-    const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(message)}`;
+    const message =
+      'Hola, quiero regalar mi giftcard física y giftcard virtual. Consulta por bases y condiciones.';
+    const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
+      message
+    )}`;
     window.open(whatsappUrl, '_blank');
   };
 

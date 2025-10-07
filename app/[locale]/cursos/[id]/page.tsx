@@ -7,11 +7,14 @@ import { ArrowLeft, Clock, CheckCircle2, PlayCircle } from 'lucide-react';
 import { Course, Lesson } from '@/types/course';
 import { getCourseDetails } from '@/lib/api-client';
 import { useCourseStore } from '@/stores';
-import HTML5VideoPlayer from '@/components/html5-video-player';
+import { useAuth } from '@/hooks/useAuth';
+import { getUserCourses as getUserCoursesService } from '@/services/user-courses.service';
+import VimeoPlayer from '@/components/vimeo-player';
 import LessonContent from '@/components/lesson-content';
 import CourseSidebar from '@/components/course-sidebar';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export default function CursoDetallePage() {
   const params = useParams();
@@ -22,6 +25,8 @@ export default function CursoDetallePage() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { token } = useAuth();
 
   const {
     setCurrentCourse,
@@ -36,7 +41,28 @@ export default function CursoDetallePage() {
     const loadCourse = async () => {
       try {
         setLoading(true);
+
+        // Verificar que el usuario tiene token
+        if (!token) {
+          setError('Debes iniciar sesión para acceder a este curso');
+          setLoading(false);
+          return;
+        }
+
+        // 1. Cargar detalles del curso
         const courseData = await getCourseDetails(courseId);
+
+        // 2. Verificar acceso: obtener lista de cursos del usuario
+        const userCourses = await getUserCoursesService(token);
+        const hasAccess = userCourses.some(uc => uc.courseId === courseId);
+
+        if (!hasAccess) {
+          setError('No tienes acceso a este curso. Compra el curso para poder acceder al contenido.');
+          setLoading(false);
+          return;
+        }
+
+        // 3. Usuario tiene acceso: mostrar curso
         setCourse(courseData);
         setCurrentCourse(courseData);
 
@@ -57,7 +83,7 @@ export default function CursoDetallePage() {
     if (courseId) {
       loadCourse();
     }
-  }, [courseId, setCurrentCourse, setCurrentLesson]);
+  }, [courseId, token, setCurrentCourse, setCurrentLesson]);
 
   const handleLessonSelect = (lesson: Lesson) => {
     setSelectedLesson(lesson);
@@ -96,9 +122,10 @@ export default function CursoDetallePage() {
     totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
   return (
-    <div className='min-h-screen bg-background'>
-      {/* Navigation */}
-      <Navigation />
+    <ProtectedRoute>
+      <div className='min-h-screen bg-background'>
+        {/* Navigation */}
+        <Navigation />
 
       {/* Main Content */}
       <div className='bg-[#1a1a1a] relative overflow-hidden'>
@@ -161,11 +188,11 @@ export default function CursoDetallePage() {
                       {/* Video Player centrado */}
                       <div className='flex justify-center'>
                         <div className='w-full max-w-4xl'>
-                          <HTML5VideoPlayer
+                          <VimeoPlayer
                             vimeoVideoId={selectedLesson.vimeoVideoId}
                             courseId={courseId}
                             lessonId={selectedLesson.id}
-                            className='w-full shadow-2xl'
+                            className='w-full shadow-2xl aspect-video'
                           />
                         </div>
                       </div>
@@ -227,8 +254,9 @@ export default function CursoDetallePage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        {/* Footer */}
+        <Footer />
+      </div>
+    </ProtectedRoute>
   );
 }
