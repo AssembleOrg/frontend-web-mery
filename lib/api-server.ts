@@ -1,65 +1,49 @@
 /**
- * MVP TEMPORARY FILE - DELETE WHEN BACKEND READY
+ * Server-side API Logic (Development Mode)
  *
- * This file simulates database operations for development.
- * Used by:
- * - /app/api/webhook/route.ts (grantCourseAccess)
- * - /app/api/cursos/route.ts (getUserCourses)
+ * Simulates database operations for development/testing.
+ * Replace with real backend implementation when ready.
  *
- * WHEN BACKEND IS READY:
- * 1. Delete this file
- * 2. Delete /app/api/cursos/* and /app/api/webhook/*
- * 3. Backend will handle these operations
+ * See BACKEND-INTEGRATION.md for backend implementation guide.
  */
 
 import { UserCourse, CourseProgress } from '@/types/course';
 import { mockCoursesWithLessons } from './mock-data';
 
-// In-memory database simulation (lost on server restart)
-// For development only - replace with real database
+/**
+ * In-memory database simulation
+ * Data is lost on server restart
+ */
 const userAccessDB: { [email: string]: string[] } = {
   'test@example.com': ['tatuaje-cosmetico', 'nanoblading-exclusive'],
 };
 
 /**
- * @param userEmail El email del usuario que compró.
- * @param courseIds Un array con los IDs de los cursos comprados.
+ * Grant course access to a user
+ * @param userEmail User's email address
+ * @param courseIds Array of course IDs to grant access to
  */
 export async function grantCourseAccess(
   userEmail: string,
   courseIds: string[]
 ): Promise<void> {
-  console.log(
-    `[DB SIM] Intentando dar acceso a ${userEmail} para los cursos:`,
-    courseIds
-  );
-
   await new Promise((resolve) => setTimeout(resolve, 200));
 
   if (!userAccessDB[userEmail]) {
     userAccessDB[userEmail] = [];
-    console.log(`[DB SIM] Usuario nuevo creado: ${userEmail}`);
   }
 
   courseIds.forEach((courseId) => {
     if (!userAccessDB[userEmail].includes(courseId)) {
       userAccessDB[userEmail].push(courseId);
-      console.log(`[DB SIM] Acceso concedido para el curso: ${courseId}`);
-    } else {
-      console.log(`[DB SIM] El usuario ya tenía acceso al curso: ${courseId}`);
     }
   });
-
-  console.log(
-    `[DB SIM] Estado final de acceso para ${userEmail}:`,
-    userAccessDB[userEmail]
-  );
 }
 
 /**
  * Get user's course IDs
- * @param userEmail Email del usuario
- * @returns Array de course IDs
+ * @param userEmail User's email address
+ * @returns Array of course IDs
  */
 export function getUserCourseIds(userEmail: string): string[] {
   return userAccessDB[userEmail] || [];
@@ -67,8 +51,8 @@ export function getUserCourseIds(userEmail: string): string[] {
 
 /**
  * Get user's courses with full details
- * @param userEmail Email del usuario
- * @returns Array de UserCourse
+ * @param userEmail User's email address
+ * @returns Array of UserCourse objects
  */
 export function getUserCourses(userEmail: string): UserCourse[] {
   const courseIds = getUserCourseIds(userEmail);
@@ -78,11 +62,10 @@ export function getUserCourses(userEmail: string): UserCourse[] {
       const course = mockCoursesWithLessons.find((c) => c.id === courseId);
 
       if (!course) {
-        console.warn(`[DB SIM] Curso no encontrado: ${courseId}`);
+        console.warn(`[API] Course not found: ${courseId}`);
         return null;
       }
 
-      // Mock progress - en producción vendría del backend
       const progress: CourseProgress = {
         courseId: course.id,
         lessonsCompleted: [],
@@ -93,7 +76,7 @@ export function getUserCourses(userEmail: string): UserCourse[] {
       return {
         courseId: course.id,
         course,
-        enrolledAt: new Date(), // Mock date - vendría del backend
+        enrolledAt: new Date(),
         progress,
         hasAccess: true,
       };

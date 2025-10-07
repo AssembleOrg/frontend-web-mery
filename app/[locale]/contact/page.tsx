@@ -95,7 +95,7 @@ export default function ContactPage() {
                           WhatsApp: 11 6159-2591
                         </span>
                       </button>
-                      <div className='flex items-center space-x-3'>
+                      {/* <div className='flex items-center space-x-3'>
                         <Mail className='h-4 w-4 text-primary flex-shrink-0' />
                         <a
                           href='mailto:info@merygarcia.com.ar'
@@ -103,7 +103,7 @@ export default function ContactPage() {
                         >
                           info@merygarcia.com.ar
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 

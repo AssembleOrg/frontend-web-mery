@@ -33,20 +33,28 @@ export const getCourseDetails = async (courseId: string): Promise<Course> => {
   return apiRequest<Course>(`/cursos/${courseId}`);
 };
 
-// Funciones adicionales para cuando el backend esté listo
+/**
+ * Mark a lesson as completed
+ * Currently handles state locally via Zustand
+ * Extend with backend API call when ready
+ */
 export const markLessonAsCompleted = async (
-  courseId: string, 
+  courseId: string,
   lessonId: string
 ): Promise<void> => {
-  // Por ahora solo manejamos el estado local
-  // Cuando tengamos backend real, aquí haremos el POST
-  console.log(`Lección ${lessonId} completada en curso ${courseId}`);
+  // Future: POST to backend API
+  return Promise.resolve();
 };
 
+/**
+ * Update course progress
+ * Currently handles state locally via Zustand
+ * Extend with backend API call when ready
+ */
 export const updateCourseProgress = async (
   courseId: string,
   progressData: Record<string, unknown>
 ): Promise<void> => {
-  // Placeholder para cuando tengamos backend
-  console.log(`Progreso actualizado para curso ${courseId}:`, progressData);
+  // Future: PATCH to backend API
+  return Promise.resolve();
 };

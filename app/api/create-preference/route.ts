@@ -1,4 +1,3 @@
-// File: app/api/create-preference/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 
@@ -7,24 +6,15 @@ const client = new MercadoPagoConfig({
 });
 
 export async function POST(req: NextRequest) {
-  console.log('======================================================');
-  console.log(
-    'API Endpoint Iniciado. Valor de BASE_URL:',
-    process.env.NEXT_PUBLIC_BASE_URL
-  );
-  console.log('======================================================');
   const rawBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   if (!rawBaseUrl) {
-    console.error(
-      'Error Crítico: La variable de entorno NEXT_PUBLIC_BASE_URL no está definida.'
-    );
+    console.error('NEXT_PUBLIC_BASE_URL no está definida.');
     return NextResponse.json(
       { error: 'Configuración del servidor incompleta.' },
       { status: 500 }
     );
   }
 
-  // Remove trailing slash to avoid double slash in URLs
   const baseUrl = rawBaseUrl.replace(/\/$/, '');
 
   try {
@@ -45,19 +35,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // if (
-    //   !payerData ||
-    //   !payerData.nombre ||
-    //   !payerData.apellido ||
-    //   !payerData.email ||
-    //   !payerData.telefono
-    // ) {
-    //   return NextResponse.json(
-    //     { error: 'Faltan datos del comprador.' },
-    //     { status: 400 }
-    //   );
-    // }
-
     const preferenceItems = items.map((item: any) => ({
       id: item.id,
       title: item.title,
@@ -67,16 +44,14 @@ export async function POST(req: NextRequest) {
       currency_id: 'ARS',
     }));
 
-    // const cleanedPhoneNumber = payerData.telefono.replace(/[\s()-]+/g, '');
-
     const preference = await new Preference(client).create({
       body: {
         items: preferenceItems,
         payer: {
-          email: 'TESTUSER8883738017904117317@TESTUSER.COM', // Test user for sandbox
+          email: 'TESTUSER8883738017904117317@TESTUSER.COM',
         },
         metadata: {
-          user_email: userEmail, // Real user email for our system
+          user_email: userEmail,
         },
         back_urls: {
           success: `${baseUrl}/${effectiveLocale}/checkout/success`,
@@ -86,9 +61,11 @@ export async function POST(req: NextRequest) {
         notification_url: `${baseUrl}/api/webhook`,
       },
     });
+
     if (!preference.init_point) {
       throw new Error('No se pudo obtener la URL de pago (init_point).');
     }
+
     return NextResponse.json({ url: preference.init_point });
   } catch (error: any) {
     console.error('Error al crear la preferencia de Mercado Pago:', error);

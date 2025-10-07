@@ -10,6 +10,7 @@ interface Service {
   key: string;
   href: string;
   image: string;
+  hoverImage?: string; // Optional hover image for special effects (e.g., SVG color change)
 }
 
 interface ExpandableServiceGalleryProps {
@@ -35,6 +36,7 @@ export function ExpandableServiceGallery({
     lashesLine:
       'https://www.instagram.com/stories/highlights/18019224445291012/',
     paramedical: 'https://www.instagram.com/merygarciaoficial/',
+    autostyling: 'https://www.instagram.com/p/DMqSOJNP5gr/?img_index=1',
   };
 
   // Detect mobile/touch devices
@@ -63,12 +65,29 @@ export function ExpandableServiceGallery({
               <Link href={service.href as any}>
                 {/* Image Container */}
                 <div className='relative h-full bg-muted overflow-hidden'>
-                  <Image
-                    src={service.image}
-                    alt={t(`services.${service.key}`)}
-                    fill
-                    className='object-cover transition-transform duration-300 group-hover:scale-105'
-                  />
+                  {service.hoverImage ? (
+                    <>
+                      <Image
+                        src={service.image}
+                        alt={t(`services.${service.key}`)}
+                        fill
+                        className='object-cover transition-opacity duration-300 group-hover:opacity-0'
+                      />
+                      <Image
+                        src={service.hoverImage}
+                        alt={t(`services.${service.key}`)}
+                        fill
+                        className='object-cover transition-opacity duration-300 opacity-0 group-hover:opacity-100'
+                      />
+                    </>
+                  ) : (
+                    <Image
+                      src={service.image}
+                      alt={t(`services.${service.key}`)}
+                      fill
+                      className='object-cover transition-transform duration-300 group-hover:scale-105'
+                    />
+                  )}
 
                   {/* Overlay */}
                   <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent' />
@@ -138,16 +157,41 @@ export function ExpandableServiceGallery({
             >
               {/* Background Image */}
               <div className='absolute inset-0'>
-                <Image
-                  src={service.image}
-                  alt={t(`services.${service.key}`)}
-                  fill
-                  className={`
-                    object-cover
-                    transition-transform duration-500 ease-out
-                    ${isHovered ? 'scale-105' : 'scale-100'}
-                  `}
-                />
+                {service.hoverImage ? (
+                  <>
+                    <Image
+                      src={service.image}
+                      alt={t(`services.${service.key}`)}
+                      fill
+                      className={`
+                        object-cover
+                        transition-opacity duration-500 ease-out
+                        ${isHovered ? 'opacity-0' : 'opacity-100'}
+                      `}
+                    />
+                    <Image
+                      src={service.hoverImage}
+                      alt={t(`services.${service.key}`)}
+                      fill
+                      className={`
+                        object-cover
+                        transition-opacity duration-500 ease-out
+                        ${isHovered ? 'opacity-100' : 'opacity-0'}
+                      `}
+                    />
+                  </>
+                ) : (
+                  <Image
+                    src={service.image}
+                    alt={t(`services.${service.key}`)}
+                    fill
+                    className={`
+                      object-cover
+                      transition-transform duration-500 ease-out
+                      ${isHovered ? 'scale-105' : 'scale-100'}
+                    `}
+                  />
+                )}
 
                 {/* Overlay */}
                 <div

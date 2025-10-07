@@ -29,7 +29,9 @@ export default function ParamedicalTattooPage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -44,15 +46,23 @@ export default function ParamedicalTattooPage() {
               <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
                 {t('areola.heading')}
               </h2>
-              <p className='text-muted-foreground font-secondary mb-6'>{t('areola.p1')}</p>
+              <p className='text-muted-foreground font-secondary mb-6'>
+                {t('areola.p1')}
+              </p>
               <div className='bg-card p-6 rounded-lg border'>
                 <h3 className='text-xl font-bold font-primary text-foreground mb-4'>
                   {t('areola.pricing.heading')}
                 </h3>
                 <div className='space-y-2 text-muted-foreground font-secondary'>
-                  <p className='font-secondary'>{t('areola.pricing.deposit')}</p>
-                  <p className='font-secondary'>{t('areola.pricing.session1')}</p>
-                  <p className='font-secondary'>{t('areola.pricing.touchUp')}</p>
+                  <p className='font-secondary'>
+                    {t('areola.pricing.deposit')}
+                  </p>
+                  <p className='font-secondary'>
+                    {t('areola.pricing.session1')}
+                  </p>
+                  <p className='font-secondary'>
+                    {t('areola.pricing.touchUp')}
+                  </p>
                 </div>
                 <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                   {t('areola.pricing.note')}
@@ -65,15 +75,23 @@ export default function ParamedicalTattooPage() {
               <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
                 {t('nipple.heading')}
               </h2>
-              <p className='text-muted-foreground font-secondary mb-6'>{t('nipple.p1')}</p>
+              <p className='text-muted-foreground font-secondary mb-6'>
+                {t('nipple.p1')}
+              </p>
               <div className='bg-card p-6 rounded-lg border'>
                 <h3 className='text-xl font-bold font-primary text-foreground mb-4'>
                   {t('nipple.pricing.heading')}
                 </h3>
                 <div className='space-y-2 text-muted-foreground font-secondary'>
-                  <p className='font-secondary'>{t('nipple.pricing.deposit')}</p>
-                  <p className='font-secondary'>{t('nipple.pricing.session1')}</p>
-                  <p className='font-secondary'>{t('nipple.pricing.touchUp')}</p>
+                  <p className='font-secondary'>
+                    {t('nipple.pricing.deposit')}
+                  </p>
+                  <p className='font-secondary'>
+                    {t('nipple.pricing.session1')}
+                  </p>
+                  <p className='font-secondary'>
+                    {t('nipple.pricing.touchUp')}
+                  </p>
                 </div>
                 <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                   {t('nipple.pricing.note')}
@@ -90,9 +108,7 @@ export default function ParamedicalTattooPage() {
                 <h3 className='text-xl font-bold font-primary mb-2'>
                   {tShared('importantInfoHeading')}
                 </h3>
-                <p className='font-secondary'>
-                  {tShared('importantInfoText')}
-                </p>
+                <p className='font-secondary'>{tShared('importantInfoText')}</p>
               </div>
             </div>
 
@@ -119,7 +135,9 @@ export default function ParamedicalTattooPage() {
             <div className='text-center pt-6 mb-6'>
               <div className='mt-4 flex items-center justify-center text-sm text-primary bg-primary/10 p-3 rounded-lg max-w-md mx-auto'>
                 <CreditCard className='h-4 w-4 mr-2 flex-shrink-0' />
-                <span className='font-secondary'>{tShared('creditCardNote')}</span>
+                <span className='flex items-center text-sm font-primary/10 font-bold text-primary'>
+                  {tShared('creditCardNote')}
+                </span>
               </div>
             </div>
           </section>

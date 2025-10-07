@@ -70,7 +70,7 @@ export function Footer() {
             <div className='mt-4'>
               <Link
                 href='/contact'
-                className='inline-flex items-center px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-primary font-medium rounded-full transition-all duration-300'
+                className='inline-flex items-center px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-primary/10 font-medium rounded-full transition-all duration-300'
               >
                 Quiero saber más
               </Link>
@@ -84,10 +84,10 @@ export function Footer() {
             </h3>
             <div className='space-y-2'>
               <Link
-                href='/services'
+                href='/about'
                 className='block font-secondary text-sm text-muted-foreground hover:text-primary transition-colors'
               >
-                Servicios
+                Mery Garcia
               </Link>
               <Link
                 href='/formaciones'
@@ -108,7 +108,6 @@ export function Footer() {
                 Contacto
               </Link>
             </div>
-
           </div>
         </div>
 

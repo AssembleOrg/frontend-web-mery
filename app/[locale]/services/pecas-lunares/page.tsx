@@ -133,7 +133,7 @@ export default function PecasLunaresPage() {
                   <p className='font-secondary'>{t('pricing.touchUp')}</p>
                   <p className='font-secondary'>{t('pricing.maintenance')}</p>
                 </div>
-                <div className='mt-4 flex items-center text-sm text-primary'>
+                <div className='mt-4 flex items-center text-sm font-primary/10 font-bold text-primary'>
                   <CreditCard className='h-4 w-4 mr-2' />
                   <span className='font-secondary'>
                     {t('pricing.creditCard')}

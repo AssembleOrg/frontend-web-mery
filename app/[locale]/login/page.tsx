@@ -18,11 +18,11 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!email || !password) {
       return;
     }
 
-    const result = await login({ email, password: password || undefined });
+    const result = await login({ email, password });
 
     if (result.success && result.user) {
       if (result.user.role === 'admin') {
@@ -71,13 +71,10 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Password (opcional para MVP) */}
+            {/* Password */}
             <div>
               <label className='block text-sm font-medium text-foreground mb-2'>
                 Contraseña
-                <span className='text-muted-foreground text-xs ml-2'>
-                  (opcional)
-                </span>
               </label>
               <div className='relative'>
                 <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
@@ -87,6 +84,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
                   placeholder='Tu contraseña'
+                  required
                 />
               </div>
             </div>
@@ -103,7 +101,7 @@ export default function LoginPage() {
             {/* Submit button */}
             <button
               type='submit'
-              disabled={isLoading || !email}
+              disabled={isLoading || !email || !password}
               className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-3 rounded-lg font-primary font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
             >
               {isLoading ? (
@@ -127,14 +125,6 @@ export default function LoginPage() {
               >
                 Regístrate
               </button>
-            </p>
-          </div>
-
-          {/* MVP Note */}
-          <div className='mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg'>
-            <p className='text-xs text-blue-600 dark:text-blue-400'>
-              <strong>MVP:</strong> Ingresa solo tu email para acceder. La
-              contraseña es opcional en esta versión.
             </p>
           </div>
         </div>

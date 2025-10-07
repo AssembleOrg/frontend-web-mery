@@ -59,7 +59,7 @@ export default function LashesLinePage() {
                 <p className='text-muted-foreground font-secondary mb-4'>
                   {t('pricing.depositText')}
                 </p>
-                <p className='text-2xl font-bold font-primary text-primary'>
+                <p className='text-sm mt-4 flex items-center font-primary/10 font-bold text-primary'>
                   {t('pricing.depositAmount')}
                 </p>
               </div>
@@ -96,7 +96,7 @@ export default function LashesLinePage() {
                 </div>
                 <div className='mt-6 flex items-center justify-center text-sm text-primary bg-primary/10 p-3 rounded-lg'>
                   <CreditCard className='h-4 w-4 mr-2 flex-shrink-0' />
-                  <span className='font-secondary'>
+                  <span className='flex items-center text-sm font-primary/10 font-bold text-primary'>
                     {t('pricing.creditCardNote')}
                   </span>
                 </div>

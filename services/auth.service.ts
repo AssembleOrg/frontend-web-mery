@@ -18,9 +18,6 @@ export class AuthServiceError extends Error {
 
 /**
  * Login - Authenticate user
- *
- * MVP: Solo email (password opcional)
- * PRODUCCIÓN: email + password required
  */
 export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -63,9 +60,6 @@ export const me = async (token: string): Promise<MeResponse> => {
 
 /**
  * Register - Create new user account
- *
- * MVP: Crea usuario con datos completos
- * PRODUCCIÓN: Validación + confirmación email
  */
 export const register = async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -112,17 +106,10 @@ export const updateProfile = async (token: string, data: UpdateProfileData): Pro
 
 /**
  * Logout
- * NOTA: Logout es solo client-side (clear localStorage)
- * Si backend requiere invalidar token, agregar endpoint aquí
+ * Currently client-side only (clears localStorage)
+ * Extend with backend token invalidation if needed
  */
 export const logout = async (token: string): Promise<void> => {
-  // Futuro: Si backend tiene POST /auth/logout
-  // await fetch(`${API_BASE_URL}/auth/logout`, {
-  //   method: 'POST',
-  //   headers: { 'Authorization': `Bearer ${token}` }
-  // });
-
-  // Por ahora, logout es solo client-side
   return Promise.resolve();
 };
 

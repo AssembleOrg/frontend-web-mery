@@ -3,7 +3,7 @@
 import { useAdminStore } from '@/stores';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { PlusCircle, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function AdminCursosPage() {
@@ -11,7 +11,7 @@ export default function AdminCursosPage() {
   const router = useRouter();
   const locale = (params.locale as string) || 'es';
 
-  const { courses, deleteCourse, publishCourse, unpublishCourse } = useAdminStore();
+  const { courses, deleteCourse } = useAdminStore();
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const handleDelete = (id: string) => {
@@ -24,14 +24,6 @@ export default function AdminCursosPage() {
       setDeleteConfirm(id);
       // Auto-cancel after 3 seconds
       setTimeout(() => setDeleteConfirm(null), 3000);
-    }
-  };
-
-  const handleTogglePublish = (id: string, isPublished: boolean) => {
-    if (isPublished) {
-      unpublishCourse(id);
-    } else {
-      publishCourse(id);
     }
   };
 
@@ -63,47 +55,6 @@ export default function AdminCursosPage() {
         </Link>
       </div>
 
-      {/* Stats Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-        <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm font-medium text-gray-600'>Total Cursos</p>
-              <p className='text-3xl font-bold text-gray-900'>{courses.length}</p>
-            </div>
-            <div className='p-3 bg-blue-50 rounded-full'>
-              <div className='w-8 h-8 bg-blue-500 rounded-full'></div>
-            </div>
-          </div>
-        </div>
-        <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm font-medium text-gray-600'>Publicados</p>
-              <p className='text-3xl font-bold text-green-600'>
-                {courses.filter((c) => c.isPublished).length}
-              </p>
-            </div>
-            <div className='p-3 bg-green-50 rounded-full'>
-              <div className='w-8 h-8 bg-green-500 rounded-full'></div>
-            </div>
-          </div>
-        </div>
-        <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm font-medium text-gray-600'>Borradores</p>
-              <p className='text-3xl font-bold text-orange-600'>
-                {courses.filter((c) => !c.isPublished).length}
-              </p>
-            </div>
-            <div className='p-3 bg-orange-50 rounded-full'>
-              <div className='w-8 h-8 bg-orange-500 rounded-full'></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Courses Table */}
       <div className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden'>
         <div className='overflow-x-auto'>
@@ -119,9 +70,6 @@ export default function AdminCursosPage() {
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Lecciones
                 </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Estado
-                </th>
                 <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Acciones
                 </th>
@@ -130,7 +78,7 @@ export default function AdminCursosPage() {
             <tbody className='bg-white divide-y divide-gray-200'>
               {courses.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className='px-6 py-12 text-center'>
+                  <td colSpan={4} className='px-6 py-12 text-center'>
                     <div className='text-gray-500'>
                       <p className='text-lg font-medium'>No hay cursos creados</p>
                       <p className='text-sm mt-1'>
@@ -172,32 +120,8 @@ export default function AdminCursosPage() {
                         {course.lessons?.length || 0} lecciones
                       </div>
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      {course.isPublished ? (
-                        <span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-                          <Eye className='w-3 h-3 mr-1' />
-                          Publicado
-                        </span>
-                      ) : (
-                        <span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800'>
-                          <EyeOff className='w-3 h-3 mr-1' />
-                          Borrador
-                        </span>
-                      )}
-                    </td>
                     <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                       <div className='flex items-center justify-end gap-2'>
-                        <button
-                          onClick={() => handleTogglePublish(course.id, course.isPublished ?? false)}
-                          className='text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded transition-colors'
-                          title={course.isPublished ? 'Despublicar' : 'Publicar'}
-                        >
-                          {course.isPublished ? (
-                            <EyeOff className='w-4 h-4' />
-                          ) : (
-                            <Eye className='w-4 h-4' />
-                          )}
-                        </button>
                         <button
                           onClick={() => router.push(`/${locale}/admin/cursos/${course.id}`)}
                           className='text-indigo-600 hover:text-indigo-900 p-2 hover:bg-indigo-50 rounded transition-colors'

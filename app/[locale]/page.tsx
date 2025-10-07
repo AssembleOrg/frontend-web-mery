@@ -41,6 +41,12 @@ export default function HomePage() {
       href: '/services/tatuaje-paramedico',
       image: '/Img-home/handcraft.webp',
     },
+    {
+      key: 'autostyling',
+      href: '/formaciones',
+      image: '/Img-home/autostyling-gris.svg',
+      hoverImage: '/Img-home/autostyling-color.svg',
+    },
   ];
 
   return (

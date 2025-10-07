@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { Navigation } from '@/components/navigation';
 
 export default function AdminLayout({
   children,
@@ -53,28 +54,25 @@ export default function AdminLayout({
 
   return (
     <div className='min-h-screen bg-gray-50'>
+      {/* Navbar Normal */}
+      <Navigation />
+
       {/* Admin Header */}
       <header className='bg-white shadow-sm border-b'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center py-4'>
-            <div className='flex items-center space-x-4'>
-              <h1 className='text-2xl font-primary font-bold text-[#660e1b]'>
-                Panel de Administrador
-              </h1>
-              <span className='px-3 py-1 bg-[#f9bbc4]/20 text-[#660e1b] text-sm font-medium rounded-full'>
-                ADMIN
+            <div className='flex items-center space-x-2'>
+              <span className='text-lg font-medium text-gray-900'>
+                Hola, {user?.name || 'Admin'}
               </span>
             </div>
-            <div className='flex items-center space-x-4'>
-              <span className='text-sm text-gray-600'>
-                {user?.name || 'Admin User'}
-              </span>
+            <div>
               <button
                 onClick={() => {
                   const locale = pathname.split('/')[1] || 'es';
                   router.push(`/${locale}`);
                 }}
-                className='px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors'
+                className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md'
               >
                 Volver al Sitio
               </button>
