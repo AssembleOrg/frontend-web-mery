@@ -54,7 +54,7 @@ export function useAuth() {
       const response = await loginService(credentials);
       setAuth(response.user, response.token);
 
-      return { success: true };
+      return { success: true, user: response.user };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión';
       setError(errorMessage);
@@ -73,7 +73,7 @@ export function useAuth() {
       const response = await registerService(credentials);
       setAuth(response.user, response.token);
 
-      return { success: true };
+      return { success: true, user: response.user };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al registrarse';
       setError(errorMessage);

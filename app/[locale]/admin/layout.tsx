@@ -1,8 +1,9 @@
-// TODO: Remove mock auth when backend ready - Add real JWT verification
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function AdminLayout({
   children,
@@ -11,57 +12,30 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    // MOCK AUTH: Simulating admin authentication
-    // TODO: Replace with real JWT verification from backend
-    const mockIsAdmin = true; // Change to false to test redirect
+    // Extract locale from pathname
+    const locale = pathname.split('/')[1] || 'es';
 
-    if (!mockIsAdmin) {
-      // Extract locale from pathname
-      const locale = pathname.split('/')[1] || 'es';
+    // Wait for auth to load
+    if (isLoading) return;
+
+    // Redirect to login if not authenticated
+    if (!isAuthenticated) {
       router.push(`/${locale}/login`);
       return;
     }
 
-    setIsAuthorized(true);
-
-    /*
-    // Real implementation when backend is ready:
-    const token = localStorage.getItem('auth_token');
-
-    if (!token) {
-      const locale = pathname.split('/')[1] || 'es';
-      router.push(`/${locale}/login`);
+    // Redirect to home if not admin (defensive: only if user exists AND is not admin)
+    if (user && user.role !== 'admin') {
+      router.push(`/${locale}`);
       return;
     }
+  }, [isLoading, isAuthenticated, user, router, pathname]);
 
-    // Verify token with backend
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Unauthorized');
-      return res.json();
-    })
-    .then(data => {
-      if (data.user.role !== 'admin') {
-        const locale = pathname.split('/')[1] || 'es';
-        router.push(`/${locale}`);
-        return;
-      }
-      setIsAuthorized(true);
-    })
-    .catch(() => {
-      localStorage.removeItem('auth_token');
-      const locale = pathname.split('/')[1] || 'es';
-      router.push(`/${locale}/login`);
-    });
-    */
-  }, [router, pathname]);
-
-  if (!isAuthorized) {
+  // Show loading state while checking auth
+  if (isLoading) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
@@ -70,6 +44,11 @@ export default function AdminLayout({
         </div>
       </div>
     );
+  }
+
+  // Don't render if not authenticated or not admin (defensive: check user exists)
+  if (!isAuthenticated || !user || user.role !== 'admin') {
+    return null;
   }
 
   return (
@@ -88,18 +67,16 @@ export default function AdminLayout({
             </div>
             <div className='flex items-center space-x-4'>
               <span className='text-sm text-gray-600'>
-                Admin User {/* TODO: Show real user name from JWT */}
+                {user?.name || 'Admin User'}
               </span>
               <button
                 onClick={() => {
-                  // TODO: Implement real logout
-                  // localStorage.removeItem('auth_token');
                   const locale = pathname.split('/')[1] || 'es';
                   router.push(`/${locale}`);
                 }}
                 className='px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors'
               >
-                Salir
+                Volver al Sitio
               </button>
             </div>
           </div>

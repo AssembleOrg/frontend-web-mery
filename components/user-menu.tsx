@@ -4,13 +4,14 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { User as UserIcon, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 export function UserMenu() {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const params = useParams();
+  const router = useRouter();
   const locale = params.locale as string;
 
   // Close menu when clicking outside
@@ -49,15 +50,34 @@ export function UserMenu() {
     setIsOpen(false);
   };
 
+  const handleAvatarClick = () => {
+    if (isAdmin) {
+      router.push(`/${locale}/admin/cursos`);
+    } else {
+      setIsOpen(!isOpen);
+    }
+  };
+
   return (
-    <div className='relative' ref={menuRef}>
+    <div
+      className='relative'
+      ref={menuRef}
+    >
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className='flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors'
       >
-        {/* Avatar */}
-        <div className='w-8 h-8 rounded-full bg-[#f9bbc4] text-white flex items-center justify-center text-sm font-semibold'>
+        {/* Avatar - clickeable para admin */}
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAvatarClick();
+          }}
+          className={`w-8 h-8 rounded-full bg-[#f9bbc4] text-white flex items-center justify-center text-sm font-semibold ${
+            isAdmin ? 'cursor-pointer hover:bg-[#eba2a8] transition-colors' : ''
+          }`}
+        >
           {initials}
         </div>
 
@@ -104,15 +124,7 @@ export function UserMenu() {
 
           {/* Menu Items */}
           <div className='py-1'>
-            <Link
-              href={`/${locale}/mi-cuenta`}
-              onClick={() => setIsOpen(false)}
-              className='flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors'
-            >
-              <UserIcon className='w-4 h-4' />
-              Mi Cuenta
-            </Link>
-
+            {/* Admin: Panel Admin primero */}
             {isAdmin && (
               <Link
                 href={`/${locale}/admin/cursos`}
@@ -123,6 +135,15 @@ export function UserMenu() {
                 Panel Admin
               </Link>
             )}
+
+            <Link
+              href={`/${locale}/mi-cuenta`}
+              onClick={() => setIsOpen(false)}
+              className='flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors'
+            >
+              <UserIcon className='w-4 h-4' />
+              Mi Cuenta
+            </Link>
           </div>
 
           {/* Separator */}

@@ -7,6 +7,8 @@ import { ArrowLeft, Clock, CheckCircle2, PlayCircle } from 'lucide-react';
 import { Course, Lesson } from '@/types/course';
 import { getCourseDetails } from '@/lib/api-client';
 import { useCourseStore } from '@/stores';
+import { useAuth } from '@/hooks/useAuth';
+import { getUserCourses as getUserCoursesService } from '@/services/user-courses.service';
 import VimeoPlayer from '@/components/vimeo-player';
 import LessonContent from '@/components/lesson-content';
 import CourseSidebar from '@/components/course-sidebar';
@@ -24,6 +26,8 @@ export default function CursoDetallePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { token } = useAuth();
+
   const {
     setCurrentCourse,
     setCurrentLesson,
@@ -37,7 +41,28 @@ export default function CursoDetallePage() {
     const loadCourse = async () => {
       try {
         setLoading(true);
+
+        // Verificar que el usuario tiene token
+        if (!token) {
+          setError('Debes iniciar sesión para acceder a este curso');
+          setLoading(false);
+          return;
+        }
+
+        // 1. Cargar detalles del curso
         const courseData = await getCourseDetails(courseId);
+
+        // 2. Verificar acceso: obtener lista de cursos del usuario
+        const userCourses = await getUserCoursesService(token);
+        const hasAccess = userCourses.some(uc => uc.courseId === courseId);
+
+        if (!hasAccess) {
+          setError('No tienes acceso a este curso. Compra el curso para poder acceder al contenido.');
+          setLoading(false);
+          return;
+        }
+
+        // 3. Usuario tiene acceso: mostrar curso
         setCourse(courseData);
         setCurrentCourse(courseData);
 
@@ -58,7 +83,7 @@ export default function CursoDetallePage() {
     if (courseId) {
       loadCourse();
     }
-  }, [courseId, setCurrentCourse, setCurrentLesson]);
+  }, [courseId, token, setCurrentCourse, setCurrentLesson]);
 
   const handleLessonSelect = (lesson: Lesson) => {
     setSelectedLesson(lesson);

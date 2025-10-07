@@ -24,8 +24,12 @@ export default function LoginPage() {
 
     const result = await login({ email, password: password || undefined });
 
-    if (result.success) {
-      router.push('/es/mi-cuenta');
+    if (result.success && result.user) {
+      if (result.user.role === 'admin') {
+        router.push(`/${locale}/admin/cursos`);
+      } else {
+        router.push(`/${locale}/mi-cuenta`);
+      }
     }
   };
 
@@ -45,7 +49,10 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+          >
             {/* Email */}
             <div>
               <label className='block text-sm font-medium text-foreground mb-2'>
@@ -87,7 +94,9 @@ export default function LoginPage() {
             {/* Error message */}
             {error && (
               <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4'>
-                <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
+                <p className='text-sm text-red-600 dark:text-red-400'>
+                  {error}
+                </p>
               </div>
             )}
 

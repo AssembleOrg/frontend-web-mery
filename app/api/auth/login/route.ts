@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isAdminEmail } from '@/lib/admin-config';
 
 /**
  * POST /api/auth/login
@@ -36,16 +37,20 @@ export async function POST(request: Request) {
     // PRODUCCIÓN: Generar JWT con jsonwebtoken
     const token = Buffer.from(email).toString('base64');
 
+    // MVP: Determinar rol basado en email
+    // PRODUCCIÓN: Rol viene de la base de datos
+    const role = isAdminEmail(email) ? 'admin' : 'user';
+
     // MVP: User básico
     // PRODUCCIÓN: Buscar user en DB y retornar data real
     const user = {
       id: Buffer.from(email).toString('base64').substring(0, 10),
       email,
       name: email.split('@')[0], // Nombre del email
-      role: 'user' as const,
+      role: role as 'user' | 'admin',
     };
 
-    console.log(`[AUTH] Login exitoso: ${email}`);
+    console.log(`[AUTH] Login exitoso: ${email} (${role})`);
 
     return NextResponse.json({
       user,

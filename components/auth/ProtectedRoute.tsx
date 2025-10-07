@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 interface ProtectedRouteProps {
@@ -17,12 +17,14 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/es/login');
+      router.push(`/${locale}/login`);
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, router, locale]);
 
   // Show loading state while checking auth
   if (isLoading) {

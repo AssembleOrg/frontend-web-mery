@@ -47,8 +47,13 @@ export default function RegisterPage() {
       city: formData.city || undefined,
     });
 
-    if (result.success) {
-      router.push(`/${locale}/mi-cuenta`);
+    if (result.success && result.user) {
+      // Redirigir según el rol del usuario retornado por register
+      if (result.user.role === 'admin') {
+        router.push(`/${locale}/admin/cursos`);
+      } else {
+        router.push(`/${locale}/mi-cuenta`);
+      }
     }
   };
 

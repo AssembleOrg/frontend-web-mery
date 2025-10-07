@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isAdminEmail } from '@/lib/admin-config';
 
 /**
  * MVP: Extract email from token
@@ -48,11 +49,12 @@ export async function PATCH(request: Request) {
 
     // MVP: Retornar user actualizado
     // PRODUCCIÓN: Actualizar en DB y retornar user actualizado
+    const role = isAdminEmail(email) ? 'admin' : 'user';
     const user = {
       id: Buffer.from(email).toString('base64').substring(0, 10),
       email,
       name: name || email.split('@')[0],
-      role: 'user' as const,
+      role: role as 'user' | 'admin',
       phone: phone || undefined,
       country: country || undefined,
       city: city || undefined,

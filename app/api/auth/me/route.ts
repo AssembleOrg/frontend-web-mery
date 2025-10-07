@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isAdminEmail } from '@/lib/admin-config';
 
 /**
  * MVP: Extract email from token
@@ -44,11 +45,12 @@ export async function GET(request: Request) {
 
     // MVP: Retornar user básico
     // PRODUCCIÓN: Buscar user en DB por email
+    const role = isAdminEmail(email) ? 'admin' : 'user';
     const user = {
       id: Buffer.from(email).toString('base64').substring(0, 10),
       email,
       name: email.split('@')[0],
-      role: 'user' as const,
+      role: role as 'user' | 'admin',
     };
 
     return NextResponse.json({ user });

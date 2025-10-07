@@ -1,7 +1,22 @@
+/**
+ * MVP TEMPORARY FILE - DELETE WHEN BACKEND READY
+ *
+ * This file simulates database operations for development.
+ * Used by:
+ * - /app/api/webhook/route.ts (grantCourseAccess)
+ * - /app/api/cursos/route.ts (getUserCourses)
+ *
+ * WHEN BACKEND IS READY:
+ * 1. Delete this file
+ * 2. Delete /app/api/cursos/* and /app/api/webhook/*
+ * 3. Backend will handle these operations
+ */
+
 import { UserCourse, CourseProgress } from '@/types/course';
 import { mockCoursesWithLessons } from './mock-data';
 
-// db simulation mockup
+// In-memory database simulation (lost on server restart)
+// For development only - replace with real database
 const userAccessDB: { [email: string]: string[] } = {
   'test@example.com': ['tatuaje-cosmetico', 'nanoblading-exclusive'],
 };
