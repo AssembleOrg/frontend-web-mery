@@ -120,8 +120,7 @@ export default function FinalizarCompraPage() {
     }
   };
 
-  const isFormValid =
-    formData.nombre && formData.apellido && formData.telefono;
+  const isFormValid = formData.nombre && formData.apellido && formData.telefono;
 
   if (items.length === 0) {
     return (
@@ -353,15 +352,17 @@ export default function FinalizarCompraPage() {
                 </div>
               </div>
 
-              <div className='mt-6 p-4 bg-[#f9bbc4]/10 rounded-lg border border-[#f9bbc4]'>
-                <p className='text-sm text-foreground'>
-                  <strong>¡Importante!</strong> Después de completar tu compra
-                  recibirás:
+              <div className='mt-6 alert-high border rounded-lg p-4'>
+                <p className='text-sm text-primary'>
+                  <strong className='text-primary'>¡Importante!</strong> Después
+                  de completar tu compra...
                 </p>
-                <ul className='text-sm text-muted-foreground mt-2 space-y-1'>
-                  <li>• Email de confirmación</li>
-                  <li>• Credenciales de acceso</li>
-                  <li>• Acceso inmediato a tus cursos</li>
+                <ul className='text-sm text-primary mt-2 space-y-1'>
+                  <li className='text-primary'>• Email de confirmación</li>
+                  <li className='text-primary'>• Credenciales de acceso</li>
+                  <li className='text-primary'>
+                    • Acceso inmediato a tus cursos
+                  </li>
                 </ul>
               </div>
             </div>

@@ -33,7 +33,9 @@ export default function MicrobladingCamouflagePage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -110,7 +112,7 @@ export default function MicrobladingCamouflagePage() {
               </div>
               <div>
                 <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-                  <AlertTriangle className='h-7 w-7 burgundy-text mr-3' />
+                  <AlertTriangle className='h-7 w-7 mr-3' />
                   {tShared('pregnantWomenHeading')}
                 </h2>
                 <p className='text-muted-foreground font-secondary'>

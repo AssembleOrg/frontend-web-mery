@@ -3,8 +3,11 @@
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { MapPin, MessageCircle, Mail, GraduationCap } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
+import { useTranslations } from 'next-intl';
 
 export default function ContactPage() {
+  const t = useTranslations('contact');
   const handleWhatsAppGeneral = () => {
     const message = 'Hola, me interesan sus servicios. ¿Puedo tener más info?';
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
@@ -81,49 +84,40 @@ export default function ContactPage() {
 
                   {/* Reception Contact */}
                   <div className='bg-card p-6 rounded-lg border mb-6'>
-                    <h3 className='font-primary font-semibold text-foreground mb-4 flex items-center'>
+                    <h4 className='text-lg font-primary font-bold text-foreground mb-4 flex items-center'>
                       <MessageCircle className='h-5 w-5 text-primary mr-2' />
-                      Recepción General
-                    </h3>
+                      Recepción de Servicios
+                    </h4>
                     <div className='space-y-3'>
                       <button
                         onClick={handleWhatsAppGeneral}
-                        className='flex items-center space-x-3 w-full text-left hover:bg-muted/50 py-1 rounded transition-colors'
+                        className='flex items-center space-x-3 w-full text-left hover:bg-muted/50 py-2 px-3 rounded transition-colors'
                       >
-                        <MessageCircle className='h-4 w-4 text-primary flex-shrink-0' />
+                        <FaWhatsapp className='h-4 w-4 text-primary flex-shrink-0' />
                         <span className='font-secondary text-muted-foreground hover:text-primary transition-colors'>
                           WhatsApp: 11 6159-2591
                         </span>
                       </button>
-                      {/* <div className='flex items-center space-x-3'>
-                        <Mail className='h-4 w-4 text-primary flex-shrink-0' />
-                        <a
-                          href='mailto:info@merygarcia.com.ar'
-                          className='font-secondary text-muted-foreground hover:text-primary transition-colors'
-                        >
-                          info@merygarcia.com.ar
-                        </a>
-                      </div> */}
                     </div>
                   </div>
 
                   {/* Training Contact */}
                   <div className='bg-card p-6 rounded-lg border'>
-                    <h3 className='font-primary font-semibold text-foreground mb-4 flex items-center'>
+                    <h4 className='text-lg font-primary font-bold text-foreground mb-4 flex items-center'>
                       <GraduationCap className='h-5 w-5 text-primary mr-2' />
                       Contacto para Formaciones
-                    </h3>
+                    </h4>
                     <div className='space-y-3'>
                       <button
                         onClick={handleWhatsAppFormaciones}
-                        className='flex items-center space-x-3 w-full text-left hover:bg-muted/50 py-1  rounded transition-colors'
+                        className='flex items-center space-x-3 w-full text-left hover:bg-muted/50 py-2 px-3 rounded transition-colors'
                       >
-                        <MessageCircle className='h-4 w-4 text-primary flex-shrink-0' />
+                        <FaWhatsapp className='h-4 w-4 text-primary flex-shrink-0' />
                         <span className='font-secondary text-muted-foreground hover:text-primary transition-colors'>
                           WhatsApp: 11 5333-6627
                         </span>
                       </button>
-                      <div className='flex items-center space-x-3'>
+                      <div className='flex items-center space-x-3 px-3'>
                         <Mail className='h-4 w-4 text-primary flex-shrink-0' />
                         <a
                           href='mailto:cursos@merygarcia.com.ar'
@@ -137,11 +131,11 @@ export default function ContactPage() {
                 </div>
 
                 {/* Additional Info */}
-                <div className='bg-primary/5 p-6 rounded-lg'>
-                  <h3 className='font-primary font-semibold text-foreground mb-3'>
+                <div className='alert-high border rounded-lg p-6'>
+                  <h4 className='text-lg font-primary font-bold text-primary mb-3'>
                     Información Importante
-                  </h3>
-                  <p className='font-secondary text-muted-foreground text-sm leading-relaxed'>
+                  </h4>
+                  <p className='font-secondary text-primary text-sm leading-relaxed'>
                     Para consultas sobre tratamientos, por favor contacta a
                     recepción. Para información sobre cursos y formaciones
                     profesionales, utiliza nuestro contacto especializado en

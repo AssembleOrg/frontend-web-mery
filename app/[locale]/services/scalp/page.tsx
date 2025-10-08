@@ -28,7 +28,9 @@ export default function ScalpPage() {
             <h1 className='text-4xl md:text-5xl font-bold font-primary mb-4'>
               {t('hero.title')}
             </h1>
-            <p className='text-xl text-white/90 font-secondary'>{t('hero.subtitle')}</p>
+            <p className='text-xl text-white/90 font-secondary'>
+              {t('hero.subtitle')}
+            </p>
           </div>
         </div>
       </section>
@@ -63,20 +65,26 @@ export default function ScalpPage() {
 
           {/* Biosecurity Section */}
           <section className='mb-12'>
-            <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-              <Shield className='h-7 w-7 text-primary mr-3' />
-              {t('biosecurity.heading')}
-            </h2>
-            <p className='text-muted-foreground font-secondary'>{t('biosecurity.text')}</p>
+            <div className='alert-low border rounded-lg p-6'>
+              <h2 className='text-2xl font-bold font-primary mb-4 flex items-center'>
+                <Shield className='h-7 w-7 mr-3' />
+                {t('biosecurity.heading')}
+              </h2>
+              <p className='font-secondary'>{t('biosecurity.text')}</p>
+            </div>
           </section>
 
           {/* Important Info Section */}
           <section className='mb-12'>
-            <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-              <AlertTriangle className='h-7 w-7 burgundy-text mr-3' />
-              {t('importantInfo.heading')}
-            </h2>
-            <p className='text-muted-foreground font-secondary'>{t('importantInfo.text')}</p>
+            <div className='alert-high border rounded-lg p-6'>
+              <h2 className='text-2xl font-bold font-primary text-primary mb-4 flex items-center'>
+                <AlertTriangle className='h-7 w-7 text-primary mr-3' />
+                {t('importantInfo.heading')}
+              </h2>
+              <p className='font-secondary text-primary'>
+                {t('importantInfo.text')}
+              </p>
+            </div>
           </section>
 
           {/* CTA Section */}

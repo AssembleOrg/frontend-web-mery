@@ -68,11 +68,11 @@ export default function NanoScalpPage() {
             </div>
 
             {/* Important Info */}
-            <div className='alert-low border rounded-lg p-6'>
-              <div className='flex items-start space-x-3'>
-                <AlertTriangle className='h-6 w-6 burgundy-text mt-1 flex-shrink-0' />
+            <div className='alert-high border rounded-lg p-6'>
+              <div className='flex items-start space-x-3 text-primary'>
+                <AlertTriangle className='h-6 w-6 mt-1 flex-shrink-0' />
                 <div>
-                  <h3 className='text-xl font-bold font-primary mb-2'>
+                  <h3 className='text-xl font-bold font-primary mb-2 '>
                     {t('importantInfo.heading')}
                   </h3>
                   <p className='font-secondary mb-4'>
@@ -85,23 +85,22 @@ export default function NanoScalpPage() {
 
           {/* Procedure & Biosecurity Grid */}
           <section className='mb-12 grid grid-cols-1 md:grid-cols-2 gap-8'>
-            <div>
-              <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-                <Clock className='h-7 w-7 text-primary mr-3' />
+            {/* Columna de Procedimiento */}
+            <div className='alert-low border rounded-lg p-6'>
+              <h2 className='text-2xl font-bold font-primary mb-4 flex items-center'>
+                <Clock className='h-7 w-7 mr-3' />
                 {t('procedure.heading')}
               </h2>
-              <p className='text-muted-foreground font-secondary'>
-                {t('procedure.text')}
-              </p>
+              <p className='font-secondary'>{t('procedure.text')}</p>
             </div>
-            <div>
-              <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-                <Shield className='h-7 w-7 text-primary mr-3' />
+
+            {/* Columna de Bioseguridad */}
+            <div className='alert-low border rounded-lg p-6'>
+              <h2 className='text-2xl font-bold font-primary mb-4 flex items-center'>
+                <Shield className='h-7 w-7 mr-3' />
                 {t('biosecurity.heading')}
               </h2>
-              <p className='text-muted-foreground font-secondary'>
-                {t('biosecurity.text')}
-              </p>
+              <p className='font-secondary'>{t('biosecurity.text')}</p>
             </div>
           </section>
 

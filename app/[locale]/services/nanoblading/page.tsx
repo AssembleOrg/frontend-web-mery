@@ -74,8 +74,8 @@ export default function NanobladingCamouflagePage() {
                     {t('nanoblading.pricing.note')}
                   </p>
                 </div>
-                <div className='mt-4 flex items-center text-sm font-primary/10 font-bold text-primary'>
-                  <CreditCard className='h-4 w-4 mr-2' />
+                <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
+                  <CreditCard className='h-6 w-6 mr-2' />
                   <span>{t('nanoblading.pricing.creditCardNote')}</span>
                 </div>
               </div>
@@ -113,16 +113,16 @@ export default function NanobladingCamouflagePage() {
               <h3 className='text-2xl font-bold text-foreground mt-8 mb-4'>
                 {t('camouflage.casesHeading')}
               </h3>
-              <div className='space-y-4'>
+              <div className='alert-low border rounded-lg p-6 space-y-4'>
                 {camouflageCases.map((caseItem) => (
                   <div
                     key={caseItem.key}
-                    className='bg-muted/30 p-4 rounded-lg'
+                    className='burgundy-text'
                   >
-                    <h4 className='font-bold text-foreground text-sm uppercase'>
+                    <h4 className='font-bold text-sm uppercase'>
                       {t(`camouflage.cases.${caseItem.key}.title`)}
                     </h4>
-                    <p className='text-sm text-muted-foreground mt-2'>
+                    <p className='text-sm mt-2'>
                       {t(`camouflage.cases.${caseItem.key}.description`)}
                     </p>
                   </div>
@@ -140,23 +140,24 @@ export default function NanobladingCamouflagePage() {
           {/* Shared Information Section */}
           <section className='mt-16 pt-12 border-t'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-12'>
-              <div>
-                <h2 className='text-2xl font-bold text-foreground mb-4 flex items-center'>
-                  <Shield className='h-7 w-7 text-primary mr-3' />
-                  {t('shared.biosecurityHeading')}
-                </h2>
-                <p className='text-muted-foreground'>
-                  {t('shared.biosecurityText')}
-                </p>
+              <div className='alert-low border rounded-lg p-6'>
+                <div className='burgundy-text'>
+                  <h2 className='text-2xl font-bold mb-4 flex items-center'>
+                    <Shield className='h-7 w-7 mr-3' />
+                    {t('shared.biosecurityHeading')}
+                  </h2>
+                  <p>{t('shared.biosecurityText')}</p>
+                </div>
               </div>
-              <div>
-                <h2 className='text-2xl font-bold text-foreground mb-4 flex items-center'>
-                  <AlertTriangle className='h-7 w-7 burgundy-text mr-3' />
-                  {t('shared.pregnantWomenHeading')}
-                </h2>
-                <p className='text-muted-foreground'>
-                  {t('shared.pregnantWomenText')}
-                </p>
+
+              <div className='alert-high border rounded-lg p-6'>
+                <div className='text-primary'>
+                  <h2 className='text-2xl font-bold mb-4 flex items-center'>
+                    <AlertTriangle className='h-7 w-7 mr-3' />
+                    {t('shared.pregnantWomenHeading')}
+                  </h2>
+                  <p>{t('shared.pregnantWomenText')}</p>
+                </div>
               </div>
             </div>
           </section>

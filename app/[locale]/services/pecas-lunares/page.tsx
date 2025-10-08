@@ -81,40 +81,40 @@ export default function PecasLunaresPage() {
 
           {/* Sección: Bioseguridad */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
-              <Shield className='h-8 w-8 text-primary mr-3' />
-              {t('biosecurity.heading')}
-            </h2>
-            <div className='bg-card p-6 rounded-lg border'>
-              <p className='mb-4 text-muted-foreground font-secondary'>
-                {t('biosecurity.intro')}
-              </p>
-              <ul className='space-y-3 text-muted-foreground font-secondary'>
-                <li className='flex items-start space-x-3'>
-                  <div className='w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0'></div>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t.raw('biosecurity.li1'),
-                    }}
-                  />
-                </li>
-                <li className='flex items-start space-x-3'>
-                  <div className='w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0'></div>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t.raw('biosecurity.li2'),
-                    }}
-                  />
-                </li>
-                <li className='flex items-start space-x-3'>
-                  <div className='w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0'></div>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t.raw('biosecurity.li3'),
-                    }}
-                  />
-                </li>
-              </ul>
+            <div className='alert-low border rounded-lg p-6'>
+              <div className='burgundy-text'>
+                <h2 className='text-3xl font-bold font-primary mb-6 flex items-center'>
+                  <Shield className='h-8 w-8 mr-3' />
+                  {t('biosecurity.heading')}
+                </h2>
+                <p className='mb-4 font-secondary'>{t('biosecurity.intro')}</p>
+                <ul className='space-y-3 font-secondary'>
+                  <li className='flex items-start space-x-3'>
+                    <div className='w-2 h-2 bg-[var(--mg-burgundy)] rounded-full mt-2 flex-shrink-0'></div>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: t.raw('biosecurity.li1'),
+                      }}
+                    />
+                  </li>
+                  <li className='flex items-start space-x-3'>
+                    <div className='w-2 h-2 bg-[var(--mg-burgundy)] rounded-full mt-2 flex-shrink-0'></div>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: t.raw('biosecurity.li2'),
+                      }}
+                    />
+                  </li>
+                  <li className='flex items-start space-x-3'>
+                    <div className='w-2 h-2 bg-[var(--mg-burgundy)] rounded-full mt-2 flex-shrink-0'></div>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: t.raw('biosecurity.li3'),
+                      }}
+                    />
+                  </li>
+                </ul>
+              </div>
             </div>
           </section>
 
@@ -133,7 +133,7 @@ export default function PecasLunaresPage() {
                   <p className='font-secondary'>{t('pricing.touchUp')}</p>
                   <p className='font-secondary'>{t('pricing.maintenance')}</p>
                 </div>
-                <div className='mt-4 flex items-center text-sm font-primary/10 font-bold text-primary'>
+                <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
                   <CreditCard className='h-4 w-4 mr-2' />
                   <span className='font-secondary'>
                     {t('pricing.creditCard')}
@@ -147,15 +147,18 @@ export default function PecasLunaresPage() {
                 <p className='text-muted-foreground font-secondary mb-4'>
                   {t('pricing.molesText')}
                 </p>
-                <div className='flex items-start space-x-3 bg-primary/10 p-4 rounded-md'>
-                  <Package className='h-5 w-5 text-primary mt-1' />
-                  <div>
-                    <h4 className='font-semibold font-primary text-foreground'>
-                      {t('pricing.kitTitle')}
-                    </h4>
-                    <p className='text-sm text-muted-foreground font-secondary'>
-                      {t('pricing.kitText')}
-                    </p>
+
+                <div className='alert-low border rounded-lg p-4'>
+                  <div className='burgundy-text flex items-start space-x-3'>
+                    <Package className='h-5 w-5 mt-1' />
+                    <div>
+                      <h4 className='font-semibold font-primary'>
+                        {t('pricing.kitTitle')}
+                      </h4>
+                      <p className='text-sm font-secondary'>
+                        {t('pricing.kitText')}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -167,18 +170,19 @@ export default function PecasLunaresPage() {
 
           {/* Sección: Consideraciones */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
-              <AlertTriangle className='h-8 w-8 burgundy-text mr-3' />
-              {t('importantInfo.heading')}
-            </h2>
-            <div className='bg-card p-6 rounded-lg border'>
+            <div className='alert-high border rounded-lg p-6'>
+              <h2 className='text-3xl font-bold font-primary text-primary mb-6 flex items-center'>
+                <AlertTriangle className='h-8 w-8 text-primary mr-3' />
+                {t('importantInfo.heading')}
+              </h2>
+
               <div className='flex items-start space-x-4'>
                 <Baby className='h-8 w-8 text-primary flex-shrink-0' />
                 <div>
-                  <h3 className='font-semibold font-primary text-foreground'>
+                  <h3 className='font-semibold font-primary text-primary'>
                     {t('importantInfo.pregnancyTitle')}
                   </h3>
-                  <p className='text-muted-foreground font-secondary'>
+                  <p className='font-secondary text-primary'>
                     {t('importantInfo.pregnancyText')}
                   </p>
                 </div>

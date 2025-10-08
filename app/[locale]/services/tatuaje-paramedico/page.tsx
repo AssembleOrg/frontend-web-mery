@@ -102,13 +102,15 @@ export default function ParamedicalTattooPage() {
 
           {/* Shared Information Section */}
           <section className='mt-16 pt-12 border-t space-y-12'>
-            <div className='alert-low border rounded-lg p-6 text-center max-w-4xl mx-auto'>
+            <div className='alert-high border rounded-lg p-6 text-center max-w-4xl mx-auto'>
               <div className='flex flex-col items-center'>
-                <AlertTriangle className='h-8 w-8 burgundy-text mb-3' />
-                <h3 className='text-xl font-bold font-primary mb-2'>
+                <AlertTriangle className='h-8 w-8 text-primary mb-3' />
+                <h3 className='text-xl font-bold font-primary text-primary mb-2'>
                   {tShared('importantInfoHeading')}
                 </h3>
-                <p className='font-secondary'>{tShared('importantInfoText')}</p>
+                <p className='font-secondary text-primary'>
+                  {tShared('importantInfoText')}
+                </p>
               </div>
             </div>
 
@@ -121,21 +123,20 @@ export default function ParamedicalTattooPage() {
                   {tShared('procedureText')}
                 </p>
               </div>
-              <div>
-                <h2 className='text-2xl font-bold font-primary text-foreground mb-4 flex items-center'>
-                  <Shield className='h-7 w-7 text-primary mr-3' />
+
+              <div className='alert-low border rounded-lg p-6'>
+                <h2 className='text-2xl font-bold font-primary  mb-4 flex items-center'>
+                  <Shield className='h-7 w-7  mr-3' />
                   {tShared('biosecurityHeading')}
                 </h2>
-                <p className='text-muted-foreground font-secondary'>
-                  {tShared('biosecurityText')}
-                </p>
+                <p className='font-secondary '>{tShared('biosecurityText')}</p>
               </div>
             </div>
 
             <div className='text-center pt-6 mb-6'>
-              <div className='mt-4 flex items-center justify-center text-sm text-primary bg-primary/10 p-3 rounded-lg max-w-md mx-auto'>
+              <div className='mt-4 alert-low border flex items-center justify-center text-sm p-3 rounded-lg max-w-md mx-auto'>
                 <CreditCard className='h-4 w-4 mr-2 flex-shrink-0' />
-                <span className='flex items-center text-sm font-primary/10 font-bold text-primary'>
+                <span className='flex items-center text-sm font-primary/10 font-bold'>
                   {tShared('creditCardNote')}
                 </span>
               </div>

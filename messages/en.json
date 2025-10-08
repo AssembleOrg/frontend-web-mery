@@ -67,7 +67,15 @@
     "info": {
       "address": "Av. Melián 3646 PB 1, CABA",
       "hours": "Tuesday to Saturday, 10am to 6pm",
-      "email": "info@merygarcia.com.ar"
+      "whatsapp": "11 6159-2591"
+    },
+    "page": {
+      "title": "Contact",
+      "underDevelopment": "Under Development",
+      "importantInfo": {
+        "title": "Important Information",
+        "description": "For treatment inquiries, please contact reception. For information about courses and professional training, use our specialized contact for training programs."
+      }
     }
   },
   "booking": {
@@ -88,6 +96,7 @@
         "intro": "We love details! That's why if you thought about giving an <strong>Experience #ByMeryGarcia</strong>, we invite you to discover our Gift Card designed to delight someone very special.",
         "description": "It's specially created so that whoever receives it can choose their preferred service. <strong>You can gift an amount</strong>, or those services you liked the most and want to give as a gift.",
         "consultation": "CONSULT FOR TERMS AND CONDITIONS",
+        "consultButton": "Consult",
         "occasions": {
           "title": "WHEN IS A GOOD TIME FOR A GIFTCARD?",
           "list": [
@@ -106,6 +115,20 @@
         "title": "Ready to give a unique experience?",
         "description": "Contact us to purchase your Gift Card and surprise someone special with the gift of beauty.",
         "contactButton": "💬 Request Gift Card"
+      },
+      "ctaSection": {
+        "title": "Choose Your Gift Card",
+        "subtitle": "You can choose between a Physical or Virtual Gift Card, according to your preferences",
+        "physical": {
+          "title": "Physical Gift Card",
+          "description": "A physical card you can hand-deliver. Perfect for a tangible and special gift that the person can keep as a keepsake.",
+          "button": "Request Physical"
+        },
+        "virtual": {
+          "title": "Virtual Gift Card",
+          "description": "A digital gift card sent instantly by email. Ideal for long-distance gifting or last-minute occasions in a quick and convenient way.",
+          "button": "Request Virtual"
+        }
       }
     }
   },
@@ -281,7 +304,7 @@
         "p1": "The first step is the consultation stage. This is free of charge. Here, we tell you what this is about, how it is done, how long it takes, and the previous and post cares to take. We clear out all doubts so that you make sure you want to have it done.",
         "p2": "This appointment is key to give you information, to confirm that you can have it done, and that you can respect the aftercare. We will also inform you how many sessions your case will take (it can be several of 2 to 4 hours).",
         "p3": "Sessions are held once a month. It is a commitment that you should take. Otherwise the service is not finished and the potential of the results cannot be expected.",
-        "p4": "Once you had the consultation and you have your mind made up, you can book your first appointment for Micro Scalp. The cost of the service will depend on the hours that it takes and each session will have the same cost. For further information send us an email to info@merygarcia.com.ar"
+        "p4": "Once you had the consultation and you have your mind made up, you can book your first appointment for Micro Scalp. The cost of the service will depend on the hours that it takes and each session will have the same cost. For further information contact us via WhatsApp at 11 6159-2591"
       },
       "biosecurity": {
         "heading": "BIOSECURITY NORMS",
@@ -317,7 +340,7 @@
       ],
       "appointments": {
         "heading": "APPOINTMENTS",
-        "text": "All appointments are given in our shops or our site at Appointments Online. Here you can choose the service, the professional in charge and the branch where you would like to take it. For special appointments outside Buenos Aires, you have to be ready to our news posted on our social networks. For further information, send us an email to info@merygarcia.com.ar"
+        "text": "All appointments are given in our shops or our site at Appointments Online. Here you can choose the service, the professional in charge and the branch where you would like to take it. For special appointments outside Buenos Aires, you have to be ready to our news posted on our social networks. For further information, contact us via WhatsApp at 11 6159-2591"
       },
       "cta": {
         "heading": "Ready for a Striking Look?",

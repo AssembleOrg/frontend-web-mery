@@ -97,14 +97,18 @@
   --mg-gray: #545454;
 
   /* Burgundy Alert System - Following Brand Guidelines */
-  --mg-burgundy: #8B1538; /* Main burgundy color */
-  --mg-burgundy-light: #B8698A; /* Lighter burgundy */
-  --mg-burgundy-dark: #5C0E24; /* Darker burgundy */
+  --mg-burgundy: #8b1538; /* Main burgundy color */
+  --mg-burgundy-light: #b8698a; /* Lighter burgundy */
+  --mg-burgundy-dark: #5c0e24; /* Darker burgundy */
 
   /* Alert Patterns */
-  --mg-alert-high: var(--mg-burgundy); /* High attention: burgundy bg, pink text */
+  --mg-alert-high: var(
+    --mg-burgundy
+  ); /* High attention: burgundy bg, pink text */
   --mg-alert-high-text: var(--mg-pink);
-  --mg-alert-low: var(--mg-pink-light); /* Low attention: pink bg, burgundy text */
+  --mg-alert-low: var(
+    --mg-pink-light
+  ); /* Low attention: pink bg, burgundy text */
   --mg-alert-low-text: var(--mg-burgundy);
 
   /* Success/WhatsApp replacement */
@@ -154,16 +158,11 @@
   --mg-dark: #1a1a1a; /* Very dark for backgrounds */
   --mg-gray: #a0a0a0; /* Lighter gray for text */
 
-  /* Burgundy Alert System - Dark Mode */
-  --mg-burgundy: #D4749C; /* Lighter burgundy for dark mode */
-  --mg-burgundy-light: #E8A5C1; /* Even lighter for dark mode */
-  --mg-burgundy-dark: #B85A84; /* Darker variant */
-
   /* Alert Patterns - Dark Mode */
-  --mg-alert-high: var(--mg-burgundy); /* High attention: burgundy bg, pink text */
-  --mg-alert-high-text: var(--mg-pink-light);
-  --mg-alert-low: var(--mg-pink-lighter); /* Low attention: dark pink bg, burgundy text */
-  --mg-alert-low-text: var(--mg-burgundy-light);
+  --mg-alert-high: #8b1538;
+  --mg-alert-high-text: #eba2a8;
+  --mg-alert-low: #fbe8ea;
+  --mg-alert-low-text: #8b1538;
 
   /* Success/WhatsApp replacement - Dark Mode */
   --mg-success: var(--mg-burgundy);
@@ -212,6 +211,19 @@
   }
 }
 
+/* Sparkle Animation for Gift Cards */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
 @layer utilities {
   /* DIN Font Weight Utilities */
   .font-primary {
@@ -227,6 +239,27 @@
   .font-primary-medium {
     font-family: 'DIN', 'AvantGarde LT', sans-serif;
     font-weight: 500; /* Medium for emphasis */
+  }
+
+  /* Sparkle Animation */
+  .animate-twinkle {
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  /* Star Shape using clip-path */
+  .star-shape {
+    clip-path: polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 70%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
   }
 
   /* Brand Alert Utilities */

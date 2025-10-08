@@ -67,11 +67,15 @@
     "info": {
       "address": "Av. Melián 3646 PB 1, CABA",
       "hours": "Martes a Sábado, 10hs a 18hs",
-      "email": "info@merygarcia.com.ar"
+      "whatsapp": "11 6159-2591"
     },
     "page": {
       "title": "Contacto",
-      "underDevelopment": "En Desarrollo"
+      "underDevelopment": "En Desarrollo",
+      "importantInfo": {
+        "title": "Información Importante",
+        "description": "Para consultas sobre tratamientos, por favor contacta a recepción. Para información sobre cursos y formaciones profesionales, utiliza nuestro contacto especializado en formaciones."
+      }
     }
   },
   "booking": {
@@ -92,6 +96,7 @@
         "intro": "Amamos los detalles! Por eso si pensaste regalar una <strong>Experiencia #ByMeryGarcia</strong>, te invitamos a que conozcas nuestra Gift Card diseñada para agasajar a alguien muy especial.",
         "description": "Está especialmente creada para que quien la reciba pueda elegir el servicio que prefiera. <strong>Podes obsequiar un importe</strong>, o aquellos servicios que más te hayan gustado y tengas ganas de regalar.",
         "consultation": "CONSULTA POR BASES Y CONDICIONES",
+        "consultButton": "Consultar",
         "occasions": {
           "title": "¿CUÁNDO ES UN BUEN MOMENTO PARA UNA GIFTCARD?",
           "list": [
@@ -110,6 +115,20 @@
         "title": "¿Lista para regalar una experiencia única?",
         "description": "Contactanos para adquirir tu Gift Card y sorprender a alguien especial con el regalo de la belleza.",
         "contactButton": "💬 Solicitar Gift Card"
+      },
+      "ctaSection": {
+        "title": "Elegí tu Gift Card",
+        "subtitle": "Podés optar por una Gift Card Física o Virtual, según tus preferencias",
+        "physical": {
+          "title": "Gift Card Física",
+          "description": "Una tarjeta física que podés entregar en mano. Perfecta para un regalo tangible y especial que la persona pueda guardar como recuerdo.",
+          "button": "Solicitar Física"
+        },
+        "virtual": {
+          "title": "Gift Card Virtual",
+          "description": "Una gift card digital que se envía al instante por email. Ideal para regalar a distancia o en el último momento de forma rápida y conveniente.",
+          "button": "Solicitar Virtual"
+        }
       }
     }
   },
@@ -279,7 +298,7 @@
         "p1": "El primer paso es la etapa de consulta. Esta es gratuita. Aquí te contamos de qué se trata, cómo se hace, cuánto tiempo lleva y los cuidados previos y posteriores a tener en cuenta. Despejamos todas tus dudas para que te asegures de que quieres hacértelo.",
         "p2": "Esta cita es la clave para darte información, para que conozcas los procedimientos, para confirmar que puedes hacértelo y que puedes respetar los cuidados posteriores. También te informaremos cuántas sesiones llevará tu caso (pueden ser varias de 2 a 4 horas).",
         "p3": "Se realiza una sesión al mes. Es un compromiso que debes asumir. De lo contrario, el servicio no se termina y no se puede esperar el potencial de los resultados.",
-        "p4": "Una vez que hayas tenido la consulta y te hayas decidido, puedes reservar tu primera cita para Micro Scalp. El costo del servicio dependerá de las horas que lleve y cada sesión tendrá el mismo costo. Para más información envíanos un email a info@merygarcia.com.ar"
+        "p4": "Una vez que hayas tenido la consulta y te hayas decidido, puedes reservar tu primera cita para Micro Scalp. El costo del servicio dependerá de las horas que lleve y cada sesión tendrá el mismo costo. Para más información contáctanos por WhatsApp al 11 6159-2591"
       },
       "biosecurity": {
         "heading": "NORMAS DE BIOSEGURIDAD",
@@ -315,7 +334,7 @@
       ],
       "appointments": {
         "heading": "TURNOS",
-        "text": "Todos los turnos se dan en nuestros locales o en nuestra web en Turnos Online. Aquí puedes elegir el servicio, el profesional a cargo y la sucursal donde te gustaría tomarlo. Para turnos especiales fuera de Buenos Aires, tienes que estar atenta a nuestras novedades publicadas en nuestras redes sociales. Para más información, envíanos un email a info@merygarcia.com.ar"
+        "text": "Todos los turnos se dan en nuestros locales o en nuestra web en Turnos Online. Aquí puedes elegir el servicio, el profesional a cargo y la sucursal donde te gustaría tomarlo. Para turnos especiales fuera de Buenos Aires, tienes que estar atenta a nuestras novedades publicadas en nuestras redes sociales. Para más información, contáctanos por WhatsApp al 11 6159-2591"
       },
       "cta": {
         "heading": "¿Lista para una Mirada Impactante?",
