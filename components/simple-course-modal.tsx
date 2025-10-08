@@ -5,7 +5,8 @@ import CourseInclude from './course-include';
 import { Course } from '@/types/course';
 import { useCartStore } from '@/stores/cart-store';
 import { useRouter } from 'next/navigation';
-import { Play, MessageCircle } from 'lucide-react';
+import { Play } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 
 interface SimpleCourseModalProps {
@@ -140,7 +141,7 @@ export default function SimpleCourseModal({
                     onClick={handleWhatsApp}
                     className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
                   >
-                    <MessageCircle className='w-4 h-4' />
+                    <FaWhatsapp className='w-4 h-4' />
                     WhatsApp
                   </button>
                 )}
@@ -204,7 +205,7 @@ export default function SimpleCourseModal({
                       onClick={handleWhatsApp}
                       className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
                     >
-                      <MessageCircle className='w-4 h-4' />
+                      <FaWhatsapp className='w-4 h-4' />
                       WhatsApp
                     </button>
                   )}

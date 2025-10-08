@@ -67,12 +67,11 @@ export function BookingCTA({
               </a>
             </Button>
 
-            {/* 4. Mostramos el segundo botón solo si showExpressButton es true */}
             {showExpressButton && (
               <Button
                 variant='outline'
                 size='lg'
-                className='px-8 py-3 text-lg'
+                className='px-8 py-3 text-lg hover:bg-transparent hover:text-primary'
                 asChild
               >
                 <Link href='/asesoramiento-express'>

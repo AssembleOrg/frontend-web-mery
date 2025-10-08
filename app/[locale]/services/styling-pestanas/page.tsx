@@ -94,9 +94,9 @@ export default function LashesLinePage() {
                     </p>
                   </div>
                 </div>
-                <div className='mt-6 flex items-center justify-center text-sm text-primary bg-primary/10 p-3 rounded-lg'>
+                <div className='mt-6 alert-low border flex items-center justify-center text-sm p-3 rounded-lg'>
                   <CreditCard className='h-4 w-4 mr-2 flex-shrink-0' />
-                  <span className='flex items-center text-sm font-primary/10 font-bold text-primary'>
+                  <span className='flex items-center text-sm font-primary/10 font-bold'>
                     {t('pricing.creditCardNote')}
                   </span>
                 </div>

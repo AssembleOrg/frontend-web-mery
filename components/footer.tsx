@@ -1,7 +1,8 @@
 'use client';
 
 import { Link } from '@/i18n/routing';
-import { MapPin, Clock, Mail, Instagram } from 'lucide-react';
+import { MapPin, Clock, Instagram } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { Logo } from './logo';
 
 export function Footer() {
@@ -47,12 +48,14 @@ export function Footer() {
                 </p>
               </div>
               <div className='flex items-center space-x-3'>
-                <Mail className='h-4 w-4 text-primary flex-shrink-0' />
+                <FaWhatsapp className='h-4 w-4 text-primary flex-shrink-0' />
                 <a
-                  href='mailto:info@merygarcia.com.ar'
+                  href='https://wa.me/5491161592591'
+                  target='_blank'
+                  rel='noopener noreferrer'
                   className='text-sm text-muted-foreground hover:text-primary transition-colors'
                 >
-                  info@merygarcia.com.ar
+                  11 6159-2591
                 </a>
               </div>
               <div className='flex items-center space-x-3'>

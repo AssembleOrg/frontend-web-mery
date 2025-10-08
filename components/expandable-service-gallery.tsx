@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { FaInstagram } from 'react-icons/fa';
 
 interface Service {
   key: string;
@@ -110,12 +111,13 @@ export function ExpandableServiceGallery({
                       </Button>
                       <Button
                         size='sm'
-                        className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm'
+                        className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm flex items-center gap-1'
                         onClick={(e) => {
                           e.preventDefault();
                           window.open(beforeAfterUrls[service.key], '_blank');
                         }}
                       >
+                        <FaInstagram className='w-4 h-4' />
                         Before & After
                       </Button>
                     </div>
@@ -257,12 +259,13 @@ export function ExpandableServiceGallery({
                     </Link>
                     <Button
                       size='sm'
-                      className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm'
+                      className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm flex items-center gap-1'
                       onClick={(e) => {
                         e.preventDefault();
                         window.open(beforeAfterUrls[service.key], '_blank');
                       }}
                     >
+                      <FaInstagram className='w-4 h-4' />
                       Before & After
                     </Button>
                   </div>
