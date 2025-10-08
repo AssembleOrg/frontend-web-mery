@@ -4,21 +4,50 @@ import { useAdminStore } from '@/stores';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AdminCursosPage() {
   const params = useParams();
   const router = useRouter();
   const locale = (params.locale as string) || 'es';
 
-  const { courses, deleteCourse } = useAdminStore();
+  const { fetchCategories, deleteCategory } = useAdminStore();
+  const [categories, setCategories] = useState<any[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const handleDelete = (id: string) => {
+  // Prevent hydration issues
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Load categories on mount
+  useEffect(() => {
+    const loadCategories = async () => {
+      setIsLoading(true);
+      try {
+        await fetchCategories();
+        // Get categories from store after fetch
+        const cats = useAdminStore.getState().categories;
+        setCategories(cats);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCategories();
+  }, [fetchCategories]);
+
+  const handleDelete = async (id: string) => {
     if (deleteConfirm === id) {
-      const success = deleteCourse(id);
+      const success = await deleteCategory(id);
       if (success) {
         setDeleteConfirm(null);
+        // Update local state after deletion
+        const updatedCategories = useAdminStore.getState().categories;
+        setCategories(updatedCategories);
       }
     } else {
       setDeleteConfirm(id);
@@ -27,15 +56,37 @@ export default function AdminCursosPage() {
     }
   };
 
-  const formatPrice = (price: number, currency: string) => {
-    if (currency === 'USD') {
-      return `U$S ${price.toLocaleString()}`;
+  const formatPrice = (category: any) => {
+    if (category.isFree) {
+      return 'Gratis';
     }
-    return `$${price.toLocaleString()}`;
+    if (category.priceUSD > 0) {
+      return `U$S ${category.priceUSD.toLocaleString()}`;
+    }
+    if (category.priceARS > 0) {
+      return `$ ${category.priceARS.toLocaleString()} ARS`;
+    }
+    return 'N/A';
   };
 
+  // Prevent hydration mismatch
+  if (!isMounted) {
+    return null;
+  }
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center py-20'>
+        <div className='text-center'>
+          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
+          <p className='mt-4 text-gray-600'>Cargando cursos...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6' suppressHydrationWarning>
       {/* Page Header */}
       <div className='flex justify-between items-center'>
         <div>
@@ -68,7 +119,10 @@ export default function AdminCursosPage() {
                   Precio
                 </th>
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Lecciones
+                  Videos
+                </th>
+                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Estado
                 </th>
                 <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Acciones
@@ -76,9 +130,9 @@ export default function AdminCursosPage() {
               </tr>
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
-              {courses.length === 0 ? (
+              {!categories || categories.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className='px-6 py-12 text-center'>
+                  <td colSpan={5} className='px-6 py-12 text-center'>
                     <div className='text-gray-500'>
                       <p className='text-lg font-medium'>No hay cursos creados</p>
                       <p className='text-sm mt-1'>
@@ -88,55 +142,76 @@ export default function AdminCursosPage() {
                   </td>
                 </tr>
               ) : (
-                courses.map((course) => (
-                  <tr key={course.id} className='hover:bg-gray-50 transition-colors'>
+                categories.map((category) => (
+                  <tr key={category.id} className='hover:bg-gray-50 transition-colors'>
                     <td className='px-6 py-4'>
                       <div className='flex items-center'>
-                        {course.image && (
+                        {category.image && (
                           <img
-                            src={course.image}
-                            alt={course.title}
+                            src={category.image}
+                            alt={category.name}
                             className='h-12 w-12 rounded object-cover mr-4'
                           />
                         )}
                         <div>
                           <div className='text-sm font-medium text-gray-900'>
-                            {course.title}
+                            {category.name}
                           </div>
                           <div className='text-sm text-gray-500'>
-                            {course.description?.substring(0, 60)}...
+                            {category.description?.substring(0, 60)}
+                            {category.description && category.description.length > 60 && '...'}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm font-semibold text-gray-900'>
-                        {formatPrice(course.price, course.currency)}
+                        {formatPrice(category)}
                       </div>
-                      <div className='text-xs text-gray-500'>{course.currency}</div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm text-gray-900'>
-                        {course.lessons?.length || 0} lecciones
+                        {category.videoCount || 0} videos
                       </div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          category.isActive
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {category.isActive ? 'Activo' : 'Inactivo'}
+                      </span>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                       <div className='flex items-center justify-end gap-2'>
                         <button
-                          onClick={() => router.push(`/${locale}/admin/cursos/${course.id}`)}
+                          onClick={() => router.push(`/${locale}/admin/cursos/${category.id}/videos`)}
+                          className='text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded transition-colors'
+                          title='Gestionar Videos'
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => router.push(`/${locale}/admin/cursos/${category.id}`)}
                           className='text-indigo-600 hover:text-indigo-900 p-2 hover:bg-indigo-50 rounded transition-colors'
                           title='Editar'
                         >
                           <Edit className='w-4 h-4' />
                         </button>
                         <button
-                          onClick={() => handleDelete(course.id)}
+                          onClick={() => handleDelete(category.id)}
                           className={`p-2 rounded transition-colors ${
-                            deleteConfirm === course.id
+                            deleteConfirm === category.id
                               ? 'text-white bg-red-600 hover:bg-red-700'
                               : 'text-red-600 hover:text-red-900 hover:bg-red-50'
                           }`}
-                          title={deleteConfirm === course.id ? 'Confirmar eliminación' : 'Eliminar'}
+                          title={deleteConfirm === category.id ? 'Confirmar eliminación' : 'Eliminar'}
                         >
                           <Trash2 className='w-4 h-4' />
                         </button>

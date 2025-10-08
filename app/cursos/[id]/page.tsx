@@ -31,7 +31,27 @@ export default function CursoDetallePage() {
     const loadCourse = async () => {
       try {
         setLoading(true);
-        const courseData = await getCourseDetails(courseId);
+        // Get Category from backend
+        const categoryData = await getCourseDetails(courseId);
+        
+        // Convert Category to Course format
+        const courseData: Course = {
+          id: categoryData.id,
+          slug: categoryData.slug,
+          title: categoryData.name,
+          description: categoryData.description || '',
+          image: categoryData.image || '',
+          price: categoryData.priceUSD || categoryData.priceARS || 0,
+          priceDisplay: categoryData.priceUSD 
+            ? `U$S ${categoryData.priceUSD}` 
+            : `$ ${categoryData.priceARS} ARS`,
+          currency: categoryData.priceUSD > 0 ? 'USD' : 'ARS',
+          isPublished: categoryData.isActive,
+          createdAt: new Date(categoryData.createdAt),
+          updatedAt: new Date(categoryData.updatedAt),
+          lessons: [], // Videos will be loaded separately if needed
+        };
+        
         setCourse(courseData);
         setCurrentCourse(courseData);
 

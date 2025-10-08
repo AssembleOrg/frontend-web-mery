@@ -16,26 +16,56 @@ interface CourseFormProps {
 
 export default function CourseForm({ course, onSubmit, onCancel }: CourseFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<Partial<CourseCreateInput>>({
-    slug: course?.slug || '',
-    title: course?.title || '',
-    description: course?.description || '',
-    image: course?.image || '',
-    price: course?.price || 0,
-    priceDisplay: course?.priceDisplay || '',
-    currency: course?.currency || 'ARS',
-    isPublished: course?.isPublished ?? false,
-    modalContent: course?.modalContent || {
-      detailedDescription: '',
-      includes: [],
-      targetAudience: '',
-      specialNotes: '',
-      additionalInfo: '',
-      duration: '',
-      level: '',
-    },
-    lessons: course?.lessons || [],
-  });
+  
+  // Map backend Category to frontend Course format
+  const mapCourseData = (courseData: any): Partial<CourseCreateInput> => {
+    if (!courseData) {
+      return {
+        slug: '',
+        title: '',
+        description: '',
+        image: '',
+        priceARS: 0,
+        priceUSD: 0,
+        isFree: false,
+        isPublished: false,
+        modalContent: {
+          detailedDescription: '',
+          includes: [],
+          targetAudience: '',
+          specialNotes: '',
+          additionalInfo: '',
+          duration: '',
+          level: '',
+        },
+        lessons: [],
+      };
+    }
+
+    return {
+      slug: courseData.slug || '',
+      title: courseData.title || courseData.name || '', // Backend uses 'name'
+      description: courseData.description || '',
+      image: courseData.image || '',
+      priceARS: courseData.priceARS || 0,
+      priceUSD: courseData.priceUSD || 0,
+      isFree: courseData.isFree || false,
+      isPublished: courseData.isPublished ?? courseData.isActive ?? false,
+      order: courseData.order || 0,
+      modalContent: courseData.modalContent || {
+        detailedDescription: '',
+        includes: [],
+        targetAudience: '',
+        specialNotes: '',
+        additionalInfo: '',
+        duration: '',
+        level: '',
+      },
+      lessons: courseData.lessons || [],
+    };
+  };
+
+  const [formData, setFormData] = useState<Partial<CourseCreateInput>>(mapCourseData(course));
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -55,7 +85,17 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
       if (!formData.title?.trim()) newErrors.title = 'El título es requerido';
       if (!formData.slug?.trim()) newErrors.slug = 'El slug es requerido';
       if (!formData.description?.trim()) newErrors.description = 'La descripción es requerida';
-      if (!formData.price || formData.price <= 0) newErrors.price = 'El precio debe ser mayor a 0';
+      
+      // Validar precios si no es gratuito
+      if (!formData.isFree) {
+        if (!formData.priceARS || formData.priceARS <= 0) {
+          newErrors.priceARS = 'El precio en ARS debe ser mayor a 0';
+        }
+        if (!formData.priceUSD || formData.priceUSD <= 0) {
+          newErrors.priceUSD = 'El precio en USD debe ser mayor a 0';
+        }
+      }
+      
       if (!formData.image?.trim()) newErrors.image = 'La imagen es requerida';
     }
 

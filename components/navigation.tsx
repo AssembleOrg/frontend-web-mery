@@ -4,7 +4,7 @@ import { Link } from '@/i18n/routing';
 import { ModeToggle } from './mode-toggle';
 import { LanguageToggle } from './language-toggle';
 import { Button } from './ui/button';
-import { Logo } from './logo';
+import { SimpleLogo } from './simple-logo';
 import { MobileMenu } from './mobile-menu';
 import { UserMenu } from './user-menu';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,10 +24,7 @@ export function Navigation() {
             href='/'
             className='flex items-center flex-shrink-0'
           >
-            <Logo
-              className='h-8 w-40 sm:h-10 sm:w-auto md:h-12 lg:h-14'
-              priority
-            />
+            <SimpleLogo />
           </Link>
           <div className='hidden xl:flex items-center space-x-4 2xl:space-x-6'>
             <Link

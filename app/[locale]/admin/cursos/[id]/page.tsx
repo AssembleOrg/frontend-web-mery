@@ -13,22 +13,59 @@ export default function EditarCursoPage() {
   const locale = (params.locale as string) || 'es';
   const courseId = params.id as string;
 
-  const { getCourseById, updateCourse } = useAdminStore();
-  const [course, setCourse] = useState(getCourseById(courseId));
+  const { categories, fetchCategoryById, updateCategory } = useAdminStore();
+  const [course, setCourse] = useState<any>(null);
   const [notFound, setNotFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const foundCourse = getCourseById(courseId);
-    if (!foundCourse) {
-      setNotFound(true);
-    } else {
-      setCourse(foundCourse);
-    }
-  }, [courseId, getCourseById]);
+    const loadCourse = async () => {
+      setIsLoading(true);
+      try {
+        // First check if course is in local state
+        const localCourse = categories.find(c => c.id === courseId);
+        if (localCourse) {
+          setCourse(localCourse);
+          setIsLoading(false);
+          return;
+        }
 
-  const handleSubmit = (courseData: CourseCreateInput) => {
+        // Otherwise fetch from API
+        const foundCourse = await fetchCategoryById(courseId);
+        if (!foundCourse) {
+          setNotFound(true);
+        } else {
+          setCourse(foundCourse);
+        }
+      } catch (error) {
+        console.error('Error loading course:', error);
+        setNotFound(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCourse();
+  }, [courseId, categories, fetchCategoryById]);
+
+  const handleSubmit = async (courseData: CourseCreateInput) => {
     try {
-      const updatedCourse = updateCourse(courseId, courseData);
+      // Convert CourseCreateInput to Category format
+      const categoryUpdates = {
+        name: courseData.title,
+        slug: courseData.slug,
+        description: courseData.description,
+        image: courseData.image,
+        priceARS: courseData.priceARS || 0,
+        priceUSD: courseData.priceUSD || 0,
+        isFree: courseData.isFree || false,
+        isActive: courseData.isPublished || false,
+        order: courseData.order || 0,
+      };
+
+      console.log('[EditarCurso] Enviando actualización:', categoryUpdates);
+
+      const updatedCourse = await updateCategory(courseId, categoryUpdates);
 
       if (!updatedCourse) {
         throw new Error('Failed to update course');
@@ -41,7 +78,7 @@ export default function EditarCursoPage() {
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
       console.error('Error updating course:', error);
-      // Show error message
+      alert('Error al actualizar el curso. Por favor intenta nuevamente.');
     }
   };
 
@@ -49,7 +86,18 @@ export default function EditarCursoPage() {
     router.push(`/${locale}/admin/cursos`);
   };
 
-  if (notFound) {
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-center'>
+          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
+          <p className='mt-4 text-gray-600'>Cargando curso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound || !course) {
     return (
       <div className='space-y-6'>
         <button
@@ -81,17 +129,6 @@ export default function EditarCursoPage() {
     );
   }
 
-  if (!course) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
-          <p className='mt-4 text-gray-600'>Cargando curso...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className='space-y-6'>
       {/* Back Button */}
@@ -109,7 +146,7 @@ export default function EditarCursoPage() {
           Editar Curso
         </h2>
         <p className='mt-1 text-sm text-gray-600'>
-          Modificar: <span className='font-semibold'>{course.title}</span>
+          Modificar: <span className='font-semibold'>{course.title || course.name}</span>
         </p>
       </div>
 

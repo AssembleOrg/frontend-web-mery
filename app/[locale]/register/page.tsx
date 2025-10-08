@@ -47,13 +47,9 @@ export default function RegisterPage() {
       city: formData.city || undefined,
     });
 
-    if (result.success && result.user) {
-      // Redirigir según el rol del usuario retornado por register
-      if (result.user.role === 'admin') {
-        router.push(`/${locale}/admin/cursos`);
-      } else {
-        router.push(`/${locale}/mi-cuenta`);
-      }
+    // Registro exitoso - redirigir a login para que el usuario inicie sesión
+    if (result.message) {
+      router.push(`/${locale}/login?registered=true`);
     }
   };
 

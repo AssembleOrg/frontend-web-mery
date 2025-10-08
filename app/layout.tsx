@@ -12,5 +12,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Don't render html/body here - let the locale layout handle it
   return children;
 }

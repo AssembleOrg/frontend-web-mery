@@ -11,20 +11,39 @@ export default function NuevoCursoPage() {
   const params = useParams();
   const locale = (params.locale as string) || 'es';
 
-  const { createCourse } = useAdminStore();
+  const { createCategory } = useAdminStore();
 
-  const handleSubmit = (courseData: CourseCreateInput) => {
+  const handleSubmit = async (courseData: CourseCreateInput) => {
     try {
-      const newCourse = createCourse(courseData);
+      // Convert CourseCreateInput to Category format
+      const categoryData = {
+        name: courseData.title,
+        slug: courseData.slug,
+        description: courseData.description,
+        image: courseData.image,
+        priceARS: courseData.priceARS || 0,
+        priceUSD: courseData.priceUSD || 0,
+        isFree: courseData.isFree || false,
+        order: courseData.order || 0,
+        isActive: courseData.isPublished || false,
+      };
 
-      // Show success message (you could add a toast notification here)
+      console.log('[NuevoCurso] Creando curso:', categoryData);
+
+      const newCourse = await createCategory(categoryData);
+
+      if (!newCourse) {
+        throw new Error('Failed to create course');
+      }
+
+      // Show success message
       console.log('Curso creado exitosamente:', newCourse);
 
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
       console.error('Error creating course:', error);
-      // Show error message (you could add a toast notification here)
+      alert('Error al crear el curso. Por favor intenta nuevamente.');
     }
   };
 

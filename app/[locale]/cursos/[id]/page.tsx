@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Clock, CheckCircle2, PlayCircle } from 'lucide-react';
+import { ArrowLeft, Clock, PlayCircle } from 'lucide-react';
 import { Course, Lesson } from '@/types/course';
 import { getCourseDetails } from '@/lib/api-client';
 import { useCourseStore } from '@/stores';
@@ -49,8 +49,8 @@ export default function CursoDetallePage() {
           return;
         }
 
-        // 1. Cargar detalles del curso
-        const courseData = await getCourseDetails(courseId);
+        // 1. Cargar detalles del curso (devuelve Category del backend)
+        const categoryData = await getCourseDetails(courseId);
 
         // 2. Verificar acceso: obtener lista de cursos del usuario
         const userCourses = await getUserCoursesService(token);
@@ -62,7 +62,25 @@ export default function CursoDetallePage() {
           return;
         }
 
-        // 3. Usuario tiene acceso: mostrar curso
+        // 3. Convert Category to Course format
+        const courseData: Course = {
+          id: categoryData.id,
+          slug: categoryData.slug,
+          title: categoryData.name,
+          description: categoryData.description || '',
+          image: categoryData.image || '',
+          price: categoryData.priceUSD || categoryData.priceARS || 0,
+          priceDisplay: categoryData.priceUSD 
+            ? `U$S ${categoryData.priceUSD}` 
+            : `$ ${categoryData.priceARS} ARS`,
+          currency: categoryData.priceUSD > 0 ? 'USD' : 'ARS',
+          isPublished: categoryData.isActive,
+          createdAt: new Date(categoryData.createdAt),
+          updatedAt: new Date(categoryData.updatedAt),
+          lessons: [], // Videos will be loaded separately if needed
+        };
+
+        // 4. Usuario tiene acceso: mostrar curso
         setCourse(courseData);
         setCurrentCourse(courseData);
 

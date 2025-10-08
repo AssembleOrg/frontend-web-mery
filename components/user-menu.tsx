@@ -42,8 +42,9 @@ export function UserMenu() {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const initials = getInitials(user.name);
-  const isAdmin = user.role === 'admin';
+  const displayName = user.name || user.email;
+  const initials = getInitials(displayName);
+  const isAdmin = user.role === 'ADMIN';
 
   const handleLogout = async () => {
     await logout();
@@ -84,7 +85,7 @@ export function UserMenu() {
         {/* Name (hidden on mobile) */}
         <div className='hidden md:flex flex-col items-start'>
           <span className='text-sm font-medium text-foreground'>
-            {user.name}
+            {displayName}
           </span>
           <span
             className={`text-xs px-2 py-0.5 rounded-full ${
@@ -109,7 +110,7 @@ export function UserMenu() {
         <div className='absolute right-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-lg py-2 z-50'>
           {/* User Info (visible on mobile) */}
           <div className='md:hidden px-4 py-3 border-b border-border'>
-            <p className='text-sm font-medium text-foreground'>{user.name}</p>
+            <p className='text-sm font-medium text-foreground'>{displayName}</p>
             <p className='text-xs text-muted-foreground'>{user.email}</p>
             <span
               className={`inline-block mt-2 text-xs px-2 py-1 rounded-full ${

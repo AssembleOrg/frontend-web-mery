@@ -21,8 +21,19 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const locale = (params.locale as string) || 'es';
 
   useEffect(() => {
+    console.log('[ProtectedRoute] auth state change', { isLoading, isAuthenticated, locale });
+
+    // Defensive delay: avoid immediate redirect caused by a race between
+    // page mount and useAuth background verification (especially on F5).
+    // Wait a short time before redirecting; if auth becomes true in that
+    // time, cancel the redirect.
     if (!isLoading && !isAuthenticated) {
-      router.push(`/${locale}/login`);
+      const timer = setTimeout(() => {
+        console.log('[ProtectedRoute] redirecting to login after delay', `/${locale}/login`);
+        router.push(`/${locale}/login`);
+      }, 700);
+
+      return () => clearTimeout(timer);
     }
   }, [isLoading, isAuthenticated, router, locale]);
 

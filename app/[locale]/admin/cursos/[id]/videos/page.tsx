@@ -1,0 +1,581 @@
+'use client';
+
+import { useAdminStore } from '@/stores';
+import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import {
+  ArrowLeft,
+  PlusCircle,
+  Edit,
+  Trash2,
+  Eye,
+  EyeOff,
+  Save,
+  X,
+  Loader2,
+} from 'lucide-react';
+import type { CreateVideoInput } from '@/lib/api-client';
+
+export default function CursoVideosPage() {
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
+  const courseId = params.id as string;
+
+  const {
+    categories,
+    videos,
+    fetchCategoryById,
+    fetchVideos,
+    createVideo,
+    updateVideo,
+    deleteVideo,
+  } = useAdminStore();
+
+  const [course, setCourse] = useState<any>(null);
+  const [courseVideos, setCourseVideos] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingVideo, setEditingVideo] = useState<any>(null);
+  const [formData, setFormData] = useState<Partial<CreateVideoInput> & { isPublished?: boolean }>({
+    title: '',
+    slug: '',
+    description: '',
+    vimeoId: '',
+    categoryId: courseId,
+    order: 0,
+  });
+  const [isFetchingVimeo, setIsFetchingVimeo] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId]);
+
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      // Load course info
+      const foundCourse = await fetchCategoryById(courseId);
+      if (foundCourse) {
+        setCourse(foundCourse);
+      }
+
+      // Load videos for this course
+      await fetchVideos(courseId);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log(videos)
+    const filtered = videos.filter((v: any) => v.categoryId === courseId);
+    setCourseVideos(filtered);
+  }, [videos, courseId]);
+
+  const handleBack = () => {
+    router.push(`/${locale}/admin/cursos`);
+  };
+
+  const handleStartAdd = () => {
+    setIsEditing(true);
+    setEditingVideo(null);
+    setFormData({
+      title: '',
+      slug: '',
+      description: '',
+      vimeoId: '',
+      categoryId: courseId,
+      order: courseVideos.length,
+      isPublished: false, // Default to unpublished (draft mode)
+    });
+    setErrors({});
+  };
+
+  const handleStartEdit = (video: any) => {
+    setIsEditing(true);
+    setEditingVideo(video);
+    setFormData({
+      title: video.title,
+      slug: video.slug,
+      description: video.description || '',
+      vimeoId: video.vimeoId || '',
+      categoryId: video.categoryId,
+      order: video.order || 0,
+      isPublished: video.isPublished || false, // Load current published status
+    });
+    setErrors({});
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingVideo(null);
+    setFormData({
+      title: '',
+      slug: '',
+      description: '',
+      vimeoId: '',
+      categoryId: courseId,
+      order: 0,
+      isPublished: false,
+    });
+    setErrors({});
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.title?.trim()) {
+      newErrors.title = 'El título es requerido';
+    }
+    if (!formData.slug?.trim()) {
+      newErrors.slug = 'El slug es requerido';
+    }
+    if (!formData.vimeoId?.trim() && !editingVideo) {
+      newErrors.vimeoId = 'El ID de Vimeo es requerido';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  const handleTitleChange = (title: string) => {
+    setFormData({
+      ...formData,
+      title,
+      slug: generateSlug(title),
+    });
+  };
+
+  const handleFetchVimeoData = async () => {
+    if (!formData.vimeoId?.trim()) {
+      alert('Por favor ingresa el ID de Vimeo primero');
+      return;
+    }
+
+    setIsFetchingVimeo(true);
+
+    try {
+      // En el futuro, esto será una llamada real a la API que obtenga datos de Vimeo
+      // Por ahora, simplemente validamos que el ID esté presente
+      
+      // La API del backend automáticamente obtendrá:
+      // - thumbnail desde Vimeo
+      // - duration desde Vimeo
+      // - vimeoUrl desde Vimeo
+      
+      alert('✓ ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.');
+      
+    } catch (error) {
+      console.error('Error validating Vimeo ID:', error);
+      alert('Error al validar el ID de Vimeo. Verifica que sea correcto.');
+    } finally {
+      setIsFetchingVimeo(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!validateForm()) {
+      console.log('Form data is not valid', errors);
+      return;
+    }
+
+    try {
+      if (editingVideo) {
+        // Update existing video
+        const updates = {
+          title: formData.title!,
+          slug: formData.slug!,
+          description: formData.description,
+          order: formData.order,
+          isPublished: formData.isPublished, // Include published status
+        };
+        await updateVideo(editingVideo.id, updates);
+      } else {
+        // Create new video
+        const newVideo: CreateVideoInput = {
+          title: formData.title!,
+          slug: formData.slug!,
+          description: formData.description,
+          vimeoId: formData.vimeoId!,
+          categoryId: courseId,
+          order: formData.order || courseVideos.length,
+          isPublished: formData.isPublished, // Include published status
+        };
+        await createVideo(newVideo as any);
+      }
+
+      // Reload data
+      await loadData();
+      handleCancelEdit();
+    } catch (error) {
+      console.error('Error saving video:', error);
+      alert('Error al guardar el video. Por favor intenta nuevamente.');
+    }
+  };
+
+  const handleDelete = async (videoId: string) => {
+    if (!confirm('¿Estás seguro de eliminar este video?')) {
+      return;
+    }
+
+    try {
+      await deleteVideo(videoId);
+      await loadData();
+    } catch (error) {
+      console.error('Error deleting video:', error);
+      alert('Error al eliminar el video.');
+    }
+  };
+
+  const handleTogglePublish = async (video: any) => {
+    try {
+      // Solo enviar isPublished, el backend maneja publishedAt automáticamente
+      await updateVideo(video.id, {
+        isPublished: !video.isPublished,
+      });
+      await loadData();
+    } catch (error) {
+      console.error('Error toggling publish status:', error);
+      alert('Error al cambiar el estado de publicación.');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-center'>
+          <Loader2 className='w-12 h-12 animate-spin text-[#f9bbc4] mx-auto' />
+          <p className='mt-4 text-gray-600'>Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!course) {
+    return (
+      <div className='space-y-6'>
+        <button
+          onClick={handleBack}
+          className='inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors'
+        >
+          <ArrowLeft className='w-4 h-4' />
+          Volver a cursos
+        </button>
+        <div className='bg-white rounded-lg shadow-lg p-12 text-center'>
+          <p className='text-gray-600'>Curso no encontrado</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className='space-y-6'>
+      {/* Header */}
+      <div className='flex items-center justify-between'>
+        <div>
+          <button
+            onClick={handleBack}
+            className='inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-4'
+          >
+            <ArrowLeft className='w-4 h-4' />
+            Volver a cursos
+          </button>
+          <h1 className='text-3xl font-primary font-bold text-gray-900'>
+            Videos de: {course.name}
+          </h1>
+          <p className='text-gray-600 mt-1'>
+            Gestiona los videos de este curso usando IDs de Vimeo
+          </p>
+        </div>
+
+        {!isEditing && (
+          <button
+            onClick={handleStartAdd}
+            className='inline-flex items-center gap-2 px-4 py-3 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors'
+          >
+            <PlusCircle className='w-5 h-5' />
+            Agregar Video
+          </button>
+        )}
+      </div>
+
+      {/* Edit Form */}
+      {isEditing && (
+        <div className='bg-white rounded-lg shadow-lg p-6 border-2 border-[#f9bbc4]'>
+          <h2 className='text-2xl font-primary font-bold text-gray-900 mb-6'>
+            {editingVideo ? 'Editar Video' : 'Nuevo Video'}
+          </h2>
+
+          <div className='space-y-4'>
+            {/* Title */}
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Título del Video *
+              </label>
+              <input
+                type='text'
+                value={formData.title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                  errors.title ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder='Ej: Introducción al Microblading'
+              />
+              {errors.title && (
+                <p className='mt-1 text-sm text-red-600'>{errors.title}</p>
+              )}
+            </div>
+
+            {/* Slug */}
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Slug (URL) *
+              </label>
+              <input
+                type='text'
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                  errors.slug ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder='introduccion-al-microblading'
+              />
+              {errors.slug && (
+                <p className='mt-1 text-sm text-red-600'>{errors.slug}</p>
+              )}
+              <p className='mt-1 text-xs text-gray-500'>
+                Se genera automáticamente del título
+              </p>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Descripción
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={4}
+                className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                placeholder='Descripción del contenido del video...'
+              />
+            </div>
+
+            {/* Vimeo ID */}
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                ID del Video de Vimeo *
+              </label>
+              <div className='flex gap-2'>
+                <input
+                  type='text'
+                  value={formData.vimeoId}
+                  onChange={(e) => setFormData({ ...formData, vimeoId: e.target.value })}
+                  className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                    errors.vimeoId ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder='776643755'
+                  disabled={!!editingVideo}
+                />
+                {!editingVideo && (
+                  <button
+                    type='button'
+                    onClick={handleFetchVimeoData}
+                    disabled={!formData.vimeoId?.trim() || isFetchingVimeo}
+                    className='px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors whitespace-nowrap'
+                  >
+                    {isFetchingVimeo ? (
+                      <>
+                        <Loader2 className='w-4 h-4 animate-spin inline mr-2' />
+                        Verificando...
+                      </>
+                    ) : (
+                      'Verificar ID'
+                    )}
+                  </button>
+                )}
+              </div>
+              {errors.vimeoId && (
+                <p className='mt-1 text-sm text-red-600'>{errors.vimeoId}</p>
+              )}
+              <p className='mt-1 text-xs text-gray-500'>
+                {editingVideo 
+                  ? 'El ID de Vimeo no se puede cambiar después de crear el video'
+                  : 'El thumbnail y duración se obtendrán automáticamente desde Vimeo al guardar'}
+              </p>
+            </div>
+
+            {/* Order */}
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Orden
+              </label>
+              <input
+                type='number'
+                value={formData.order}
+                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                min='0'
+              />
+              <p className='mt-1 text-xs text-gray-500'>
+                Orden en que aparecerá el video en la lista
+              </p>
+            </div>
+
+            {/* Published Status */}
+            <div className='flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200'>
+              <input
+                type='checkbox'
+                id='isPublished'
+                checked={formData.isPublished || false}
+                onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                className='w-5 h-5 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b] focus:ring-2'
+              />
+              <div className='flex-1'>
+                <label 
+                  htmlFor='isPublished' 
+                  className='block text-sm font-medium text-gray-700 cursor-pointer'
+                >
+                  Video Publicado
+                </label>
+                <p className='text-xs text-gray-500 mt-1'>
+                  {formData.isPublished 
+                    ? '✓ Este video será visible para los usuarios con acceso al curso' 
+                    : '○ Este video no será visible para los usuarios (modo borrador)'}
+                </p>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className='flex gap-3 pt-4'>
+              <button
+                onClick={handleSave}
+                className='inline-flex items-center gap-2 px-6 py-3 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors'
+              >
+                <Save className='w-4 h-4' />
+                Guardar Video
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                className='inline-flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors'
+              >
+                <X className='w-4 h-4' />
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Videos List */}
+      <div className='bg-white rounded-lg shadow-lg overflow-hidden'>
+        <div className='p-6'>
+          <h2 className='text-xl font-primary font-bold text-gray-900 mb-4'>
+            Videos del Curso ({courseVideos.length})
+          </h2>
+
+          {courseVideos.length === 0 ? (
+            <div className='text-center py-12'>
+              <p className='text-gray-500 mb-2'>No hay videos en este curso</p>
+                <p className='text-sm text-gray-400'>
+                Agrega tu primer video haciendo clic en &quot;Agregar Video&quot;
+              </p>
+            </div>
+          ) : (
+            <div className='space-y-3'>
+              {courseVideos
+                .sort((a, b) => (a.order || 0) - (b.order || 0))
+                .map((video) => (
+                  <div
+                    key={video.id}
+                    className='flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors'
+                  >
+                    {/* Thumbnail */}
+                    {video.thumbnail && (
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className='w-32 h-18 object-cover rounded'
+                      />
+                    )}
+
+                    {/* Info */}
+                    <div className='flex-1'>
+                      <h3 className='font-semibold text-gray-900'>{video.title}</h3>
+                      {video.description && (
+                        <p className='text-sm text-gray-600 mt-1 line-clamp-2'>
+                          {video.description}
+                        </p>
+                      )}
+                      <div className='flex gap-4 mt-2 text-xs text-gray-500'>
+                        <span>Orden: {video.order}</span>
+                        {video.duration && <span>Duración: {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')} min</span>}
+                        <span className={`font-medium ${video.isPublished ? 'text-green-600' : 'text-yellow-600'}`}>
+                          {video.isPublished ? '● Publicado' : '○ No publicado'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className='flex gap-2'>
+                      <button
+                        onClick={() => handleTogglePublish(video)}
+                        className={`p-2 rounded transition-colors ${
+                          video.isPublished
+                            ? 'text-yellow-600 hover:bg-yellow-50'
+                            : 'text-green-600 hover:bg-green-50'
+                        }`}
+                        title={video.isPublished ? 'Despublicar' : 'Publicar'}
+                      >
+                        {video.isPublished ? <EyeOff className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
+                      </button>
+                      <button
+                        onClick={() => handleStartEdit(video)}
+                        disabled={isEditing}
+                        className='p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors disabled:opacity-50'
+                      >
+                        <Edit className='w-5 h-5' />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(video.id)}
+                        disabled={isEditing}
+                        className='p-2 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50'
+                      >
+                        <Trash2 className='w-5 h-5' />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Info Box */}
+      <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
+        <h3 className='font-semibold text-blue-900 mb-2'>💡 Sobre los videos de Vimeo</h3>
+        <ul className='text-sm text-blue-800 space-y-1'>
+          <li>• Los videos se alojan en Vimeo - solo necesitas el ID del video</li>
+          <li>• El thumbnail y duración se obtienen automáticamente</li>
+                <li>• Puedes reordenar los videos cambiando el campo &quot;Orden&quot;</li>
+          <li>• Los videos no publicados no serán visibles para los usuarios</li>
+        </ul>
+      </div>
+    </div>
+  );
+}

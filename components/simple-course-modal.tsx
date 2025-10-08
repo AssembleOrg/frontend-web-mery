@@ -3,11 +3,13 @@
 import { Modal } from './ui/modal';
 import CourseInclude from './course-include';
 import { Course } from '@/types/course';
-import { useCartStore } from '@/stores/cart-store';
+import { useCart } from '@/hooks/useCart';
 import { useRouter } from 'next/navigation';
-import { Play } from 'lucide-react';
+import { Play, Loader2, ShoppingCart, CheckCircle } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
+import { useState, useEffect } from 'react';
+import { getPresentationVideo } from '@/lib/api-client';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -20,9 +22,38 @@ export default function SimpleCourseModal({
   isOpen,
   onClose,
 }: SimpleCourseModalProps) {
-  const { addToCart } = useCartStore();
+  const { addCourse, isInCart, isLoading: cartLoading } = useCart();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const [presentationVideo, setPresentationVideo] = useState<any>(null);
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  const [loadingVideo, setLoadingVideo] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
+
+  // Load presentation video (order 0) when modal opens
+  useEffect(() => {
+    if (isOpen && course?.id) {
+      console.log('[SimpleCourseModal] Loading presentation video for course:', course.id);
+      setLoadingVideo(true);
+      setPresentationVideo(null);
+      setStreamUrl(null);
+      
+      getPresentationVideo(course.id)
+        .then((result) => {
+          console.log('[SimpleCourseModal] Presentation video result:', result);
+          if (result) {
+            setPresentationVideo(result.video);
+            setStreamUrl(result.streamUrl || null);
+          }
+        })
+        .catch((error) => {
+          console.error('[SimpleCourseModal] Error loading presentation video:', error);
+        })
+        .finally(() => {
+          setLoadingVideo(false);
+        });
+    }
+  }, [isOpen, course?.id]);
 
   if (!course) return null;
 
@@ -34,13 +65,7 @@ export default function SimpleCourseModal({
     window.open(whatsappUrl, '_blank');
   };
 
-  const handleBuyCourse = () => {
-    if (course.currency === 'USD') {
-      // Cursos en USD van a WhatsApp
-      handleWhatsApp();
-      return;
-    }
-
+  const handleBuyCourse = async () => {
     // Verificar autenticación antes de agregar al carrito
     if (!isAuthenticated) {
       onClose(); // Cerrar modal
@@ -48,11 +73,35 @@ export default function SimpleCourseModal({
       return;
     }
 
-    addToCart(course);
-    router.push('/es/compra-de-cursos');
+    // Verificar si ya está en el carrito
+    const alreadyInCart = isInCart(course.id);
+    if (alreadyInCart) {
+      // Si ya está en el carrito, ir directamente al carrito
+      onClose();
+      router.push('/es/compra-de-cursos');
+      return;
+    }
+
+    // Agregar curso al carrito (usando API del backend)
+    setAddingToCart(true);
+    const success = await addCourse(course.id);
+    setAddingToCart(false);
+    
+    if (success) {
+      onClose();
+      router.push('/es/compra-de-cursos');
+    } else {
+      // El error ya fue manejado por useCart
+      alert('No se pudo agregar el curso al carrito. Por favor intenta nuevamente.');
+    }
   };
 
-  const isUSDCourse = course.currency === 'USD';
+  // Para usuarios internacionales, mostrar opción de WhatsApp con USD
+  const showUSDOption = course.priceUSD && course.priceUSD > 0;
+  
+  // Check if course is already in cart
+  const courseInCart = isInCart(course.id);
+  const buttonDisabled = addingToCart || cartLoading;
 
   // Function to render text with paragraph breaks
   const renderTextWithParagraphs = (text: string) => {
@@ -81,22 +130,69 @@ export default function SimpleCourseModal({
       <div className='w-full max-w-4xl h-[90vh] mx-auto bg-white rounded-lg flex flex-col'>
         <div className='flex-1 overflow-y-auto'>
           <div className='relative'>
-            <div className='bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] rounded-t-lg aspect-video flex items-center justify-center border-b border-gray-200'>
-              <div className='text-center'>
-                <div className='w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200'>
-                  <Play
-                    className='w-10 h-10 text-[#660e1b] ml-1'
-                    fill='currentColor'
-                  />
+            {loadingVideo ? (
+              <div className='bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] rounded-t-lg aspect-video flex items-center justify-center border-b border-gray-200'>
+                <div className='text-center'>
+                  <Loader2 className='w-12 h-12 text-[#660e1b] animate-spin mx-auto mb-4' />
+                  <p className='text-[#660e1b] font-primary font-bold text-lg'>
+                    Cargando video...
+                  </p>
                 </div>
-                <p className='text-[#660e1b] font-primary font-bold text-lg'>
-                  Video del Curso
-                </p>
-                <p className='text-sm text-[#6c757d] mt-1'>
-                  [Creando containers]
-                </p>
               </div>
-            </div>
+            ) : presentationVideo && streamUrl ? (
+              <div className='bg-black rounded-t-lg aspect-video'>
+                <iframe
+                  src={streamUrl}
+                  className='w-full h-full rounded-t-lg'
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; picture-in-picture'
+                  allowFullScreen
+                  title={presentationVideo.title}
+                />
+              </div>
+            ) : presentationVideo && !streamUrl ? (
+              <div className='bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] rounded-t-lg aspect-video flex items-center justify-center border-b border-gray-200'>
+                <div className='text-center max-w-md px-6'>
+                  <div className='w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg border border-gray-200'>
+                    <Play
+                      className='w-10 h-10 text-[#660e1b] ml-1'
+                      fill='currentColor'
+                    />
+                  </div>
+                  <h3 className='font-primary font-bold text-lg text-[#660e1b] mb-2'>
+                    {presentationVideo.title}
+                  </h3>
+                  <p className='text-sm text-[#6c757d] mb-4'>
+                    {presentationVideo.description}
+                  </p>
+                  <div className='bg-amber-50 border border-amber-200 rounded-lg p-3 mb-2'>
+                    <p className='text-xs text-amber-800'>
+                      ⚠️ El backend requiere configuración adicional para videos públicos
+                    </p>
+                  </div>
+                  <p className='text-xs text-gray-500'>
+                    El endpoint <code className='bg-gray-200 px-1 rounded text-[10px]'>/videos/:id/stream</code> debe permitir acceso público para videos con <code className='bg-gray-200 px-1 rounded text-[10px]'>order = 0</code>
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className='bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] rounded-t-lg aspect-video flex items-center justify-center border-b border-gray-200'>
+                <div className='text-center'>
+                  <div className='w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200'>
+                    <Play
+                      className='w-10 h-10 text-[#660e1b] ml-1'
+                      fill='currentColor'
+                    />
+                  </div>
+                  <p className='text-[#660e1b] font-primary font-bold text-lg'>
+                    Video del Curso
+                  </p>
+                  <p className='text-sm text-[#6c757d] mt-1'>
+                    Video de presentación no disponible
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className='bg-white px-6 py-6'>
@@ -131,20 +227,14 @@ export default function SimpleCourseModal({
             </div>
 
             <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-6 rounded-lg shadow-lg'>
-              <div
-                className={`hidden md:flex items-center ${
-                  isUSDCourse ? 'flex-col space-y-4' : 'justify-between'
-                }`}
-              >
-                {!isUSDCourse && (
-                  <button
-                    onClick={handleWhatsApp}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
-                  >
-                    <FaWhatsapp className='w-4 h-4' />
-                    WhatsApp
-                  </button>
-                )}
+              <div className='hidden md:flex items-center justify-between'>
+                <button
+                  onClick={handleWhatsApp}
+                  className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
+                >
+                  <FaWhatsapp className='w-4 h-4' />
+                  WhatsApp
+                </button>
 
                 <div className='text-center'>
                   <h3 className='text-lg font-primary font-bold text-white mb-1'>
@@ -153,26 +243,38 @@ export default function SimpleCourseModal({
                   <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                     {course.priceDisplay}
                   </p>
+                  {showUSDOption && (
+                    <p className='text-white/90 text-sm mt-1'>
+                      También disponible en U$S {course.priceUSD}
+                    </p>
+                  )}
                   <p className='text-white/90 text-xs mt-1'>
                     Incluye certificación y materiales
                   </p>
                 </div>
 
-                {!isUSDCourse ? (
-                  <button
-                    onClick={handleBuyCourse}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
-                  >
-                    🛒 Comprar
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleBuyCourse}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
-                  >
-                    💬 Consultar
-                  </button>
-                )}
+                <button
+                  onClick={handleBuyCourse}
+                  className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                  disabled={buttonDisabled}
+                >
+                  {addingToCart ? (
+                    <>
+                      <Loader2 className='w-4 h-4 animate-spin' />
+                      Agregando...
+                    </>
+                  ) : courseInCart ? (
+                    <>
+                      <CheckCircle className='w-4 h-4' />
+                      Ver Carrito
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className='w-4 h-4' />
+                      Agregar al Carrito
+                    </>
+                  )}
+                </button>
               </div>
 
               <div className='md:hidden space-y-4'>
@@ -183,6 +285,11 @@ export default function SimpleCourseModal({
                   <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                     {course.priceDisplay}
                   </p>
+                  {showUSDOption && (
+                    <p className='text-white/90 text-sm mt-1'>
+                      También disponible en U$S {course.priceUSD}
+                    </p>
+                  )}
                   <p className='text-white/90 text-xs mt-1'>
                     Incluye certificación y materiales
                   </p>
@@ -191,24 +298,34 @@ export default function SimpleCourseModal({
                 <div className='flex flex-col space-y-3'>
                   <button
                     onClick={handleBuyCourse}
-                    className={`py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl ${
-                      isUSDCourse
-                        ? 'bg-[#660e1b] hover:bg-[#4a0a14] text-white'
-                        : 'bg-[#660e1b] hover:bg-[#4a0a14] text-white'
-                    }`}
+                    className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
+                    disabled={buttonDisabled}
                   >
-                    {isUSDCourse ? '💬 Consultar Precio' : '🛒 Comprar Curso'}
+                    {addingToCart ? (
+                      <>
+                        <Loader2 className='w-5 h-5 animate-spin' />
+                        Agregando...
+                      </>
+                    ) : courseInCart ? (
+                      <>
+                        <CheckCircle className='w-5 h-5' />
+                        Ver Carrito
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className='w-5 h-5' />
+                        Agregar al Carrito
+                      </>
+                    )}
                   </button>
 
-                  {!isUSDCourse && (
-                    <button
-                      onClick={handleWhatsApp}
-                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
-                    >
-                      <FaWhatsapp className='w-4 h-4' />
-                      WhatsApp
-                    </button>
-                  )}
+                  <button
+                    onClick={handleWhatsApp}
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
+                  >
+                    <FaWhatsapp className='w-4 h-4' />
+                    WhatsApp
+                  </button>
                 </div>
               </div>
             </div>

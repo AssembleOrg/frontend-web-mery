@@ -63,21 +63,17 @@ export function Logo({
   const finalHeight = height || sizeConfig.height;
   const finalClassName = className || sizeConfig.className;
 
+  // Don't render until client-side mounted to avoid SSR issues
   if (!mounted) {
-    // Return light logo as default during hydration
+    // Return placeholder with same dimensions to prevent layout shift
     return (
-      <Image
-        src='/Img-home/Mery-logo-comestic-tattoo.png'
-        alt='Mery García Cosmetic Tattoo'
-        width={finalWidth}
-        height={finalHeight}
-        className={finalClassName}
-        priority={priority}
-        style={{
-          maxWidth: '100%',
-          height: 'auto',
+      <div 
+        style={{ 
+          width: finalWidth, 
+          height: finalHeight,
+          display: 'inline-block'
         }}
-        quality={95}
+        aria-hidden="true"
       />
     );
   }
@@ -87,22 +83,26 @@ export function Logo({
   const isDark = currentTheme === 'dark';
 
   return (
-    <Image
-      src={
-        isDark
-          ? '/Img-home/mery-blanco-logo.png'
-          : '/Img-home/Mery-logo-comestic-tattoo.png'
-      }
-      alt='Mery García Cosmetic Tattoo'
-      width={finalWidth}
-      height={finalHeight}
-      className={finalClassName}
-      priority={priority}
-      style={{
-        maxWidth: '100%',
-        height: 'auto',
-      }}
-      quality={95}
-    />
+    <div suppressHydrationWarning style={{ display: 'inline-block' }}>
+      <Image
+        src={
+          isDark
+            ? '/Img-home/mery-blanco-logo.png'
+            : '/Img-home/Mery-logo-comestic-tattoo.png'
+        }
+        alt='Mery García Cosmetic Tattoo'
+        width={finalWidth}
+        height={finalHeight}
+        className={finalClassName}
+        priority={priority}
+        style={{
+          maxWidth: '100%',
+          height: 'auto',
+          objectFit: 'contain',
+        }}
+        quality={95}
+        unoptimized
+      />
+    </div>
   );
 }

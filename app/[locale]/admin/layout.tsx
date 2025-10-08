@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
+import { AuthGate } from '@/components/auth/AuthGate';
 
 export default function AdminLayout({
   children,
@@ -19,6 +20,8 @@ export default function AdminLayout({
     // Extract locale from pathname
     const locale = pathname.split('/')[1] || 'es';
 
+    console.log('[AdminLayout] auth check', { pathname, isLoading, isAuthenticated, user: user?.id });
+
     // Wait for auth to load
     if (isLoading) return;
 
@@ -29,7 +32,7 @@ export default function AdminLayout({
     }
 
     // Redirect to home if not admin (defensive: only if user exists AND is not admin)
-    if (user && user.role !== 'admin') {
+    if (user && user.role !== 'ADMIN') {
       router.push(`/${locale}`);
       return;
     }
@@ -48,43 +51,45 @@ export default function AdminLayout({
   }
 
   // Don't render if not authenticated or not admin (defensive: check user exists)
-  if (!isAuthenticated || !user || user.role !== 'admin') {
+  if (!isAuthenticated || !user || user.role !== 'ADMIN') {
     return null;
   }
 
   return (
-    <div className='min-h-screen bg-gray-50'>
-      {/* Navbar Normal */}
-      <Navigation />
+    <AuthGate>
+      <div className='min-h-screen bg-gray-50'>
+        {/* Navbar Normal */}
+        <Navigation />
 
-      {/* Admin Header */}
-      <header className='bg-white shadow-sm border-b'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center py-4'>
-            <div className='flex items-center space-x-2'>
-              <span className='text-lg font-medium text-gray-900'>
-                Hola, {user?.name || 'Admin'}
-              </span>
-            </div>
-            <div>
-              <button
-                onClick={() => {
-                  const locale = pathname.split('/')[1] || 'es';
-                  router.push(`/${locale}`);
-                }}
-                className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md'
-              >
-                Volver al Sitio
-              </button>
+        {/* Admin Header */}
+        <header className='bg-white shadow-sm border-b'>
+          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+            <div className='flex justify-between items-center py-4'>
+              <div className='flex items-center space-x-2'>
+                <span className='text-lg font-medium text-gray-900'>
+                  Hola, {user?.name || 'Admin'}
+                </span>
+              </div>
+              <div>
+                <button
+                  onClick={() => {
+                    const locale = pathname.split('/')[1] || 'es';
+                    router.push(`/${locale}`);
+                  }}
+                  className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md'
+                >
+                  Volver al Sitio
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Admin Content */}
-      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-        {children}
-      </main>
-    </div>
+        {/* Admin Content */}
+        <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+          {children}
+        </main>
+      </div>
+    </AuthGate>
   );
 }

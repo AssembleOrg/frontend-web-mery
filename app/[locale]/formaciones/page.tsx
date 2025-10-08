@@ -5,27 +5,63 @@ import { Footer } from '@/components/footer';
 import Image from 'next/image';
 import SimpleCourseCard from '@/components/simple-course-card';
 import SimpleCourseModal from '@/components/simple-course-modal';
-import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
-import { initialCourses } from '@/lib/seed-courses';
+import { getCourseImage } from '@/lib/utils';
 
 export default function FormacionesPage() {
-  const router = useRouter();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [courses, setCourses] = useState<Course[]>([]);
 
   // Get courses from admin store
-  const { getPublishedCourses, seedCourses } = useAdminStore();
+  const { fetchCategories } = useAdminStore();
 
-  // Seed initial courses on first load (if store is empty)
+  // Fetch courses from API on mount
   useEffect(() => {
-    seedCourses(initialCourses);
-  }, [seedCourses]);
-
-  // Get all published courses
-  const courses = getPublishedCourses();
+    const loadCourses = async () => {
+      setIsLoading(true);
+      try {
+        await fetchCategories();
+        // Get categories from store after fetch
+        const categories = useAdminStore.getState().categories;
+        
+        // Convert categories to courses format
+        // Default: mostrar precios en ARS (mercado principal argentino)
+        const coursesData: Course[] = categories.map((cat): Course => {
+          return {
+            id: cat.id,
+            title: cat.name,
+            description: cat.description || '',
+            image: getCourseImage(cat.slug, cat.image),
+            price: cat.priceARS || 0,
+            priceARS: cat.priceARS || 0,
+            priceUSD: cat.priceUSD || 0,
+            isFree: cat.isFree || false,
+            priceDisplay: cat.isFree 
+              ? 'Gratis' 
+              : (cat.priceARS > 0 
+                  ? `$${cat.priceARS.toLocaleString('es-AR')}` 
+                  : (cat.priceUSD > 0 ? `U$S ${cat.priceUSD}` : 'Gratis')),
+            currency: 'ARS' as 'ARS' | 'USD', // Siempre ARS por defecto
+            slug: cat.slug,
+            isPublished: cat.isActive,
+            order: cat.order || 0,
+            isActive: cat.isActive,
+          };
+        });
+        
+        setCourses(coursesData);
+      } catch (error) {
+        console.error('Error loading courses:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCourses();
+  }, [fetchCategories]);
 
   const handleCourseClick = (course: Course) => {
     setSelectedCourse(course);
@@ -50,8 +86,24 @@ export default function FormacionesPage() {
   // Filter out auto-styling from regular grid (show it in banner instead)
   const regularCourses = courses.filter((c) => c.slug !== 'auto-styling-cejas');
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className='min-h-screen bg-background'>
+        <Navigation />
+        <div className='flex items-center justify-center py-20'>
+          <div className='text-center'>
+            <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
+            <p className='mt-4 text-gray-600'>Cargando formaciones...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='min-h-screen bg-background' suppressHydrationWarning>
       <Navigation />
 
       <section className='w-full'>
@@ -113,28 +165,36 @@ export default function FormacionesPage() {
         </section>
       )}
 
-      <section className='container mx-auto px-4 pb-16 py-8 max-w-7xl'>
+      <section className='container mx-auto px-4 pb-16 py-8 max-w-7xl' suppressHydrationWarning>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-          {regularCourses.map((course) => (
-            <SimpleCourseCard
-              key={course.id}
-              image={course.image}
-              title={course.title}
-              price={course.priceDisplay}
-              description={course.description}
-              onCourseClick={() => handleCourseClick(course)}
-            />
-          ))}
+          {regularCourses.map((course) => {
+            // Ensure price is always a string
+            const priceDisplay = course.priceDisplay || 
+              (course.priceARS > 0 ? `$${course.priceARS.toLocaleString('es-AR')}` : 'Gratis');
+            
+            return (
+              <SimpleCourseCard
+                key={course.id}
+                image={course.image}
+                title={course.title}
+                price={priceDisplay}
+                description={course.description}
+                onCourseClick={() => handleCourseClick(course)}
+              />
+            );
+          })}
         </div>
       </section>
 
       <Footer />
 
-      <SimpleCourseModal
-        course={selectedCourse}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+      {selectedCourse && (
+        <SimpleCourseModal
+          course={selectedCourse}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 }

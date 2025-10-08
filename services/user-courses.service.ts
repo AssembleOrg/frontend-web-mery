@@ -6,6 +6,7 @@
  */
 
 import { UserCourse } from '@/types/course';
+import { getCourseImage } from '@/lib/utils';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -34,7 +35,16 @@ export const getUserCourses = async (token: string): Promise<UserCourse[]> => {
     );
   }
 
-  return response.json();
+  const data: UserCourse[] = await response.json();
+  
+  // Apply slug-based image logic to all courses
+  return data.map((userCourse) => ({
+    ...userCourse,
+    course: {
+      ...userCourse.course,
+      image: getCourseImage(userCourse.course.slug, userCourse.course.image)
+    }
+  }));
 };
 
 export const userCoursesService = {
