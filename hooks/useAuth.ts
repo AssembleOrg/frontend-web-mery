@@ -16,18 +16,23 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useCourseStore } from '@/stores/course-store';
 import { useUserCoursesStore } from '@/stores/user-courses-store';
-import { login as loginService, register as registerService, me as meService, updateProfile as updateProfileService, logout as logoutService, AuthServiceError } from '@/services/auth.service';
-import { LoginCredentials, RegisterCredentials, UpdateProfileData } from '@/types/auth';
+import {
+  login as loginService,
+  register as registerService,
+  me as meService,
+  updateProfile as updateProfileService,
+  logout as logoutService,
+  AuthServiceError,
+} from '@/services/auth.service';
+import {
+  LoginCredentials,
+  RegisterCredentials,
+  UpdateProfileData,
+} from '@/types/auth';
 
 export function useAuth() {
-  const { 
-    user, 
-    token, 
-    isAuthenticated, 
-    setAuth, 
-    updateUser, 
-    clearAuth
-  } = useAuthStore();
+  const { user, token, isAuthenticated, setAuth, updateUser, clearAuth } =
+    useAuthStore();
   const [isLoading, setIsLoading] = useState(true); // Iniciar en true para evitar redirects prematuros
   const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +40,7 @@ export function useAuth() {
   // Se ejecuta cada vez que se monta el componente (después de F5, navegación, etc)
   useEffect(() => {
     let mounted = true;
-    
+
     const initAuth = async () => {
       // Si ya hay una verificación en curso, espera su resultado
       if (sessionVerifyPromise) {
@@ -48,19 +53,27 @@ export function useAuth() {
       sessionVerifyPromise = new Promise<void>((resolve) => {
         resolveVerify = resolve;
       });
-  // Load auth from cookies PRIMERO (sincrónico)
-  useAuthStore.getState().initializeAuth();
-  const currentToken = useAuthStore.getState().token;
-  const currentUser = useAuthStore.getState().user;
-  console.log('[useAuth] initializeAuth ->', { currentToken: !!currentToken, currentUser: !!currentUser });
-      
+      // Load auth from cookies PRIMERO (sincrónico)
+      useAuthStore.getState().initializeAuth();
+      const currentToken = useAuthStore.getState().token;
+      const currentUser = useAuthStore.getState().user;
+      console.log('[useAuth] initializeAuth ->', {
+        currentToken: !!currentToken,
+        currentUser: !!currentUser,
+      });
+
       // If there's no client-side token, attempt server-side verification
       // This covers httpOnly session cookies set by the backend
       if (!currentToken) {
         try {
-          console.log('[useAuth] No token en cookies, intentando verificación server-side...');
+          console.log(
+            '[useAuth] No token en cookies, intentando verificación server-side...'
+          );
           const response = await meService();
-          console.log('[useAuth] me() response (server-side):', response && { hasUser: !!response.user, token: !!response.token });
+          console.log(
+            '[useAuth] me() response (server-side):',
+            response && { hasUser: !!response.user, token: !!response.token }
+          );
           if (mounted && response && response.user) {
             console.log('[useAuth] Sesión server-side válida:', response.user);
             setAuth(response.user, response.token || null);
@@ -68,7 +81,10 @@ export function useAuth() {
         } catch (err) {
           console.error('[useAuth] Verificación server-side fallida:', err);
           // Only clear auth on auth-specific errors
-          if (err instanceof AuthServiceError && (err.status === 401 || err.status === 403)) {
+          if (
+            err instanceof AuthServiceError &&
+            (err.status === 401 || err.status === 403)
+          ) {
             if (mounted) clearAuth();
           } else {
             // network/server error: keep local cookies (if any)
@@ -80,7 +96,7 @@ export function useAuth() {
         }
         return;
       }
-      
+
       // Si hay token Y user en cookies, asumir autenticado inmediatamente
       // Esto evita el redirect mientras verificamos con el backend
       if (currentToken && currentUser) {
@@ -91,20 +107,28 @@ export function useAuth() {
         try {
           console.log('[useAuth] Verificando sesión con token...');
           const response = await meService(currentToken);
-          console.log('[useAuth] me() response (token):', response && { hasUser: !!response.user, token: !!response.token });
+          console.log(
+            '[useAuth] me() response (token):',
+            response && { hasUser: !!response.user, token: !!response.token }
+          );
           if (mounted) {
             console.log('[useAuth] Sesión válida:', response.user);
             setAuth(response.user, currentToken);
           }
         } catch (err) {
           console.error('[useAuth] Error verificando sesión:', err);
-          if (err instanceof AuthServiceError && (err.status === 401 || err.status === 403)) {
+          if (
+            err instanceof AuthServiceError &&
+            (err.status === 401 || err.status === 403)
+          ) {
             console.log('[useAuth] Token inválido, limpiando sesión');
             if (mounted) {
               clearAuth();
             }
           } else {
-            console.log('[useAuth] Error de red/servidor, manteniendo sesión de cookies');
+            console.log(
+              '[useAuth] Error de red/servidor, manteniendo sesión de cookies'
+            );
           }
         } finally {
           resolveVerify();
@@ -119,7 +143,10 @@ export function useAuth() {
           }
         } catch (err) {
           console.error('[useAuth] Error verificando sesión:', err);
-          if (err instanceof AuthServiceError && (err.status === 401 || err.status === 403)) {
+          if (
+            err instanceof AuthServiceError &&
+            (err.status === 401 || err.status === 403)
+          ) {
             if (mounted) {
               clearAuth();
             }
@@ -139,7 +166,7 @@ export function useAuth() {
     };
 
     initAuth();
-    
+
     // Cleanup para evitar actualizaciones de estado en componente desmontado
     return () => {
       mounted = false;
@@ -157,7 +184,8 @@ export function useAuth() {
 
       return { success: true, user: response.user };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al iniciar sesión';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -172,12 +200,13 @@ export function useAuth() {
       setError(null);
 
       const response = await registerService(credentials);
-      
+
       // Registration successful, but API sends verification email
       // User needs to verify email before logging in
       return { success: true, message: response.message };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al registrarse';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al registrarse';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -193,17 +222,22 @@ export function useAuth() {
 
       const currentToken = useAuthStore.getState().token;
       const currentUser = useAuthStore.getState().user;
-      
+
       if (!currentToken || !currentUser) {
         throw new Error('No hay sesión activa');
       }
 
-      const response = await updateProfileService(currentToken, currentUser.id, data);
+      const response = await updateProfileService(
+        currentToken,
+        currentUser.id,
+        data
+      );
       updateUser(response.user);
 
       return { success: true };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar perfil';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al actualizar perfil';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

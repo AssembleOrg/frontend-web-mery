@@ -90,7 +90,10 @@ export default function CompraPage() {
                   {/* Course Image */}
                   <div className='flex-shrink-0 w-24 h-24'>
                     <Image
-                      src={item.category.image || '/formacion/nanoblading-exclusive.webp'}
+                      src={
+                        item.category.image ||
+                        '/formacion/nanoblading-exclusive.webp'
+                      }
                       alt={item.category.name}
                       width={96}
                       height={96}

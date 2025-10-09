@@ -234,19 +234,22 @@
 @layer utilities {
   /* DIN Font Weight Utilities */
   .font-primary {
-    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 300; /* Use Light as default */
     letter-spacing: normal; /* Reset any inherited letter-spacing */
     line-height: normal; /* Reset line height */
   }
 
   .font-primary-regular {
-    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400; /* Regular when explicitly needed */
   }
 
   .font-primary-medium {
-    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 500; /* Medium for emphasis */
   }
 

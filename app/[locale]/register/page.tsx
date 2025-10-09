@@ -1,17 +1,21 @@
+// app/[locale]/register/page.tsx
+
 'use client';
 
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useRouter, useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { UserPlus, Mail, Lock, User, Phone, MapPin, Globe } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { RegisterSkeleton } from '@/components/auth/RegisterSkeleton';
 
 export default function RegisterPage() {
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
-  const { register, isLoading, error } = useAuth();
+  const { register, isLoading, error: apiError } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -22,36 +26,65 @@ export default function RegisterPage() {
     country: '',
     city: '',
   });
+  const [formError, setFormError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (apiError) {
+      toast.error(apiError);
+    }
+  }, [apiError]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (formError) {
+      setFormError(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
 
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+    if (formData.password.length < 8) {
+      setFormError('La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
-    const result = await register({
+    const payload: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      phone?: string;
+      country?: string;
+      city?: string;
+    } = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       password: formData.password,
-      phone: formData.phone || undefined,
-      country: formData.country || undefined,
-      city: formData.city || undefined,
-    });
+    };
 
-    // Registro exitoso - redirigir a login para que el usuario inicie sesión
-    if (result.message) {
+    if (formData.phone) payload.phone = formData.phone;
+    if (formData.country) payload.country = formData.country;
+    if (formData.city) payload.city = formData.city;
+
+    const result = await register(payload);
+
+    if (result.success) {
+      toast.success(
+        '¡Registro exitoso! Revisa tu email para verificar tu cuenta.'
+      );
       router.push(`/${locale}/login?registered=true`);
     }
   };
+
+  if (isLoading && !formData.email) {
+    return <RegisterSkeleton />;
+  }
 
   return (
     <div className='min-h-screen bg-background'>
@@ -69,7 +102,10 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+          >
             {/* Nombre y Apellido */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {/* Nombre */}
@@ -143,7 +179,7 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
-                  placeholder='Tu contraseña'
+                  placeholder='Mínimo 8 caracteres'
                   required
                 />
               </div>
@@ -213,17 +249,25 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Error message */}
-            {error && (
+            {/* Bloque de Error Unificado */}
+            {(apiError || formError) && (
               <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4'>
-                <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
+                <p className='text-sm text-red-600 dark:text-red-400'>
+                  {formError || apiError}
+                </p>
               </div>
             )}
 
             {/* Submit button */}
             <button
               type='submit'
-              disabled={isLoading || !formData.firstName || !formData.lastName || !formData.email || !formData.password}
+              disabled={
+                isLoading ||
+                !formData.firstName ||
+                !formData.lastName ||
+                !formData.email ||
+                !formData.password
+              }
               className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-3 rounded-lg font-primary font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
             >
               {isLoading ? (

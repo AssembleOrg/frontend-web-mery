@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function CourseTableSkeleton() {
   return (
@@ -40,7 +40,10 @@ export function CourseTableSkeleton() {
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
               {[...Array(5)].map((_, index) => (
-                <tr key={index} className='hover:bg-gray-50'>
+                <tr
+                  key={index}
+                  className='hover:bg-gray-50'
+                >
                   <td className='px-6 py-4'>
                     <div className='flex items-center'>
                       <Skeleton className='h-12 w-12 rounded mr-4' />
@@ -78,4 +81,3 @@ export function CourseTableSkeleton() {
     </div>
   );
 }
-

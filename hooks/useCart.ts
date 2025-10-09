@@ -11,14 +11,14 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
-import { 
+import {
   getCart as getCartService,
   addToCart as addToCartService,
   removeFromCart as removeFromCartService,
   clearCart as clearCartService,
   getCartSummary as getCartSummaryService,
   Cart,
-  CartSummary
+  CartSummary,
 } from '@/lib/api-client';
 
 export function useCart() {
@@ -43,7 +43,8 @@ export function useCart() {
         const cartData = await getCartService();
         setCart(cartData);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Error al cargar el carrito';
+        const errorMessage =
+          err instanceof Error ? err.message : 'Error al cargar el carrito';
         setError(errorMessage);
         console.error('[useCart] Error loading cart:', err);
       } finally {
@@ -55,50 +56,58 @@ export function useCart() {
   }, [isAuthenticated]);
 
   // Add course to cart
-  const addCourse = useCallback(async (categoryId: string) => {
-    if (!isAuthenticated) {
-      setError('Debes iniciar sesión para agregar cursos al carrito');
-      return false;
-    }
+  const addCourse = useCallback(
+    async (categoryId: string) => {
+      if (!isAuthenticated) {
+        setError('Debes iniciar sesión para agregar cursos al carrito');
+        return false;
+      }
 
-    try {
-      setIsLoading(true);
-      setError(null);
-      const updatedCart = await addToCartService(categoryId);
-      setCart(updatedCart);
-      return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al agregar al carrito';
-      setError(errorMessage);
-      console.error('[useCart] Error adding to cart:', err);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated]);
+      try {
+        setIsLoading(true);
+        setError(null);
+        const updatedCart = await addToCartService(categoryId);
+        setCart(updatedCart);
+        return true;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Error al agregar al carrito';
+        setError(errorMessage);
+        console.error('[useCart] Error adding to cart:', err);
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isAuthenticated]
+  );
 
   // Remove item from cart
-  const removeItem = useCallback(async (itemId: string) => {
-    if (!isAuthenticated) {
-      setError('Debes iniciar sesión');
-      return false;
-    }
+  const removeItem = useCallback(
+    async (itemId: string) => {
+      if (!isAuthenticated) {
+        setError('Debes iniciar sesión');
+        return false;
+      }
 
-    try {
-      setIsLoading(true);
-      setError(null);
-      const updatedCart = await removeFromCartService(itemId);
-      setCart(updatedCart);
-      return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al eliminar del carrito';
-      setError(errorMessage);
-      console.error('[useCart] Error removing from cart:', err);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated]);
+      try {
+        setIsLoading(true);
+        setError(null);
+        const updatedCart = await removeFromCartService(itemId);
+        setCart(updatedCart);
+        return true;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Error al eliminar del carrito';
+        setError(errorMessage);
+        console.error('[useCart] Error removing from cart:', err);
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isAuthenticated]
+  );
 
   // Clear entire cart
   const clear = useCallback(async () => {
@@ -115,7 +124,8 @@ export function useCart() {
       setSummary(null);
       return true;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al vaciar el carrito';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al vaciar el carrito';
       setError(errorMessage);
       console.error('[useCart] Error clearing cart:', err);
       return false;
@@ -138,7 +148,8 @@ export function useCart() {
       setSummary(summaryData);
       return summaryData;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al cargar resumen';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al cargar resumen';
       setError(errorMessage);
       console.error('[useCart] Error loading summary:', err);
       return null;
@@ -160,7 +171,8 @@ export function useCart() {
       const cartData = await getCartService();
       setCart(cartData);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar el carrito';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al actualizar el carrito';
       setError(errorMessage);
       console.error('[useCart] Error refreshing cart:', err);
     } finally {
@@ -169,10 +181,13 @@ export function useCart() {
   }, [isAuthenticated]);
 
   // Check if course is in cart
-  const isInCart = useCallback((categoryId: string): boolean => {
-    if (!cart || !cart.items) return false;
-    return cart.items.some(item => item.categoryId === categoryId);
-  }, [cart]);
+  const isInCart = useCallback(
+    (categoryId: string): boolean => {
+      if (!cart || !cart.items) return false;
+      return cart.items.some((item) => item.categoryId === categoryId);
+    },
+    [cart]
+  );
 
   return {
     cart,
@@ -190,4 +205,3 @@ export function useCart() {
     totalUSD: cart?.totalUSD || 0,
   };
 }
-

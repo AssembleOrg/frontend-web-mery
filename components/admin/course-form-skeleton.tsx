@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function CourseFormSkeleton() {
   return (
@@ -17,16 +17,17 @@ export function CourseFormSkeleton() {
         <div className='mb-8'>
           <div className='flex items-center justify-between'>
             {[...Array(3)].map((_, index) => (
-              <div key={index} className='flex-1 flex items-center'>
+              <div
+                key={index}
+                className='flex-1 flex items-center'
+              >
                 <div className='flex items-center flex-1'>
                   <Skeleton className='w-10 h-10 rounded-full' />
                   <div className='ml-3 flex-1'>
                     <Skeleton className='h-4 w-32' />
                   </div>
                 </div>
-                {index < 2 && (
-                  <Skeleton className='h-0.5 flex-1 mx-4' />
-                )}
+                {index < 2 && <Skeleton className='h-0.5 flex-1 mx-4' />}
               </div>
             ))}
           </div>
@@ -47,7 +48,7 @@ export function CourseFormSkeleton() {
                 <Skeleton className='h-10 w-full' />
               </div>
             ))}
-            
+
             {/* Textarea Field */}
             <div>
               <Skeleton className='h-4 w-32 mb-2' />
@@ -74,4 +75,3 @@ export function CourseFormSkeleton() {
     </div>
   );
 }
-
