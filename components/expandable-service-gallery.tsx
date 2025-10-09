@@ -30,13 +30,13 @@ export function ExpandableServiceGallery({
       'https://www.instagram.com/stories/highlights/17904023200243157/',
     nanoblading:
       'https://www.instagram.com/stories/highlights/18023006104657516/',
-    scalp: 'https://www.instagram.com/merygarciaoficial/',
-    freckles: 'https://www.instagram.com/merygarciaoficial/',
+    scalp: 'https://www.instagram.com/p/CuFL7T6ra3f/',
+    freckles: 'https://www.instagram.com/p/C5ot3blPU5r/',
     nanoscalp:
       'https://www.instagram.com/stories/highlights/17879544007940692/',
     lashesLine:
       'https://www.instagram.com/stories/highlights/18019224445291012/',
-    paramedical: 'https://www.instagram.com/merygarciaoficial/',
+    paramedical: 'https://www.instagram.com/p/DLGOqHnype1/?img_index=1',
     autostyling: 'https://www.instagram.com/p/DMqSOJNP5gr/?img_index=1',
   };
 
