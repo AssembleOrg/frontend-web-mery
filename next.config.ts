@@ -19,19 +19,18 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true, // Disable image optimization for development
   },
-  // Dev-only proxy to backend to avoid cross-origin cookie issues
+  // Proxy to backend API
   async rewrites() {
-    // In production, your platform should handle proper routing.
-    if (process.env.NODE_ENV !== 'production') {
-      return [
-        {
-          source: '/api/:path*',
-          destination: 'http://localhost:3000/api/:path*',
-        },
-      ];
-    }
-
-    return [];
+    // Development: proxy a localhost para evitar CORS
+    // Production: proxy a Railway backend
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+    
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
   },
 };
 
