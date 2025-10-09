@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Course, CourseCreateInput, CourseIncludeItem, Lesson } from '@/types/course';
-import { ChevronLeft, ChevronRight, Save, Eye } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, Eye, Loader2 } from 'lucide-react';
 import { BasicInfoStep } from './course-form-steps/basic-info-step';
-import { ModalContentStep } from './course-form-steps/modal-content-step';
 import { LessonsStep } from './course-form-steps/lessons-step';
 import { PreviewStep } from './course-form-steps/preview-step';
 
@@ -12,9 +11,10 @@ interface CourseFormProps {
   course?: Course;
   onSubmit: (courseData: CourseCreateInput) => void;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
-export default function CourseForm({ course, onSubmit, onCancel }: CourseFormProps) {
+export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = false }: CourseFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
   
   // Map backend Category to frontend Course format
@@ -28,7 +28,7 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
         priceARS: 0,
         priceUSD: 0,
         isFree: false,
-        isPublished: false,
+        isPublished: true, // Activo por default en nuevos cursos
         modalContent: {
           detailedDescription: '',
           includes: [],
@@ -69,11 +69,17 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Update formData when course prop changes (important for async data loading)
+  useEffect(() => {
+    if (course) {
+      setFormData(mapCourseData(course));
+    }
+  }, [course]);
+
   const steps = [
     { number: 1, title: 'Información Básica', component: BasicInfoStep },
-    { number: 2, title: 'Contenido del Modal', component: ModalContentStep },
-    { number: 3, title: 'Lecciones', component: LessonsStep },
-    { number: 4, title: 'Vista Previa', component: PreviewStep },
+    { number: 2, title: 'Lecciones', component: LessonsStep },
+    { number: 3, title: 'Vista Previa', component: PreviewStep },
   ];
 
   const CurrentStepComponent = steps[currentStep - 1].component;
@@ -100,18 +106,9 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
     }
 
     if (step === 2) {
-      if (!formData.modalContent?.detailedDescription?.trim()) {
-        newErrors.detailedDescription = 'La descripción detallada es requerida';
-      }
-      if (!formData.modalContent?.targetAudience?.trim()) {
-        newErrors.targetAudience = 'El público objetivo es requerido';
-      }
-    }
-
-    if (step === 3) {
-      if (!formData.lessons || formData.lessons.length === 0) {
-        newErrors.lessons = 'Debes agregar al menos una lección';
-      }
+      // if (!formData.lessons || formData.lessons.length === 0) {
+      //   newErrors.lessons = 'Debes agregar al menos una lección';
+      // }
     }
 
     setErrors(newErrors);
@@ -132,7 +129,7 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
     if (validateStep(currentStep)) {
       // Validate all steps before submitting
       let isValid = true;
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 2; i++) {
         if (!validateStep(i)) {
           isValid = false;
           setCurrentStep(i);
@@ -150,16 +147,6 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
     setFormData((prev) => ({
       ...prev,
       ...updates,
-    }));
-  };
-
-  const updateModalContent = (updates: Partial<CourseCreateInput['modalContent']>) => {
-    setFormData((prev) => ({
-      ...prev,
-      modalContent: {
-        ...prev.modalContent!,
-        ...updates,
-      },
     }));
   };
 
@@ -214,7 +201,6 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
         <CurrentStepComponent
           formData={formData}
           updateFormData={updateFormData}
-          updateModalContent={updateModalContent}
           updateLessons={updateLessons}
           errors={errors}
         />
@@ -225,7 +211,8 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
         <button
           type='button'
           onClick={onCancel}
-          className='px-6 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors'
+          disabled={isSubmitting}
+          className='px-6 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
         >
           Cancelar
         </button>
@@ -235,7 +222,8 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
             <button
               type='button'
               onClick={handlePrevious}
-              className='inline-flex items-center gap-2 px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors'
+              disabled={isSubmitting}
+              className='inline-flex items-center gap-2 px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
             >
               <ChevronLeft className='w-4 h-4' />
               Anterior
@@ -246,7 +234,8 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
             <button
               type='button'
               onClick={handleNext}
-              className='inline-flex items-center gap-2 px-6 py-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors'
+              disabled={isSubmitting}
+              className='inline-flex items-center gap-2 px-6 py-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
             >
               Siguiente
               <ChevronRight className='w-4 h-4' />
@@ -257,10 +246,20 @@ export default function CourseForm({ course, onSubmit, onCancel }: CourseFormPro
             <button
               type='button'
               onClick={handleSubmit}
-              className='inline-flex items-center gap-2 px-6 py-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors shadow-lg hover:shadow-xl'
+              disabled={isSubmitting}
+              className='inline-flex items-center gap-2 px-6 py-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed'
             >
-              <Save className='w-4 h-4' />
-              {course ? 'Actualizar Curso' : 'Crear Curso'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className='w-4 h-4 animate-spin' />
+                  {course ? 'Actualizando...' : 'Creando...'}
+                </>
+              ) : (
+                <>
+                  <Save className='w-4 h-4' />
+                  {course ? 'Actualizar Curso' : 'Crear Curso'}
+                </>
+              )}
             </button>
           )}
         </div>

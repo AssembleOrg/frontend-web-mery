@@ -10,6 +10,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
+import { useModal } from '@/contexts/modal-context';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -25,6 +26,7 @@ export default function SimpleCourseModal({
   const { addCourse, isInCart, isLoading: cartLoading } = useCart();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const { showError } = useModal();
   const [presentationVideo, setPresentationVideo] = useState<any>(null);
   const [streamUrl, setStreamUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -92,12 +94,20 @@ export default function SimpleCourseModal({
       router.push('/es/compra-de-cursos');
     } else {
       // El error ya fue manejado por useCart
-      alert('No se pudo agregar el curso al carrito. Por favor intenta nuevamente.');
+      showError('No se pudo agregar el curso al carrito. Por favor intenta nuevamente.');
     }
   };
 
-  // Para usuarios internacionales, mostrar opción de WhatsApp con USD
-  const showUSDOption = course.priceUSD && course.priceUSD > 0;
+  // Si el precio ARS es placeholder (99.999.999), mostrar USD
+  const isPlaceholderPrice = course.priceARS === 99999999;
+  
+  // Determinar qué precio mostrar
+  const displayPrice = isPlaceholderPrice && course.priceUSD > 0
+    ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+    : course.priceDisplay;
+  
+  // Para usuarios internacionales, mostrar opción de WhatsApp con USD (solo si NO es placeholder)
+  const showUSDOption = !isPlaceholderPrice && course.priceUSD && course.priceUSD > 0;
   
   // Check if course is already in cart
   const courseInCart = isInCart(course.id);
@@ -241,7 +251,7 @@ export default function SimpleCourseModal({
                     Inversión del Curso
                   </h3>
                   <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                    {course.priceDisplay}
+                    {displayPrice}
                   </p>
                   {showUSDOption && (
                     <p className='text-white/90 text-sm mt-1'>
@@ -283,7 +293,7 @@ export default function SimpleCourseModal({
                     Inversión del Curso
                   </h3>
                   <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                    {course.priceDisplay}
+                    {displayPrice}
                   </p>
                   {showUSDOption && (
                     <p className='text-white/90 text-sm mt-1'>

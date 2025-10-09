@@ -168,9 +168,22 @@ export default function FormacionesPage() {
       <section className='container mx-auto px-4 pb-16 py-8 max-w-7xl' suppressHydrationWarning>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
           {regularCourses.map((course) => {
-            // Ensure price is always a string
-            const priceDisplay = course.priceDisplay || 
-              (course.priceARS > 0 ? `$${course.priceARS.toLocaleString('es-AR')}` : 'Gratis');
+            // Si el precio ARS es 99.999.999 (placeholder), mostrar precio en USD
+            let priceDisplay: string;
+            
+            if (course.isFree) {
+              priceDisplay = 'Gratis';
+            } else if (course.priceARS === 99999999) {
+              // Mostrar precio en USD para placeholders
+              priceDisplay = course.priceUSD > 0 
+                ? `USD ${course.priceUSD.toLocaleString('en-US')}` 
+                : 'Consultar';
+            } else {
+              // Mostrar precio en ARS normalmente
+              priceDisplay = course.priceARS > 0 
+                ? `$${course.priceARS.toLocaleString('es-AR')}` 
+                : 'Gratis';
+            }
             
             return (
               <SimpleCourseCard

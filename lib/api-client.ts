@@ -556,10 +556,31 @@ export const getPresentationVideo = async (categoryId: string): Promise<{ video:
 
           if (streamResponse.ok) {
             const streamData = await streamResponse.json();
-            console.log('[API] Stream URL obtained:', streamData.data?.streamUrl);
+            const streamUrl = streamData.data?.streamUrl;
+            console.log('[API] Stream URL obtained:', streamUrl);
+            
+            // Si la URL no incluye parámetros de Vimeo necesarios, construir una URL más permisiva
+            let finalStreamUrl = streamUrl;
+            
+            if (streamUrl && streamUrl.includes('player.vimeo.com')) {
+              // Agregar parámetros para evitar restricciones de dominio
+              const url = new URL(streamUrl);
+              
+              // Estos parámetros ayudan a que Vimeo sea más permisivo
+              if (!url.searchParams.has('dnt')) {
+                url.searchParams.set('dnt', '1'); // Do Not Track
+              }
+              if (!url.searchParams.has('app_id')) {
+                url.searchParams.set('app_id', '122963'); // Vimeo default app ID
+              }
+              
+              finalStreamUrl = url.toString();
+              console.log('[API] Enhanced Vimeo URL:', finalStreamUrl);
+            }
+            
             return { 
               video, 
-              streamUrl: streamData.data?.streamUrl 
+              streamUrl: finalStreamUrl 
             };
           } else {
             console.warn('[API] Could not get stream URL (backend may require auth):', streamResponse.status);

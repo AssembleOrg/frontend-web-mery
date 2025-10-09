@@ -1,21 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import { useAdminStore } from '@/stores';
 import CourseForm from '@/components/admin/course-form';
 import { useRouter, useParams } from 'next/navigation';
 import { CourseCreateInput } from '@/types/course';
 import { ArrowLeft } from 'lucide-react';
+import { useModal } from '@/contexts/modal-context';
 
 export default function NuevoCursoPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'es';
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showError } = useModal();
 
-  const { createCategory } = useAdminStore();
+  const { createCategory, createVideo } = useAdminStore();
 
   const handleSubmit = async (courseData: CourseCreateInput) => {
+    setIsSubmitting(true);
     try {
-      // Convert CourseCreateInput to Category format
+      console.log('[NuevoCurso] Iniciando creación de curso...');
+      
+      // STEP 1: Create Category (basic course info)
       const categoryData = {
         name: courseData.title,
         slug: courseData.slug,
@@ -28,22 +35,48 @@ export default function NuevoCursoPage() {
         isActive: courseData.isPublished || false,
       };
 
-      console.log('[NuevoCurso] Creando curso:', categoryData);
-
+      console.log('[NuevoCurso] Creando categoría:', categoryData);
       const newCourse = await createCategory(categoryData);
 
       if (!newCourse) {
         throw new Error('Failed to create course');
       }
 
-      // Show success message
-      console.log('Curso creado exitosamente:', newCourse);
+      console.log('[NuevoCurso] ✓ Categoría creada:', newCourse);
+
+      // STEP 2: Create Lessons (Videos) if any
+      const lessons = courseData.lessons || [];
+      
+      if (lessons.length > 0) {
+        console.log('[NuevoCurso] Creando', lessons.length, 'lecciones...');
+        
+        for (const lesson of lessons) {
+          const videoData = {
+            title: lesson.title,
+            slug: lesson.slug || lesson.title.toLowerCase().replace(/\s+/g, '-'),
+            description: lesson.description || '',
+            vimeoId: lesson.vimeoVideoId,
+            categoryId: newCourse.id,
+            order: lesson.order || 0,
+            isPublished: lesson.isPublished || false,
+          };
+          
+          console.log('[NuevoCurso] Creando video:', lesson.title);
+          await createVideo(videoData as any);
+        }
+        
+        console.log('[NuevoCurso] ✓ Todas las lecciones creadas');
+      }
+
+      console.log('[NuevoCurso] ✓ Curso y lecciones creados exitosamente');
 
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
-      console.error('Error creating course:', error);
-      alert('Error al crear el curso. Por favor intenta nuevamente.');
+      console.error('[NuevoCurso] Error:', error);
+      showError('Error al crear el curso. Por favor intenta nuevamente.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -73,7 +106,7 @@ export default function NuevoCursoPage() {
       </div>
 
       {/* Course Form */}
-      <CourseForm onSubmit={handleSubmit} onCancel={handleCancel} />
+      <CourseForm onSubmit={handleSubmit} onCancel={handleCancel} isSubmitting={isSubmitting} />
     </div>
   );
 }
