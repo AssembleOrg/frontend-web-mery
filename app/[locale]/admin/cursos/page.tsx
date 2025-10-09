@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { CourseTableSkeleton } from '@/components/admin/course-table-skeleton';
 
 export default function AdminCursosPage() {
   const params = useParams();
@@ -56,33 +57,13 @@ export default function AdminCursosPage() {
     }
   };
 
-  const formatPrice = (category: any) => {
-    if (category.isFree) {
-      return 'Gratis';
-    }
-    if (category.priceUSD > 0) {
-      return `U$S ${category.priceUSD.toLocaleString()}`;
-    }
-    if (category.priceARS > 0) {
-      return `$ ${category.priceARS.toLocaleString()} ARS`;
-    }
-    return 'N/A';
-  };
-
   // Prevent hydration mismatch
   if (!isMounted) {
     return null;
   }
 
   if (isLoading) {
-    return (
-      <div className='flex items-center justify-center py-20'>
-        <div className='text-center'>
-          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
-          <p className='mt-4 text-gray-600'>Cargando cursos...</p>
-        </div>
-      </div>
-    );
+    return <CourseTableSkeleton />;
   }
 
   return (
@@ -116,7 +97,10 @@ export default function AdminCursosPage() {
                   Curso
                 </th>
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Precio
+                  Precio ARS
+                </th>
+                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Precio USD
                 </th>
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Videos
@@ -132,7 +116,7 @@ export default function AdminCursosPage() {
             <tbody className='bg-white divide-y divide-gray-200'>
               {!categories || categories.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className='px-6 py-12 text-center'>
+                  <td colSpan={6} className='px-6 py-12 text-center'>
                     <div className='text-gray-500'>
                       <p className='text-lg font-medium'>No hay cursos creados</p>
                       <p className='text-sm mt-1'>
@@ -166,7 +150,12 @@ export default function AdminCursosPage() {
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm font-semibold text-gray-900'>
-                        {formatPrice(category)}
+                        {category.isFree ? 'Gratis' : category.priceARS > 0 ? `$ ${category.priceARS.toLocaleString()}` : '-'}
+                      </div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <div className='text-sm font-semibold text-gray-900'>
+                        {category.isFree ? 'Gratis' : category.priceUSD > 0 ? `U$S ${category.priceUSD.toLocaleString()}` : '-'}
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>

@@ -3,6 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ModalProvider } from '@/contexts/modal-context';
 import { Poppins } from 'next/font/google';
 import Script from 'next/script';
 
@@ -47,11 +48,13 @@ export default async function LocaleLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
-            {children}
-            <Script
-              src='https://sdk.mercadopago.com/js/v2'
-              strategy='lazyOnload'
-            />
+            <ModalProvider>
+              {children}
+              <Script
+                src='https://sdk.mercadopago.com/js/v2'
+                strategy='lazyOnload'
+              />
+            </ModalProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

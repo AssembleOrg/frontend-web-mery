@@ -2,6 +2,7 @@
 
 import { CourseCreateInput } from '@/types/course';
 import { Upload } from 'lucide-react';
+import { useModal } from '@/contexts/modal-context';
 
 interface BasicInfoStepProps {
   formData: Partial<CourseCreateInput>;
@@ -10,6 +11,7 @@ interface BasicInfoStepProps {
 }
 
 export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoStepProps) {
+  const { showError } = useModal();
   const handlePriceARSChange = (value: string) => {
     const priceARS = parseFloat(value) || 0;
     updateFormData({ priceARS });
@@ -39,13 +41,13 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Por favor selecciona un archivo de imagen válido');
+      showError('Por favor selecciona un archivo de imagen válido', 'Formato inválido');
       return;
     }
 
     // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert('La imagen no puede superar los 2MB');
+      showError('La imagen no puede superar los 2MB', 'Archivo muy grande');
       return;
     }
 
@@ -330,7 +332,7 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         <input
           type='checkbox'
           id='isPublished'
-          checked={formData.isPublished || false}
+          checked={formData.isPublished ?? true}
           onChange={(e) => updateFormData({ isPublished: e.target.checked })}
           className='w-4 h-4 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b]'
         />

@@ -15,12 +15,15 @@ import {
   Loader2,
 } from 'lucide-react';
 import type { CreateVideoInput } from '@/lib/api-client';
+import { VideoManagementSkeleton } from '@/components/admin/video-management-skeleton';
+import { useModal } from '@/contexts/modal-context';
 
 export default function CursoVideosPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'es';
   const courseId = params.id as string;
+  const { showConfirm, showWarning, showSuccess, showError } = useModal();
 
   const {
     categories,
@@ -162,7 +165,7 @@ export default function CursoVideosPage() {
 
   const handleFetchVimeoData = async () => {
     if (!formData.vimeoId?.trim()) {
-      alert('Por favor ingresa el ID de Vimeo primero');
+      showWarning('Por favor ingresa el ID de Vimeo primero');
       return;
     }
 
@@ -177,11 +180,11 @@ export default function CursoVideosPage() {
       // - duration desde Vimeo
       // - vimeoUrl desde Vimeo
       
-      alert('✓ ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.');
+      showSuccess('ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.', 'Validación Exitosa');
       
     } catch (error) {
       console.error('Error validating Vimeo ID:', error);
-      alert('Error al validar el ID de Vimeo. Verifica que sea correcto.');
+      showError('Error al validar el ID de Vimeo. Verifica que sea correcto.');
     } finally {
       setIsFetchingVimeo(false);
     }
@@ -223,12 +226,20 @@ export default function CursoVideosPage() {
       handleCancelEdit();
     } catch (error) {
       console.error('Error saving video:', error);
-      alert('Error al guardar el video. Por favor intenta nuevamente.');
+      showError('Error al guardar el video. Por favor intenta nuevamente.');
     }
   };
 
   const handleDelete = async (videoId: string) => {
-    if (!confirm('¿Estás seguro de eliminar este video?')) {
+    const confirmed = await showConfirm({
+      title: 'Eliminar Video',
+      message: '¿Estás seguro de eliminar este video? Esta acción no se puede deshacer.',
+      type: 'warning',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -237,7 +248,7 @@ export default function CursoVideosPage() {
       await loadData();
     } catch (error) {
       console.error('Error deleting video:', error);
-      alert('Error al eliminar el video.');
+      showError('Error al eliminar el video.');
     }
   };
 
@@ -250,19 +261,12 @@ export default function CursoVideosPage() {
       await loadData();
     } catch (error) {
       console.error('Error toggling publish status:', error);
-      alert('Error al cambiar el estado de publicación.');
+      showError('Error al cambiar el estado de publicación.');
     }
   };
 
   if (isLoading) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <Loader2 className='w-12 h-12 animate-spin text-[#f9bbc4] mx-auto' />
-          <p className='mt-4 text-gray-600'>Cargando...</p>
-        </div>
-      </div>
-    );
+    return <VideoManagementSkeleton />;
   }
 
   if (!course) {
