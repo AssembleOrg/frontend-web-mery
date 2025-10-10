@@ -21,7 +21,7 @@ export default function NuevoCursoPage() {
     setIsSubmitting(true);
     try {
       console.log('[NuevoCurso] Iniciando creación de curso...');
-      
+
       // STEP 1: Create Category (basic course info)
       const categoryData = {
         name: courseData.title,
@@ -46,25 +46,40 @@ export default function NuevoCursoPage() {
 
       // STEP 2: Create Lessons (Videos) if any
       const lessons = courseData.lessons || [];
-      
+
       if (lessons.length > 0) {
         console.log('[NuevoCurso] Creando', lessons.length, 'lecciones...');
-        
-        for (const lesson of lessons) {
+
+        for (let index = 0; index < lessons.length; index++) {
+          const lesson = lessons[index];
+
+          // Validar que el vimeoId esté presente
+          if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
+            console.error('[NuevoCurso] Error: Lección sin vimeoId:', lesson.title);
+            throw new Error(`La lección "${lesson.title}" no tiene un ID de Vimeo válido`);
+          }
+
           const videoData = {
             title: lesson.title,
             slug: lesson.slug || lesson.title.toLowerCase().replace(/\s+/g, '-'),
             description: lesson.description || '',
-            vimeoId: lesson.vimeoVideoId,
+            vimeoId: lesson.vimeoVideoId.trim(),
             categoryId: newCourse.id,
-            order: lesson.order || 0,
-            isPublished: lesson.isPublished || false,
+            order: lesson.order !== undefined ? lesson.order : index,
+            isPublished: lesson.isPublished ?? false,
           };
-          
-          console.log('[NuevoCurso] Creando video:', lesson.title);
-          await createVideo(videoData as any);
+
+          console.log('[NuevoCurso] Creando video:', lesson.title, 'vimeoId:', videoData.vimeoId);
+          const createdVideo = await createVideo(videoData);
+
+          if (!createdVideo) {
+            console.error('[NuevoCurso] Error: No se pudo crear el video:', lesson.title);
+            throw new Error(`No se pudo crear el video "${lesson.title}"`);
+          }
+
+          console.log('[NuevoCurso] ✓ Video creado:', createdVideo.id);
         }
-        
+
         console.log('[NuevoCurso] ✓ Todas las lecciones creadas');
       }
 
@@ -106,7 +121,11 @@ export default function NuevoCursoPage() {
       </div>
 
       {/* Course Form */}
-      <CourseForm onSubmit={handleSubmit} onCancel={handleCancel} isSubmitting={isSubmitting} />
+      <CourseForm
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 }

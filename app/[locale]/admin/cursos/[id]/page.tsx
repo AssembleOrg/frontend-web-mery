@@ -140,18 +140,34 @@ export default function EditarCursoPage() {
       }
 
       // Create new videos
-      for (const lesson of lessonsToCreate) {
-        console.log('[EditarCurso] Creando video:', lesson.title);
+      for (let index = 0; index < lessonsToCreate.length; index++) {
+        const lesson = lessonsToCreate[index];
+
+        // Validar que el vimeoId esté presente
+        if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
+          console.error('[EditarCurso] Error: Lección sin vimeoId:', lesson.title);
+          throw new Error(`La lección "${lesson.title}" no tiene un ID de Vimeo válido`);
+        }
+
+        console.log('[EditarCurso] Creando video:', lesson.title, 'vimeoId:', lesson.vimeoVideoId);
         const videoData = {
           title: lesson.title,
           slug: lesson.slug || lesson.title.toLowerCase().replace(/\s+/g, '-'),
           description: lesson.description || '',
-          vimeoId: lesson.vimeoVideoId,
+          vimeoId: lesson.vimeoVideoId.trim(),
           categoryId: courseId,
-          order: lesson.order || 0,
-          isPublished: lesson.isPublished || false,
+          order: lesson.order !== undefined ? lesson.order : index,
+          isPublished: lesson.isPublished ?? false,
         };
-        await createVideo(videoData as any);
+
+        const createdVideo = await createVideo(videoData);
+
+        if (!createdVideo) {
+          console.error('[EditarCurso] Error: No se pudo crear el video:', lesson.title);
+          throw new Error(`No se pudo crear el video "${lesson.title}"`);
+        }
+
+        console.log('[EditarCurso] ✓ Video creado:', createdVideo.id);
       }
 
       // Update existing videos

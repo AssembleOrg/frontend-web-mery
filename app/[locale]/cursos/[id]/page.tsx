@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Clock, PlayCircle, Loader2 } from 'lucide-react';
@@ -31,9 +31,12 @@ export default function CursoDetallePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 👈 CORRECCIÓN 1: Movemos los estados dentro del componente
   const [streamUrl, setStreamUrl] = useState<string | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
+
+  // Race condition prevention: AbortController para cancelar requests
+  const loadCourseAbortController = useRef<AbortController | null>(null);
+  const lessonSelectAbortController = useRef<AbortController | null>(null);
 
   const { user, token } = useAuth();
   const {
@@ -44,32 +47,59 @@ export default function CursoDetallePage() {
   } = useCourseStore();
 
   const courseProgress = getUserCourseProgress(courseId);
-
-  // 👈 CORRECCIÓN 2: Definimos handleLessonSelect PRIMERO para poder usarla en loadCourse
   const handleLessonSelect = useCallback(
     async (lesson: Lesson) => {
+      console.log('[CursoPage] Seleccionando lección:', lesson.title, 'ID:', lesson.id);
+
+      // Cancelar request anterior si existe
+      if (lessonSelectAbortController.current) {
+        console.log('[CursoPage] Cancelando request anterior de lección');
+        lessonSelectAbortController.current.abort();
+      }
+
+      // Crear nuevo AbortController para este request
+      const abortController = new AbortController();
+      lessonSelectAbortController.current = abortController;
+
       setSelectedLesson(lesson);
       setCurrentLesson(lesson);
 
       // Solo intentamos cargar el video si hay token (usuario autenticado)
-      if (!token) return;
+      if (!token) {
+        console.warn('[CursoPage] No hay token, no se puede cargar el video');
+        return;
+      }
 
       setIsVideoLoading(true);
       setStreamUrl(null);
 
       try {
+        console.log('[CursoPage] Solicitando stream URL para video:', lesson.id);
         // Llamamos al endpoint que nos da la URL segura de Vimeo
         const response = await getVideoStreamUrl(lesson.id);
-        setStreamUrl(response.data.streamUrl);
+
+        // Solo actualizar estado si el request no fue abortado
+        if (!abortController.signal.aborted) {
+          console.log('[CursoPage] Stream URL recibida:', response.data.streamUrl);
+          setStreamUrl(response.data.streamUrl);
+        } else {
+          console.log('[CursoPage] Request abortado, ignorando respuesta');
+        }
       } catch (error) {
-        console.error('Error fetching stream URL:', error);
-        toast.error('No se pudo cargar el video.');
-        setStreamUrl(null);
+        // Solo mostrar error si el request no fue abortado
+        if (!abortController.signal.aborted) {
+          console.error('[CursoPage] Error al obtener stream URL:', error);
+          toast.error('No se pudo cargar el video. Por favor intenta de nuevo.');
+          setStreamUrl(null);
+        }
       } finally {
-        setIsVideoLoading(false);
+        // Solo limpiar estado si el request no fue abortado
+        if (!abortController.signal.aborted) {
+          setIsVideoLoading(false);
+        }
       }
     },
-    [setCurrentLesson, token] // Añadimos token a las dependencias
+    [setCurrentLesson, token]
   );
 
   const loadCourse = useCallback(async () => {
@@ -77,9 +107,27 @@ export default function CursoDetallePage() {
       return;
     }
 
+    // Cancelar request anterior si existe
+    if (loadCourseAbortController.current) {
+      console.log('[CursoPage] Cancelando carga anterior del curso');
+      loadCourseAbortController.current.abort();
+    }
+
+    // Crear nuevo AbortController para este request
+    const abortController = new AbortController();
+    loadCourseAbortController.current = abortController;
+
+    console.log('[CursoPage] Iniciando carga del curso:', courseId);
+
     try {
       // 1. Cargar detalles del curso
       const categoryData = await getCourseDetails(courseId);
+
+      // Si el request fue abortado, salir temprano
+      if (abortController.signal.aborted) {
+        console.log('[CursoPage] Carga de curso abortada');
+        return;
+      }
 
       // 2. Lógica de bypass para ADMIN
       const isAdmin = user.role === 'ADMIN' || user.role === 'SUBADMIN';
@@ -90,13 +138,21 @@ export default function CursoDetallePage() {
       }
 
       if (!hasAccess) {
-        setError('No tienes acceso a este curso.');
-        setLoading(false);
+        if (!abortController.signal.aborted) {
+          setError('No tienes acceso a este curso.');
+          setLoading(false);
+        }
         return;
       }
 
       // 3. Cargar los videos (lecciones)
       const videosData = await getCourseVideos(courseId);
+
+      // Si el request fue abortado, salir temprano
+      if (abortController.signal.aborted) {
+        console.log('[CursoPage] Carga de curso abortada');
+        return;
+      }
 
       // Nota: Como vimos, videosData no trae vimeoId, pero eso ya no importa
       // porque usaremos handleLessonSelect para obtener la URL de streaming.
@@ -109,6 +165,8 @@ export default function CursoDetallePage() {
         duration: video.duration
           ? `${Math.floor(video.duration / 60)}m ${video.duration % 60}s`
           : 'N/A',
+        order: video.order || 0,
+        isPublished: video.isPublished,
       }));
 
       // 4. Construir el objeto del curso
@@ -118,6 +176,9 @@ export default function CursoDetallePage() {
         title: categoryData.name,
         description: categoryData.description || '',
         image: categoryData.image || '',
+        priceARS: categoryData.priceARS || 0,
+        priceUSD: categoryData.priceUSD || 0,
+        isFree: categoryData.isFree || false,
         price: 0,
         priceDisplay: '',
         currency: 'ARS',
@@ -127,21 +188,29 @@ export default function CursoDetallePage() {
         lessons: lessons,
       };
 
-      setCourse(courseData);
-      setCurrentCourse(courseData);
+      // Solo actualizar estado si el request no fue abortado
+      if (!abortController.signal.aborted) {
+        setCourse(courseData);
+        setCurrentCourse(courseData);
 
-      // 👈 CORRECCIÓN 3: La selección inicial ocurre AQUÍ, donde `lessons` existe
-      if (lessons.length > 0) {
-        // Llamamos a handleLessonSelect para seleccionar y cargar el video
-        handleLessonSelect(lessons[0]);
+        console.log('[CursoPage] Curso cargado exitosamente, total de lecciones:', lessons.length);
+
+        // Selección inicial
+        if (lessons.length > 0) {
+          handleLessonSelect(lessons[0]);
+        }
       }
     } catch (err) {
-      setError('Error al cargar el curso');
-      console.error('Error loading course:', err);
+      if (!abortController.signal.aborted) {
+        setError('Error al cargar el curso');
+        console.error('[CursoPage] Error loading course:', err);
+      }
     } finally {
-      setLoading(false);
+      if (!abortController.signal.aborted) {
+        setLoading(false);
+      }
     }
-  }, [courseId, user, token, setCurrentCourse, handleLessonSelect]); // Añadimos handleLessonSelect
+  }, [courseId, user, token, setCurrentCourse, handleLessonSelect]);
 
   // 👈 CORRECCIÓN 4: El useEffect es muy simple
   useEffect(() => {

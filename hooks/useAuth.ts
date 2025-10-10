@@ -7,11 +7,10 @@
  * - Orchestrates API calls (services) + state updates (stores)
  * - Loading/error states AQUÍ (NO en store)
  * - NUNCA store methods en useCallback dependencies
+ * - SINGLETON: Todos los componentes comparten el mismo estado de inicialización
  */
 
 import { useState, useEffect, useCallback } from 'react';
-// Singleton para evitar requests duplicados a /api/auth/me
-let sessionVerifyPromise: Promise<any> | null = null;
 import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useCourseStore } from '@/stores/course-store';
@@ -30,22 +29,64 @@ import {
   UpdateProfileData,
 } from '@/types/auth';
 
+// ============================================
+// SINGLETON STATE - Compartido entre todas las instancias de useAuth
+// ============================================
+let sessionVerifyPromise: Promise<any> | null = null;
+let sharedIsLoading = true;
+let sharedError: string | null = null;
+const stateListeners = new Set<() => void>();
+
+// Función para notificar a todas las instancias de useAuth sobre cambios de estado
+function notifyStateChange() {
+  stateListeners.forEach(listener => listener());
+}
+
+function setSharedLoading(loading: boolean) {
+  if (sharedIsLoading !== loading) {
+    sharedIsLoading = loading;
+    notifyStateChange();
+  }
+}
+
+function setSharedError(error: string | null) {
+  if (sharedError !== error) {
+    sharedError = error;
+    notifyStateChange();
+  }
+}
+
 export function useAuth() {
   const { user, token, isAuthenticated, setAuth, updateUser, clearAuth } =
     useAuthStore();
-  const [isLoading, setIsLoading] = useState(true); // Iniciar en true para evitar redirects prematuros
-  const [error, setError] = useState<string | null>(null);
+
+  // Estado local que se sincroniza con el estado compartido
+  const [isLoading, setIsLoading] = useState(sharedIsLoading);
+  const [error, setError] = useState<string | null>(sharedError);
+
+  // Suscribirse a cambios en el estado compartido
+  useEffect(() => {
+    const syncState = () => {
+      setIsLoading(sharedIsLoading);
+      setError(sharedError);
+    };
+
+    stateListeners.add(syncState);
+    return () => {
+      stateListeners.delete(syncState);
+    };
+  }, []);
 
   // Auto-init: Initialize auth from cookies and verify session
-  // Se ejecuta cada vez que se monta el componente (después de F5, navegación, etc)
+  // SINGLETON: Solo se ejecuta una vez globalmente, no por cada instancia
   useEffect(() => {
     let mounted = true;
 
     const initAuth = async () => {
       // Si ya hay una verificación en curso, espera su resultado
       if (sessionVerifyPromise) {
+        console.log('[useAuth] Verificación ya en curso, esperando resultado...');
         await sessionVerifyPromise;
-        setIsLoading(false);
         return;
       }
 
@@ -53,6 +94,9 @@ export function useAuth() {
       sessionVerifyPromise = new Promise<void>((resolve) => {
         resolveVerify = resolve;
       });
+
+      console.log('[useAuth] Iniciando verificación de sesión (singleton)');
+
       // Load auth from cookies PRIMERO (sincrónico)
       useAuthStore.getState().initializeAuth();
       const currentToken = useAuthStore.getState().token;
@@ -90,7 +134,7 @@ export function useAuth() {
             // network/server error: keep local cookies (if any)
           }
         } finally {
-          if (mounted) setIsLoading(false);
+          if (mounted) setSharedLoading(false);
           resolveVerify();
           sessionVerifyPromise = null;
         }
@@ -101,7 +145,7 @@ export function useAuth() {
       // Esto evita el redirect mientras verificamos con el backend
       if (currentToken && currentUser) {
         if (mounted) {
-          setIsLoading(false);
+          setSharedLoading(false);
         }
         // Verificar con el backend en segundo plano (sin bloquear la UI)
         try {
@@ -111,7 +155,7 @@ export function useAuth() {
             '[useAuth] me() response (token):',
             response && { hasUser: !!response.user, token: !!response.token }
           );
-          if (mounted) {
+          if (mounted && response && response.user) {
             console.log('[useAuth] Sesión válida:', response.user);
             setAuth(response.user, currentToken);
           }
@@ -157,7 +201,7 @@ export function useAuth() {
           }
         } finally {
           if (mounted) {
-            setIsLoading(false);
+            setSharedLoading(false);
           }
           resolveVerify();
           sessionVerifyPromise = null;
@@ -176,8 +220,8 @@ export function useAuth() {
   // Login
   const login = useCallback(async (credentials: LoginCredentials) => {
     try {
-      setIsLoading(true);
-      setError(null);
+      setSharedLoading(true);
+      setSharedError(null);
 
       const response = await loginService(credentials);
       setAuth(response.user, response.token);
@@ -186,18 +230,18 @@ export function useAuth() {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al iniciar sesión';
-      setError(errorMessage);
+      setSharedError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
-      setIsLoading(false);
+      setSharedLoading(false);
     }
   }, []); // CRITICAL: Empty array, NOT [setAuth]
 
   // Register
   const register = useCallback(async (credentials: RegisterCredentials) => {
     try {
-      setIsLoading(true);
-      setError(null);
+      setSharedLoading(true);
+      setSharedError(null);
 
       const response = await registerService(credentials);
 
@@ -207,18 +251,18 @@ export function useAuth() {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al registrarse';
-      setError(errorMessage);
+      setSharedError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
-      setIsLoading(false);
+      setSharedLoading(false);
     }
   }, []); // CRITICAL: Empty array, NOT [setAuth]
 
   // Update Profile
   const updateProfile = useCallback(async (data: UpdateProfileData) => {
     try {
-      setIsLoading(true);
-      setError(null);
+      setSharedLoading(true);
+      setSharedError(null);
 
       const currentToken = useAuthStore.getState().token;
       const currentUser = useAuthStore.getState().user;
@@ -238,10 +282,10 @@ export function useAuth() {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al actualizar perfil';
-      setError(errorMessage);
+      setSharedError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
-      setIsLoading(false);
+      setSharedLoading(false);
     }
   }, []); // CRITICAL: Empty array, NOT [updateUser]
 

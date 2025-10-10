@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -20,14 +20,30 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const params = useParams();
   const locale = (params.locale as string) || 'es';
 
+  // Track previous state to avoid duplicate logs
+  const prevStateRef = useRef({ isLoading, isAuthenticated });
+
+  // Memoize shouldRedirect calculation
+  const shouldRedirect = useMemo(() => {
+    return !isLoading && !isAuthenticated;
+  }, [isLoading, isAuthenticated]);
+
   useEffect(() => {
-    console.log('[ProtectedRoute] auth state change', { isLoading, isAuthenticated, locale });
+    // Only log if state actually changed
+    const stateChanged =
+      prevStateRef.current.isLoading !== isLoading ||
+      prevStateRef.current.isAuthenticated !== isAuthenticated;
+
+    if (stateChanged) {
+      console.log('[ProtectedRoute] auth state change', { isLoading, isAuthenticated, locale });
+      prevStateRef.current = { isLoading, isAuthenticated };
+    }
 
     // Defensive delay: avoid immediate redirect caused by a race between
     // page mount and useAuth background verification (especially on F5).
     // Wait a short time before redirecting; if auth becomes true in that
     // time, cancel the redirect.
-    if (!isLoading && !isAuthenticated) {
+    if (shouldRedirect) {
       const timer = setTimeout(() => {
         console.log('[ProtectedRoute] redirecting to login after delay', `/${locale}/login`);
         router.push(`/${locale}/login`);
@@ -35,7 +51,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
       return () => clearTimeout(timer);
     }
-  }, [isLoading, isAuthenticated, router, locale]);
+  }, [shouldRedirect, isLoading, isAuthenticated, router, locale]);
 
   // Show loading state while checking auth
   if (isLoading) {

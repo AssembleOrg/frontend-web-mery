@@ -20,13 +20,22 @@ export default function VimeoPlayer({
 }: VimeoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [iframeKey, setIframeKey] = useState(0);
 
   const { markLessonCompleted, isLessonCompleted } = useCourseStore();
   const completed = isLessonCompleted(courseId, lessonId);
 
+  // Reset completion state when lesson changes
   useEffect(() => {
     setIsCompleted(completed);
   }, [completed]);
+
+  // Force iframe reload when vimeoSrcUrl changes
+  useEffect(() => {
+    if (vimeoSrcUrl) {
+      setIframeKey((prev) => prev + 1);
+    }
+  }, [vimeoSrcUrl, lessonId]);
 
   let finalIframeSrc = '';
   if (vimeoSrcUrl) {
@@ -100,6 +109,7 @@ export default function VimeoPlayer({
         style={{ paddingBottom: '56.25%' }}
       >
         <iframe
+          key={iframeKey}
           ref={iframeRef}
           src={finalIframeSrc}
           className='absolute top-0 left-0 w-full h-full rounded-lg'

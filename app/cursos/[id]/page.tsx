@@ -41,6 +41,9 @@ export default function CursoDetallePage() {
           title: categoryData.name,
           description: categoryData.description || '',
           image: categoryData.image || '',
+          priceARS: categoryData.priceARS || 0,
+          priceUSD: categoryData.priceUSD || 0,
+          isFree: categoryData.isFree || false,
           price: categoryData.priceUSD || categoryData.priceARS || 0,
           priceDisplay: categoryData.priceUSD
             ? `U$S ${categoryData.priceUSD}`

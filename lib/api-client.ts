@@ -87,7 +87,9 @@ interface VideoProgress {
  * Get auth token from cookies
  */
 function getAuthToken(): string | undefined {
-  return Cookies.get('auth_token');
+  const token = Cookies.get('auth_token');
+  console.log('[api-client] getAuthToken called, result:', token ? `${token.substring(0, 20)}...` : 'undefined');
+  return token;
 }
 
 /**
@@ -95,10 +97,15 @@ function getAuthToken(): string | undefined {
  */
 function getAuthHeaders(): HeadersInit {
   const token = getAuthToken();
-  return {
+  const headers = {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
   };
+  console.log('[api-client] getAuthHeaders:', {
+    hasToken: !!token,
+    hasAuthHeader: !!(headers as any).Authorization,
+  });
+  return headers;
 }
 
 /**
@@ -108,12 +115,21 @@ async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
+  const headers = {
+    ...getAuthHeaders(),
+    ...options.headers,
+  };
+
+  console.log('[api-client] Request:', {
+    endpoint,
+    method: options.method || 'GET',
+    hasAuthHeader: !!(headers as any).Authorization,
+    headers: headers, // Ver TODOS los headers
+  });
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
-    headers: {
-      ...getAuthHeaders(),
-      ...options.headers,
-    },
+    headers,
     credentials: 'include',
   });
 

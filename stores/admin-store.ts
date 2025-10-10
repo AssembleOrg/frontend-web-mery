@@ -59,6 +59,7 @@ interface AdminActions {
   createVideo: (video: Omit<Video, 'id' | 'createdAt' | 'updatedAt' | 'thumbnail' | 'duration'>) => Promise<Video | null>;
   updateVideo: (id: string, updates: Partial<Video>) => Promise<Video | null>;
   deleteVideo: (id: string) => Promise<boolean>;
+  getVideosByCategory: (categoryId: string) => Video[];
 
   // Utility
   setLoading: (loading: boolean) => void;
@@ -259,18 +260,38 @@ export const useAdminStore = create<AdminState & AdminActions>()(
     /**
      * Fetch videos
      * GET /videos
+     * IMPORTANTE: Fusiona videos inteligentemente en lugar de reemplazarlos
      */
     fetchVideos: async (categoryId?: string) => {
       set({ isLoading: true, error: null });
       try {
         const response = await apiClient.getVideos({ categoryId });
-        console.log('[Admin Store] Videos response:', response);
+        console.log('[Admin Store] Videos response for category', categoryId, ':', response);
+
+        const newVideos = response.data.data;
+        console.log('[Admin Store] New videos count:', newVideos.length);
+
         set((state) => {
-          // Backend returns { data: { data: [], meta: {} } }
-          state.videos = response.data.data;
+          if (categoryId) {
+            // Fusionar inteligentemente: remover videos viejos de esta categoría, agregar nuevos
+            console.log('[Admin Store] Before merge, total videos:', state.videos.length);
+
+            // Filtrar videos de otras categorías (mantenerlos)
+            const otherCategoryVideos = state.videos.filter(v => v.categoryId !== categoryId);
+            console.log('[Admin Store] Videos from other categories:', otherCategoryVideos.length);
+
+            // Combinar: videos de otras categorías + nuevos videos de esta categoría
+            state.videos = [...otherCategoryVideos, ...newVideos];
+            console.log('[Admin Store] After merge, total videos:', state.videos.length);
+          } else {
+            // Si no hay categoryId, reemplazar todo (carga global)
+            state.videos = newVideos;
+            console.log('[Admin Store] Global load, total videos:', state.videos.length);
+          }
           state.isLoading = false;
         });
       } catch (error) {
+        console.error('[Admin Store] Error fetching videos:', error);
         set({
           isLoading: false,
           error: error instanceof Error ? error.message : 'Failed to fetch videos'
@@ -304,6 +325,8 @@ export const useAdminStore = create<AdminState & AdminActions>()(
     createVideo: async (video) => {
       set({ isLoading: true, error: null });
       try {
+        console.log('[Admin Store] Creating video:', video);
+
         const response = await fetch(`${API_BASE_URL}/videos`, {
           method: 'POST',
           headers: getAuthHeaders(),
@@ -313,24 +336,47 @@ export const useAdminStore = create<AdminState & AdminActions>()(
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Failed to create video');
+          console.error('[Admin Store] Create video failed:', response.status, errorData);
+
+          // Manejar errores específicos
+          if (response.status === 409) {
+            const error = new Error(`Ya existe un video con el slug "${video.slug}". Por favor usa un slug diferente.`);
+            set({
+              isLoading: false,
+              error: error.message
+            });
+            throw error;
+          }
+
+          const error = new Error(errorData.message || `Error ${response.status}: No se pudo crear el video`);
+          set({
+            isLoading: false,
+            error: error.message
+          });
+          throw error;
         }
 
         const result = await response.json();
         const newVideo = result.data;
+        console.log('[Admin Store] Video created successfully:', newVideo);
 
         set((state) => {
           state.videos.push(newVideo);
+          console.log('[Admin Store] Video added to store. Total videos:', state.videos.length);
           state.isLoading = false;
         });
 
         return newVideo;
       } catch (error) {
-        set({
-          isLoading: false,
-          error: error instanceof Error ? error.message : 'Failed to create video'
-        });
-        return null;
+        console.error('[Admin Store] Error creating video:', error);
+        // El error ya fue seteado en el bloque if(!response.ok), solo propagar
+        if (!(error instanceof Error && get().error)) {
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Failed to create video'
+          });
+        }
+        throw error; // Propagar el error para que el componente lo capture
       }
     },
 
@@ -405,6 +451,16 @@ export const useAdminStore = create<AdminState & AdminActions>()(
         });
         return false;
       }
+    },
+
+    /**
+     * Get videos by category ID
+     * Helper para obtener videos filtrados por categoría desde el store
+     */
+    getVideosByCategory: (categoryId: string) => {
+      const videos = get().videos.filter(v => v.categoryId === categoryId);
+      console.log('[Admin Store] getVideosByCategory:', categoryId, 'count:', videos.length);
+      return videos;
     },
 
     // ============================================

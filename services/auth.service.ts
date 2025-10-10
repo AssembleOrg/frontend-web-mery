@@ -92,15 +92,43 @@ export const me = async (token?: string): Promise<{ user: any; token?: string | 
   }
 
   const data: MeResponse = await response.json();
-  
+
+  // Logging detallado para debugging
+  console.log('[auth.service] /api/auth/me raw response:', JSON.stringify(data, null, 2));
+
   if (!data.success) {
     throw new AuthServiceError(401, 'Session invalid or expired');
   }
 
+  // Parsing robusto: manejar múltiples estructuras posibles del backend
+  // Estructura 1: { success: true, data: { user: {...} } }
+  // Estructura 2: { success: true, data: {...} } donde data ES el user
+  // Estructura 3: { success: true, user: {...} } donde user está al mismo nivel
+  let user = null;
+  let accessToken = null;
+
+  if (data.data) {
+    // Intentar estructura anidada primero
+    user = (data.data as any).user || data.data;
+    accessToken = (data.data as any).accessToken;
+  } else if ((data as any).user) {
+    // Usuario al mismo nivel que success
+    user = (data as any).user;
+    accessToken = (data as any).accessToken;
+  }
+
+  console.log('[auth.service] Parsed user:', user ? { id: user.id, email: user.email, role: user.role } : null);
+  console.log('[auth.service] Parsed accessToken:', !!accessToken);
+
+  if (!user) {
+    console.error('[auth.service] No user found in response structure');
+    throw new AuthServiceError(401, 'Invalid response structure from /api/auth/me');
+  }
+
   // Some backends may return a refreshed token; include it if present
   return {
-    user: data.data.user,
-    token: (data.data as any).accessToken || null
+    user,
+    token: accessToken || null
   };
 };
 

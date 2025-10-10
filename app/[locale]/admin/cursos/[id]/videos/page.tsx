@@ -2,7 +2,7 @@
 
 import { useAdminStore } from '@/stores';
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft,
   PlusCircle,
@@ -14,6 +14,7 @@ import {
   X,
   Loader2,
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import type { CreateVideoInput } from '@/lib/api-client';
 import { VideoManagementSkeleton } from '@/components/admin/video-management-skeleton';
 import { useModal } from '@/contexts/modal-context';
@@ -25,6 +26,9 @@ export default function CursoVideosPage() {
   const courseId = params.id as string;
   const { showConfirm, showWarning, showSuccess, showError } = useModal();
 
+  // Race condition prevention ref
+  const loadingDataRef = useRef(false);
+
   const {
     categories,
     videos,
@@ -33,6 +37,7 @@ export default function CursoVideosPage() {
     createVideo,
     updateVideo,
     deleteVideo,
+    getVideosByCategory,
   } = useAdminStore();
 
   const [course, setCourse] = useState<any>(null);
@@ -51,34 +56,62 @@ export default function CursoVideosPage() {
   const [isFetchingVimeo, setIsFetchingVimeo] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Race condition prevention: AbortController para cancelar requests
+  const loadDataAbortController = useRef<AbortController | null>(null);
+
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId]);
 
   const loadData = async () => {
+    // Cancelar request anterior si existe
+    if (loadDataAbortController.current) {
+      console.log('[VideosPage] Cancelando carga anterior de datos');
+      loadDataAbortController.current.abort();
+    }
+
+    // Crear nuevo AbortController para este request
+    const abortController = new AbortController();
+    loadDataAbortController.current = abortController;
+
     setIsLoading(true);
+    console.log('[VideosPage] Iniciando carga de datos para curso:', courseId);
+
     try {
       // Load course info
       const foundCourse = await fetchCategoryById(courseId);
-      if (foundCourse) {
+
+      // Solo actualizar estado si el request no fue abortado
+      if (!abortController.signal.aborted && foundCourse) {
         setCourse(foundCourse);
+        console.log('[VideosPage] Curso cargado:', foundCourse.name);
       }
 
       // Load videos for this course
       await fetchVideos(courseId);
+
+      if (!abortController.signal.aborted) {
+        console.log('[VideosPage] Videos cargados exitosamente');
+      }
     } catch (error) {
-      console.error('Error loading data:', error);
+      if (!abortController.signal.aborted) {
+        console.error('[VideosPage] Error loading data:', error);
+      }
     } finally {
-      setIsLoading(false);
+      if (!abortController.signal.aborted) {
+        setIsLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    console.log(videos)
-    const filtered = videos.filter((v: any) => v.categoryId === courseId);
+    // Usar el helper del store para obtener videos filtrados
+    const filtered = getVideosByCategory(courseId);
+    console.log('[VideosPage] Total videos in store:', videos.length);
+    console.log('[VideosPage] Filtered videos for course', courseId, ':', filtered.length);
     setCourseVideos(filtered);
-  }, [videos, courseId]);
+  }, [videos, courseId, getVideosByCategory]);
 
   const handleBack = () => {
     router.push(`/${locale}/admin/cursos`);
@@ -192,13 +225,15 @@ export default function CursoVideosPage() {
 
   const handleSave = async () => {
     if (!validateForm()) {
-      console.log('Form data is not valid', errors);
+      console.log('[VideosPage] Form data is not valid', errors);
+      toast.error('Por favor completa todos los campos requeridos');
       return;
     }
 
     try {
       if (editingVideo) {
         // Update existing video
+        console.log('[VideosPage] Updating video:', editingVideo.id);
         const updates = {
           title: formData.title!,
           slug: formData.slug!,
@@ -206,9 +241,12 @@ export default function CursoVideosPage() {
           order: formData.order,
           isPublished: formData.isPublished, // Include published status
         };
-        await updateVideo(editingVideo.id, updates);
+        const result = await updateVideo(editingVideo.id, updates);
+        console.log('[VideosPage] Video updated:', result);
+        toast.success('Video actualizado exitosamente');
       } else {
         // Create new video
+        console.log('[VideosPage] Creating new video for course:', courseId);
         const newVideo: CreateVideoInput = {
           title: formData.title!,
           slug: formData.slug!,
@@ -218,15 +256,26 @@ export default function CursoVideosPage() {
           order: formData.order || courseVideos.length,
           isPublished: formData.isPublished, // Include published status
         };
-        await createVideo(newVideo as any);
+        const result = await createVideo(newVideo as any);
+        console.log('[VideosPage] Video created:', result);
+
+        if (!result) {
+          throw new Error('Failed to create video - no result returned');
+        }
+        toast.success('Video creado exitosamente');
       }
 
-      // Reload data
+      // Reload data to ensure sync
+      console.log('[VideosPage] Reloading data after save...');
       await loadData();
       handleCancelEdit();
     } catch (error) {
-      console.error('Error saving video:', error);
-      showError('Error al guardar el video. Por favor intenta nuevamente.');
+      console.error('[VideosPage] Error saving video:', error);
+      // El error ya viene formateado desde admin-store.ts para errores 409
+      const errorMessage = error instanceof Error ? error.message : 'Error al guardar el video. Por favor intenta nuevamente.';
+      toast.error(errorMessage, {
+        duration: 5000, // Mostrar por 5 segundos para errores importantes
+      });
     }
   };
 
@@ -246,22 +295,25 @@ export default function CursoVideosPage() {
     try {
       await deleteVideo(videoId);
       await loadData();
+      toast.success('Video eliminado exitosamente');
     } catch (error) {
-      console.error('Error deleting video:', error);
-      showError('Error al eliminar el video.');
+      console.error('[VideosPage] Error deleting video:', error);
+      toast.error('Error al eliminar el video. Por favor intenta nuevamente.');
     }
   };
 
   const handleTogglePublish = async (video: any) => {
     try {
       // Solo enviar isPublished, el backend maneja publishedAt automáticamente
+      const newStatus = !video.isPublished;
       await updateVideo(video.id, {
-        isPublished: !video.isPublished,
+        isPublished: newStatus,
       });
       await loadData();
+      toast.success(newStatus ? 'Video publicado exitosamente' : 'Video despublicado exitosamente');
     } catch (error) {
-      console.error('Error toggling publish status:', error);
-      showError('Error al cambiar el estado de publicación.');
+      console.error('[VideosPage] Error toggling publish status:', error);
+      toast.error('Error al cambiar el estado de publicación. Por favor intenta nuevamente.');
     }
   };
 
