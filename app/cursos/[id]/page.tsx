@@ -33,7 +33,7 @@ export default function CursoDetallePage() {
         setLoading(true);
         // Get Category from backend
         const categoryData = await getCourseDetails(courseId);
-        
+
         // Convert Category to Course format
         const courseData: Course = {
           id: categoryData.id,
@@ -42,8 +42,8 @@ export default function CursoDetallePage() {
           description: categoryData.description || '',
           image: categoryData.image || '',
           price: categoryData.priceUSD || categoryData.priceARS || 0,
-          priceDisplay: categoryData.priceUSD 
-            ? `U$S ${categoryData.priceUSD}` 
+          priceDisplay: categoryData.priceUSD
+            ? `U$S ${categoryData.priceUSD}`
             : `$ ${categoryData.priceARS} ARS`,
           currency: categoryData.priceUSD > 0 ? 'USD' : 'ARS',
           isPublished: categoryData.isActive,
@@ -51,7 +51,7 @@ export default function CursoDetallePage() {
           updatedAt: new Date(categoryData.updatedAt),
           lessons: [], // Videos will be loaded separately if needed
         };
-        
+
         setCourse(courseData);
         setCurrentCourse(courseData);
 

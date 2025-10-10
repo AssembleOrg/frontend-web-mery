@@ -54,19 +54,19 @@ export interface Course {
   title: string;
   description: string;
   image: string;
-  
+
   // Sistema bimonetario (ambos precios coexisten)
-  priceARS: number;  // Precio en Pesos Argentinos
-  priceUSD: number;  // Precio en Dólares
-  isFree?: boolean;  // Si el curso es gratuito
-  
+  priceARS: number; // Precio en Pesos Argentinos
+  priceUSD: number; // Precio en Dólares
+  isFree?: boolean; // Si el curso es gratuito
+
   // Backward compatibility (deprecated - usar priceARS/priceUSD)
   price?: number;
   priceDisplay?: string;
   currency?: 'USD' | 'ARS';
 
   // Metadata de publicación (para admin)
-  isPublished?: boolean;        // false = borrador, true = público
+  isPublished?: boolean; // false = borrador, true = público
   createdAt?: Date;
   updatedAt?: Date;
   order?: number;
@@ -105,7 +105,7 @@ export type CourseUpdateInput = Partial<Omit<Course, 'id'>>;
  * Estado del formulario multi-step del admin
  */
 export interface CourseFormState {
-  step: number;                    // 1: Basic, 2: Modal, 3: Lessons, 4: Preview
+  step: number; // 1: Basic, 2: Modal, 3: Lessons, 4: Preview
   basicInfo: Partial<Course>;
   modalContent: Partial<CourseModalContent>;
   lessons: Lesson[];

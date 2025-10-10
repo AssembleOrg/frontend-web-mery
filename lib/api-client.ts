@@ -8,7 +8,11 @@ import Cookies from 'js-cookie';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string, public errorType?: string) {
+  constructor(
+    public status: number,
+    message: string,
+    public errorType?: string
+  ) {
     super(message);
     this.name = 'ApiError';
   }
@@ -93,7 +97,7 @@ function getAuthHeaders(): HeadersInit {
   const token = getAuthToken();
   return {
     'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` })
+    ...(token && { Authorization: `Bearer ${token}` }),
   };
 }
 
@@ -117,7 +121,9 @@ async function apiRequest<T>(
     const errorData = await response.json().catch(() => ({}));
     throw new ApiError(
       response.status,
-      errorData.message || errorData.error || `Error ${response.status}: ${response.statusText}`,
+      errorData.message ||
+        errorData.error ||
+        `Error ${response.status}: ${response.statusText}`,
       errorData.error
     );
   }
@@ -142,15 +148,20 @@ export interface GetCategoriesParams {
  * Get all categories/courses
  * GET /categories
  */
-export const getCategories = async (params?: GetCategoriesParams): Promise<ApiResponse<{
-  data: Category[];
-  meta: PaginationMeta;
-}>> => {
+export const getCategories = async (
+  params?: GetCategoriesParams
+): Promise<
+  ApiResponse<{
+    data: Category[];
+    meta: PaginationMeta;
+  }>
+> => {
   const queryParams = new URLSearchParams();
   if (params?.page) queryParams.append('page', params.page.toString());
   if (params?.limit) queryParams.append('limit', params.limit.toString());
   if (params?.search) queryParams.append('search', params.search);
-  if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+  if (params?.isActive !== undefined)
+    queryParams.append('isActive', params.isActive.toString());
   if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
   if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
 
@@ -165,7 +176,9 @@ export const getCategories = async (params?: GetCategoriesParams): Promise<ApiRe
  * Get category by ID or slug
  * GET /categories/:id
  */
-export const getCategoryById = async (id: string): Promise<ApiResponse<Category>> => {
+export const getCategoryById = async (
+  id: string
+): Promise<ApiResponse<Category>> => {
   return apiRequest<Category>(`/categories/${id}`);
 };
 
@@ -187,16 +200,21 @@ export interface GetVideosParams {
  * Get all videos
  * GET /videos
  */
-export const getVideos = async (params?: GetVideosParams): Promise<ApiResponse<{
-  data: Video[];
-  meta: PaginationMeta;
-}>> => {
+export const getVideos = async (
+  params?: GetVideosParams
+): Promise<
+  ApiResponse<{
+    data: Video[];
+    meta: PaginationMeta;
+  }>
+> => {
   const queryParams = new URLSearchParams();
   if (params?.page) queryParams.append('page', params.page.toString());
   if (params?.limit) queryParams.append('limit', params.limit.toString());
   if (params?.search) queryParams.append('search', params.search);
   if (params?.categoryId) queryParams.append('categoryId', params.categoryId);
-  if (params?.isPublished !== undefined) queryParams.append('isPublished', params.isPublished.toString());
+  if (params?.isPublished !== undefined)
+    queryParams.append('isPublished', params.isPublished.toString());
   if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
   if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
 
@@ -220,8 +238,12 @@ export const getVideoById = async (id: string): Promise<ApiResponse<Video>> => {
  * GET /videos/:id/stream
  * Requires authentication
  */
-export const getVideoStreamUrl = async (id: string): Promise<ApiResponse<{ streamUrl: string; expiresAt: string }>> => {
-  return apiRequest<{ streamUrl: string; expiresAt: string }>(`/videos/${id}/stream`);
+export const getVideoStreamUrl = async (
+  id: string
+): Promise<ApiResponse<{ streamUrl: string; expiresAt: string }>> => {
+  return apiRequest<{ streamUrl: string; expiresAt: string }>(
+    `/videos/${id}/stream`
+  );
 };
 
 /**
@@ -245,7 +267,9 @@ export const updateVideoProgress = async (
  * GET /videos/:id/progress
  * Requires authentication
  */
-export const getVideoProgress = async (id: string): Promise<ApiResponse<VideoProgress>> => {
+export const getVideoProgress = async (
+  id: string
+): Promise<ApiResponse<VideoProgress>> => {
   return apiRequest<VideoProgress>(`/videos/${id}/progress`);
 };
 
@@ -282,7 +306,9 @@ export interface UpdateVideoInput {
  * POST /videos
  * Requires ADMIN or SUBADMIN authentication
  */
-export const createVideo = async (videoData: CreateVideoInput): Promise<ApiResponse<Video>> => {
+export const createVideo = async (
+  videoData: CreateVideoInput
+): Promise<ApiResponse<Video>> => {
   return apiRequest<Video>('/videos', {
     method: 'POST',
     body: JSON.stringify(videoData),
@@ -294,7 +320,10 @@ export const createVideo = async (videoData: CreateVideoInput): Promise<ApiRespo
  * PATCH /videos/:id
  * Requires ADMIN or SUBADMIN authentication
  */
-export const updateVideo = async (id: string, updates: UpdateVideoInput): Promise<ApiResponse<Video>> => {
+export const updateVideo = async (
+  id: string,
+  updates: UpdateVideoInput
+): Promise<ApiResponse<Video>> => {
   return apiRequest<Video>(`/videos/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(updates),
@@ -345,7 +374,9 @@ export interface UpdateCategoryInput {
  * POST /categories
  * Requires ADMIN or SUBADMIN authentication
  */
-export const createCategory = async (categoryData: CreateCategoryInput): Promise<ApiResponse<Category>> => {
+export const createCategory = async (
+  categoryData: CreateCategoryInput
+): Promise<ApiResponse<Category>> => {
   return apiRequest<Category>('/categories', {
     method: 'POST',
     body: JSON.stringify(categoryData),
@@ -357,7 +388,10 @@ export const createCategory = async (categoryData: CreateCategoryInput): Promise
  * PATCH /categories/:id
  * Requires ADMIN or SUBADMIN authentication
  */
-export const updateCategory = async (id: string, updates: UpdateCategoryInput): Promise<ApiResponse<Category>> => {
+export const updateCategory = async (
+  id: string,
+  updates: UpdateCategoryInput
+): Promise<ApiResponse<Category>> => {
   return apiRequest<Category>(`/categories/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(updates),
@@ -369,7 +403,9 @@ export const updateCategory = async (id: string, updates: UpdateCategoryInput): 
  * DELETE /categories/:id
  * Requires ADMIN authentication
  */
-export const deleteCategory = async (id: string): Promise<ApiResponse<{ message: string }>> => {
+export const deleteCategory = async (
+  id: string
+): Promise<ApiResponse<{ message: string }>> => {
   return apiRequest<{ message: string }>(`/categories/${id}`, {
     method: 'DELETE',
   });
@@ -436,7 +472,7 @@ export const getCart = async (): Promise<Cart> => {
 export const addToCart = async (categoryId: string): Promise<Cart> => {
   const response = await apiRequest<Cart>('/cart/add', {
     method: 'POST',
-    body: JSON.stringify({ categoryId })
+    body: JSON.stringify({ categoryId }),
   });
   return response.data;
 };
@@ -448,7 +484,7 @@ export const addToCart = async (categoryId: string): Promise<Cart> => {
  */
 export const removeFromCart = async (itemId: string): Promise<Cart> => {
   const response = await apiRequest<Cart>(`/cart/items/${itemId}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
   return response.data;
 };
@@ -460,7 +496,7 @@ export const removeFromCart = async (itemId: string): Promise<Cart> => {
  */
 export const clearCart = async (): Promise<void> => {
   await apiRequest<{ message: string }>('/cart', {
-    method: 'DELETE'
+    method: 'DELETE',
   });
 };
 
@@ -485,7 +521,9 @@ export const getCartSummary = async (): Promise<CartSummary> => {
 export const getUserCourses = async (): Promise<Category[]> => {
   const response = await getCategories({ isActive: true });
   // Filter only courses the user has access to
-  return response.data.data.filter((category: Category) => category.hasAccess || category.isPurchased);
+  return response.data.data.filter(
+    (category: Category) => category.hasAccess || category.isPurchased
+  );
 };
 
 /**
@@ -500,17 +538,22 @@ export const getCourseVideos = async (categoryId: string): Promise<Video[]> => {
  * Get presentation video (order 0) for a course - PUBLIC ACCESS
  * This endpoint doesn't require authentication as it's for previewing courses
  */
-export const getPresentationVideo = async (categoryId: string): Promise<{ video: Video; streamUrl?: string } | null> => {
+export const getPresentationVideo = async (
+  categoryId: string
+): Promise<{ video: Video; streamUrl?: string } | null> => {
   try {
     const queryParams = new URLSearchParams({
       categoryId,
       isPublished: 'true',
       sortBy: 'order',
       sortOrder: 'asc',
-      limit: '1'
+      limit: '1',
     });
 
-    console.log('[API] Fetching presentation video:', `${API_BASE_URL}/videos?${queryParams}`);
+    console.log(
+      '[API] Fetching presentation video:',
+      `${API_BASE_URL}/videos?${queryParams}`
+    );
 
     const response = await fetch(`${API_BASE_URL}/videos?${queryParams}`, {
       method: 'GET',
@@ -523,49 +566,63 @@ export const getPresentationVideo = async (categoryId: string): Promise<{ video:
     console.log('[API] Response status:', response.status);
 
     if (!response.ok) {
-      console.error('[API] Response not OK:', response.status, response.statusText);
+      console.error(
+        '[API] Response not OK:',
+        response.status,
+        response.statusText
+      );
       return null;
     }
 
-    const data: ApiResponse<{ data: Video[]; meta: PaginationMeta }> = await response.json();
+    const data: ApiResponse<{ data: Video[]; meta: PaginationMeta }> =
+      await response.json();
     console.log('[API] Full response data:', data);
-    
+
     const videos = data.data.data;
     console.log('[API] Videos array:', videos);
     console.log('[API] Videos length:', videos?.length);
-    
+
     if (videos && videos.length > 0) {
       const video = videos[0];
       console.log('[API] First video:', video);
       console.log('[API] First video order:', video.order);
-      
+
       // For videos with order = 0 (presentation videos), try to get stream URL
       // This requires backend to allow public access to /stream for order = 0 videos
-      if (video.order === 0 || video.order === undefined || video.order === null) {
-        console.log('[API] Found presentation video, attempting to get stream URL...');
-        
+      if (
+        video.order === 0 ||
+        video.order === undefined ||
+        video.order === null
+      ) {
+        console.log(
+          '[API] Found presentation video, attempting to get stream URL...'
+        );
+
         try {
           // Try to get stream URL (may fail if backend requires auth for all videos)
-          const streamResponse = await fetch(`${API_BASE_URL}/videos/${video.id}/stream`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-          });
+          const streamResponse = await fetch(
+            `${API_BASE_URL}/videos/${video.id}/stream`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+            }
+          );
 
           if (streamResponse.ok) {
             const streamData = await streamResponse.json();
             const streamUrl = streamData.data?.streamUrl;
             console.log('[API] Stream URL obtained:', streamUrl);
-            
+
             // Si la URL no incluye parámetros de Vimeo necesarios, construir una URL más permisiva
             let finalStreamUrl = streamUrl;
-            
+
             if (streamUrl && streamUrl.includes('player.vimeo.com')) {
               // Agregar parámetros para evitar restricciones de dominio
               const url = new URL(streamUrl);
-              
+
               // Estos parámetros ayudan a que Vimeo sea más permisivo
               if (!url.searchParams.has('dnt')) {
                 url.searchParams.set('dnt', '1'); // Do Not Track
@@ -573,17 +630,20 @@ export const getPresentationVideo = async (categoryId: string): Promise<{ video:
               if (!url.searchParams.has('app_id')) {
                 url.searchParams.set('app_id', '122963'); // Vimeo default app ID
               }
-              
+
               finalStreamUrl = url.toString();
               console.log('[API] Enhanced Vimeo URL:', finalStreamUrl);
             }
-            
-            return { 
-              video, 
-              streamUrl: finalStreamUrl 
+
+            return {
+              video,
+              streamUrl: finalStreamUrl,
             };
           } else {
-            console.warn('[API] Could not get stream URL (backend may require auth):', streamResponse.status);
+            console.warn(
+              '[API] Could not get stream URL (backend may require auth):',
+              streamResponse.status
+            );
             // Return video without stream URL
             return { video };
           }
@@ -594,7 +654,7 @@ export const getPresentationVideo = async (categoryId: string): Promise<{ video:
         }
       }
     }
-    
+
     console.log('[API] No presentation video found (order 0)');
     return null;
   } catch (error) {
@@ -619,7 +679,7 @@ export const apiClient = {
   createCategory,
   updateCategory,
   deleteCategory,
-  
+
   // Videos
   getVideos,
   getVideoById,
@@ -630,14 +690,14 @@ export const apiClient = {
   updateVideo,
   deleteVideo,
   getPresentationVideo,
-  
+
   // Cart
   getCart,
   addToCart,
   removeFromCart,
   clearCart,
   getCartSummary,
-  
+
   // User Courses
   getUserCourses,
   getCourseVideos,

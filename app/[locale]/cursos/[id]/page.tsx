@@ -1,11 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Clock, PlayCircle } from 'lucide-react';
+import { ArrowLeft, Clock, PlayCircle, Loader2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { Course, Lesson } from '@/types/course';
-import { getCourseDetails } from '@/lib/api-client';
+import {
+  getCourseDetails,
+  getCourseVideos,
+  getVideoStreamUrl,
+} from '@/lib/api-client';
 import { useCourseStore } from '@/stores';
 import { useAuth } from '@/hooks/useAuth';
 import { getUserCourses as getUserCoursesService } from '@/services/user-courses.service';
@@ -26,8 +31,11 @@ export default function CursoDetallePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { token } = useAuth();
+  // 👈 CORRECCIÓN 1: Movemos los estados dentro del componente
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
 
+  const { user, token } = useAuth();
   const {
     setCurrentCourse,
     setCurrentLesson,
@@ -37,78 +45,112 @@ export default function CursoDetallePage() {
 
   const courseProgress = getUserCourseProgress(courseId);
 
-  useEffect(() => {
-    const loadCourse = async () => {
+  // 👈 CORRECCIÓN 2: Definimos handleLessonSelect PRIMERO para poder usarla en loadCourse
+  const handleLessonSelect = useCallback(
+    async (lesson: Lesson) => {
+      setSelectedLesson(lesson);
+      setCurrentLesson(lesson);
+
+      // Solo intentamos cargar el video si hay token (usuario autenticado)
+      if (!token) return;
+
+      setIsVideoLoading(true);
+      setStreamUrl(null);
+
       try {
-        setLoading(true);
-
-        // Verificar que el usuario tiene token
-        if (!token) {
-          setError('Debes iniciar sesión para acceder a este curso');
-          setLoading(false);
-          return;
-        }
-
-        // 1. Cargar detalles del curso (devuelve Category del backend)
-        const categoryData = await getCourseDetails(courseId);
-
-        // 2. Verificar acceso: obtener lista de cursos del usuario
-        const userCourses = await getUserCoursesService(token);
-        const hasAccess = userCourses.some((uc) => uc.courseId === courseId);
-
-        if (!hasAccess) {
-          setError(
-            'No tienes acceso a este curso. Compra el curso para poder acceder al contenido.'
-          );
-          setLoading(false);
-          return;
-        }
-
-        // 3. Convert Category to Course format
-        const courseData: Course = {
-          id: categoryData.id,
-          slug: categoryData.slug,
-          title: categoryData.name,
-          description: categoryData.description || '',
-          image: categoryData.image || '',
-          price: categoryData.priceUSD || categoryData.priceARS || 0,
-          priceDisplay: categoryData.priceUSD
-            ? `U$S ${categoryData.priceUSD}`
-            : `$ ${categoryData.priceARS} ARS`,
-          currency: categoryData.priceUSD > 0 ? 'USD' : 'ARS',
-          isPublished: categoryData.isActive,
-          createdAt: new Date(categoryData.createdAt),
-          updatedAt: new Date(categoryData.updatedAt),
-          lessons: [], // Videos will be loaded separately if needed
-        };
-
-        // 4. Usuario tiene acceso: mostrar curso
-        setCourse(courseData);
-        setCurrentCourse(courseData);
-
-        // Seleccionar la primera lección por defecto
-        if (courseData.lessons && courseData.lessons.length > 0) {
-          const firstLesson = courseData.lessons[0];
-          setSelectedLesson(firstLesson);
-          setCurrentLesson(firstLesson);
-        }
-      } catch (err) {
-        setError('Error al cargar el curso');
-        console.error('Error loading course:', err);
+        // Llamamos al endpoint que nos da la URL segura de Vimeo
+        const response = await getVideoStreamUrl(lesson.id);
+        setStreamUrl(response.data.streamUrl);
+      } catch (error) {
+        console.error('Error fetching stream URL:', error);
+        toast.error('No se pudo cargar el video.');
+        setStreamUrl(null);
       } finally {
-        setLoading(false);
+        setIsVideoLoading(false);
       }
-    };
+    },
+    [setCurrentLesson, token] // Añadimos token a las dependencias
+  );
 
+  const loadCourse = useCallback(async () => {
+    if (!user || !token) {
+      return;
+    }
+
+    try {
+      // 1. Cargar detalles del curso
+      const categoryData = await getCourseDetails(courseId);
+
+      // 2. Lógica de bypass para ADMIN
+      const isAdmin = user.role === 'ADMIN' || user.role === 'SUBADMIN';
+      let hasAccess = isAdmin;
+      if (!isAdmin) {
+        const userCourses = await getUserCoursesService(token);
+        hasAccess = userCourses.some((uc) => uc.courseId === courseId);
+      }
+
+      if (!hasAccess) {
+        setError('No tienes acceso a este curso.');
+        setLoading(false);
+        return;
+      }
+
+      // 3. Cargar los videos (lecciones)
+      const videosData = await getCourseVideos(courseId);
+
+      // Nota: Como vimos, videosData no trae vimeoId, pero eso ya no importa
+      // porque usaremos handleLessonSelect para obtener la URL de streaming.
+      const lessons: Lesson[] = videosData.map((video) => ({
+        id: video.id,
+        title: video.title,
+        slug: video.slug,
+        description: video.description || '',
+        vimeoVideoId: '', // Ya no es crítico tenerlo aquí
+        duration: video.duration
+          ? `${Math.floor(video.duration / 60)}m ${video.duration % 60}s`
+          : 'N/A',
+      }));
+
+      // 4. Construir el objeto del curso
+      const courseData: Course = {
+        id: categoryData.id,
+        slug: categoryData.slug,
+        title: categoryData.name,
+        description: categoryData.description || '',
+        image: categoryData.image || '',
+        price: 0,
+        priceDisplay: '',
+        currency: 'ARS',
+        isPublished: categoryData.isActive,
+        createdAt: new Date(categoryData.createdAt),
+        updatedAt: new Date(categoryData.updatedAt),
+        lessons: lessons,
+      };
+
+      setCourse(courseData);
+      setCurrentCourse(courseData);
+
+      // 👈 CORRECCIÓN 3: La selección inicial ocurre AQUÍ, donde `lessons` existe
+      if (lessons.length > 0) {
+        // Llamamos a handleLessonSelect para seleccionar y cargar el video
+        handleLessonSelect(lessons[0]);
+      }
+    } catch (err) {
+      setError('Error al cargar el curso');
+      console.error('Error loading course:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [courseId, user, token, setCurrentCourse, handleLessonSelect]); // Añadimos handleLessonSelect
+
+  // 👈 CORRECCIÓN 4: El useEffect es muy simple
+  useEffect(() => {
     if (courseId) {
       loadCourse();
     }
-  }, [courseId, token, setCurrentCourse, setCurrentLesson]);
+  }, [loadCourse]);
 
-  const handleLessonSelect = (lesson: Lesson) => {
-    setSelectedLesson(lesson);
-    setCurrentLesson(lesson);
-  };
+  // --- Renderizado ---
 
   if (loading) {
     return (
@@ -208,12 +250,28 @@ export default function CursoDetallePage() {
                         {/* Video Player centrado */}
                         <div className='flex justify-center'>
                           <div className='w-full max-w-4xl'>
-                            <VimeoPlayer
-                              vimeoVideoId={selectedLesson.vimeoVideoId}
-                              courseId={courseId}
-                              lessonId={selectedLesson.id}
-                              className='w-full shadow-2xl aspect-video'
-                            />
+                            {isVideoLoading ? (
+                              <div className='aspect-video bg-gray-900 rounded-lg flex items-center justify-center border border-gray-700'>
+                                <Loader2 className='w-12 h-12 text-[#f9bbc4] animate-spin' />
+                              </div>
+                            ) : streamUrl ? (
+                              // Importante: Pasamos streamUrl como una nueva prop a VimeoPlayer
+                              <VimeoPlayer
+                                vimeoSrcUrl={streamUrl}
+                                courseId={courseId}
+                                lessonId={selectedLesson.id}
+                                className='w-full shadow-2xl aspect-video'
+                              />
+                            ) : (
+                              <div className='aspect-video bg-gray-900 rounded-lg flex items-center justify-center border-2 border-red-500 p-8 text-center'>
+                                <div>
+                                  <div className='text-4xl mb-2'>⚠️</div>
+                                  <h3 className='text-lg font-bold text-white'>
+                                    Video no disponible
+                                  </h3>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
 
