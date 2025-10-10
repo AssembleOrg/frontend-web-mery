@@ -45,7 +45,9 @@ export default function CursoVideosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingVideo, setEditingVideo] = useState<any>(null);
-  const [formData, setFormData] = useState<Partial<CreateVideoInput> & { isPublished?: boolean }>({
+  const [formData, setFormData] = useState<
+    Partial<CreateVideoInput> & { isPublished?: boolean }
+  >({
     title: '',
     description: '',
     vimeoId: '',
@@ -108,7 +110,12 @@ export default function CursoVideosPage() {
     // Usar el helper del store para obtener videos filtrados
     const filtered = getVideosByCategory(courseId);
     console.log('[VideosPage] Total videos in store:', videos.length);
-    console.log('[VideosPage] Filtered videos for course', courseId, ':', filtered.length);
+    console.log(
+      '[VideosPage] Filtered videos for course',
+      courseId,
+      ':',
+      filtered.length
+    );
     setCourseVideos(filtered);
   }, [videos, courseId, getVideosByCategory]);
 
@@ -190,14 +197,16 @@ export default function CursoVideosPage() {
     try {
       // En el futuro, esto será una llamada real a la API que obtenga datos de Vimeo
       // Por ahora, simplemente validamos que el ID esté presente
-      
+
       // La API del backend automáticamente obtendrá:
       // - thumbnail desde Vimeo
       // - duration desde Vimeo
       // - vimeoUrl desde Vimeo
-      
-      showSuccess('ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.', 'Validación Exitosa');
-      
+
+      showSuccess(
+        'ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.',
+        'Validación Exitosa'
+      );
     } catch (error) {
       console.error('Error validating Vimeo ID:', error);
       showError('Error al validar el ID de Vimeo. Verifica que sea correcto.');
@@ -253,7 +262,10 @@ export default function CursoVideosPage() {
     } catch (error) {
       console.error('[VideosPage] Error saving video:', error);
       // El error ya viene formateado desde admin-store.ts para errores 409
-      const errorMessage = error instanceof Error ? error.message : 'Error al guardar el video. Por favor intenta nuevamente.';
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Error al guardar el video. Por favor intenta nuevamente.';
       toast.error(errorMessage, {
         duration: 5000, // Mostrar por 5 segundos para errores importantes
       });
@@ -263,7 +275,8 @@ export default function CursoVideosPage() {
   const handleDelete = async (videoId: string) => {
     const confirmed = await showConfirm({
       title: 'Eliminar Video',
-      message: '¿Estás seguro de eliminar este video? Esta acción no se puede deshacer.',
+      message:
+        '¿Estás seguro de eliminar este video? Esta acción no se puede deshacer.',
       type: 'warning',
       confirmText: 'Eliminar',
       cancelText: 'Cancelar',
@@ -291,10 +304,16 @@ export default function CursoVideosPage() {
         isPublished: newStatus,
       });
       await loadData();
-      toast.success(newStatus ? 'Video publicado exitosamente' : 'Video despublicado exitosamente');
+      toast.success(
+        newStatus
+          ? 'Video publicado exitosamente'
+          : 'Video despublicado exitosamente'
+      );
     } catch (error) {
       console.error('[VideosPage] Error toggling publish status:', error);
-      toast.error('Error al cambiar el estado de publicación. Por favor intenta nuevamente.');
+      toast.error(
+        'Error al cambiar el estado de publicación. Por favor intenta nuevamente.'
+      );
     }
   };
 
@@ -320,7 +339,7 @@ export default function CursoVideosPage() {
   }
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 font-admin'>
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div>
@@ -331,7 +350,7 @@ export default function CursoVideosPage() {
             <ArrowLeft className='w-4 h-4' />
             Volver a cursos
           </button>
-          <h1 className='text-3xl font-primary font-bold text-gray-900'>
+          <h1 className='text-3xl font-bold text-gray-900'>
             Videos de: {course.name}
           </h1>
           <p className='text-gray-600 mt-1'>
@@ -353,7 +372,7 @@ export default function CursoVideosPage() {
       {/* Edit Form */}
       {isEditing && (
         <div className='bg-white rounded-lg shadow-lg p-6 border-2 border-[#f9bbc4]'>
-          <h2 className='text-2xl font-primary font-bold text-gray-900 mb-6'>
+          <h2 className='text-2xl font-bold text-gray-900 mb-6'>
             {editingVideo ? 'Editar Video' : 'Nuevo Video'}
           </h2>
 
@@ -367,7 +386,7 @@ export default function CursoVideosPage() {
                 type='text'
                 value={formData.title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                className={`text-black w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
                   errors.title ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder='Ej: Introducción al Microblading'
@@ -384,9 +403,11 @@ export default function CursoVideosPage() {
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 rows={4}
-                className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                className='text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                 placeholder='Descripción del contenido del video...'
               />
             </div>
@@ -400,8 +421,10 @@ export default function CursoVideosPage() {
                 <input
                   type='text'
                   value={formData.vimeoId}
-                  onChange={(e) => setFormData({ ...formData, vimeoId: e.target.value })}
-                  className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                  onChange={(e) =>
+                    setFormData({ ...formData, vimeoId: e.target.value })
+                  }
+                  className={`text-black flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
                     errors.vimeoId ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder='776643755'
@@ -412,7 +435,7 @@ export default function CursoVideosPage() {
                     type='button'
                     onClick={handleFetchVimeoData}
                     disabled={!formData.vimeoId?.trim() || isFetchingVimeo}
-                    className='px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors whitespace-nowrap'
+                    className='px-4 py-2 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors whitespace-nowrap'
                   >
                     {isFetchingVimeo ? (
                       <>
@@ -429,7 +452,7 @@ export default function CursoVideosPage() {
                 <p className='mt-1 text-sm text-red-600'>{errors.vimeoId}</p>
               )}
               <p className='mt-1 text-xs text-gray-500'>
-                {editingVideo 
+                {editingVideo
                   ? 'El ID de Vimeo no se puede cambiar después de crear el video'
                   : 'El thumbnail y duración se obtendrán automáticamente desde Vimeo al guardar'}
               </p>
@@ -443,8 +466,13 @@ export default function CursoVideosPage() {
               <input
                 type='number'
                 value={formData.order}
-                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    order: parseInt(e.target.value) || 0,
+                  })
+                }
+                className='text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                 min='0'
               />
               <p className='mt-1 text-xs text-gray-500'>
@@ -458,19 +486,21 @@ export default function CursoVideosPage() {
                 type='checkbox'
                 id='isPublished'
                 checked={formData.isPublished || false}
-                onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, isPublished: e.target.checked })
+                }
                 className='w-5 h-5 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b] focus:ring-2'
               />
               <div className='flex-1'>
-                <label 
-                  htmlFor='isPublished' 
+                <label
+                  htmlFor='isPublished'
                   className='block text-sm font-medium text-gray-700 cursor-pointer'
                 >
                   Video Publicado
                 </label>
                 <p className='text-xs text-gray-500 mt-1'>
-                  {formData.isPublished 
-                    ? '✓ Este video será visible para los usuarios con acceso al curso' 
+                  {formData.isPublished
+                    ? '✓ Este video será visible para los usuarios con acceso al curso'
                     : '○ Este video no será visible para los usuarios (modo borrador)'}
                 </p>
               </div>
@@ -500,15 +530,16 @@ export default function CursoVideosPage() {
       {/* Videos List */}
       <div className='bg-white rounded-lg shadow-lg overflow-hidden'>
         <div className='p-6'>
-          <h2 className='text-xl font-primary font-bold text-gray-900 mb-4'>
+          <h2 className='text-xl font-bold text-gray-900 mb-4'>
             Videos del Curso ({courseVideos.length})
           </h2>
 
           {courseVideos.length === 0 ? (
             <div className='text-center py-12'>
               <p className='text-gray-500 mb-2'>No hay videos en este curso</p>
-                <p className='text-sm text-gray-400'>
-                Agrega tu primer video haciendo clic en &quot;Agregar Video&quot;
+              <p className='text-sm text-gray-400'>
+                Agrega tu primer video haciendo clic en &quot;Agregar
+                Video&quot;
               </p>
             </div>
           ) : (
@@ -531,7 +562,9 @@ export default function CursoVideosPage() {
 
                     {/* Info */}
                     <div className='flex-1'>
-                      <h3 className='font-semibold text-gray-900'>{video.title}</h3>
+                      <h3 className='font-semibold text-gray-900'>
+                        {video.title}
+                      </h3>
                       {video.description && (
                         <p className='text-sm text-gray-600 mt-1 line-clamp-2'>
                           {video.description}
@@ -539,8 +572,20 @@ export default function CursoVideosPage() {
                       )}
                       <div className='flex gap-4 mt-2 text-xs text-gray-500'>
                         <span>Orden: {video.order}</span>
-                        {video.duration && <span>Duración: {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')} min</span>}
-                        <span className={`font-medium ${video.isPublished ? 'text-green-600' : 'text-yellow-600'}`}>
+                        {video.duration && (
+                          <span>
+                            Duración: {Math.floor(video.duration / 60)}:
+                            {(video.duration % 60).toString().padStart(2, '0')}{' '}
+                            min
+                          </span>
+                        )}
+                        <span
+                          className={`font-medium ${
+                            video.isPublished
+                              ? 'text-green-600'
+                              : 'text-yellow-600'
+                          }`}
+                        >
                           {video.isPublished ? '● Publicado' : '○ No publicado'}
                         </span>
                       </div>
@@ -550,26 +595,30 @@ export default function CursoVideosPage() {
                     <div className='flex gap-2'>
                       <button
                         onClick={() => handleTogglePublish(video)}
-                        className={`p-2 rounded transition-colors ${
+                        className={`p-2.5 rounded-lg transition-all border-2 ${
                           video.isPublished
-                            ? 'text-yellow-600 hover:bg-yellow-50'
-                            : 'text-green-600 hover:bg-green-50'
+                            ? 'bg-[#F7CBCB] border-[#EBA2A8] text-[#660e1b] hover:bg-[#EBA2A8] hover:text-white'
+                            : 'bg-[#FBE8EA] border-[#EBA2A8]/50 text-[#660e1b]/70 hover:bg-[#F7CBCB] hover:border-[#EBA2A8]'
                         }`}
                         title={video.isPublished ? 'Despublicar' : 'Publicar'}
                       >
-                        {video.isPublished ? <EyeOff className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
+                        {video.isPublished ? (
+                          <EyeOff className='w-5 h-5' />
+                        ) : (
+                          <Eye className='w-5 h-5' />
+                        )}
                       </button>
                       <button
                         onClick={() => handleStartEdit(video)}
                         disabled={isEditing}
-                        className='p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors disabled:opacity-50'
+                        className='p-2.5 rounded-lg bg-[#FBE8EA] border-2 border-[#EBA2A8] text-[#660e1b] hover:bg-[#EBA2A8] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                       >
                         <Edit className='w-5 h-5' />
                       </button>
                       <button
                         onClick={() => handleDelete(video.id)}
                         disabled={isEditing}
-                        className='p-2 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50'
+                        className='p-2.5 rounded-lg bg-red-50 border-2 border-red-300 text-red-600 hover:bg-red-500 hover:border-red-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                       >
                         <Trash2 className='w-5 h-5' />
                       </button>
@@ -582,13 +631,21 @@ export default function CursoVideosPage() {
       </div>
 
       {/* Info Box */}
-      <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
-        <h3 className='font-semibold text-blue-900 mb-2'>💡 Sobre los videos de Vimeo</h3>
-        <ul className='text-sm text-blue-800 space-y-1'>
-          <li>• Los videos se alojan en Vimeo - solo necesitas el ID del video</li>
+      <div className='bg-[#FBE8EA] border border-[#F7CBCB] rounded-lg p-4'>
+        <h3 className='font-semibold text-[#660e1b] mb-2'>
+          💡 Sobre los videos de Vimeo
+        </h3>
+        <ul className='text-sm text-[#2B2B2B] space-y-1'>
+          <li>
+            • Los videos se alojan en Vimeo - solo necesitas el ID del video
+          </li>
           <li>• El thumbnail y duración se obtienen automáticamente</li>
-                <li>• Puedes reordenar los videos cambiando el campo &quot;Orden&quot;</li>
-          <li>• Los videos no publicados no serán visibles para los usuarios</li>
+          <li>
+            • Puedes reordenar los videos cambiando el campo &quot;Orden&quot;
+          </li>
+          <li>
+            • Los videos no publicados no serán visibles para los usuarios
+          </li>
         </ul>
       </div>
     </div>

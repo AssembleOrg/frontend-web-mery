@@ -23,21 +23,21 @@ export function PreviewStep({ formData }: PreviewStepProps) {
       {/* Status */}
       <div className={`p-4 rounded-lg border-2 ${
         formData.isPublished
-          ? 'bg-green-50 border-green-200'
-          : 'bg-orange-50 border-orange-200'
+          ? 'bg-[#FBE8EA] border-[#EBA2A8]'
+          : 'bg-[#F7CBCB]/50 border-[#EBA2A8]/50'
       }`}>
         <div className='flex items-center gap-2'>
           {formData.isPublished ? (
             <>
-              <CheckCircle className='w-5 h-5 text-green-600' />
-              <span className='font-semibold text-green-900'>
+              <CheckCircle className='w-5 h-5 text-[#660e1b]' />
+              <span className='font-semibold text-[#660e1b]'>
                 Este curso será publicado inmediatamente
               </span>
             </>
           ) : (
             <>
-              <AlertCircle className='w-5 h-5 text-orange-600' />
-              <span className='font-semibold text-orange-900'>
+              <AlertCircle className='w-5 h-5 text-[#660e1b]/70' />
+              <span className='font-semibold text-[#660e1b]/70'>
                 Este curso se guardará como borrador
               </span>
             </>
@@ -160,15 +160,15 @@ export function PreviewStep({ formData }: PreviewStepProps) {
 
       {/* Summary Stats */}
       <div className='grid grid-cols-2 gap-4'>
-        <div className='p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200'>
-          <p className='text-sm text-blue-800 font-medium'>Total de Lecciones</p>
-          <p className='text-3xl font-bold text-blue-900 mt-1'>
+        <div className='p-4 bg-gradient-to-br from-[#FBE8EA] to-[#F7CBCB] rounded-lg border border-[#EBA2A8]'>
+          <p className='text-sm text-[#660e1b] font-medium'>Total de Lecciones</p>
+          <p className='text-3xl font-bold text-[#2B2B2B] mt-1'>
             {formData.lessons?.length || 0}
           </p>
         </div>
-        <div className='p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200'>
-          <p className='text-sm text-green-800 font-medium'>Estado</p>
-          <p className='text-lg font-bold text-green-900 mt-1'>
+        <div className='p-4 bg-gradient-to-br from-[#FBE8EA] to-[#EBA2A8] rounded-lg border border-[#EBA2A8]'>
+          <p className='text-sm text-[#660e1b] font-medium'>Estado</p>
+          <p className='text-lg font-bold text-[#660e1b] mt-1'>
             {formData.isPublished ? 'Público' : 'Borrador'}
           </p>
         </div>

@@ -7,6 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { CourseCreateInput } from '@/types/course';
 import { ArrowLeft } from 'lucide-react';
 import { useModal } from '@/contexts/modal-context';
+import { toast } from 'react-hot-toast';
 
 export default function NuevoCursoPage() {
   const router = useRouter();
@@ -84,11 +85,22 @@ export default function NuevoCursoPage() {
 
       console.log('[NuevoCurso] ✓ Curso y lecciones creados exitosamente');
 
+      // Show success toast
+      toast.success(`Curso "${courseData.title}" creado exitosamente`);
+
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
       console.error('[NuevoCurso] Error:', error);
-      showError('Error al crear el curso. Por favor intenta nuevamente.');
+
+      // Extract detailed error message
+      const errorMessage = error instanceof Error
+        ? error.message
+        : 'Error desconocido al crear el curso';
+
+      // Show error in both toast and modal
+      toast.error(errorMessage);
+      showError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

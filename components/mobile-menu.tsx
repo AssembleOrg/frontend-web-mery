@@ -120,11 +120,8 @@ export function MobileMenu() {
               </a>
             </Button>
             {isAuthenticated ? (
-              <div
-                className='w-full'
-                onClick={closeMenu}
-              >
-                <UserMenu />
+              <div className='w-full'>
+                <UserMenu onNavigate={closeMenu} />
               </div>
             ) : (
               <Button

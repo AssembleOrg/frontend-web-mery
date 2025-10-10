@@ -30,8 +30,8 @@ export default function AdminDashboard() {
       description: 'Próximamente: Gestión de usuarios y permisos',
       icon: FaUsers,
       href: '#',
-      color: 'bg-blue-50 text-blue-600 hover:bg-blue-100',
-      iconBg: 'bg-blue-100',
+      color: 'bg-[#FBE8EA] text-[#660e1b] hover:bg-[#F7CBCB]',
+      iconBg: 'bg-[#F7CBCB]',
       disabled: true,
     },
     {
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 font-admin">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">
@@ -135,11 +135,11 @@ export default function AdminDashboard() {
       </div>
 
       {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+      <div className="bg-[#FBE8EA] border border-[#F7CBCB] rounded-xl p-6">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0">
             <svg
-              className="h-6 w-6 text-blue-600"
+              className="h-6 w-6 text-[#EBA2A8]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -153,10 +153,10 @@ export default function AdminDashboard() {
             </svg>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-blue-900 mb-1">
+            <h3 className="text-sm font-medium text-[#660e1b] mb-1">
               Información importante
             </h3>
-            <p className="text-sm text-blue-700">
+            <p className="text-sm text-[#2B2B2B]">
               Actualmente solo está disponible la gestión de cursos. Las
               funciones de usuarios y estadísticas estarán disponibles
               próximamente.

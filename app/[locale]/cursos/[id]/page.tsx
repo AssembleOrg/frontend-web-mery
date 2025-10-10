@@ -159,7 +159,6 @@ export default function CursoDetallePage() {
       const lessons: Lesson[] = videosData.map((video) => ({
         id: video.id,
         title: video.title,
-        slug: video.slug,
         description: video.description || '',
         vimeoVideoId: '', // Ya no es crítico tenerlo aquí
         duration: video.duration
@@ -254,7 +253,7 @@ export default function CursoDetallePage() {
 
   return (
     <ProtectedRoute>
-      <div className='min-h-screen bg-background'>
+      <div className='min-h-screen bg-background font-admin'>
         {/* Navigation */}
         <Navigation />
 
@@ -364,7 +363,7 @@ export default function CursoDetallePage() {
 
                         {/* Contenido adicional de la lección */}
                         <div className='max-w-4xl mx-auto'>
-                          <LessonContent lesson={selectedLesson} />
+                          <LessonContent lesson={selectedLesson} courseId={courseId} />
                         </div>
                       </div>
                     ) : (

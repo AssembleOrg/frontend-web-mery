@@ -60,7 +60,12 @@ export default function SimpleCourseModal({
   if (!course) return null;
 
   const handleWhatsApp = () => {
-    const message = `Hola! Me interesa el curso de ${course.title}. Necesito más información.`;
+    // Si es un curso en USD (placeholder price), incluir el precio en el mensaje
+    const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0;
+    const priceInfo = isUSDCourse
+      ? ` (USD ${course.priceUSD.toLocaleString('en-US')})`
+      : '';
+    const message = `Hola! Me interesa el curso de ${course.title}${priceInfo}. Necesito más información.`;
     const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(
       message
     )}`;
@@ -237,107 +242,167 @@ export default function SimpleCourseModal({
             </div>
 
             <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-6 rounded-lg shadow-lg'>
-              <div className='hidden md:flex items-center justify-between'>
-                <button
-                  onClick={handleWhatsApp}
-                  className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
-                >
-                  <FaWhatsapp className='w-4 h-4' />
-                  WhatsApp
-                </button>
-
-                <div className='text-center'>
-                  <h3 className='text-lg font-primary font-bold text-white mb-1'>
-                    Inversión del Curso
-                  </h3>
-                  <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                    {displayPrice}
-                  </p>
-                  {showUSDOption && (
-                    <p className='text-white/90 text-sm mt-1'>
-                      También disponible en U$S {course.priceUSD}
+              {/* Desktop layout */}
+              {isPlaceholderPrice ? (
+                /* Cursos en USD: Solo WhatsApp */
+                <div className='hidden md:flex items-center justify-between'>
+                  <div className='flex-1 text-center'>
+                    <h3 className='text-lg font-primary font-bold text-white mb-1'>
+                      Inversión del Curso
+                    </h3>
+                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                      {displayPrice}
                     </p>
-                  )}
-                  <p className='text-white/90 text-xs mt-1'>
-                    Incluye certificación y materiales
-                  </p>
-                </div>
-
-                <button
-                  onClick={handleBuyCourse}
-                  className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
-                  disabled={buttonDisabled}
-                >
-                  {addingToCart ? (
-                    <>
-                      <Loader2 className='w-4 h-4 animate-spin' />
-                      Agregando...
-                    </>
-                  ) : courseInCart ? (
-                    <>
-                      <CheckCircle className='w-4 h-4' />
-                      Ver Carrito
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className='w-4 h-4' />
-                      Agregar al Carrito
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <div className='md:hidden space-y-4'>
-                <div className='text-center'>
-                  <h3 className='text-lg font-primary font-bold text-white mb-1'>
-                    Inversión del Curso
-                  </h3>
-                  <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                    {displayPrice}
-                  </p>
-                  {showUSDOption && (
-                    <p className='text-white/90 text-sm mt-1'>
-                      También disponible en U$S {course.priceUSD}
+                    <p className='text-white/90 text-xs mt-1'>
+                      Incluye certificación y materiales
                     </p>
-                  )}
-                  <p className='text-white/90 text-xs mt-1'>
-                    Incluye certificación y materiales
-                  </p>
-                </div>
-
-                <div className='flex flex-col space-y-3'>
-                  <button
-                    onClick={handleBuyCourse}
-                    className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
-                    disabled={buttonDisabled}
-                  >
-                    {addingToCart ? (
-                      <>
-                        <Loader2 className='w-5 h-5 animate-spin' />
-                        Agregando...
-                      </>
-                    ) : courseInCart ? (
-                      <>
-                        <CheckCircle className='w-5 h-5' />
-                        Ver Carrito
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className='w-5 h-5' />
-                        Agregar al Carrito
-                      </>
-                    )}
-                  </button>
+                    <p className='text-white/90 text-sm mt-2 font-semibold'>
+                      💬 Consultar por este curso vía WhatsApp
+                    </p>
+                  </div>
 
                   <button
                     onClick={handleWhatsApp}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-4 px-10 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
+                  >
+                    <FaWhatsapp className='w-5 h-5' />
+                    Consultar por WhatsApp
+                  </button>
+                </div>
+              ) : (
+                /* Cursos en ARS: Carrito + WhatsApp */
+                <div className='hidden md:flex items-center justify-between'>
+                  <button
+                    onClick={handleWhatsApp}
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
                   >
                     <FaWhatsapp className='w-4 h-4' />
                     WhatsApp
                   </button>
+
+                  <div className='text-center'>
+                    <h3 className='text-lg font-primary font-bold text-white mb-1'>
+                      Inversión del Curso
+                    </h3>
+                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                      {displayPrice}
+                    </p>
+                    {showUSDOption && (
+                      <p className='text-white/90 text-sm mt-1'>
+                        También disponible en U$S {course.priceUSD}
+                      </p>
+                    )}
+                    <p className='text-white/90 text-xs mt-1'>
+                      Incluye certificación y materiales
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleBuyCourse}
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                    disabled={buttonDisabled}
+                  >
+                    {addingToCart ? (
+                      <>
+                        <Loader2 className='w-4 h-4 animate-spin' />
+                        Agregando...
+                      </>
+                    ) : courseInCart ? (
+                      <>
+                        <CheckCircle className='w-4 h-4' />
+                        Ver Carrito
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className='w-4 h-4' />
+                        Agregar al Carrito
+                      </>
+                    )}
+                  </button>
                 </div>
-              </div>
+              )}
+
+              {/* Mobile layout */}
+              {isPlaceholderPrice ? (
+                /* Cursos en USD: Solo WhatsApp */
+                <div className='md:hidden space-y-4'>
+                  <div className='text-center'>
+                    <h3 className='text-lg font-primary font-bold text-white mb-1'>
+                      Inversión del Curso
+                    </h3>
+                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                      {displayPrice}
+                    </p>
+                    <p className='text-white/90 text-xs mt-1'>
+                      Incluye certificación y materiales
+                    </p>
+                    <p className='text-white/90 text-sm mt-2 font-semibold'>
+                      💬 Consultar por este curso vía WhatsApp
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleWhatsApp}
+                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-4 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform w-full'
+                  >
+                    <FaWhatsapp className='w-5 h-5' />
+                    Consultar por WhatsApp
+                  </button>
+                </div>
+              ) : (
+                /* Cursos en ARS: Carrito + WhatsApp */
+                <div className='md:hidden space-y-4'>
+                  <div className='text-center'>
+                    <h3 className='text-lg font-primary font-bold text-white mb-1'>
+                      Inversión del Curso
+                    </h3>
+                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                      {displayPrice}
+                    </p>
+                    {showUSDOption && (
+                      <p className='text-white/90 text-sm mt-1'>
+                        También disponible en U$S {course.priceUSD}
+                      </p>
+                    )}
+                    <p className='text-white/90 text-xs mt-1'>
+                      Incluye certificación y materiales
+                    </p>
+                  </div>
+
+                  <div className='flex flex-col space-y-3'>
+                    <button
+                      onClick={handleBuyCourse}
+                      className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
+                      disabled={buttonDisabled}
+                    >
+                      {addingToCart ? (
+                        <>
+                          <Loader2 className='w-5 h-5 animate-spin' />
+                          Agregando...
+                        </>
+                      ) : courseInCart ? (
+                        <>
+                          <CheckCircle className='w-5 h-5' />
+                          Ver Carrito
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className='w-5 h-5' />
+                          Agregar al Carrito
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={handleWhatsApp}
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
+                    >
+                      <FaWhatsapp className='w-4 h-4' />
+                      WhatsApp
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {course.modalContent?.includes &&

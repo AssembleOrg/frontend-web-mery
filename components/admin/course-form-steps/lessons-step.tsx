@@ -194,7 +194,7 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
 
       {/* Add/Edit Form */}
       {(isAdding || editingIndex !== null) && (
-        <div className='bg-blue-50 rounded-lg p-6 border-2 border-blue-200 shadow-lg'>
+        <div className='bg-[#FBE8EA] rounded-lg p-6 border-2 border-[#F7CBCB] shadow-lg'>
           <h4 className='text-xl font-semibold text-gray-900 mb-4'>
             {isAdding ? 'Nueva Lección' : 'Editar Lección'}
           </h4>
@@ -252,7 +252,7 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                   type='button'
                   onClick={handleFetchVimeoData}
                   disabled={!editingLesson.vimeoVideoId?.trim() || loadingVimeoData}
-                  className='px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors whitespace-nowrap'
+                  className='px-4 py-2 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors whitespace-nowrap'
                 >
                   {loadingVimeoData ? (
                     <>
@@ -424,7 +424,7 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                       <button
                         onClick={() => handleStartEdit(index)}
                         disabled={isAdding || editingIndex !== null}
-                        className='p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='p-2 text-[#EBA2A8] hover:bg-[#FBE8EA]/30 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                         title='Editar'
                       >
                         <Edit className='w-4 h-4' />

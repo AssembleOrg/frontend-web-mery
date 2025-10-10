@@ -27,7 +27,7 @@ export default function FormacionesPage() {
         await fetchCategories();
         // Get categories from store after fetch
         const categories = useAdminStore.getState().categories;
-        
+
         // Convert categories to courses format
         // Default: mostrar precios en ARS (mercado principal argentino)
         const coursesData: Course[] = categories.map((cat): Course => {
@@ -40,11 +40,13 @@ export default function FormacionesPage() {
             priceARS: cat.priceARS || 0,
             priceUSD: cat.priceUSD || 0,
             isFree: cat.isFree || false,
-            priceDisplay: cat.isFree 
-              ? 'Gratis' 
-              : (cat.priceARS > 0 
-                  ? `$${cat.priceARS.toLocaleString('es-AR')}` 
-                  : (cat.priceUSD > 0 ? `U$S ${cat.priceUSD}` : 'Gratis')),
+            priceDisplay: cat.isFree
+              ? 'Gratis'
+              : cat.priceARS > 0
+              ? `$${cat.priceARS.toLocaleString('es-AR')}`
+              : cat.priceUSD > 0
+              ? `U$S ${cat.priceUSD}`
+              : 'Gratis',
             currency: 'ARS' as 'ARS' | 'USD', // Siempre ARS por defecto
             slug: cat.slug,
             isPublished: cat.isActive,
@@ -52,7 +54,7 @@ export default function FormacionesPage() {
             isActive: cat.isActive,
           };
         });
-        
+
         setCourses(coursesData);
       } catch (error) {
         console.error('Error loading courses:', error);
@@ -74,7 +76,9 @@ export default function FormacionesPage() {
   };
 
   // Get auto-styling course for the featured banner
-  const autoStylingCourse = courses.find((c) => c.slug === 'auto-styling-cejas');
+  const autoStylingCourse = courses.find(
+    (c) => c.slug === 'auto-styling-cejas'
+  );
 
   const handleAutoStylingClick = () => {
     if (autoStylingCourse) {
@@ -103,7 +107,10 @@ export default function FormacionesPage() {
   }
 
   return (
-    <div className='min-h-screen bg-background' suppressHydrationWarning>
+    <div
+      className='min-h-screen bg-background'
+      suppressHydrationWarning
+    >
       <Navigation />
 
       <section className='w-full'>
@@ -165,26 +172,31 @@ export default function FormacionesPage() {
         </section>
       )}
 
-      <section className='container mx-auto px-4 pb-16 py-8 max-w-7xl' suppressHydrationWarning>
+      <section
+        className='container mx-auto px-4 pb-16 py-8 max-w-7xl'
+        suppressHydrationWarning
+      >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
           {regularCourses.map((course) => {
             // Si el precio ARS es 99.999.999 (placeholder), mostrar precio en USD
             let priceDisplay: string;
-            
+
             if (course.isFree) {
               priceDisplay = 'Gratis';
             } else if (course.priceARS === 99999999) {
               // Mostrar precio en USD para placeholders
-              priceDisplay = course.priceUSD > 0 
-                ? `USD ${course.priceUSD.toLocaleString('en-US')}` 
-                : 'Consultar';
+              priceDisplay =
+                course.priceUSD > 0
+                  ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+                  : 'Consultar';
             } else {
               // Mostrar precio en ARS normalmente
-              priceDisplay = course.priceARS > 0 
-                ? `$${course.priceARS.toLocaleString('es-AR')}` 
-                : 'Gratis';
+              priceDisplay =
+                course.priceARS > 0
+                  ? `$${course.priceARS.toLocaleString('es-AR')}`
+                  : 'Gratis';
             }
-            
+
             return (
               <SimpleCourseCard
                 key={course.id}

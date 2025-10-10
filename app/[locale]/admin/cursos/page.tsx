@@ -6,6 +6,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { CourseTableSkeleton } from '@/components/admin/course-table-skeleton';
+import { useModal } from '@/contexts/modal-context';
+import { toast } from 'react-hot-toast';
 
 export default function AdminCursosPage() {
   const params = useParams();
@@ -13,8 +15,8 @@ export default function AdminCursosPage() {
   const locale = (params.locale as string) || 'es';
 
   const { fetchCategories, deleteCategory } = useAdminStore();
+  const { showConfirm } = useModal();
   const [categories, setCategories] = useState<any[]>([]);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -41,19 +43,35 @@ export default function AdminCursosPage() {
     loadCategories();
   }, [fetchCategories]);
 
-  const handleDelete = async (id: string) => {
-    if (deleteConfirm === id) {
+  const handleDelete = async (id: string, courseName: string) => {
+    const confirmed = await showConfirm({
+      title: 'Eliminar Curso',
+      message: `¿Estás seguro de que deseas eliminar el curso "${courseName}"? Esta acción no se puede deshacer y eliminará todos los videos asociados.`,
+      type: 'warning',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
       const success = await deleteCategory(id);
       if (success) {
-        setDeleteConfirm(null);
+        toast.success(`Curso "${courseName}" eliminado exitosamente`);
         // Update local state after deletion
         const updatedCategories = useAdminStore.getState().categories;
         setCategories(updatedCategories);
+      } else {
+        toast.error('No se pudo eliminar el curso. Por favor intenta nuevamente.');
       }
-    } else {
-      setDeleteConfirm(id);
-      // Auto-cancel after 3 seconds
-      setTimeout(() => setDeleteConfirm(null), 3000);
+    } catch (error) {
+      console.error('[AdminCursos] Error al eliminar curso:', error);
+      const errorMessage = error instanceof Error
+        ? error.message
+        : 'Error desconocido al eliminar el curso';
+      toast.error(errorMessage);
     }
   };
 
@@ -67,11 +85,11 @@ export default function AdminCursosPage() {
   }
 
   return (
-    <div className='space-y-6' suppressHydrationWarning>
+    <div className='space-y-6 font-admin' suppressHydrationWarning>
       {/* Page Header */}
       <div className='flex justify-between items-center'>
         <div>
-          <h2 className='text-3xl font-primary font-bold text-gray-900'>
+          <h2 className='text-3xl font-bold text-gray-900'>
             Gestión de Cursos
           </h2>
           <p className='mt-1 text-sm text-gray-600'>
@@ -178,7 +196,7 @@ export default function AdminCursosPage() {
                       <div className='flex items-center justify-end gap-2'>
                         <button
                           onClick={() => router.push(`/${locale}/admin/cursos/${category.id}/videos`)}
-                          className='text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded transition-colors'
+                          className='text-[#EBA2A8] hover:text-[#660e1b] p-2 hover:bg-[#FBE8EA]/30 rounded transition-colors'
                           title='Gestionar Videos'
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,19 +206,15 @@ export default function AdminCursosPage() {
                         </button>
                         <button
                           onClick={() => router.push(`/${locale}/admin/cursos/${category.id}`)}
-                          className='text-indigo-600 hover:text-indigo-900 p-2 hover:bg-indigo-50 rounded transition-colors'
+                          className='text-[#EBA2A8] hover:text-[#660e1b] p-2 hover:bg-[#FBE8EA]/30 rounded transition-colors'
                           title='Editar'
                         >
                           <Edit className='w-4 h-4' />
                         </button>
                         <button
-                          onClick={() => handleDelete(category.id)}
-                          className={`p-2 rounded transition-colors ${
-                            deleteConfirm === category.id
-                              ? 'text-white bg-red-600 hover:bg-red-700'
-                              : 'text-red-600 hover:text-red-900 hover:bg-red-50'
-                          }`}
-                          title={deleteConfirm === category.id ? 'Confirmar eliminación' : 'Eliminar'}
+                          onClick={() => handleDelete(category.id, category.name)}
+                          className='p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded transition-colors'
+                          title='Eliminar'
                         >
                           <Trash2 className='w-4 h-4' />
                         </button>
