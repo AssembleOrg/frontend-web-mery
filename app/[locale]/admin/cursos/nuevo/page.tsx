@@ -61,7 +61,6 @@ export default function NuevoCursoPage() {
 
           const videoData = {
             title: lesson.title,
-            slug: lesson.slug || lesson.title.toLowerCase().replace(/\s+/g, '-'),
             description: lesson.description || '',
             vimeoId: lesson.vimeoVideoId.trim(),
             categoryId: newCourse.id,

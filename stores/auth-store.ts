@@ -4,12 +4,20 @@
  *
  * ARQUITECTURA: SOLO state synchronous, NUNCA async
  * NO API calls aquí - usar hooks/useAuth.ts para lógica
+ * 
+ * SECURITY:
+ * - Solo usamos auth_token (JWT HttpOnly cookie del backend)
+ * - NO guardamos auth_user en cookies (era inseguro)
+ * - Decodificamos JWT en cliente solo para mostrar UI
+ * - Backend siempre valida el JWT en cada request
  */
 
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import Cookies from 'js-cookie';
 import { User } from '@/types/auth';
+import { getUserFromJWT } from '@/lib/jwt-utils';
+import { cleanupLegacyCookies } from '@/lib/auth-migration';
 
 interface AuthState {
   user: User | null;
@@ -26,12 +34,6 @@ interface AuthActions {
 }
 
 const AUTH_COOKIE_NAME = 'auth_token';
-const USER_COOKIE_NAME = 'auth_user';
-const COOKIE_OPTIONS = {
-  expires: 7, // 7 days
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
-};
 
 /**
  * Auth store for user session management
@@ -51,46 +53,34 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
     // Initialize auth from cookies (call on app mount)
     initializeAuth: () => {
+      // SECURITY: Remove legacy insecure cookies
+      cleanupLegacyCookies();
+      
       const token = Cookies.get(AUTH_COOKIE_NAME);
-      const userJson = Cookies.get(USER_COOKIE_NAME);
 
-      if (token && userJson) {
-        try {
-          const user = JSON.parse(userJson) as User;
+      if (token) {
+        // Decode JWT to get user info (safe - only for UI display)
+        const userData = getUserFromJWT(token);
+        
+        if (userData) {
           set((state) => {
-            state.user = user;
+            state.user = userData as User;
             state.token = token;
             state.isAuthenticated = true;
           });
-        } catch (error) {
-          // Invalid cookie data, clear everything
+        } else {
+          // Invalid token format, clear it
           Cookies.remove(AUTH_COOKIE_NAME);
-          Cookies.remove(USER_COOKIE_NAME);
-        }
-      } else if (userJson) {
-        // If only user cookie exists (rare), attempt to load user
-        try {
-          const user = JSON.parse(userJson) as User;
-          set((state) => {
-            state.user = user;
-            state.isAuthenticated = true;
-          });
-        } catch (error) {
-          Cookies.remove(USER_COOKIE_NAME);
         }
       }
     },
 
     // Set authentication (after successful login)
+    // Note: Backend sets auth_token as HttpOnly cookie
+    // We only store user data in state (decoded from JWT)
     setAuth: (user: User, token?: string | null) => {
-      // Save user cookie
-      Cookies.set(USER_COOKIE_NAME, JSON.stringify(user), COOKIE_OPTIONS);
-      // Save token cookie only if provided (for client-side tokens)
-      if (token) {
-        Cookies.set(AUTH_COOKIE_NAME, token, COOKIE_OPTIONS);
-      }
-
-      // Update state
+      // Update state only - no cookies needed
+      // Backend already set auth_token as HttpOnly cookie
       set((state) => {
         state.user = user;
         state.token = token || state.token;
@@ -102,22 +92,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     updateUser: (userData: Partial<User>) => {
       set((state) => {
         if (state.user) {
-          const updatedUser = { ...state.user, ...userData };
-          state.user = updatedUser;
-
-          // Update cookie
-          Cookies.set(USER_COOKIE_NAME, JSON.stringify(updatedUser), COOKIE_OPTIONS);
+          state.user = { ...state.user, ...userData };
+          // No need to update cookies - JWT remains the same
+          // Only backend can change user role/email
         }
       });
     },
 
     // Clear authentication (logout)
     clearAuth: () => {
-      // Remove cookies
-      Cookies.remove(AUTH_COOKIE_NAME);
-      Cookies.remove(USER_COOKIE_NAME);
-
-      // Clear state
+      // Clear state only
+      // Backend clears auth_token cookie via /auth/logout endpoint
       set((state) => {
         state.user = null;
         state.token = null;

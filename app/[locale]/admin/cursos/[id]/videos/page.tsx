@@ -47,7 +47,6 @@ export default function CursoVideosPage() {
   const [editingVideo, setEditingVideo] = useState<any>(null);
   const [formData, setFormData] = useState<Partial<CreateVideoInput> & { isPublished?: boolean }>({
     title: '',
-    slug: '',
     description: '',
     vimeoId: '',
     categoryId: courseId,
@@ -122,7 +121,6 @@ export default function CursoVideosPage() {
     setEditingVideo(null);
     setFormData({
       title: '',
-      slug: '',
       description: '',
       vimeoId: '',
       categoryId: courseId,
@@ -137,7 +135,6 @@ export default function CursoVideosPage() {
     setEditingVideo(video);
     setFormData({
       title: video.title,
-      slug: video.slug,
       description: video.description || '',
       vimeoId: video.vimeoId || '',
       categoryId: video.categoryId,
@@ -152,7 +149,6 @@ export default function CursoVideosPage() {
     setEditingVideo(null);
     setFormData({
       title: '',
-      slug: '',
       description: '',
       vimeoId: '',
       categoryId: courseId,
@@ -168,9 +164,6 @@ export default function CursoVideosPage() {
     if (!formData.title?.trim()) {
       newErrors.title = 'El título es requerido';
     }
-    if (!formData.slug?.trim()) {
-      newErrors.slug = 'El slug es requerido';
-    }
     if (!formData.vimeoId?.trim() && !editingVideo) {
       newErrors.vimeoId = 'El ID de Vimeo es requerido';
     }
@@ -179,20 +172,10 @@ export default function CursoVideosPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  };
-
   const handleTitleChange = (title: string) => {
     setFormData({
       ...formData,
       title,
-      slug: generateSlug(title),
     });
   };
 
@@ -236,7 +219,6 @@ export default function CursoVideosPage() {
         console.log('[VideosPage] Updating video:', editingVideo.id);
         const updates = {
           title: formData.title!,
-          slug: formData.slug!,
           description: formData.description,
           order: formData.order,
           isPublished: formData.isPublished, // Include published status
@@ -249,7 +231,6 @@ export default function CursoVideosPage() {
         console.log('[VideosPage] Creating new video for course:', courseId);
         const newVideo: CreateVideoInput = {
           title: formData.title!,
-          slug: formData.slug!,
           description: formData.description,
           vimeoId: formData.vimeoId!,
           categoryId: courseId,
@@ -394,28 +375,6 @@ export default function CursoVideosPage() {
               {errors.title && (
                 <p className='mt-1 text-sm text-red-600'>{errors.title}</p>
               )}
-            </div>
-
-            {/* Slug */}
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-2'>
-                Slug (URL) *
-              </label>
-              <input
-                type='text'
-                value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
-                  errors.slug ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder='introduccion-al-microblading'
-              />
-              {errors.slug && (
-                <p className='mt-1 text-sm text-red-600'>{errors.slug}</p>
-              )}
-              <p className='mt-1 text-xs text-gray-500'>
-                Se genera automáticamente del título
-              </p>
             </div>
 
             {/* Description */}

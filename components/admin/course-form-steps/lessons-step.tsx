@@ -25,20 +25,10 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
     return `lesson-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   };
 
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  };
-
   const handleTitleChange = (title: string) => {
     setEditingLesson({
       ...editingLesson,
       title,
-      slug: generateSlug(title),
     });
   };
 
@@ -46,7 +36,6 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
     setEditingLesson({
       id: generateLessonId(),
       title: '',
-      slug: '',
       description: '',
       vimeoVideoId: '',
       duration: '',
@@ -62,7 +51,6 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
     const lesson = lessons[index];
     setEditingLesson({
       ...lesson,
-      slug: lesson.slug || generateSlug(lesson.title),
     });
     setEditingIndex(index);
     setIsAdding(false);
@@ -74,9 +62,6 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
 
     if (!editingLesson.title?.trim()) {
       newErrors.title = 'El título es requerido';
-    }
-    if (!editingLesson.slug?.trim()) {
-      newErrors.slug = 'El slug es requerido';
     }
     if (!editingLesson.vimeoVideoId?.trim()) {
       newErrors.vimeoVideoId = 'El ID de Vimeo es requerido';
@@ -94,7 +79,6 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
     const newLesson: Lesson = {
       id: editingLesson.id || generateLessonId(),
       title: editingLesson.title!.trim(),
-      slug: editingLesson.slug!.trim(),
       description: editingLesson.description?.trim() || '',
       vimeoVideoId: editingLesson.vimeoVideoId!.trim(),
       duration: editingLesson.duration?.trim() || '',
@@ -233,28 +217,6 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
               {formErrors.title && (
                 <p className='mt-1 text-sm text-red-600'>{formErrors.title}</p>
               )}
-            </div>
-
-            {/* Slug */}
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-2'>
-                Slug (URL) *
-              </label>
-              <input
-                type='text'
-                value={editingLesson.slug || ''}
-                onChange={(e) => setEditingLesson({ ...editingLesson, slug: e.target.value })}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
-                  formErrors.slug ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder='introduccion-al-estilismo-de-cejas'
-              />
-              {formErrors.slug && (
-                <p className='mt-1 text-sm text-red-600'>{formErrors.slug}</p>
-              )}
-              <p className='mt-1 text-xs text-gray-500'>
-                Se genera automáticamente del título
-              </p>
             </div>
 
             {/* Description */}
@@ -442,11 +404,6 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                         <span className='flex items-center gap-1'>
                           <span className='font-medium'>Vimeo ID:</span> {lesson.vimeoVideoId}
                         </span>
-                        {lesson.slug && (
-                          <span className='flex items-center gap-1'>
-                            <span className='font-medium'>Slug:</span> {lesson.slug}
-                          </span>
-                        )}
                         {lesson.duration && (
                           <span className='flex items-center gap-1'>
                             <span className='font-medium'>Duración:</span> {lesson.duration}

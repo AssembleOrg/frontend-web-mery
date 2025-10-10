@@ -56,7 +56,6 @@ export interface Category {
 export interface Video {
   id: string;
   title: string;
-  slug: string;
   description?: string;
   vimeoId?: string;
   thumbnail?: string;
@@ -135,13 +134,29 @@ async function apiRequest<T>(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new ApiError(
+    const error = new ApiError(
       response.status,
       errorData.message ||
         errorData.error ||
         `Error ${response.status}: ${response.statusText}`,
       errorData.error
     );
+
+    // SECURITY: Auto-redirect to login on authentication failures
+    if (response.status === 401 || response.status === 403) {
+      console.warn('[api-client] Authentication failed (401/403), triggering logout');
+      
+      // Trigger global auth error event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('auth:unauthorized', {
+            detail: { status: response.status, endpoint, error: errorData },
+          })
+        );
+      }
+    }
+
+    throw error;
   }
 
   return response.json();
@@ -295,7 +310,6 @@ export const getVideoProgress = async (
 
 export interface CreateVideoInput {
   title: string;
-  slug: string;
   description?: string;
   vimeoId: string;
   categoryId: string;
@@ -307,7 +321,6 @@ export interface CreateVideoInput {
 
 export interface UpdateVideoInput {
   title?: string;
-  slug?: string;
   description?: string;
   categoryId?: string;
   order?: number;

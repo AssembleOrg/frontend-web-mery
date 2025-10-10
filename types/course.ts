@@ -15,7 +15,6 @@ export interface DownloadableFile {
 export interface Lesson {
   id: string;
   title: string;
-  slug?: string;
   description: string;
   vimeoVideoId: string;
   duration?: string;

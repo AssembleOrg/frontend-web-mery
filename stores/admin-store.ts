@@ -27,7 +27,6 @@ interface Category {
 interface Video {
   id: string;
   title: string;
-  slug: string;
   description?: string;
   thumbnail?: string;
   duration?: number;
@@ -339,14 +338,14 @@ export const useAdminStore = create<AdminState & AdminActions>()(
           console.error('[Admin Store] Create video failed:', response.status, errorData);
 
           // Manejar errores específicos
-          if (response.status === 409) {
-            const error = new Error(`Ya existe un video con el slug "${video.slug}". Por favor usa un slug diferente.`);
-            set({
-              isLoading: false,
-              error: error.message
-            });
-            throw error;
-          }
+          // if (response.status === 409) {
+          //   const error = new Error(`Ya existe un video con el slug "${video.slug}". Por favor usa un slug diferente.`);
+          //   set({
+          //     isLoading: false,
+          //     error: error.message
+          //   });
+          //   throw error;
+          // }
 
           const error = new Error(errorData.message || `Error ${response.status}: No se pudo crear el video`);
           set({

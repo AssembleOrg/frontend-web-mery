@@ -55,9 +55,8 @@ export default function EditarCursoPage() {
           .map((video: any) => ({
             id: video.id,
             title: video.title,
-            slug: video.slug,
             description: video.description || '',
-            vimeoVideoId: video.vimeoId || video.slug, // Use vimeoId if available, fallback to slug
+            vimeoVideoId: video.vimeoId,
             duration: video.duration ? `${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}` : undefined,
             order: video.order || 0,
             isPublished: video.isPublished || false,
@@ -152,7 +151,6 @@ export default function EditarCursoPage() {
         console.log('[EditarCurso] Creando video:', lesson.title, 'vimeoId:', lesson.vimeoVideoId);
         const videoData = {
           title: lesson.title,
-          slug: lesson.slug || lesson.title.toLowerCase().replace(/\s+/g, '-'),
           description: lesson.description || '',
           vimeoId: lesson.vimeoVideoId.trim(),
           categoryId: courseId,
@@ -175,7 +173,6 @@ export default function EditarCursoPage() {
         console.log('[EditarCurso] Actualizando video:', lesson.id);
         const updates = {
           title: lesson.title,
-          slug: lesson.slug || lesson.title.toLowerCase().replace(/\s+/g, '-'),
           description: lesson.description || '',
           order: lesson.order || 0,
           isPublished: lesson.isPublished || false,
