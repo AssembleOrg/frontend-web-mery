@@ -17,6 +17,7 @@ import { getUserCourses as getUserCoursesService } from '@/services/user-courses
 import VimeoPlayer from '@/components/vimeo-player';
 import LessonContent from '@/components/lesson-content';
 import CourseSidebar from '@/components/course-sidebar';
+import { CursoPlayerSkeleton } from '@/components/cursos/CursoPlayerSkeleton';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -221,11 +222,7 @@ export default function CursoDetallePage() {
   // --- Renderizado ---
 
   if (loading) {
-    return (
-      <div className='min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-pink-400'></div>
-      </div>
-    );
+    return <CursoPlayerSkeleton />;
   }
 
   if (error || !course) {

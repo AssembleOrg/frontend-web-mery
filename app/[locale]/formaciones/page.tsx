@@ -5,7 +5,8 @@ import { Footer } from '@/components/footer';
 import Image from 'next/image';
 import SimpleCourseCard from '@/components/simple-course-card';
 import SimpleCourseModal from '@/components/simple-course-modal';
-import { useState, useEffect } from 'react';
+import { FormacionesSkeleton } from '@/components/formaciones/FormacionesSkeleton';
+import { useState, useEffect, useMemo } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
 import { getCourseImage } from '@/lib/utils';
@@ -90,19 +91,40 @@ export default function FormacionesPage() {
   // Filter out auto-styling from regular grid (show it in banner instead)
   const regularCourses = courses.filter((c) => c.slug !== 'auto-styling-cejas');
 
+  // Memoize price calculations to avoid re-computing on every render
+  const coursesWithDisplayPrice = useMemo(() =>
+    regularCourses.map((course) => {
+      let priceDisplay: string;
+
+      if (course.isFree) {
+        priceDisplay = 'Gratis';
+      } else if (course.priceARS === 99999999) {
+        // Mostrar precio en USD para placeholders
+        priceDisplay =
+          course.priceUSD > 0
+            ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+            : 'Consultar';
+      } else {
+        // Mostrar precio en ARS normalmente
+        priceDisplay =
+          course.priceARS > 0
+            ? `$${course.priceARS.toLocaleString('es-AR')}`
+            : 'Gratis';
+      }
+
+      return { ...course, priceDisplay };
+    }),
+    [regularCourses]
+  );
+
   // Show loading state
   if (isLoading) {
     return (
-      <div className='min-h-screen bg-background'>
+      <>
         <Navigation />
-        <div className='flex items-center justify-center py-20'>
-          <div className='text-center'>
-            <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
-            <p className='mt-4 text-gray-600'>Cargando formaciones...</p>
-          </div>
-        </div>
+        <FormacionesSkeleton />
         <Footer />
-      </div>
+      </>
     );
   }
 
@@ -115,14 +137,16 @@ export default function FormacionesPage() {
 
       <section className='w-full'>
         <div className='container mx-auto px-4 max-w-7xl'>
-          <Image
-            src='/Formacion-banner.png'
-            alt='Formaciones Mery García'
-            width={1920}
-            height={600}
-            className='w-full h-auto object-cover rounded-lg'
-            priority
-          />
+          <div className='relative w-full aspect-[16/5] rounded-lg overflow-hidden'>
+            <Image
+              src='/Formacion-banner.png'
+              alt='Formaciones Mery García'
+              fill
+              className='object-cover'
+              priority
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1280px'
+            />
+          </div>
         </div>
       </section>
 
@@ -177,37 +201,16 @@ export default function FormacionesPage() {
         suppressHydrationWarning
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-          {regularCourses.map((course) => {
-            // Si el precio ARS es 99.999.999 (placeholder), mostrar precio en USD
-            let priceDisplay: string;
-
-            if (course.isFree) {
-              priceDisplay = 'Gratis';
-            } else if (course.priceARS === 99999999) {
-              // Mostrar precio en USD para placeholders
-              priceDisplay =
-                course.priceUSD > 0
-                  ? `USD ${course.priceUSD.toLocaleString('en-US')}`
-                  : 'Consultar';
-            } else {
-              // Mostrar precio en ARS normalmente
-              priceDisplay =
-                course.priceARS > 0
-                  ? `$${course.priceARS.toLocaleString('es-AR')}`
-                  : 'Gratis';
-            }
-
-            return (
-              <SimpleCourseCard
-                key={course.id}
-                image={course.image}
-                title={course.title}
-                price={priceDisplay}
-                description={course.description}
-                onCourseClick={() => handleCourseClick(course)}
-              />
-            );
-          })}
+          {coursesWithDisplayPrice.map((course) => (
+            <SimpleCourseCard
+              key={course.id}
+              image={course.image}
+              title={course.title}
+              price={course.priceDisplay}
+              description={course.description}
+              onCourseClick={() => handleCourseClick(course)}
+            />
+          ))}
         </div>
       </section>
 
