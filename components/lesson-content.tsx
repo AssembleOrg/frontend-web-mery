@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { FileText } from 'lucide-react';
 import { Lesson } from '@/types/course';
 
@@ -283,9 +284,11 @@ En este video te muestro como realizar tus prácticas para poder aplicar todos l
                   rel='noopener noreferrer'
                   className='flex items-center gap-4 p-4 bg-white/90 hover:bg-white rounded-lg transition-colors group border border-white/50 hover:border-white shadow-sm'
                 >
-                  <img
+                  <Image
                     src='/pdf-icon.png'
                     alt='PDF'
+                    width={32}
+                    height={32}
                     className='w-8 h-8 flex-shrink-0'
                   />
                   <div className='flex-1 min-w-0'>

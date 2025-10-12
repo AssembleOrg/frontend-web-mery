@@ -27,6 +27,7 @@ export default function RegisterPage() {
     city: '',
   });
   const [formError, setFormError] = useState<string | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     if (apiError) {
@@ -47,6 +48,11 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+
+    if (!acceptedTerms) {
+      setFormError('Debes aceptar los términos y condiciones para continuar.');
+      return;
+    }
 
     if (formData.password.length < 8) {
       setFormError('La contraseña debe tener al menos 8 caracteres.');
@@ -249,6 +255,31 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {/* Términos y Condiciones Checkbox */}
+            <div className='flex items-start gap-3'>
+              <input
+                type='checkbox'
+                id='terms'
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                className='mt-1 w-4 h-4 text-[#f9bbc4] bg-background border-border rounded focus:ring-[#f9bbc4] focus:ring-2'
+              />
+              <label
+                htmlFor='terms'
+                className='text-sm text-foreground leading-relaxed'
+              >
+                He leído y acepto los{' '}
+                <a
+                  href={`/${locale}/terminos-y-condiciones-formaciones-mery-garcia`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-[#f9bbc4] hover:text-[#eba2a8] font-medium underline transition-colors'
+                >
+                  términos y condiciones
+                </a>
+              </label>
+            </div>
+
             {/* Bloque de Error Unificado */}
             {(apiError || formError) && (
               <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4'>
@@ -266,7 +297,8 @@ export default function RegisterPage() {
                 !formData.firstName ||
                 !formData.lastName ||
                 !formData.email ||
-                !formData.password
+                !formData.password ||
+                !acceptedTerms
               }
               className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-3 rounded-lg font-primary font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
             >

@@ -2,6 +2,7 @@
 
 import { useAdminStore } from '@/stores';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft,
@@ -553,9 +554,11 @@ export default function CursoVideosPage() {
                   >
                     {/* Thumbnail */}
                     {video.thumbnail && (
-                      <img
+                      <Image
                         src={video.thumbnail}
                         alt={video.title}
+                        width={128}
+                        height={72}
                         className='w-32 h-18 object-cover rounded'
                       />
                     )}

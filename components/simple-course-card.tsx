@@ -7,6 +7,8 @@ interface SimpleCourseCardProps {
   title: string;
   price: string;
   description?: string;
+  slug?: string;
+  isAutostylism?: boolean;
   onCourseClick?: () => void;
 }
 
@@ -15,6 +17,8 @@ export default function SimpleCourseCard({
   title,
   price,
   description,
+  slug,
+  isAutostylism = false,
   onCourseClick,
 }: SimpleCourseCardProps) {
   const handleClick = () => {
@@ -26,7 +30,7 @@ export default function SimpleCourseCard({
   };
 
   return (
-    <div className='bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full'>
+    <div className='relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full'>
       {/* Course Image */}
       <div className='relative h-48 w-full'>
         <Image
@@ -38,6 +42,20 @@ export default function SimpleCourseCard({
           sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw'
         />
       </div>
+
+      {/* Ribbon */}
+      {isAutostylism && (
+        <div className='absolute top-0 left-0 z-20 pointer-events-none'>
+          <Image
+            src='/autostylism-ribbon.png'
+            alt='Autostylism'
+            width={88}
+            height={88}
+            className='w-22 h-22 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain drop-shadow-lg'
+            style={{ transform: 'translate(-5%, -25%) rotate(-15deg)' }}
+          />
+        </div>
+      )}
 
       {/* Course Content */}
       <div className='p-4 flex flex-col flex-grow'>

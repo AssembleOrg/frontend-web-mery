@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Clock, PlayCircle, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Course, Lesson } from '@/types/course';
@@ -50,7 +51,12 @@ export default function CursoDetallePage() {
   const courseProgress = getUserCourseProgress(courseId);
   const handleLessonSelect = useCallback(
     async (lesson: Lesson) => {
-      console.log('[CursoPage] Seleccionando lección:', lesson.title, 'ID:', lesson.id);
+      console.log(
+        '[CursoPage] Seleccionando lección:',
+        lesson.title,
+        'ID:',
+        lesson.id
+      );
 
       // Cancelar request anterior si existe
       if (lessonSelectAbortController.current) {
@@ -75,13 +81,19 @@ export default function CursoDetallePage() {
       setStreamUrl(null);
 
       try {
-        console.log('[CursoPage] Solicitando stream URL para video:', lesson.id);
+        console.log(
+          '[CursoPage] Solicitando stream URL para video:',
+          lesson.id
+        );
         // Llamamos al endpoint que nos da la URL segura de Vimeo
         const response = await getVideoStreamUrl(lesson.id);
 
         // Solo actualizar estado si el request no fue abortado
         if (!abortController.signal.aborted) {
-          console.log('[CursoPage] Stream URL recibida:', response.data.streamUrl);
+          console.log(
+            '[CursoPage] Stream URL recibida:',
+            response.data.streamUrl
+          );
           setStreamUrl(response.data.streamUrl);
         } else {
           console.log('[CursoPage] Request abortado, ignorando respuesta');
@@ -90,7 +102,9 @@ export default function CursoDetallePage() {
         // Solo mostrar error si el request no fue abortado
         if (!abortController.signal.aborted) {
           console.error('[CursoPage] Error al obtener stream URL:', error);
-          toast.error('No se pudo cargar el video. Por favor intenta de nuevo.');
+          toast.error(
+            'No se pudo cargar el video. Por favor intenta de nuevo.'
+          );
           setStreamUrl(null);
         }
       } finally {
@@ -193,7 +207,10 @@ export default function CursoDetallePage() {
         setCourse(courseData);
         setCurrentCourse(courseData);
 
-        console.log('[CursoPage] Curso cargado exitosamente, total de lecciones:', lessons.length);
+        console.log(
+          '[CursoPage] Curso cargado exitosamente, total de lecciones:',
+          lessons.length
+        );
 
         // Selección inicial
         if (lessons.length > 0) {
@@ -258,10 +275,11 @@ export default function CursoDetallePage() {
         <div className='bg-[#1a1a1a] relative overflow-hidden'>
           {/* Background SVG */}
           <div className='absolute inset-0 opacity-10 pointer-events-none'>
-            <img
+            <Image
               src='/browes.svg'
               alt='Background decoration'
-              className='w-full h-full object-cover object-center'
+              fill
+              className='object-cover object-center'
             />
           </div>
 
@@ -280,9 +298,11 @@ export default function CursoDetallePage() {
 
               {/* Logo central y FORMACIONES */}
               <div className='text-center'>
-                <img
+                <Image
                   src='/Img-home/mery-blanco-logo.png'
                   alt='Mery García'
+                  width={500}
+                  height={120}
                   className='h-16 mx-auto mb-4 filter brightness-0 invert'
                 />
                 <p className='text-lg font-light tracking-[0.15em] text-[#f9bbc4]'>
@@ -360,7 +380,10 @@ export default function CursoDetallePage() {
 
                         {/* Contenido adicional de la lección */}
                         <div className='max-w-4xl mx-auto'>
-                          <LessonContent lesson={selectedLesson} courseId={courseId} />
+                          <LessonContent
+                            lesson={selectedLesson}
+                            courseId={courseId}
+                          />
                         </div>
                       </div>
                     ) : (

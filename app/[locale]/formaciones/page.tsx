@@ -6,16 +6,20 @@ import Image from 'next/image';
 import SimpleCourseCard from '@/components/simple-course-card';
 import SimpleCourseModal from '@/components/simple-course-modal';
 import { FormacionesSkeleton } from '@/components/formaciones/FormacionesSkeleton';
+import { FilterBanner } from '@/components/formaciones/FilterBanner';
 import { useState, useEffect, useMemo } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
-import { getCourseImage } from '@/lib/utils';
+import { getCourseImage, isAutostylismCourse } from '@/lib/utils';
+
+type CourseFilter = 'all' | 'professional' | 'autostylism';
 
 export default function FormacionesPage() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [filter, setFilter] = useState<CourseFilter>('all');
 
   // Get courses from admin store
   const { fetchCategories } = useAdminStore();
@@ -76,45 +80,49 @@ export default function FormacionesPage() {
     setSelectedCourse(null);
   };
 
-  // Get auto-styling course for the featured banner
-  const autoStylingCourse = courses.find(
-    (c) => c.slug === 'auto-styling-cejas'
+  // Separate courses by type
+  const autostylismCourses = useMemo(
+    () => courses.filter((c) => isAutostylismCourse(c.slug, c.title)),
+    [courses]
   );
 
-  const handleAutoStylingClick = () => {
-    if (autoStylingCourse) {
-      setSelectedCourse(autoStylingCourse);
-      setIsModalOpen(true);
-    }
-  };
+  const professionalCourses = useMemo(
+    () => courses.filter((c) => !isAutostylismCourse(c.slug, c.title)),
+    [courses]
+  );
 
-  // Filter out auto-styling from regular grid (show it in banner instead)
-  const regularCourses = courses.filter((c) => c.slug !== 'auto-styling-cejas');
+  // Filter courses based on selected filter
+  const filteredCourses = useMemo(() => {
+    if (filter === 'professional') return professionalCourses;
+    if (filter === 'autostylism') return autostylismCourses;
+    return courses;
+  }, [filter, courses, professionalCourses, autostylismCourses]);
 
   // Memoize price calculations to avoid re-computing on every render
-  const coursesWithDisplayPrice = useMemo(() =>
-    regularCourses.map((course) => {
-      let priceDisplay: string;
+  const coursesWithDisplayPrice = useMemo(
+    () =>
+      filteredCourses.map((course) => {
+        let priceDisplay: string;
 
-      if (course.isFree) {
-        priceDisplay = 'Gratis';
-      } else if (course.priceARS === 99999999) {
-        // Mostrar precio en USD para placeholders
-        priceDisplay =
-          course.priceUSD > 0
-            ? `USD ${course.priceUSD.toLocaleString('en-US')}`
-            : 'Consultar';
-      } else {
-        // Mostrar precio en ARS normalmente
-        priceDisplay =
-          course.priceARS > 0
-            ? `$${course.priceARS.toLocaleString('es-AR')}`
-            : 'Gratis';
-      }
+        if (course.isFree) {
+          priceDisplay = 'Gratis';
+        } else if (course.priceARS === 99999999) {
+          priceDisplay =
+            course.priceUSD > 0
+              ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+              : 'Consultar';
+        } else {
+          priceDisplay =
+            course.priceARS > 0
+              ? `$${course.priceARS.toLocaleString('es-AR')}`
+              : 'Gratis';
+        }
 
-      return { ...course, priceDisplay };
-    }),
-    [regularCourses]
+        const isAutostylism = isAutostylismCourse(course.slug, course.title);
+
+        return { ...course, priceDisplay, isAutostylism };
+      }),
+    [filteredCourses]
   );
 
   // Show loading state
@@ -150,51 +158,43 @@ export default function FormacionesPage() {
         </div>
       </section>
 
-      {/* Auto Styling Banner */}
-      {autoStylingCourse && (
-        <section className='container mx-auto px-4 py-8 max-w-7xl'>
-          <div className='relative bg-gradient-to-r from-[#fbe8ea] to-[#f9bbc4] p-6 md:p-8 rounded-lg border-2 border-[#eba2a8] shadow-lg'>
-            {/* Badge "NUEVO" */}
-            <div className='absolute -top-3 left-6 bg-[#660e1b] text-white px-4 py-1 text-sm font-bold rounded-full'>
-              NUEVO
-            </div>
+      {/* Hero Filter Banners */}
+      <section className='container mx-auto px-4 py-8 max-w-7xl'>
+        <div className='flex gap-6 md:grid md:grid-cols-2 md:gap-6'>
+          <FilterBanner
+            title='Formaciones Profesionales'
+            description='Técnicas avanzadas para tu negocio'
+            image='/Img-home/home-1.webp'
+            onClick={() =>
+              setFilter(filter === 'professional' ? 'all' : 'professional')
+            }
+            isActive={filter === 'professional'}
+            showRibbon={false}
+          />
+          <FilterBanner
+            title='Autostylism'
+            description='Diseña tus cejas en casa'
+            image='/Img-home/home-3.webp'
+            onClick={() =>
+              setFilter(filter === 'autostylism' ? 'all' : 'autostylism')
+            }
+            isActive={filter === 'autostylism'}
+            showRibbon={true}
+          />
+        </div>
 
-            <div className='flex flex-col md:flex-row items-center justify-between gap-6'>
-              {/* Contenido del Banner */}
-              <div className='text-center md:text-left flex-1'>
-                <h2 className='text-2xl md:text-3xl font-primary font-semibold text-[#660e1b]/80 mb-3'>
-                  ¿Querés aprender a diseñar tus propias cejas?
-                </h2>
-                <p className='text-xl md:text-2xl lg:text-3xl font-primary font-black text-[#660e1b] mb-2'>
-                  {autoStylingCourse.title}
-                </p>
-                <p className='text-sm text-[#660e1b]/70 font-medium'>
-                  ✨ Sin experiencia requerida • 📱 100% Online • ⏰ 6 meses de
-                  acceso
-                </p>
-              </div>
-
-              {/* CTA Button */}
-              <div className='text-center'>
-                <div className='mb-3'>
-                  <span className='text-2xl font-primary font-bold text-[#660e1b]'>
-                    {autoStylingCourse.priceDisplay}
-                  </span>
-                  <p className='text-xs text-[#660e1b]/70'>
-                    Incluye certificación y materiales
-                  </p>
-                </div>
-                <button
-                  onClick={handleAutoStylingClick}
-                  className='bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-3 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
-                >
-                  🎯 Quiero Aprender
-                </button>
-              </div>
-            </div>
+        {/* Reset Filter Button */}
+        {filter !== 'all' && (
+          <div className='flex justify-center mt-6'>
+            <button
+              onClick={() => setFilter('all')}
+              className='px-6 py-2 rounded-full border-2 border-[#EBA2A8] bg-[#EBA2A8] text-white font-primary font-semibold hover:bg-[#f9bbc4] hover:border-[#f9bbc4] transition-all duration-300 shadow-md'
+            >
+              Ver Todos
+            </button>
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       <section
         className='container mx-auto px-4 pb-16 py-8 max-w-7xl'
@@ -208,6 +208,8 @@ export default function FormacionesPage() {
               title={course.title}
               price={course.priceDisplay}
               description={course.description}
+              slug={course.slug}
+              isAutostylism={course.isAutostylism}
               onCourseClick={() => handleCourseClick(course)}
             />
           ))}

@@ -1,6 +1,7 @@
 'use client';
 
 import { CourseCreateInput } from '@/types/course';
+import Image from 'next/image';
 import { Upload } from 'lucide-react';
 import { useModal } from '@/contexts/modal-context';
 
@@ -283,9 +284,11 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           <div className='relative'>
             <div className='p-4 bg-gray-50 rounded-lg border-2 border-gray-200'>
               <div className='flex items-start gap-4'>
-                <img
-                  src={formData.image}
+                <Image
+                  src={formData.image || ''}
                   alt='Preview'
+                  width={192}
+                  height={192}
                   className='w-48 h-48 object-cover rounded-lg'
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Error+al+cargar+imagen';
