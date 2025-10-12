@@ -56,8 +56,13 @@ export default function NuevoCursoPage() {
 
           // Validar que el vimeoId esté presente
           if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
-            console.error('[NuevoCurso] Error: Lección sin vimeoId:', lesson.title);
-            throw new Error(`La lección "${lesson.title}" no tiene un ID de Vimeo válido`);
+            console.error(
+              '[NuevoCurso] Error: Lección sin vimeoId:',
+              lesson.title
+            );
+            throw new Error(
+              `La lección "${lesson.title}" no tiene un ID de Vimeo válido`
+            );
           }
 
           const videoData = {
@@ -69,11 +74,19 @@ export default function NuevoCursoPage() {
             isPublished: lesson.isPublished ?? false,
           };
 
-          console.log('[NuevoCurso] Creando video:', lesson.title, 'vimeoId:', videoData.vimeoId);
+          console.log(
+            '[NuevoCurso] Creando video:',
+            lesson.title,
+            'vimeoId:',
+            videoData.vimeoId
+          );
           const createdVideo = await createVideo(videoData);
 
           if (!createdVideo) {
-            console.error('[NuevoCurso] Error: No se pudo crear el video:', lesson.title);
+            console.error(
+              '[NuevoCurso] Error: No se pudo crear el video:',
+              lesson.title
+            );
             throw new Error(`No se pudo crear el video "${lesson.title}"`);
           }
 
@@ -93,12 +106,16 @@ export default function NuevoCursoPage() {
     } catch (error) {
       console.error('[NuevoCurso] Error:', error);
 
-      // Extract detailed error message
-      const errorMessage = error instanceof Error
-        ? error.message
-        : 'Error desconocido al crear el curso';
+      let errorMessage = 'Error desconocido al crear el curso';
 
-      // Show error in both toast and modal
+      if (error instanceof Error) {
+        if (error.message.includes('500') || error.message.includes('Internal Server Error')) {
+          errorMessage = 'Error al crear el curso. La imagen puede ser demasiado pesada (máx. 2MB recomendado).';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       toast.error(errorMessage);
       showError(errorMessage);
     } finally {
