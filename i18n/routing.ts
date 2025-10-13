@@ -54,6 +54,10 @@ export const routing = defineRouting({
       es: '/servicios/styling-pestanas',
       en: '/services/eyelash-styling',
     },
+    '/services/lip-blush': {
+      es: '/servicios/lip-blush',
+      en: '/services/lip-blush',
+    },
     '/services/tatuaje-paramedico': {
       es: '/servicios/tatuaje-paramedico',
       en: '/services/paramedical-tattoo',

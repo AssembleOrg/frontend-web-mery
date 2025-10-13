@@ -19,14 +19,15 @@
     "quote": "No elegí la vida de cejas. La vida de cejas me eligió a mí.",
     "services": {
       "title": "Servicios",
-      "eyebrowStyling": "Diseño de Cejas",
-      "nanoblading": "Nanoblading",
+      "eyebrowStyling": "Styling de Cejas",
+      "nanoblading": "Nanoblading & Camuflaje",
       "microblading": "Microblading & Camuflaje",
       "scalp": "Scalp",
       "nanoscalp": "Nano Scalp",
-      "lashesLine": "Styling de Pestañas",
+      "lashesLine": "Lash Line",
+      "lipBlush": "Lip Blush",
       "freckles": "Pecas & Lunares",
-      "paramedical": "Tatuaje Paramédico",
+      "paramedical": "Paramedical Tattoo",
       "autostyling": "Autostyling"
     },
     "learnMore": {
@@ -210,27 +211,27 @@
       "services": [
         {
           "title": "Modelado de cejas con Staff MG",
-          "price": "AR$ 36.000.-",
+          "price": "AR$ 39.000.-",
           "description": "Consiste en darle forma a las cejas, a través del cortado y la depilación artesanal, pelo por pelo, teniendo en cuenta el gusto de la persona y las proporciones del rostro."
         },
         {
           "title": "Laminado de cejas",
-          "price": "AR$ 36.000.-",
+          "price": "AR$ 39.000.-",
           "description": "Disciplinamos a través de un alisado químico, cejas rebeldes."
         },
         {
           "title": "Tinte de cejas",
-          "price": "AR$ 28.000.-",
+          "price": "AR$ 32.000.-",
           "description": "Le damos color a las cejas cuando estas son muy claritas o bien si tenes canas."
         },
         {
           "title": "Brow Refill",
-          "price": "AR$ 36.000.-",
-          "description": "Reactiva y/o potencia el efecto de densidad de tu microblading, tiñendo la piel de tus cejas con un juego de sombras de acabado hiperealista. También podés realizarlo si no tenés microblading, pero igualmente querés lucir unas cejas densas, hiper pobladas y realistas por 20 días."
+          "price": "AR$ 39.000.-",
+          "description": "Reactiva y/o potencia el efecto de densidad de tu Nanoblading, tiñendo la piel de tus cejas con un juego de sombras de acabado hiperealista. También podés realizarlo si no tenés Nanoblading, pero igualmente querés lucir unas cejas densas, hiper pobladas y realistas por 20 días."
         },
         {
           "title": "Lash Refill",
-          "price": "AR$ 28.000.-",
+          "price": "AR$ 32.000.-",
           "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lashes Line, con un juego de sombras de acabado hiperealista."
         }
       ],
@@ -249,7 +250,7 @@
         "heading": "¿QUÉ ES EL MICROBLADING?",
         "p1": "Es una técnica muy novedosa, aunque realmente antigua. Consiste en generar un tatuaje superficial mediante pequeños rasguños donde se inserta la tinta. De esta forma conseguimos un efecto súper real con un ACABADO PELO A PELO.",
         "p2": "Dura entre 8 meses y 1 año, dependiendo del tipo de piel y los cuidados que haya recibido. Pasado este tiempo, la piel queda limpia, sin rastro de tinta y sin dejar cicatriz.",
-        "p3": "¡Estás en buenas manos! Mery es una experta en cejas y atiende a más de 400 clientas al mes solo en servicios relacionados con cejas. Lleva más de 15 años trabajando en el estilismo de cejas."
+        "p3": "¡Estás en buenas manos! Mery es una experta en cejas y atiende a más de 400 clientas al mes solo en servicios relacionados con cejas. Lleva más de 15 años trabajando en styling de cejas."
       },
       "camouflage": {
         "heading": "¿QUÉ ES EL CAMUFLAJE?",
@@ -272,7 +273,7 @@
       },
       "shared": {
         "procedureHeading": "PROCEDIMIENTO",
-        "procedureConsultation": "La primera instancia es la consulta, que es gratuita. Solo se cobrará el estilismo de cejas si es necesario. Durante esta consulta te contaremos de qué se trata el procedimiento, cómo se realiza, cuánto tiempo lleva y los cruciales cuidados previos y posteriores. Despejaremos todas tus dudas para que estés completamente segura antes de realizarlo.",
+        "procedureConsultation": "La primera instancia es la consulta, que es gratuita. Solo se cobrará el stylism de cejas si es necesario. Durante esta consulta te contaremos de qué se trata el procedimiento, cómo se realiza, cuánto tiempo lleva y los cruciales cuidados previos y posteriores. Despejaremos todas tus dudas para que estés completamente segura antes de realizarlo.",
         "procedureMicroblading": "Una vez realizada tu primera consulta y si estás decidida, puedes reservar tu primera cita para Microblading. El precio se divide en dos partes: la primera sesión y un retoque necesario en una segunda sesión (entre 30 y 60 días después) que tiene un costo adicional. Pasados los tres meses, se considerará mantenimiento.",
         "procedureCamouflage": "Una vez realizada tu consulta, puedes reservar tu cita para Camuflaje. Cada sesión tiene un costo. El número de sesiones necesarias dependerá del criterio de la especialista y la respuesta de la piel de cada clienta. Finalizadas las sesiones de Camuflaje, puedes realizar una sesión de Microblading (con cargo adicional) para dar la textura deseada.",
         "biosecurityHeading": "NORMAS DE BIOSEGURIDAD",
@@ -286,19 +287,19 @@
     },
     "scalp": {
       "hero": {
-        "title": "Micro Scalp",
+        "title": "Nano Scalp",
         "subtitle": "Una solución eficaz y natural para la alopecia y cicatrices"
       },
       "whatIsIt": {
-        "heading": "¿QUÉ ES EL MICROSCALP?",
-        "p1": "Consiste en conseguir un efecto óptico de relleno mediante pequeños puntos que simulan ser folículos pilosos. Se perciben como algo completamente natural, aumentando la densidad del cabello. El Micro Scalp es conocido como un tratamiento exitoso y eficaz para personas con alopecia. También da buenos resultados para cubrir cicatrices, mejorando así la apariencia y la autoestima de la persona."
+        "heading": "¿QUÉ ES EL NANO SCALP?",
+        "p1": "Consiste en conseguir un efecto óptico de relleno mediante pequeños puntos que simulan ser folículos pilosos. Se perciben como algo completamente natural, aumentando la densidad del cabello. El Nano Scalp es conocido como un tratamiento exitoso y eficaz para personas con alopecia. También da buenos resultados para cubrir cicatrices, mejorando así la apariencia y la autoestima de la persona."
       },
       "procedure": {
         "heading": "PROCEDIMIENTO",
         "p1": "El primer paso es la etapa de consulta. Esta es gratuita. Aquí te contamos de qué se trata, cómo se hace, cuánto tiempo lleva y los cuidados previos y posteriores a tener en cuenta. Despejamos todas tus dudas para que te asegures de que quieres hacértelo.",
         "p2": "Esta cita es la clave para darte información, para que conozcas los procedimientos, para confirmar que puedes hacértelo y que puedes respetar los cuidados posteriores. También te informaremos cuántas sesiones llevará tu caso (pueden ser varias de 2 a 4 horas).",
         "p3": "Se realiza una sesión al mes. Es un compromiso que debes asumir. De lo contrario, el servicio no se termina y no se puede esperar el potencial de los resultados.",
-        "p4": "Una vez que hayas tenido la consulta y te hayas decidido, puedes reservar tu primera cita para Micro Scalp. El costo del servicio dependerá de las horas que lleve y cada sesión tendrá el mismo costo. Para más información contáctanos por WhatsApp al 11 6159-2591"
+        "p4": "Una vez que hayas tenido la consulta y te hayas decidido, puedes reservar tu primera cita para Nano Scalp. El costo del servicio dependerá de las horas que lleve y cada sesión tendrá el mismo costo. Para más información contáctanos por WhatsApp al 11 6159-2591"
       },
       "biosecurity": {
         "heading": "NORMAS DE BIOSEGURIDAD",
@@ -310,13 +311,13 @@
       },
       "cta": {
         "heading": "¿Lista para Recuperar tu Confianza?",
-        "text": "El Micro Scalp ofrece una solución definitiva y de aspecto natural. Reserva una consulta gratuita para descubrir cómo podemos ayudarte.",
+        "text": "El Nano Scalp ofrece una solución definitiva y de aspecto natural. Reserva una consulta gratuita para descubrir cómo podemos ayudarte.",
         "button": "Reservar Consulta Gratuita"
       }
     },
     "eyelashStyling": {
       "hero": {
-        "title": "Styling de Pestañas",
+        "title": "Lash Line",
         "subtitle": "¡Nos encanta que las pestañas sean las protagonistas!"
       },
       "intro": {
@@ -338,7 +339,7 @@
       },
       "cta": {
         "heading": "¿Lista para una Mirada Impactante?",
-        "text": "Realza tu belleza natural con nuestros servicios de styling de pestañas. Reserva tu turno ahora.",
+        "text": "Realza tu belleza natural con nuestros servicios de Lash Line. Reserva tu turno ahora.",
         "button": "Reservar Turno"
       }
     },
@@ -428,6 +429,46 @@
         "button": "Reservar Consulta"
       }
     },
+    "lipBlush": {
+      "hero": {
+        "title": "Lip Blush",
+        "subtitle": "WE ARE BACK 💋 Labios hiper definidos, súper natural #ByMeryGarcia"
+      },
+      "intro": {
+        "text": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
+      },
+      "whatIsIt": {
+        "heading": "¿QUÉ ES EL LIP BLUSH?",
+        "p1": "Es un servicio de tatuaje cosmético que aporta color y definición de acabado hiperrealista. No buscamos una boca con efecto maquillado, sino que emulando la textura del labio ganamos una expresión más joven y fresca sin perder naturalidad.",
+        "p2": "No aporta volumen, no genera brillo, labios sin makeup con mucha más frescura. Sin polvo, sin textura, como si el labio tuviese color natural 💋🍒",
+        "p3": "El resultado dura entre 12 y 24 meses dependiendo de cada persona. El procedimiento consta de una primera sesión y un retoque para terminar de definir el diseño que Mery creó para vos a los 30 o 60 días."
+      },
+      "pricing": {
+        "depositTitle": "Consulta y Seña",
+        "depositText": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lip Blush, la misma no es reembolsable y no congela el valor de tu servicio:",
+        "depositAmount": "Seña AR$ 100.000.-",
+        "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
+        "firstSessionLabel": "Primera Sesión",
+        "touchUpLabel": "Retoque",
+        "maintenanceLabel": "Mantenimiento",
+        "session1": "U$S 650.- (en efectivo U$S 450)",
+        "touchUp": "U$S 317.- (en efectivo U$S 180)",
+        "maintenance": "U$S 650.- (en efectivo U$S 475)",
+        "creditCardNote": "Acercate a nuestro local para acceder a 3 cuotas sin interés pagando con tarjeta física de cualquier banco."
+      },
+      "importantInfo": {
+        "herpesTitle": "IMPORTANTE: Herpes",
+        "herpesText": "En caso de haber tenido herpes, por favor consultar con su dermatólogo para realizar tratamiento preventivo.",
+        "preparationTitle": "Preparación",
+        "preparationText": "Por favor concurrir a la sesión con los labios bien hidratados.",
+        "availability": "🚀 Sólo 2 citas por semana"
+      },
+      "cta": {
+        "heading": "¿Lista para tus Labios de Ensueño?",
+        "text": "Descubre el secreto de unos labios naturalmente perfectos con un acabado hiperrealista. Reserva tu consulta con Mery.",
+        "button": "Reservar Consulta"
+      }
+    },
     "nanoscalp": {
       "hero": {
         "title": "Nano Scalp",
@@ -465,11 +506,11 @@
     },
     "paramedicalTattoo": {
       "hero": {
-        "title": "Tatuaje Paramédico",
+        "title": "Paramedical Tattoo",
         "subtitle": "Restaurando la confianza a través del arte y la precisión."
       },
       "areola": {
-        "heading": "¿QUÉ ES LA ARMONIZACIÓN DE AREOLA?",
+        "heading": "¿QUÉ ES LA AREOLA HARMONIZATION?",
         "p1": "Es una técnica de micropigmentación para disimular la apariencia de las cicatrices, mezclándolas con el tono de la piel circundante sin perder realismo. Este procedimiento está recomendado para personas con cicatrices post-quirúrgicas, lesiones estéticas o para corregir asimetrías.",
         "pricing": {
           "heading": "Precio de Lista",
@@ -480,7 +521,7 @@
         }
       },
       "nipple": {
-        "heading": "¿QUÉ ES LA RECONSTRUCCIÓN DE PEZÓN?",
+        "heading": "¿QUÉ ES NIPPLE RECONSTRUCTION?",
         "p1": "Es una técnica de tatuaje cosmético 3D que puede ayudar a corregir asimetrías, mejorar la apariencia de cicatrices o cubrir imperfecciones en la zona de la areola y pezón. Recomendado para personas con cicatrices post-quirúrgicas, reconstrucción mamaria o cicatrices por lesiones.",
         "pricing": {
           "heading": "Precio de Lista",
@@ -543,7 +584,7 @@
       },
       "browRefill": {
         "title": "Brow Refill",
-        "description": "Reactiva la densidad del microblading tiñendo la piel de las cejas con efecto sombra hiperrealista."
+        "description": "Reactiva la densidad del nanoblading tiñendo la piel de las cejas con efecto sombra hiperrealista."
       },
       "eyebrowLamination": {
         "title": "Laminado de cejas",

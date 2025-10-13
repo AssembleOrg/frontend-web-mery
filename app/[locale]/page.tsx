@@ -16,25 +16,25 @@ export default function HomePage() {
       href: '/services/nanoblading',
       image: '/Img-home/nanoblading.webp',
     },
-    {
-      key: 'scalp',
-      href: '/services/scalp',
-      image: '/Img-home/home-3.webp',
-    },
+    // {
+    //   key: 'scalp',
+    //   href: '/services/scalp',
+    //   image: '/Img-home/home-3.webp',
+    // },
     {
       key: 'freckles',
       href: '/services/pecas-lunares',
       image: '/Img-home/home-4.webp',
     },
     {
-      key: 'nanoscalp',
-      href: '/services/nano-scalp',
-      image: '/Img-home/home-6.webp',
-    },
-    {
       key: 'lashesLine',
       href: '/services/styling-pestanas',
       image: '/Img-home/home-8.webp',
+    },
+    {
+      key: 'lipBlush',
+      href: '/services/lip-blush',
+      image: '/Img-home/Lip-blush-1.webp',
     },
     {
       key: 'paramedical',

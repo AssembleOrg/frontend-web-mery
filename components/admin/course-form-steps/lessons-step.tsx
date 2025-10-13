@@ -1,7 +1,16 @@
 'use client';
 
 import { Lesson } from '@/types/course';
-import { PlusCircle, Trash2, Edit, ChevronUp, ChevronDown, Save, X, Loader2 } from 'lucide-react';
+import {
+  PlusCircle,
+  Trash2,
+  Edit,
+  ChevronUp,
+  ChevronDown,
+  Save,
+  X,
+  Loader2,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useModal } from '@/contexts/modal-context';
 
@@ -11,7 +20,11 @@ interface LessonsStepProps {
   errors: Record<string, string>;
 }
 
-export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProps) {
+export function LessonsStep({
+  formData,
+  updateLessons,
+  errors,
+}: LessonsStepProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingLesson, setEditingLesson] = useState<Partial<Lesson>>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -107,7 +120,8 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
   const handleDelete = async (index: number) => {
     const confirmed = await showConfirm({
       title: 'Eliminar Lección',
-      message: '¿Estás seguro de eliminar esta lección? Esta acción no se puede deshacer.',
+      message:
+        '¿Estás seguro de eliminar esta lección? Esta acción no se puede deshacer.',
       type: 'warning',
       confirmText: 'Eliminar',
       cancelText: 'Cancelar',
@@ -170,9 +184,12 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
 
     try {
       // En el futuro, esto será una llamada real a la API que obtenga datos de Vimeo
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      showSuccess('ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.', 'Validación Exitosa');
+      showSuccess(
+        'ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.',
+        'Validación Exitosa'
+      );
     } catch (error) {
       console.error('Error validating Vimeo ID:', error);
       showError('Error al validar el ID de Vimeo. Verifica que sea correcto.');
@@ -226,7 +243,12 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
               </label>
               <textarea
                 value={editingLesson.description || ''}
-                onChange={(e) => setEditingLesson({ ...editingLesson, description: e.target.value })}
+                onChange={(e) =>
+                  setEditingLesson({
+                    ...editingLesson,
+                    description: e.target.value,
+                  })
+                }
                 rows={4}
                 className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent resize-none'
                 placeholder='Descripción breve de la lección...'
@@ -242,16 +264,25 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                 <input
                   type='text'
                   value={editingLesson.vimeoVideoId || ''}
-                  onChange={(e) => setEditingLesson({ ...editingLesson, vimeoVideoId: e.target.value })}
+                  onChange={(e) =>
+                    setEditingLesson({
+                      ...editingLesson,
+                      vimeoVideoId: e.target.value,
+                    })
+                  }
                   className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
-                    formErrors.vimeoVideoId ? 'border-red-500' : 'border-gray-300'
+                    formErrors.vimeoVideoId
+                      ? 'border-red-500'
+                      : 'border-gray-300'
                   }`}
                   placeholder='987654321'
                 />
                 <button
                   type='button'
                   onClick={handleFetchVimeoData}
-                  disabled={!editingLesson.vimeoVideoId?.trim() || loadingVimeoData}
+                  disabled={
+                    !editingLesson.vimeoVideoId?.trim() || loadingVimeoData
+                  }
                   className='px-4 py-2 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors whitespace-nowrap'
                 >
                   {loadingVimeoData ? (
@@ -265,10 +296,13 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                 </button>
               </div>
               {formErrors.vimeoVideoId && (
-                <p className='mt-1 text-sm text-red-600'>{formErrors.vimeoVideoId}</p>
+                <p className='mt-1 text-sm text-red-600'>
+                  {formErrors.vimeoVideoId}
+                </p>
               )}
               <p className='mt-1 text-xs text-gray-500'>
-                Pega el ID y haz click en el botón para llenar automáticamente los campos
+                Pega el ID y haz click en el botón para llenar automáticamente
+                los campos
               </p>
             </div>
 
@@ -280,7 +314,12 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
               <input
                 type='number'
                 value={editingLesson.order ?? 0}
-                onChange={(e) => setEditingLesson({ ...editingLesson, order: parseInt(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setEditingLesson({
+                    ...editingLesson,
+                    order: parseInt(e.target.value) || 0,
+                  })
+                }
                 className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                 min='0'
               />
@@ -295,16 +334,24 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                 type='checkbox'
                 id='lessonPublished'
                 checked={editingLesson.isPublished ?? true}
-                onChange={(e) => setEditingLesson({ ...editingLesson, isPublished: e.target.checked })}
+                onChange={(e) =>
+                  setEditingLesson({
+                    ...editingLesson,
+                    isPublished: e.target.checked,
+                  })
+                }
                 className='w-5 h-5 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b] focus:ring-2'
               />
               <div className='flex-1'>
-                <label htmlFor='lessonPublished' className='text-sm font-medium text-gray-900 cursor-pointer'>
+                <label
+                  htmlFor='lessonPublished'
+                  className='text-sm font-medium text-gray-900 cursor-pointer'
+                >
                   Video Publicado
                 </label>
                 <p className='text-xs text-gray-500 mt-1'>
-                  {editingLesson.isPublished 
-                    ? '✓ Este video será visible para los usuarios' 
+                  {editingLesson.isPublished
+                    ? '✓ Este video será visible para los usuarios'
                     : 'Este video no será visible para los usuarios (modo borrador)'}
                 </p>
               </div>
@@ -398,22 +445,28 @@ export function LessonsStep({ formData, updateLessons, errors }: LessonsStepProp
                         {lesson.title}
                       </h5>
                       {lesson.description && (
-                        <p className='text-sm text-gray-600 mt-1 line-clamp-2'>{lesson.description}</p>
+                        <p className='text-sm text-gray-600 mt-1 line-clamp-2'>
+                          {lesson.description}
+                        </p>
                       )}
                       <div className='flex flex-wrap gap-3 mt-2 text-xs text-gray-500'>
                         <span className='flex items-center gap-1'>
-                          <span className='font-medium'>Vimeo ID:</span> {lesson.vimeoVideoId}
+                          <span className='font-medium'>Vimeo ID:</span>{' '}
+                          {lesson.vimeoVideoId}
                         </span>
                         {lesson.duration && (
                           <span className='flex items-center gap-1'>
-                            <span className='font-medium'>Duración:</span> {lesson.duration}
+                            <span className='font-medium'>Duración:</span>{' '}
+                            {lesson.duration}
                           </span>
                         )}
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          lesson.isPublished 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            lesson.isPublished
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
                           {lesson.isPublished ? 'Publicado' : 'Borrador'}
                         </span>
                       </div>

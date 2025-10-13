@@ -19,7 +19,6 @@ export function BookingCTA({
   mainButtonText,
   showExpressButton = true,
 }: BookingCTAProps) {
-  // Siempre obtenemos las traducciones por defecto como fallback
   const t = useTranslations('booking');
 
   return (
@@ -30,7 +29,6 @@ export function BookingCTA({
           <div className='flex items-center justify-center mb-6'>
             <Calendar className='h-8 w-8 text-primary mr-3' />
             <h2 className='text-3xl font-primary font-bold text-foreground'>
-              {/* 3. Usamos la prop si existe, si no, usamos la traducción por defecto */}
               {heading || t('title')}
             </h2>
           </div>
