@@ -2,15 +2,14 @@
 
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import { useCartStore } from '@/stores/cart-store';
+import { useCart } from '@/hooks/useCart';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { Trash2, ShoppingBag, Loader2 } from 'lucide-react';
 
 export default function CompraPage() {
   const router = useRouter();
-  const { items, removeFromCart, updateQuantity, getTotal, clearCart } =
-    useCartStore();
+  const { cart, removeItem, clear, isLoading, itemCount, totalARS } = useCart();
 
   const handleContinueShopping = () => {
     router.push('/es/formaciones');
@@ -20,19 +19,31 @@ export default function CompraPage() {
     router.push('/es/finalizar-compra');
   };
 
-  const increaseQuantity = (courseId: string, currentQuantity: number) => {
-    updateQuantity(courseId, currentQuantity + 1);
+  const handleRemoveItem = async (itemId: string) => {
+    await removeItem(itemId);
   };
 
-  const decreaseQuantity = (courseId: string, currentQuantity: number) => {
-    if (currentQuantity > 1) {
-      updateQuantity(courseId, currentQuantity - 1);
-    }
+  const handleClearCart = async () => {
+    await clear();
   };
 
-  const total = getTotal();
+  // Loading state
+  if (isLoading && !cart) {
+    return (
+      <div className='min-h-screen bg-background'>
+        <Navigation />
+        <div className='container mx-auto px-4 py-16 max-w-4xl'>
+          <div className='text-center'>
+            <Loader2 className='w-24 h-24 mx-auto text-muted-foreground mb-6 animate-spin' />
+            <p className='text-muted-foreground'>Cargando carrito...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
-  if (items.length === 0) {
+  if (!cart || itemCount === 0) {
     return (
       <div className='min-h-screen bg-background'>
         <Navigation />
@@ -70,17 +81,20 @@ export default function CompraPage() {
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Cart Items */}
           <div className='lg:col-span-2 space-y-4'>
-            {items.map((item) => (
+            {cart.items.map((item) => (
               <div
-                key={item.course.id}
+                key={item.id}
                 className='bg-card p-6 rounded-lg border shadow-sm'
               >
                 <div className='flex gap-4'>
                   {/* Course Image */}
                   <div className='flex-shrink-0 w-24 h-24'>
                     <Image
-                      src={item.course.image}
-                      alt={item.course.title}
+                      src={
+                        item.category.image ||
+                        '/formacion/nanoblading-exclusive.webp'
+                      }
+                      alt={item.category.name}
                       width={96}
                       height={96}
                       className='w-full h-full object-cover rounded-lg'
@@ -90,47 +104,24 @@ export default function CompraPage() {
                   {/* Course Details */}
                   <div className='flex-1'>
                     <h3 className='text-lg font-primary font-bold text-foreground mb-2'>
-                      {item.course.title}
+                      {item.category.name}
                     </h3>
+                    <p className='text-sm text-muted-foreground mb-2'>
+                      {item.category.description}
+                    </p>
                     <p className='text-2xl font-primary font-bold text-[#f9bbc4] mb-4'>
-                      {item.course.priceDisplay}
+                      ${item.priceARS.toLocaleString('es-AR')} ARS
                     </p>
 
-                    {/* Quantity and Remove */}
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center gap-3'>
-                        <span className='text-sm text-muted-foreground'>
-                          Cantidad:
-                        </span>
-                        <div className='flex items-center gap-2'>
-                          <button
-                            onClick={() =>
-                              decreaseQuantity(item.course.id, item.quantity)
-                            }
-                            className='w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors'
-                            disabled={item.quantity <= 1}
-                          >
-                            <Minus className='w-4 h-4' />
-                          </button>
-                          <span className='w-8 text-center font-medium'>
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              increaseQuantity(item.course.id, item.quantity)
-                            }
-                            className='w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors'
-                          >
-                            <Plus className='w-4 h-4' />
-                          </button>
-                        </div>
-                      </div>
-
+                    {/* Remove Button */}
+                    <div className='flex items-center justify-end'>
                       <button
-                        onClick={() => removeFromCart(item.course.id)}
-                        className='text-destructive hover:text-destructive/80 transition-colors'
+                        onClick={() => handleRemoveItem(item.id)}
+                        className='text-destructive hover:text-destructive/80 transition-colors flex items-center gap-2'
+                        disabled={isLoading}
                       >
                         <Trash2 className='w-5 h-5' />
+                        Eliminar
                       </button>
                     </div>
                   </div>
@@ -149,14 +140,14 @@ export default function CompraPage() {
               <div className='space-y-4 mb-6'>
                 <div className='flex justify-between text-muted-foreground'>
                   <span>
-                    Subtotal ({items.length} curso{items.length > 1 ? 's' : ''})
+                    Subtotal ({itemCount} curso{itemCount > 1 ? 's' : ''})
                   </span>
-                  <span>${total.toLocaleString()}</span>
+                  <span>${totalARS.toLocaleString('es-AR')} ARS</span>
                 </div>
                 <div className='border-t pt-4'>
                   <div className='flex justify-between text-lg font-primary font-bold text-foreground'>
                     <span>Total</span>
-                    <span>${total.toLocaleString()}</span>
+                    <span>${totalARS.toLocaleString('es-AR')} ARS</span>
                   </div>
                 </div>
               </div>
@@ -177,8 +168,9 @@ export default function CompraPage() {
                 </button>
 
                 <button
-                  onClick={clearCart}
+                  onClick={handleClearCart}
                   className='w-full text-muted-foreground hover:text-foreground py-2 text-sm transition-colors duration-200'
+                  disabled={isLoading}
                 >
                   Vaciar Carrito
                 </button>

@@ -6,7 +6,11 @@ import { User as UserIcon, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
 
-export function UserMenu() {
+interface UserMenuProps {
+  onNavigate?: () => void;
+}
+
+export function UserMenu({ onNavigate }: UserMenuProps = {}) {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -42,12 +46,19 @@ export function UserMenu() {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const initials = getInitials(user.name);
-  const isAdmin = user.role === 'admin';
+  const displayName = user.name || user.email;
+  const initials = getInitials(displayName);
+  const isAdmin = user.role === 'ADMIN';
 
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);
+    onNavigate?.();
+  };
+
+  const handleMenuItemClick = () => {
+    setIsOpen(false);
+    onNavigate?.();
   };
 
   const handleAvatarClick = () => {
@@ -84,7 +95,7 @@ export function UserMenu() {
         {/* Name (hidden on mobile) */}
         <div className='hidden md:flex flex-col items-start'>
           <span className='text-sm font-medium text-foreground'>
-            {user.name}
+            {displayName}
           </span>
           <span
             className={`text-xs px-2 py-0.5 rounded-full ${
@@ -106,11 +117,11 @@ export function UserMenu() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className='absolute right-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-lg py-2 z-50'>
+        <div className='absolute right-0 mt-2 w-full sm:w-72 bg-card border border-border rounded-lg shadow-lg py-2 z-50'>
           {/* User Info (visible on mobile) */}
           <div className='md:hidden px-4 py-3 border-b border-border'>
-            <p className='text-sm font-medium text-foreground'>{user.name}</p>
-            <p className='text-xs text-muted-foreground'>{user.email}</p>
+            <p className='text-sm font-medium text-foreground'>{displayName}</p>
+            <p className='text-xs text-muted-foreground mt-1'>{user.email}</p>
             <span
               className={`inline-block mt-2 text-xs px-2 py-1 rounded-full ${
                 isAdmin
@@ -128,21 +139,21 @@ export function UserMenu() {
             {isAdmin && (
               <Link
                 href={`/${locale}/admin/cursos`}
-                onClick={() => setIsOpen(false)}
-                className='flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors'
+                onClick={handleMenuItemClick}
+                className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
               >
-                <Settings className='w-4 h-4' />
-                Panel Admin
+                <Settings className='w-5 h-5' />
+                <span className='font-medium'>Panel Admin</span>
               </Link>
             )}
 
             <Link
               href={`/${locale}/mi-cuenta`}
-              onClick={() => setIsOpen(false)}
-              className='flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors'
+              onClick={handleMenuItemClick}
+              className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
             >
-              <UserIcon className='w-4 h-4' />
-              Mi Cuenta
+              <UserIcon className='w-5 h-5' />
+              <span className='font-medium'>Mi Cuenta</span>
             </Link>
           </div>
 
@@ -152,10 +163,10 @@ export function UserMenu() {
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className='w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-muted transition-colors'
+            className='w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-muted transition-colors active:bg-muted/80'
           >
-            <LogOut className='w-4 h-4' />
-            Cerrar Sesión
+            <LogOut className='w-5 h-5' />
+            <span className='font-medium'>Cerrar Sesión</span>
           </button>
         </div>
       )}

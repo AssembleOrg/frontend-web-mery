@@ -35,6 +35,16 @@
   font-display: swap;
 }
 
+/* ITC Avant Garde - Admin Panel Font */
+@font-face {
+  font-family: 'ITC Avant Garde';
+  src: url('/font/ITCAvantGardeStd-Bk.woff2') format('woff2'),
+       url('/font/ITCAvantGardeStd-Bk.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -206,8 +216,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    font-size: 16px; /* Ensure base font size is consistent */
+  }
+
   body {
     @apply bg-background text-foreground font-primary font-light;
+    letter-spacing: normal !important; /* Reset any weird letter spacing */
+    line-height: 1.5 !important; /* Normal line height */
   }
 }
 
@@ -227,18 +244,30 @@
 @layer utilities {
   /* DIN Font Weight Utilities */
   .font-primary {
-    font-family: 'DIN', 'AvantGarde LT', sans-serif;
+    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 300; /* Use Light as default */
+    letter-spacing: normal; /* Reset any inherited letter-spacing */
+    line-height: normal; /* Reset line height */
   }
 
   .font-primary-regular {
-    font-family: 'DIN', 'AvantGarde LT', sans-serif;
+    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400; /* Regular when explicitly needed */
   }
 
   .font-primary-medium {
-    font-family: 'DIN', 'AvantGarde LT', sans-serif;
+    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 500; /* Medium for emphasis */
+  }
+
+  /* Admin Panel Font */
+  .font-admin {
+    font-family: 'ITC Avant Garde', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-weight: 400;
   }
 
   /* Sparkle Animation */

@@ -94,7 +94,7 @@ export default function FirstMasterclassNanobladingPage() {
                     Incluye FREE PASS
                   </h3>
                   <p className='text-lg lg:text-xl font-primary font-bold mb-1 lg:mb-2'>
-                    a Estilismo de Cejas & Microblading
+                    a Styling de Cejas & Nanoblading
                   </p>
                   <p className='text-sm lg:text-lg'>On Line Por 6 meses</p>
                 </div>

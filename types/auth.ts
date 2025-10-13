@@ -1,16 +1,22 @@
 /**
  * Auth Types
- * Layer 1: Types/Contracts
+ * Following API documentation from api.md
  */
 
 export interface User {
   id: string;
   email: string;
-  name: string;
-  role: 'user' | 'admin';
+  role: 'ADMIN' | 'SUBADMIN' | 'USER';
+  firstName?: string;
+  lastName?: string;
+  name?: string; // Computed from firstName + lastName or standalone
   phone?: string;
   country?: string;
   city?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
 }
 
 export interface AuthState {
@@ -21,36 +27,50 @@ export interface AuthState {
 
 export interface LoginCredentials {
   email: string;
-  password?: string; // Opcional para MVP - solo email
+  password: string;
 }
 
 export interface LoginResponse {
-  token: string;
-  user: User;
+  success: boolean;
+  data: {
+    accessToken: string;
+    user: User;
+  };
+  timestamp: string;
 }
 
 export interface MeResponse {
-  user: User;
+  success: boolean;
+  data: {
+    user: User;
+  };
+  timestamp: string;
 }
 
 export interface RegisterCredentials {
-  firstName: string; // Nombre
-  lastName: string;  // Apellido
   email: string;
-  password?: string; // Opcional para MVP
+  password: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
   country?: string;
   city?: string;
 }
 
 export interface RegisterResponse {
-  token: string;
-  user: User;
+  success: boolean;
+  message: string;
+  timestamp: string;
 }
 
 export interface UpdateProfileData {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
   name?: string;
   phone?: string;
   country?: string;
   city?: string;
+  role?: 'ADMIN' | 'SUBADMIN' | 'USER';
+  isActive?: boolean;
 }

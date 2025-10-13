@@ -1,30 +1,125 @@
 'use client';
 
+import { useState } from 'react';
 import { useAdminStore } from '@/stores';
 import CourseForm from '@/components/admin/course-form';
 import { useRouter, useParams } from 'next/navigation';
 import { CourseCreateInput } from '@/types/course';
 import { ArrowLeft } from 'lucide-react';
+import { useModal } from '@/contexts/modal-context';
+import { toast } from 'react-hot-toast';
 
 export default function NuevoCursoPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'es';
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showError } = useModal();
 
-  const { createCourse } = useAdminStore();
+  const { createCategory, createVideo } = useAdminStore();
 
-  const handleSubmit = (courseData: CourseCreateInput) => {
+  const handleSubmit = async (courseData: CourseCreateInput) => {
+    setIsSubmitting(true);
     try {
-      const newCourse = createCourse(courseData);
+      console.log('[NuevoCurso] Iniciando creación de curso...');
 
-      // Show success message (you could add a toast notification here)
-      console.log('Curso creado exitosamente:', newCourse);
+      // STEP 1: Create Category (basic course info)
+      const categoryData = {
+        name: courseData.title,
+        slug: courseData.slug,
+        description: courseData.description,
+        image: courseData.image,
+        priceARS: courseData.priceARS || 0,
+        priceUSD: courseData.priceUSD || 0,
+        isFree: courseData.isFree || false,
+        order: courseData.order || 0,
+        isActive: courseData.isPublished || false,
+      };
+
+      console.log('[NuevoCurso] Creando categoría:', categoryData);
+      const newCourse = await createCategory(categoryData);
+
+      if (!newCourse) {
+        throw new Error('Failed to create course');
+      }
+
+      console.log('[NuevoCurso] ✓ Categoría creada:', newCourse);
+
+      // STEP 2: Create Lessons (Videos) if any
+      const lessons = courseData.lessons || [];
+
+      if (lessons.length > 0) {
+        console.log('[NuevoCurso] Creando', lessons.length, 'lecciones...');
+
+        for (let index = 0; index < lessons.length; index++) {
+          const lesson = lessons[index];
+
+          // Validar que el vimeoId esté presente
+          if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
+            console.error(
+              '[NuevoCurso] Error: Lección sin vimeoId:',
+              lesson.title
+            );
+            throw new Error(
+              `La lección "${lesson.title}" no tiene un ID de Vimeo válido`
+            );
+          }
+
+          const videoData = {
+            title: lesson.title,
+            description: lesson.description || '',
+            vimeoId: lesson.vimeoVideoId.trim(),
+            categoryId: newCourse.id,
+            order: lesson.order !== undefined ? lesson.order : index,
+            isPublished: lesson.isPublished ?? false,
+          };
+
+          console.log(
+            '[NuevoCurso] Creando video:',
+            lesson.title,
+            'vimeoId:',
+            videoData.vimeoId
+          );
+          const createdVideo = await createVideo(videoData);
+
+          if (!createdVideo) {
+            console.error(
+              '[NuevoCurso] Error: No se pudo crear el video:',
+              lesson.title
+            );
+            throw new Error(`No se pudo crear el video "${lesson.title}"`);
+          }
+
+          console.log('[NuevoCurso] ✓ Video creado:', createdVideo.id);
+        }
+
+        console.log('[NuevoCurso] ✓ Todas las lecciones creadas');
+      }
+
+      console.log('[NuevoCurso] ✓ Curso y lecciones creados exitosamente');
+
+      // Show success toast
+      toast.success(`Curso "${courseData.title}" creado exitosamente`);
 
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
-      console.error('Error creating course:', error);
-      // Show error message (you could add a toast notification here)
+      console.error('[NuevoCurso] Error:', error);
+
+      let errorMessage = 'Error desconocido al crear el curso';
+
+      if (error instanceof Error) {
+        if (error.message.includes('500') || error.message.includes('Internal Server Error')) {
+          errorMessage = 'Error al crear el curso. La imagen puede ser demasiado pesada (máx. 2MB recomendado).';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      toast.error(errorMessage);
+      showError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -54,7 +149,11 @@ export default function NuevoCursoPage() {
       </div>
 
       {/* Course Form */}
-      <CourseForm onSubmit={handleSubmit} onCancel={handleCancel} />
+      <CourseForm
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 }

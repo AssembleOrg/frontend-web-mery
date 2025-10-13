@@ -1,7 +1,9 @@
 'use client';
 
 import { CourseCreateInput } from '@/types/course';
+import Image from 'next/image';
 import { Upload } from 'lucide-react';
+import { useModal } from '@/contexts/modal-context';
 
 interface BasicInfoStepProps {
   formData: Partial<CourseCreateInput>;
@@ -10,15 +12,15 @@ interface BasicInfoStepProps {
 }
 
 export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoStepProps) {
-  const handlePriceChange = (value: string, currency?: 'ARS' | 'USD') => {
-    const price = parseFloat(value) || 0;
-    const currentCurrency = currency || formData.currency || 'ARS';
-    updateFormData({
-      price,
-      priceDisplay: currentCurrency === 'USD'
-        ? `U$S ${price.toLocaleString()}`
-        : `$${price.toLocaleString()}`,
-    });
+  const { showError } = useModal();
+  const handlePriceARSChange = (value: string) => {
+    const priceARS = parseFloat(value) || 0;
+    updateFormData({ priceARS });
+  };
+
+  const handlePriceUSDChange = (value: string) => {
+    const priceUSD = parseFloat(value) || 0;
+    updateFormData({ priceUSD });
   };
 
   const handleSlugGenerate = () => {
@@ -40,13 +42,13 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Por favor selecciona un archivo de imagen válido');
+      showError('Por favor selecciona un archivo de imagen válido', 'Formato inválido');
       return;
     }
 
     // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert('La imagen no puede superar los 2MB');
+      showError('La imagen no puede superar los 2MB', 'Archivo muy grande');
       return;
     }
 
@@ -143,75 +145,108 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         </p>
       </div>
 
-      {/* Price and Currency */}
-      <div className='grid grid-cols-2 gap-4'>
-        <div>
-          <label htmlFor='price' className='block text-sm font-medium text-gray-700 mb-2'>
-            Precio *
-          </label>
+      {/* Precios Bimonetarios */}
+      <div className='space-y-4'>
+        <div className='flex items-center gap-2 mb-2'>
+          <h4 className='text-sm font-semibold text-gray-900'>Precios (Sistema Bimonetario)</h4>
+          <span className='text-xs bg-[#FBE8EA] text-[#660e1b] px-2 py-1 rounded'>Ambos precios coexisten</span>
+        </div>
+        
+        <div className='grid grid-cols-2 gap-4'>
+          {/* Precio ARS */}
+          <div>
+            <label htmlFor='priceARS' className='block text-sm font-medium text-gray-700 mb-2'>
+              Precio en Pesos (ARS) *
+            </label>
+            <div className='relative'>
+              <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'>$</span>
+              <input
+                type='number'
+                id='priceARS'
+                value={formData.priceARS || ''}
+                onChange={(e) => handlePriceARSChange(e.target.value)}
+                min='0'
+                step='1'
+                className={`w-full pl-8 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                  errors.priceARS ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder='280000'
+              />
+            </div>
+            {errors.priceARS && <p className='mt-1 text-sm text-red-600'>{errors.priceARS}</p>}
+            <p className='mt-1 text-xs text-gray-500'>
+              Vista: ${(formData.priceARS || 0).toLocaleString('es-AR')} ARS
+            </p>
+          </div>
+
+          {/* Precio USD */}
+          <div>
+            <label htmlFor='priceUSD' className='block text-sm font-medium text-gray-700 mb-2'>
+              Precio en Dólares (USD) *
+            </label>
+            <div className='relative'>
+              <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'>U$S</span>
+              <input
+                type='number'
+                id='priceUSD'
+                value={formData.priceUSD || ''}
+                onChange={(e) => handlePriceUSDChange(e.target.value)}
+                min='0'
+                step='0.01'
+                className={`w-full pl-12 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
+                  errors.priceUSD ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder='200'
+              />
+            </div>
+            {errors.priceUSD && <p className='mt-1 text-sm text-red-600'>{errors.priceUSD}</p>}
+            <p className='mt-1 text-xs text-gray-500'>
+              Vista: U$S {(formData.priceUSD || 0).toLocaleString('en-US')}
+            </p>
+          </div>
+        </div>
+
+        {/* Curso Gratuito */}
+        <div className='flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200'>
           <input
-            type='number'
-            id='price'
-            value={formData.price || ''}
-            onChange={(e) => handlePriceChange(e.target.value)}
-            min='0'
-            step='0.01'
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent ${
-              errors.price ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder='280000'
-          />
-          {errors.price && <p className='mt-1 text-sm text-red-600'>{errors.price}</p>}
-        </div>
-
-        <div>
-          <label htmlFor='currency' className='block text-sm font-medium text-gray-700 mb-2'>
-            Moneda *
-          </label>
-          <select
-            id='currency'
-            value={formData.currency || 'ARS'}
+            type='checkbox'
+            id='isFree'
+            checked={formData.isFree || false}
             onChange={(e) => {
-              const currency = e.target.value as 'ARS' | 'USD';
-              updateFormData({ currency });
-              handlePriceChange(formData.price?.toString() || '0', currency);
+              const isFree = e.target.checked;
+              updateFormData({ 
+                isFree,
+                priceARS: isFree ? 0 : formData.priceARS,
+                priceUSD: isFree ? 0 : formData.priceUSD
+              });
             }}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          >
-            <option value='ARS'>Pesos Argentinos (ARS)</option>
-            <option value='USD'>Dólares (USD)</option>
-          </select>
+            className='w-4 h-4 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b]'
+          />
+          <label htmlFor='isFree' className='text-sm font-medium text-gray-700'>
+            Curso gratuito (establece ambos precios en 0)
+          </label>
         </div>
-      </div>
 
-      {/* Price Display Preview */}
-      {formData.priceDisplay && (
-        <div className='p-4 bg-gray-50 rounded-lg border border-gray-200'>
-          <p className='text-sm text-gray-600'>Vista previa del precio:</p>
-          <p className='text-2xl font-bold text-[#660e1b] mt-1'>{formData.priceDisplay}</p>
-        </div>
-      )}
-
-      {/* USD Course Warning */}
-      {formData.currency === 'USD' && (
-        <div className='p-4 bg-blue-50 rounded-lg border-2 border-blue-200'>
+        {/* Info sobre precios */}
+        <div className='p-4 bg-[#FBE8EA] rounded-lg border border-[#F7CBCB]'>
           <div className='flex gap-3'>
             <div className='flex-shrink-0'>
-              <svg className='w-6 h-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+              <svg className='w-5 h-5 text-[#EBA2A8]' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
               </svg>
             </div>
             <div className='flex-1'>
-              <h4 className='text-sm font-semibold text-blue-900 mb-1'>
-                Curso en Dólares - Consulta por WhatsApp
+              <h4 className='text-sm font-semibold text-[#660e1b] mb-1'>
+                Sistema Bimonetario
               </h4>
-              <p className='text-sm text-blue-800'>
-                Los cursos en USD no mostrarán un botón de compra. En su lugar, los usuarios serán redirigidos a WhatsApp para consultar sobre el curso. Solo los cursos en ARS pueden agregarse al carrito.
+              <p className='text-sm text-[#2B2B2B]'>
+                Los usuarios argentinos verán el precio en ARS (pesos) por defecto y podrán comprar directamente.
+                Los usuarios de otros países verán el precio en USD.
               </p>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Image Upload */}
       <div>
@@ -249,9 +284,11 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           <div className='relative'>
             <div className='p-4 bg-gray-50 rounded-lg border-2 border-gray-200'>
               <div className='flex items-start gap-4'>
-                <img
-                  src={formData.image}
+                <Image
+                  src={formData.image || ''}
                   alt='Preview'
+                  width={192}
+                  height={192}
                   className='w-48 h-48 object-cover rounded-lg'
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Error+al+cargar+imagen';
@@ -298,7 +335,7 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         <input
           type='checkbox'
           id='isPublished'
-          checked={formData.isPublished || false}
+          checked={formData.isPublished ?? true}
           onChange={(e) => updateFormData({ isPublished: e.target.checked })}
           className='w-4 h-4 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b]'
         />

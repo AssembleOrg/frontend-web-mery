@@ -4,12 +4,20 @@
  *
  * ARQUITECTURA: SOLO state synchronous, NUNCA async
  * NO API calls aquí - usar hooks/useAuth.ts para lógica
+ * 
+ * SECURITY:
+ * - Solo usamos auth_token (JWT HttpOnly cookie del backend)
+ * - NO guardamos auth_user en cookies (era inseguro)
+ * - Decodificamos JWT en cliente solo para mostrar UI
+ * - Backend siempre valida el JWT en cada request
  */
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import Cookies from 'js-cookie';
 import { User } from '@/types/auth';
+import { getUserFromJWT } from '@/lib/jwt-utils';
+import { cleanupLegacyCookies } from '@/lib/auth-migration';
 
 interface AuthState {
   user: User | null;
@@ -19,10 +27,13 @@ interface AuthState {
 
 interface AuthActions {
   // Synchronous setters only
-  setAuth: (user: User, token: string) => void;
+  setAuth: (user: User, token?: string | null) => void;
   updateUser: (userData: Partial<User>) => void;
   clearAuth: () => void;
+  initializeAuth: () => void;
 }
+
+const AUTH_COOKIE_NAME = 'auth_token';
 
 /**
  * Auth store for user session management
@@ -31,51 +42,72 @@ interface AuthActions {
  * - SOLO setters sincronos
  * - NUNCA async functions
  * - NUNCA API calls (usar hooks/useAuth.ts)
- * - Persist user session en localStorage
+ * - Persist user session en cookies (NOT localStorage)
  */
 export const useAuthStore = create<AuthState & AuthActions>()(
-  persist(
-    immer((set) => ({
-      // Initial State
-      user: null,
-      token: null,
-      isAuthenticated: false,
+  immer((set) => ({
+    // Initial State
+    user: null,
+    token: null,
+    isAuthenticated: false,
 
-      // Set authentication (after successful login)
-      setAuth: (user: User, token: string) => {
-        set((state) => {
-          state.user = user;
-          state.token = token;
-          state.isAuthenticated = true;
-        });
-      },
+    // Initialize auth from cookies (call on app mount)
+    initializeAuth: () => {
+      // SECURITY: Remove legacy insecure cookies
+      cleanupLegacyCookies();
+      
+      const token = Cookies.get(AUTH_COOKIE_NAME);
 
-      // Update user data (after profile edit)
-      updateUser: (userData: Partial<User>) => {
-        set((state) => {
-          if (state.user) {
-            state.user = { ...state.user, ...userData };
-          }
-        });
-      },
+      if (token) {
+        // Decode JWT to get user info (safe - only for UI display)
+        const userData = getUserFromJWT(token);
+        
+        if (userData) {
+          set((state) => {
+            state.user = userData as User;
+            state.token = token;
+            state.isAuthenticated = true;
+          });
+        } else {
+          // Invalid token format, clear it
+          Cookies.remove(AUTH_COOKIE_NAME);
+        }
+      }
+    },
 
-      // Clear authentication (logout)
-      clearAuth: () => {
-        set((state) => {
-          state.user = null;
-          state.token = null;
-          state.isAuthenticated = false;
-        });
-      },
-    })),
-    {
-      name: 'auth-storage', // localStorage key
-      // Only persist auth data, not loading/error states
-      partialize: (state) => ({
-        user: state.user,
-        token: state.token,
-        isAuthenticated: state.isAuthenticated,
-      }),
-    }
-  )
+    // Set authentication (after successful login)
+    // Note: Backend sets auth_token as HttpOnly cookie
+    // We only store user data in state (decoded from JWT)
+    setAuth: (user: User, token?: string | null) => {
+      // Update state only - no cookies needed
+      // Backend already set auth_token as HttpOnly cookie
+      set((state) => {
+        state.user = user;
+        state.token = token || state.token;
+        state.isAuthenticated = true;
+      });
+    },
+
+    // Update user data (after profile edit)
+    updateUser: (userData: Partial<User>) => {
+      set((state) => {
+        if (state.user) {
+          state.user = { ...state.user, ...userData };
+          // No need to update cookies - JWT remains the same
+          // Only backend can change user role/email
+        }
+      });
+    },
+
+    // Clear authentication (logout)
+    clearAuth: () => {
+      // Clear state only
+      // Backend clears auth_token cookie via /auth/logout endpoint
+      set((state) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+      });
+    },
+  }))
 );

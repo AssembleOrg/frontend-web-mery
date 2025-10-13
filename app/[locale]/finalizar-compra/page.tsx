@@ -2,30 +2,22 @@
 
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import { useCartStore } from '@/stores/cart-store';
 import { useRouter, useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { CreditCard, User, Mail, Phone, MapPin } from 'lucide-react';
+import { Loader2, ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-// import { MercadoPagoButton } from '@/components/mercadopago/mercado-pago-button';
-// import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
-
-//init
-// if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-//   initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY);
-// }
-
+import { useCart } from '@/hooks/useCart';
+import { CheckoutView } from '@/components/checkout/CheckoutView';
+import { CheckoutSkeleton } from '@/components/checkout/CheckoutSkeleton';
+import { toast } from 'react-hot-toast';
 export default function FinalizarCompraPage() {
   const router = useRouter();
-  const { items, getTotal, clearCart } = useCartStore();
-  const { user, isAuthenticated } = useAuth();
-  const [isProcessing, setIsProcessing] = useState(false);
-  // const [preferenceId, setPreferenceId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const params = useParams();
-  const locale = params.locale;
-
+  const locale = params.locale as string;
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { cart, totalARS, isLoading: isCartLoading } = useCart();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -34,20 +26,18 @@ export default function FinalizarCompraPage() {
     ciudad: '',
   });
 
-  // Redirect to login if not authenticated
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push(`/${locale}/login`);
+    if (!isAuthLoading && !isAuthenticated) {
+      router.push(`/${locale}/login?redirect=/es/finalizar-compra`);
     }
-  }, [isAuthenticated, locale, router]);
+  }, [isAuthenticated, isAuthLoading, locale, router]);
 
-  // Auto-complete form with user data
+  // Autocomplete
   useEffect(() => {
     if (user) {
       const nameParts = user.name?.trim().split(' ') || [];
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
-
       setFormData((prev) => ({
         ...prev,
         nombre: firstName,
@@ -59,35 +49,31 @@ export default function FinalizarCompraPage() {
     }
   }, [user]);
 
-  const total = getTotal();
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!user?.email) {
-      setError('Debes iniciar sesión para continuar');
+    if (!user?.email || !cart) {
+      toast.error('Debes iniciar sesión y tener un carrito para continuar.');
       return;
     }
 
     setIsProcessing(true);
+    toast.loading('Procesando tu pago...', { id: 'payment-toast' });
     setError(null);
 
-    const itemsForAPI = items.map((item) => ({
-      id: item.course.id,
-      title: item.course.title,
-      description: item.course.description || `Curso: ${item.course.title}`,
-      price: item.course.price,
-      quantity: item.quantity,
+    // Mapea los items del carrito para la API de MercadoPago
+    const itemsForAPI = cart.items.map((item) => ({
+      id: item.category.id,
+      title: item.category.name,
+      description: item.category.description || `Curso: ${item.category.name}`,
+      price: item.priceARS,
+      quantity: 1,
     }));
 
     try {
@@ -96,47 +82,69 @@ export default function FinalizarCompraPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: itemsForAPI,
-          locale: locale,
-          userEmail: user.email, // Pass user email to webhook
+          locale,
+          userEmail: user.email,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Error en el servidor al crear la preferencia.');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || 'Error en el servidor al crear la preferencia.'
+        );
       }
 
       const { url } = await response.json();
       if (url) {
+        toast.success('Redirigiendo a la pasarela de pago...', {
+          id: 'payment-toast',
+        });
         router.push(url);
       } else {
         throw new Error('No se recibió una URL de pago.');
       }
     } catch (err: any) {
-      setError(
-        'No se pudo procesar el pago. Por favor, intenta de nuevo más tarde.'
+      toast.error(
+        err.message || 'No se pudo procesar el pago. Intenta de nuevo.',
+        { id: 'payment-toast' }
       );
       console.error(err);
       setIsProcessing(false);
     }
   };
 
-  const isFormValid = formData.nombre && formData.apellido && formData.telefono;
+  const isFormValid = !!(
+    formData.nombre &&
+    formData.apellido &&
+    formData.telefono
+  );
 
-  if (items.length === 0) {
+  if (isAuthLoading || isCartLoading) {
     return (
-      <div className='min-h-screen bg-background'>
+      <div className='min-h-screen bg-background flex flex-col'>
         <Navigation />
-        <div className='container mx-auto px-4 py-16 max-w-4xl'>
+        <CheckoutSkeleton />
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!cart || cart.items.length === 0) {
+    return (
+      <div className='min-h-screen bg-background flex flex-col'>
+        <Navigation />
+        <div className='flex-grow container mx-auto px-4 flex items-center justify-center'>
           <div className='text-center'>
-            <h1 className='text-3xl font-primary font-bold text-foreground mb-4'>
+            <ShoppingBag className='w-24 h-24 mx-auto text-muted-foreground mb-6' />
+            <h1 className='text-3xl font-primary font-bold text-foreground'>
               No hay cursos en tu carrito
             </h1>
-            <p className='text-muted-foreground mb-8'>
+            <p className='text-muted-foreground my-4'>
               Agrega algunos cursos antes de finalizar la compra.
             </p>
             <button
               onClick={() => router.push('/es/formaciones')}
-              className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-8 py-3 rounded-lg font-primary font-bold transition-colors duration-200'
+              className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-8 py-3 rounded-lg font-primary'
             >
               Ver Formaciones
             </button>
@@ -150,226 +158,17 @@ export default function FinalizarCompraPage() {
   return (
     <div className='min-h-screen bg-background'>
       <Navigation />
-
-      <div className='container mx-auto px-4 py-16 max-w-6xl'>
-        <h1 className='text-3xl font-primary font-bold text-foreground mb-8'>
-          Finalizar Compra
-        </h1>
-
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
-          {/* Checkout Form */}
-          <div>
-            <form
-              onSubmit={handleSubmit}
-              className='space-y-8'
-            >
-              {/* Personal Information */}
-              <div className='bg-card p-6 rounded-lg border'>
-                <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
-                  <User className='w-5 h-5 text-[#f9bbc4]' />
-                  Información Personal
-                </h2>
-
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <div>
-                    <label className='block text-sm font-medium text-foreground mb-2'>
-                      Nombre *
-                    </label>
-                    <input
-                      type='text'
-                      name='nombre'
-                      value={formData.nombre}
-                      onChange={handleInputChange}
-                      required
-                      className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
-                    />
-                  </div>
-                  <div>
-                    <label className='block text-sm font-medium text-foreground mb-2'>
-                      Apellido *
-                    </label>
-                    <input
-                      type='text'
-                      name='apellido'
-                      value={formData.apellido}
-                      onChange={handleInputChange}
-                      required
-                      className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
-                    />
-                  </div>
-                </div>
-
-                <div className='mt-4'>
-                  <label className='block text-sm font-medium text-foreground mb-2 flex items-center gap-2'>
-                    <Mail className='w-4 h-4 text-[#f9bbc4]' />
-                    Email
-                  </label>
-                  <input
-                    type='email'
-                    value={user?.email || ''}
-                    disabled
-                    className='w-full px-4 py-2 border border-border rounded-lg bg-muted text-muted-foreground cursor-not-allowed'
-                  />
-                  <p className='text-xs text-muted-foreground mt-1'>
-                    El acceso a los cursos será enviado a este email
-                  </p>
-                </div>
-
-                <div className='mt-4'>
-                  <label className='block text-sm font-medium text-foreground mb-2 items-center gap-2'>
-                    <Phone className='w-4 h-4 text-[#f9bbc4]' />
-                    Teléfono *
-                  </label>
-                  <input
-                    type='tel'
-                    name='telefono'
-                    value={formData.telefono}
-                    onChange={handleInputChange}
-                    required
-                    className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
-                  />
-                </div>
-              </div>
-
-              {/* Location Information */}
-              <div className='bg-card p-6 rounded-lg border'>
-                <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
-                  <MapPin className='w-5 h-5 text-[#f9bbc4]' />
-                  Ubicación
-                </h2>
-
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <div>
-                    <label className='block text-sm font-medium text-foreground mb-2'>
-                      País
-                    </label>
-                    <select
-                      name='pais'
-                      value={formData.pais}
-                      onChange={handleInputChange}
-                      className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
-                    >
-                      <option value=''>Seleccionar país</option>
-                      <option value='Argentina'>Argentina</option>
-                      <option value='Brasil'>Brasil</option>
-                      <option value='Chile'>Chile</option>
-                      <option value='Uruguay'>Uruguay</option>
-                      <option value='Paraguay'>Paraguay</option>
-                      <option value='Bolivia'>Bolivia</option>
-                      <option value='Otro'>Otro</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className='block text-sm font-medium text-foreground mb-2'>
-                      Ciudad
-                    </label>
-                    <input
-                      type='text'
-                      name='ciudad'
-                      value={formData.ciudad}
-                      onChange={handleInputChange}
-                      className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Method */}
-              <div className='bg-card p-6 rounded-lg border'>
-                <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
-                  <CreditCard className='w-5 h-5 text-[#f9bbc4]' />
-                  Método de Pago
-                </h2>
-
-                <div className='bg-muted/50 p-4 rounded-lg'>
-                  <p className='text-muted-foreground text-sm'>
-                    Completa tus datos y haz clic en Confirmar y Pagar para ser
-                    redirigido a la plataforma de pagos segura.
-                  </p>
-                </div>
-                <button
-                  type='submit'
-                  disabled={!isFormValid || isProcessing}
-                  className='w-full mt-6 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-muted disabled:text-muted-foreground text-white py-4 px-6 rounded-lg font-primary font-bold text-lg transition-colors duration-200'
-                >
-                  {isProcessing
-                    ? 'Procesando...'
-                    : `Confirmar y Pagar - $${total.toLocaleString()}`}
-                </button>
-                {error && (
-                  <p className='text-red-500 mt-2 text-center'>{error}</p>
-                )}
-              </div>
-            </form>
-          </div>
-          {/* Order Summary */}
-          <div>
-            <div className='bg-card p-6 rounded-lg border sticky top-6'>
-              <h2 className='text-xl font-primary font-bold text-foreground mb-6'>
-                Resumen del Pedido
-              </h2>
-
-              <div className='space-y-4 mb-6'>
-                {items.map((item) => (
-                  <div
-                    key={item.course.id}
-                    className='flex gap-4'
-                  >
-                    <div className='flex-shrink-0 w-16 h-16'>
-                      <Image
-                        src={item.course.image}
-                        alt={item.course.title}
-                        width={64}
-                        height={64}
-                        className='w-full h-full object-cover rounded-lg'
-                      />
-                    </div>
-                    <div className='flex-1'>
-                      <h3 className='font-medium text-foreground'>
-                        {item.course.title}
-                      </h3>
-                      <div className='flex justify-between items-center mt-1'>
-                        <span className='text-sm text-muted-foreground'>
-                          Cantidad: {item.quantity}
-                        </span>
-                        <span className='font-bold text-[#f9bbc4]'>
-                          {item.course.priceDisplay}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className='border-t pt-4 space-y-2'>
-                <div className='flex justify-between text-muted-foreground'>
-                  <span>Subtotal</span>
-                  <span>${total.toLocaleString()}</span>
-                </div>
-                <div className='flex justify-between text-lg font-primary font-bold text-foreground'>
-                  <span>Total</span>
-                  <span>${total.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div className='mt-6 alert-high border rounded-lg p-4'>
-                <p className='text-sm text-primary'>
-                  <strong className='text-primary'>¡Importante!</strong> Después
-                  de completar tu compra...
-                </p>
-                <ul className='text-sm text-primary mt-2 space-y-1'>
-                  <li className='text-primary'>• Email de confirmación</li>
-                  <li className='text-primary'>• Credenciales de acceso</li>
-                  <li className='text-primary'>
-                    • Acceso inmediato a tus cursos
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <CheckoutView
+        cart={cart}
+        user={user}
+        formData={formData}
+        isProcessing={isProcessing}
+        isFormValid={isFormValid}
+        error={error}
+        totalARS={totalARS}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+      />
       <Footer />
     </div>
   );

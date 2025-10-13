@@ -16,25 +16,25 @@ export default function HomePage() {
       href: '/services/nanoblading',
       image: '/Img-home/nanoblading.webp',
     },
-    {
-      key: 'scalp',
-      href: '/services/scalp',
-      image: '/Img-home/home-3.webp',
-    },
+    // {
+    //   key: 'scalp',
+    //   href: '/services/scalp',
+    //   image: '/Img-home/home-3.webp',
+    // },
     {
       key: 'freckles',
       href: '/services/pecas-lunares',
       image: '/Img-home/home-4.webp',
     },
     {
-      key: 'nanoscalp',
-      href: '/services/nano-scalp',
-      image: '/Img-home/home-6.webp',
-    },
-    {
       key: 'lashesLine',
       href: '/services/styling-pestanas',
       image: '/Img-home/home-8.webp',
+    },
+    {
+      key: 'lipBlush',
+      href: '/services/lip-blush',
+      image: '/Img-home/Lip-blush-1.webp',
     },
     {
       key: 'paramedical',
@@ -57,7 +57,7 @@ export default function HomePage() {
       <section className='relative py-20 bg-gradient-to-b from-primary/5 to-background'>
         <div className='container mx-auto px-4 text-center'>
           <div className='max-w-4xl mx-auto'>
-            <h1 className='text-2xl md:text-3xl lg:text-4xl font-primary font-bold text-foreground tracking-wide mt-6'>
+            <h1 className='text-2xl md:text-3xl lg:text-4xl font-primary font-bold text-foreground tracking-tight mt-6 max-w-4xl'>
               I DIDN&apos;T CHOOSE THE BROW LIFE. THE BROW LIFE{' '}
               <span className='text-primary'>CHOSE ME</span>
             </h1>

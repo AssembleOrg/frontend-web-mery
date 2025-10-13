@@ -30,13 +30,14 @@ export function ExpandableServiceGallery({
       'https://www.instagram.com/stories/highlights/17904023200243157/',
     nanoblading:
       'https://www.instagram.com/stories/highlights/18023006104657516/',
-    scalp: 'https://www.instagram.com/merygarciaoficial/',
-    freckles: 'https://www.instagram.com/merygarciaoficial/',
+    // scalp: 'https://www.instagram.com/p/CuFL7T6ra3f/', //Sin historyss yet
+    freckles: 'https://www.instagram.com/p/C5ot3blPU5r/',
     nanoscalp:
       'https://www.instagram.com/stories/highlights/17879544007940692/',
     lashesLine:
       'https://www.instagram.com/stories/highlights/18019224445291012/',
-    paramedical: 'https://www.instagram.com/merygarciaoficial/',
+    lipBlush: 'https://www.instagram.com/reel/CwX7F8nAOlJ/',
+    paramedical: 'https://www.instagram.com/p/DLGOqHnype1/?img_index=1',
     autostyling: 'https://www.instagram.com/p/DMqSOJNP5gr/?img_index=1',
   };
 
@@ -111,10 +112,17 @@ export function ExpandableServiceGallery({
                       </Button>
                       <Button
                         size='sm'
-                        className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm flex items-center gap-1'
+                        className={`backdrop-blur-sm flex items-center gap-1 ${
+                          beforeAfterUrls[service.key]
+                            ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
+                            : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
+                        }`}
+                        disabled={!beforeAfterUrls[service.key]}
                         onClick={(e) => {
                           e.preventDefault();
-                          window.open(beforeAfterUrls[service.key], '_blank');
+                          if (beforeAfterUrls[service.key]) {
+                            window.open(beforeAfterUrls[service.key], '_blank');
+                          }
                         }}
                       >
                         <FaInstagram className='w-4 h-4' />
@@ -259,10 +267,17 @@ export function ExpandableServiceGallery({
                     </Link>
                     <Button
                       size='sm'
-                      className='bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4] backdrop-blur-sm flex items-center gap-1'
+                      className={`backdrop-blur-sm flex items-center gap-1 ${
+                        beforeAfterUrls[service.key]
+                          ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
+                          : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
+                      }`}
+                      disabled={!beforeAfterUrls[service.key]}
                       onClick={(e) => {
                         e.preventDefault();
-                        window.open(beforeAfterUrls[service.key], '_blank');
+                        if (beforeAfterUrls[service.key]) {
+                          window.open(beforeAfterUrls[service.key], '_blank');
+                        }
                       }}
                     >
                       <FaInstagram className='w-4 h-4' />

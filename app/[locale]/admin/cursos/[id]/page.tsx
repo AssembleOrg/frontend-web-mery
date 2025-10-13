@@ -6,42 +6,189 @@ import { useRouter, useParams } from 'next/navigation';
 import { CourseCreateInput } from '@/types/course';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { CourseFormSkeleton } from '@/components/admin/course-form-skeleton';
+import { useModal } from '@/contexts/modal-context';
 
 export default function EditarCursoPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'es';
   const courseId = params.id as string;
+  const { showError } = useModal();
 
-  const { getCourseById, updateCourse } = useAdminStore();
-  const [course, setCourse] = useState(getCourseById(courseId));
+  const { categories, fetchCategoryById, updateCategory, fetchVideos, videos, createVideo, updateVideo, deleteVideo } = useAdminStore();
+  const [course, setCourse] = useState<any>(null);
+  const [originalLessons, setOriginalLessons] = useState<any[]>([]);
   const [notFound, setNotFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const foundCourse = getCourseById(courseId);
-    if (!foundCourse) {
-      setNotFound(true);
-    } else {
-      setCourse(foundCourse);
-    }
-  }, [courseId, getCourseById]);
+    const loadCourse = async () => {
+      setIsLoading(true);
+      try {
+        // First check if course is in local state
+        const localCourse = categories.find(c => c.id === courseId);
+        let courseData;
+        
+        if (localCourse) {
+          courseData = localCourse;
+        } else {
+          // Otherwise fetch from API
+          const foundCourse = await fetchCategoryById(courseId);
+          if (!foundCourse) {
+            setNotFound(true);
+            setIsLoading(false);
+            return;
+          }
+          courseData = foundCourse;
+        }
 
-  const handleSubmit = (courseData: CourseCreateInput) => {
+        // Load videos for this category
+        await fetchVideos(courseId);
+        const courseVideos = useAdminStore.getState().videos;
+        
+        console.log('[EditCourse] Loaded videos:', courseVideos);
+        
+        // Convert videos to lessons format and sort by order
+        const lessons = courseVideos
+          .map((video: any) => ({
+            id: video.id,
+            title: video.title,
+            description: video.description || '',
+            vimeoVideoId: video.vimeoId,
+            duration: video.duration ? `${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}` : undefined,
+            order: video.order || 0,
+            isPublished: video.isPublished || false,
+          }))
+          .sort((a, b) => a.order - b.order);
+        
+        // Merge course data with lessons
+        const courseWithLessons = {
+          ...courseData,
+          lessons,
+        };
+        
+        console.log('[EditCourse] Course with lessons:', courseWithLessons);
+        setCourse(courseWithLessons);
+        setOriginalLessons(lessons); // Save original lessons to compare on save
+      } catch (error) {
+        console.error('Error loading course:', error);
+        setNotFound(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCourse();
+  }, [courseId, categories, fetchCategoryById, fetchVideos]);
+
+  const handleSubmit = async (courseData: CourseCreateInput) => {
+    setIsSubmitting(true);
     try {
-      const updatedCourse = updateCourse(courseId, courseData);
+      console.log('[EditarCurso] Iniciando actualización...');
+      
+      // STEP 1: Update Category (basic course info)
+      const categoryUpdates = {
+        name: courseData.title,
+        slug: courseData.slug,
+        description: courseData.description,
+        image: courseData.image,
+        priceARS: courseData.priceARS || 0,
+        priceUSD: courseData.priceUSD || 0,
+        isFree: courseData.isFree || false,
+        isActive: courseData.isPublished || false,
+        order: courseData.order || 0,
+      };
+
+      console.log('[EditarCurso] Actualizando categoría:', categoryUpdates);
+      const updatedCourse = await updateCategory(courseId, categoryUpdates);
 
       if (!updatedCourse) {
         throw new Error('Failed to update course');
       }
 
-      // Show success message
-      console.log('Curso actualizado exitosamente:', updatedCourse);
+      // STEP 2: Manage Lessons (Videos)
+      const newLessons = courseData.lessons || [];
+      console.log('[EditarCurso] Lecciones originales:', originalLessons);
+      console.log('[EditarCurso] Lecciones nuevas:', newLessons);
+
+      // Identify lessons to delete (were in original but not in new)
+      const lessonsToDelete = originalLessons.filter(
+        (original) => !newLessons.find((newLesson) => newLesson.id === original.id)
+      );
+
+      // Identify lessons to create (start with "lesson-" = generated ID)
+      const lessonsToCreate = newLessons.filter(
+        (lesson) => lesson.id.startsWith('lesson-')
+      );
+
+      // Identify lessons to update (existing IDs, not starting with "lesson-")
+      const lessonsToUpdate = newLessons.filter(
+        (lesson) => !lesson.id.startsWith('lesson-') && originalLessons.find((orig) => orig.id === lesson.id)
+      );
+
+      console.log('[EditarCurso] A eliminar:', lessonsToDelete.length);
+      console.log('[EditarCurso] A crear:', lessonsToCreate.length);
+      console.log('[EditarCurso] A actualizar:', lessonsToUpdate.length);
+
+      // Delete videos
+      for (const lesson of lessonsToDelete) {
+        console.log('[EditarCurso] Eliminando video:', lesson.id);
+        await deleteVideo(lesson.id);
+      }
+
+      // Create new videos
+      for (let index = 0; index < lessonsToCreate.length; index++) {
+        const lesson = lessonsToCreate[index];
+
+        // Validar que el vimeoId esté presente
+        if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
+          console.error('[EditarCurso] Error: Lección sin vimeoId:', lesson.title);
+          throw new Error(`La lección "${lesson.title}" no tiene un ID de Vimeo válido`);
+        }
+
+        console.log('[EditarCurso] Creando video:', lesson.title, 'vimeoId:', lesson.vimeoVideoId);
+        const videoData = {
+          title: lesson.title,
+          description: lesson.description || '',
+          vimeoId: lesson.vimeoVideoId.trim(),
+          categoryId: courseId,
+          order: lesson.order !== undefined ? lesson.order : index,
+          isPublished: lesson.isPublished ?? false,
+        };
+
+        const createdVideo = await createVideo(videoData);
+
+        if (!createdVideo) {
+          console.error('[EditarCurso] Error: No se pudo crear el video:', lesson.title);
+          throw new Error(`No se pudo crear el video "${lesson.title}"`);
+        }
+
+        console.log('[EditarCurso] ✓ Video creado:', createdVideo.id);
+      }
+
+      // Update existing videos
+      for (const lesson of lessonsToUpdate) {
+        console.log('[EditarCurso] Actualizando video:', lesson.id);
+        const updates = {
+          title: lesson.title,
+          description: lesson.description || '',
+          order: lesson.order || 0,
+          isPublished: lesson.isPublished || false,
+        };
+        await updateVideo(lesson.id, updates);
+      }
+
+      console.log('[EditarCurso] ✓ Curso y lecciones actualizados exitosamente');
 
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
-      console.error('Error updating course:', error);
-      // Show error message
+      console.error('[EditarCurso] Error:', error);
+      showError('Error al actualizar el curso. Por favor intenta nuevamente.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -49,7 +196,11 @@ export default function EditarCursoPage() {
     router.push(`/${locale}/admin/cursos`);
   };
 
-  if (notFound) {
+  if (isLoading) {
+    return <CourseFormSkeleton />;
+  }
+
+  if (notFound || !course) {
     return (
       <div className='space-y-6'>
         <button
@@ -81,17 +232,6 @@ export default function EditarCursoPage() {
     );
   }
 
-  if (!course) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
-          <p className='mt-4 text-gray-600'>Cargando curso...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className='space-y-6'>
       {/* Back Button */}
@@ -109,7 +249,7 @@ export default function EditarCursoPage() {
           Editar Curso
         </h2>
         <p className='mt-1 text-sm text-gray-600'>
-          Modificar: <span className='font-semibold'>{course.title}</span>
+          Modificar: <span className='font-semibold'>{course.title || course.name}</span>
         </p>
       </div>
 
@@ -118,6 +258,7 @@ export default function EditarCursoPage() {
         course={course}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

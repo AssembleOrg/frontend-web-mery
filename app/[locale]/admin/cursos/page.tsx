@@ -2,44 +2,101 @@
 
 import { useAdminStore } from '@/stores';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { CourseTableSkeleton } from '@/components/admin/course-table-skeleton';
+import { useModal } from '@/contexts/modal-context';
+import { toast } from 'react-hot-toast';
 
 export default function AdminCursosPage() {
   const params = useParams();
   const router = useRouter();
   const locale = (params.locale as string) || 'es';
 
-  const { courses, deleteCourse } = useAdminStore();
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const { fetchCategories, deleteCategory } = useAdminStore();
+  const { showConfirm } = useModal();
+  const [categories, setCategories] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const handleDelete = (id: string) => {
-    if (deleteConfirm === id) {
-      const success = deleteCourse(id);
-      if (success) {
-        setDeleteConfirm(null);
+  // Prevent hydration issues
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Load categories on mount
+  useEffect(() => {
+    const loadCategories = async () => {
+      setIsLoading(true);
+      try {
+        await fetchCategories();
+        // Get categories from store after fetch
+        const cats = useAdminStore.getState().categories;
+        setCategories(cats);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      } finally {
+        setIsLoading(false);
       }
-    } else {
-      setDeleteConfirm(id);
-      // Auto-cancel after 3 seconds
-      setTimeout(() => setDeleteConfirm(null), 3000);
+    };
+    loadCategories();
+  }, [fetchCategories]);
+
+  const handleDelete = async (id: string, courseName: string) => {
+    const confirmed = await showConfirm({
+      title: 'Eliminar Curso',
+      message: `¿Estás seguro de que deseas eliminar el curso "${courseName}"? Esta acción no se puede deshacer y eliminará todos los videos asociados.`,
+      type: 'warning',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const success = await deleteCategory(id);
+      if (success) {
+        toast.success(`Curso "${courseName}" eliminado exitosamente`);
+        // Update local state after deletion
+        const updatedCategories = useAdminStore.getState().categories;
+        setCategories(updatedCategories);
+      } else {
+        toast.error(
+          'No se pudo eliminar el curso. Por favor intenta nuevamente.'
+        );
+      }
+    } catch (error) {
+      console.error('[AdminCursos] Error al eliminar curso:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Error desconocido al eliminar el curso';
+      toast.error(errorMessage);
     }
   };
 
-  const formatPrice = (price: number, currency: string) => {
-    if (currency === 'USD') {
-      return `U$S ${price.toLocaleString()}`;
-    }
-    return `$${price.toLocaleString()}`;
-  };
+  // Prevent hydration mismatch
+  if (!isMounted) {
+    return null;
+  }
+
+  if (isLoading) {
+    return <CourseTableSkeleton />;
+  }
 
   return (
-    <div className='space-y-6'>
+    <div
+      className='space-y-6 font-admin'
+      suppressHydrationWarning
+    >
       {/* Page Header */}
       <div className='flex justify-between items-center'>
         <div>
-          <h2 className='text-3xl font-primary font-bold text-gray-900'>
+          <h2 className='text-3xl font-bold text-gray-900'>
             Gestión de Cursos
           </h2>
           <p className='mt-1 text-sm text-gray-600'>
@@ -65,10 +122,16 @@ export default function AdminCursosPage() {
                   Curso
                 </th>
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Precio
+                  Precio ARS
                 </th>
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Lecciones
+                  Precio USD
+                </th>
+                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Videos
+                </th>
+                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Estado
                 </th>
                 <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Acciones
@@ -76,67 +139,136 @@ export default function AdminCursosPage() {
               </tr>
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
-              {courses.length === 0 ? (
+              {!categories || categories.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className='px-6 py-12 text-center'>
+                  <td
+                    colSpan={6}
+                    className='px-6 py-12 text-center'
+                  >
                     <div className='text-gray-500'>
-                      <p className='text-lg font-medium'>No hay cursos creados</p>
+                      <p className='text-lg font-medium'>
+                        No hay cursos creados
+                      </p>
                       <p className='text-sm mt-1'>
-                        Crea tu primer curso haciendo clic en &quot;Crear Nuevo Curso&quot;
+                        Crea tu primer curso haciendo clic en &quot;Crear Nuevo
+                        Curso&quot;
                       </p>
                     </div>
                   </td>
                 </tr>
               ) : (
-                courses.map((course) => (
-                  <tr key={course.id} className='hover:bg-gray-50 transition-colors'>
+                categories.map((category) => (
+                  <tr
+                    key={category.id}
+                    className='hover:bg-gray-50 transition-colors'
+                  >
                     <td className='px-6 py-4'>
                       <div className='flex items-center'>
-                        {course.image && (
-                          <img
-                            src={course.image}
-                            alt={course.title}
+                        {category.image && (
+                          <Image
+                            src={category.image}
+                            alt={category.name}
+                            width={90}
+                            height={90}
                             className='h-12 w-12 rounded object-cover mr-4'
                           />
                         )}
                         <div>
                           <div className='text-sm font-medium text-gray-900'>
-                            {course.title}
+                            {category.name}
                           </div>
                           <div className='text-sm text-gray-500'>
-                            {course.description?.substring(0, 60)}...
+                            {category.description?.substring(0, 60)}
+                            {category.description &&
+                              category.description.length > 60 &&
+                              '...'}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm font-semibold text-gray-900'>
-                        {formatPrice(course.price, course.currency)}
+                        {category.isFree
+                          ? 'Gratis'
+                          : category.priceARS > 0
+                          ? `$ ${category.priceARS.toLocaleString()}`
+                          : '-'}
                       </div>
-                      <div className='text-xs text-gray-500'>{course.currency}</div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <div className='text-sm font-semibold text-gray-900'>
+                        {category.isFree
+                          ? 'Gratis'
+                          : category.priceUSD > 0
+                          ? `U$S ${category.priceUSD.toLocaleString()}`
+                          : '-'}
+                      </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm text-gray-900'>
-                        {course.lessons?.length || 0} lecciones
+                        {category.videoCount || 0} videos
                       </div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          category.isActive
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {category.isActive ? 'Activo' : 'Inactivo'}
+                      </span>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                       <div className='flex items-center justify-end gap-2'>
                         <button
-                          onClick={() => router.push(`/${locale}/admin/cursos/${course.id}`)}
-                          className='text-indigo-600 hover:text-indigo-900 p-2 hover:bg-indigo-50 rounded transition-colors'
+                          onClick={() =>
+                            router.push(
+                              `/${locale}/admin/cursos/${category.id}/videos`
+                            )
+                          }
+                          className='text-[#EBA2A8] hover:text-[#660e1b] p-2 hover:bg-[#FBE8EA]/30 rounded transition-colors'
+                          title='Gestionar Videos'
+                        >
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='w-4 h-4'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                          >
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth={2}
+                              d='M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z'
+                            />
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth={2}
+                              d='M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() =>
+                            router.push(
+                              `/${locale}/admin/cursos/${category.id}`
+                            )
+                          }
+                          className='text-[#EBA2A8] hover:text-[#660e1b] p-2 hover:bg-[#FBE8EA]/30 rounded transition-colors'
                           title='Editar'
                         >
                           <Edit className='w-4 h-4' />
                         </button>
                         <button
-                          onClick={() => handleDelete(course.id)}
-                          className={`p-2 rounded transition-colors ${
-                            deleteConfirm === course.id
-                              ? 'text-white bg-red-600 hover:bg-red-700'
-                              : 'text-red-600 hover:text-red-900 hover:bg-red-50'
-                          }`}
-                          title={deleteConfirm === course.id ? 'Confirmar eliminación' : 'Eliminar'}
+                          onClick={() =>
+                            handleDelete(category.id, category.name)
+                          }
+                          className='p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded transition-colors'
+                          title='Eliminar'
                         >
                           <Trash2 className='w-4 h-4' />
                         </button>

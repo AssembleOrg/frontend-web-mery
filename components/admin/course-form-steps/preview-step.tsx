@@ -9,16 +9,6 @@ interface PreviewStepProps {
 }
 
 export function PreviewStep({ formData }: PreviewStepProps) {
-  const modalContent = formData.modalContent || {
-    detailedDescription: '',
-    includes: [],
-    targetAudience: '',
-    specialNotes: '',
-    additionalInfo: '',
-    duration: '',
-    level: '',
-  };
-
   return (
     <div className='space-y-6'>
       <div>
@@ -33,21 +23,21 @@ export function PreviewStep({ formData }: PreviewStepProps) {
       {/* Status */}
       <div className={`p-4 rounded-lg border-2 ${
         formData.isPublished
-          ? 'bg-green-50 border-green-200'
-          : 'bg-orange-50 border-orange-200'
+          ? 'bg-[#FBE8EA] border-[#EBA2A8]'
+          : 'bg-[#F7CBCB]/50 border-[#EBA2A8]/50'
       }`}>
         <div className='flex items-center gap-2'>
           {formData.isPublished ? (
             <>
-              <CheckCircle className='w-5 h-5 text-green-600' />
-              <span className='font-semibold text-green-900'>
+              <CheckCircle className='w-5 h-5 text-[#660e1b]' />
+              <span className='font-semibold text-[#660e1b]'>
                 Este curso será publicado inmediatamente
               </span>
             </>
           ) : (
             <>
-              <AlertCircle className='w-5 h-5 text-orange-600' />
-              <span className='font-semibold text-orange-900'>
+              <AlertCircle className='w-5 h-5 text-[#660e1b]/70' />
+              <span className='font-semibold text-[#660e1b]/70'>
                 Este curso se guardará como borrador
               </span>
             </>
@@ -75,9 +65,26 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <p className='text-sm text-gray-600 mb-2'>
               {formData.description}
             </p>
-            <p className='text-lg font-semibold text-gray-900 mb-3'>
-              {formData.priceDisplay}
-            </p>
+            <div className='mb-3'>
+              {formData.isFree ? (
+                <p className='text-lg font-semibold text-green-600'>Gratis</p>
+              ) : formData.priceARS === 99999999 ? (
+                // Mostrar solo precio USD para placeholders
+                <p className='text-lg font-semibold text-gray-900'>
+                  USD {(formData.priceUSD || 0).toLocaleString('en-US')}
+                </p>
+              ) : (
+                // Mostrar ambos precios normalmente
+                <div className='space-y-1'>
+                  <p className='text-lg font-semibold text-gray-900'>
+                    $ {(formData.priceARS || 0).toLocaleString('es-AR')} ARS
+                  </p>
+                  <p className='text-sm text-gray-600'>
+                    U$S {(formData.priceUSD || 0).toLocaleString('en-US')}
+                  </p>
+                </div>
+              )}
+            </div>
             <button className='w-full bg-[#f9bbc4] text-white py-2 px-4 rounded text-sm font-medium'>
               Más información
             </button>
@@ -101,12 +108,16 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <p className='font-medium text-gray-900'>{formData.slug || '-'}</p>
           </div>
           <div>
-            <span className='text-gray-600'>Precio:</span>
-            <p className='font-medium text-gray-900'>{formData.priceDisplay || '-'}</p>
+            <span className='text-gray-600'>Precio ARS:</span>
+            <p className='font-medium text-gray-900'>
+              {formData.isFree ? 'Gratis' : `$ ${(formData.priceARS || 0).toLocaleString('es-AR')}`}
+            </p>
           </div>
           <div>
-            <span className='text-gray-600'>Moneda:</span>
-            <p className='font-medium text-gray-900'>{formData.currency || '-'}</p>
+            <span className='text-gray-600'>Precio USD:</span>
+            <p className='font-medium text-gray-900'>
+              {formData.isFree ? 'Gratis' : `U$S ${(formData.priceUSD || 0).toLocaleString('en-US')}`}
+            </p>
           </div>
         </div>
 
@@ -114,74 +125,6 @@ export function PreviewStep({ formData }: PreviewStepProps) {
           <span className='text-sm text-gray-600'>Descripción Corta:</span>
           <p className='mt-1 text-gray-900'>{formData.description || '-'}</p>
         </div>
-      </div>
-
-      {/* Modal Content */}
-      <div className='bg-white border border-gray-200 rounded-lg p-6 space-y-4'>
-        <h4 className='text-lg font-semibold text-gray-900 border-b pb-2'>
-          Contenido del Modal
-        </h4>
-
-        <div>
-          <span className='text-sm font-medium text-gray-700'>Descripción Detallada:</span>
-          <div className='mt-2 prose prose-sm max-w-none'>
-            {modalContent.detailedDescription?.split('\n\n').map((paragraph: string, index: number) => (
-              <p key={index} className='text-gray-900 mb-3'>
-                {paragraph}
-              </p>
-            )) || <p className='text-gray-400 italic'>Sin descripción detallada</p>}
-          </div>
-        </div>
-
-        {modalContent.includes && modalContent.includes.length > 0 && (
-          <div>
-            <span className='text-sm font-medium text-gray-700'>¿Qué incluye?</span>
-            <ul className='mt-2 space-y-2'>
-              {modalContent.includes.map((item: { iconImage?: string; text: string }, index: number) => (
-                <li key={index} className='flex items-center gap-2 text-sm text-gray-900'>
-                  {item.iconImage && (
-                    <img src={item.iconImage} alt='' className='w-5 h-5' />
-                  )}
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <div>
-          <span className='text-sm font-medium text-gray-700'>Público Objetivo:</span>
-          <p className='mt-1 text-gray-900'>{modalContent.targetAudience || '-'}</p>
-        </div>
-
-        <div className='grid grid-cols-2 gap-4'>
-          {modalContent.duration && (
-            <div>
-              <span className='text-sm text-gray-600'>Duración:</span>
-              <p className='font-medium text-gray-900'>{modalContent.duration}</p>
-            </div>
-          )}
-          {modalContent.level && (
-            <div>
-              <span className='text-sm text-gray-600'>Nivel:</span>
-              <p className='font-medium text-gray-900'>{modalContent.level}</p>
-            </div>
-          )}
-        </div>
-
-        {modalContent.specialNotes && (
-          <div className='p-3 bg-[#f9bbc4]/10 rounded-lg'>
-            <span className='text-sm font-medium text-gray-700'>Notas Especiales:</span>
-            <p className='mt-1 text-gray-900'>{modalContent.specialNotes}</p>
-          </div>
-        )}
-
-        {modalContent.additionalInfo && (
-          <div>
-            <span className='text-sm font-medium text-gray-700'>Información Adicional:</span>
-            <p className='mt-1 text-gray-900'>{modalContent.additionalInfo}</p>
-          </div>
-        )}
       </div>
 
       {/* Lessons */}
@@ -216,22 +159,16 @@ export function PreviewStep({ formData }: PreviewStepProps) {
       </div>
 
       {/* Summary Stats */}
-      <div className='grid grid-cols-3 gap-4'>
-        <div className='p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200'>
-          <p className='text-sm text-blue-800 font-medium'>Total de Lecciones</p>
-          <p className='text-3xl font-bold text-blue-900 mt-1'>
+      <div className='grid grid-cols-2 gap-4'>
+        <div className='p-4 bg-gradient-to-br from-[#FBE8EA] to-[#F7CBCB] rounded-lg border border-[#EBA2A8]'>
+          <p className='text-sm text-[#660e1b] font-medium'>Total de Lecciones</p>
+          <p className='text-3xl font-bold text-[#2B2B2B] mt-1'>
             {formData.lessons?.length || 0}
           </p>
         </div>
-        <div className='p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200'>
-          <p className='text-sm text-purple-800 font-medium'>Incluye</p>
-          <p className='text-3xl font-bold text-purple-900 mt-1'>
-            {modalContent.includes?.length || 0}
-          </p>
-        </div>
-        <div className='p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200'>
-          <p className='text-sm text-green-800 font-medium'>Estado</p>
-          <p className='text-lg font-bold text-green-900 mt-1'>
+        <div className='p-4 bg-gradient-to-br from-[#FBE8EA] to-[#EBA2A8] rounded-lg border border-[#EBA2A8]'>
+          <p className='text-sm text-[#660e1b] font-medium'>Estado</p>
+          <p className='text-lg font-bold text-[#660e1b] mt-1'>
             {formData.isPublished ? 'Público' : 'Borrador'}
           </p>
         </div>

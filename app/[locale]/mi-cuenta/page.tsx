@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCourses } from '@/hooks/useUserCourses';
+import { MiCuentaSkeleton } from '@/components/mi-cuenta/MiCuentaSkeleton';
 
 export default function MiCuentaPage() {
   const router = useRouter();
@@ -100,10 +101,7 @@ export default function MiCuentaPage() {
             </h2>
 
             {loading ? (
-              <div className='bg-card p-8 rounded-lg border text-center'>
-                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-pink-400 mx-auto mb-4'></div>
-                <p className='text-muted-foreground'>Cargando tus cursos...</p>
-              </div>
+              <MiCuentaSkeleton />
             ) : userCourses.length === 0 ? (
               <div className='bg-card p-8 rounded-lg border text-center'>
                 <BookOpen className='w-16 h-16 mx-auto text-muted-foreground mb-4' />

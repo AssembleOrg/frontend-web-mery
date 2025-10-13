@@ -20,14 +20,15 @@
     "services": {
       "title": "Services",
       "eyebrowStyling": "Eyebrow Design",
-      "nanoblading": "Nanoblading",
+      "nanoblading": "Nanoblading & Camouflage",
       "microblading": "Microblading & Camouflage",
       "scalp": "Scalp",
       "nanoscalp": "Nano Scalp",
-      "lashesLine": "Eyelash Styling",
+      "lashesLine": "Lash Line",
       "freckles": "Freckles & Moles",
       "paramedical": "Paramedical Tattoo",
-      "autostyling": "Autostyling"
+      "autostyling": "Autostyling",
+      "lipBlush": "Lip Blush"
     },
     "learnMore": {
       "title": "Want to know more about",
@@ -216,27 +217,27 @@
       "services": [
         {
           "title": "Eyebrow Shaping with MG Staff",
-          "price": "AR$ 36,000.-",
+          "price": "AR$ 39,000.-",
           "description": "It consists of shaping the eyebrows through trimming and artisanal, hair-by-hair tweezing, considering the person's taste and facial proportions."
         },
         {
           "title": "Eyebrow Lamination",
-          "price": "AR$ 36,000.-",
+          "price": "AR$ 39,000.-",
           "description": "We tame rebellious eyebrows through a chemical straightening process."
         },
         {
           "title": "Eyebrow Tinting",
-          "price": "AR$ 28,000.-",
+          "price": "AR$ 32,000.-",
           "description": "We add color to the eyebrows when they are very light or if you have gray hairs."
         },
         {
           "title": "Brow Refill",
-          "price": "AR$ 36,000.-",
-          "description": "Reactivates and/or enhances the density effect of your microblading by tinting the skin of your eyebrows with a hyper-realistic shadow play. You can also get it if you don't have microblading but still want to show off dense, super-full, and realistic eyebrows for 20 days."
+          "price": "AR$ 39,000.-",
+          "description": "Reactivates and/or enhances the density effect of your Nanoblading by tinting the skin of your eyebrows with a hyper-realistic shadow play. You can also get it if you don't have Nanoblading but still want to show off dense, super-full, and realistic eyebrows for 20 days."
         },
         {
           "title": "Lash Refill",
-          "price": "AR$ 28,000.-",
+          "price": "AR$ 32,000.-",
           "description": "Reactivates and/or enhances the density effect of your Lashes Line service with a hyper-realistic shadow play."
         }
       ],
@@ -292,19 +293,19 @@
     },
     "scalp": {
       "hero": {
-        "title": "Micro Scalp",
+        "title": "Nano Scalp",
         "subtitle": "An effective and natural solution for alopecia and scars"
       },
       "whatIsIt": {
-        "heading": "WHAT IS MICROSCALP?",
-        "p1": "It consists in getting an optical effect of filling by means of little spots that pretend to be hair follicles. They are perceived as something completely natural, increasing the hair density. Micro Scalp is known as a successful, effective treatment for people with alopecia. It also gives good results to cover scars so as to improve the appearance and the person’s self esteem."
+        "heading": "WHAT IS NANO SCALP?",
+        "p1": "It consists in getting an optical effect of filling by means of little spots that pretend to be hair follicles. They are perceived as something completely natural, increasing the hair density. Nano Scalp is known as a successful, effective treatment for people with alopecia. It also gives good results to cover scars so as to improve the appearance and the person’s self esteem."
       },
       "procedure": {
         "heading": "PROCEDURE",
         "p1": "The first step is the consultation stage. This is free of charge. Here, we tell you what this is about, how it is done, how long it takes, and the previous and post cares to take. We clear out all doubts so that you make sure you want to have it done.",
         "p2": "This appointment is key to give you information, to confirm that you can have it done, and that you can respect the aftercare. We will also inform you how many sessions your case will take (it can be several of 2 to 4 hours).",
         "p3": "Sessions are held once a month. It is a commitment that you should take. Otherwise the service is not finished and the potential of the results cannot be expected.",
-        "p4": "Once you had the consultation and you have your mind made up, you can book your first appointment for Micro Scalp. The cost of the service will depend on the hours that it takes and each session will have the same cost. For further information contact us via WhatsApp at 11 6159-2591"
+        "p4": "Once you had the consultation and you have your mind made up, you can book your first appointment for Nano Scalp. The cost of the service will depend on the hours that it takes and each session will have the same cost. For further information contact us via WhatsApp at 11 6159-2591"
       },
       "biosecurity": {
         "heading": "BIOSECURITY NORMS",
@@ -316,13 +317,13 @@
       },
       "cta": {
         "heading": "Ready to Regain Your Confidence?",
-        "text": "Micro Scalp offers a definitive, natural-looking solution. Book a free consultation to find out how we can help you.",
+        "text": "Nano Scalp offers a definitive, natural-looking solution. Book a free consultation to find out how we can help you.",
         "button": "Book Free Consultation"
       }
     },
     "eyelashStyling": {
       "hero": {
-        "title": "Eyelash Styling",
+        "title": "Lash Line",
         "subtitle": "We love the eyelashes to come to the fore!"
       },
       "intro": {
@@ -469,6 +470,46 @@
         "button": "Schedule Consultation"
       }
     },
+    "lipBlush": {
+      "hero": {
+        "title": "Lip Blush",
+        "subtitle": "WE ARE BACK 💋 Hyper-defined lips, super natural #ByMeryGarcia"
+      },
+      "intro": {
+        "text": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes✨"
+      },
+      "whatIsIt": {
+        "heading": "WHAT IS LIP BLUSH?",
+        "p1": "It's a cosmetic tattoo service that provides color and definition with a hyper-realistic finish. We're not looking for a made-up mouth effect, but rather by emulating the lip texture we gain a younger and fresher expression without losing naturalness.",
+        "p2": "It doesn't add volume, it doesn't create shine, lips without makeup with much more freshness. No powder, no texture, as if the lip had natural color 💋🍒",
+        "p3": "The result lasts between 12 and 24 months depending on each person. The procedure consists of a first session and a touch-up to finish defining the design that Mery created for you at 30 or 60 days."
+      },
+      "pricing": {
+        "depositTitle": "Consultation and Deposit",
+        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lip Blush session; it is non-refundable and does not lock in the price of your service:",
+        "depositAmount": "Deposit AR$ 100,000.-",
+        "priceListTitle": "Service List Price with Mery Garcia",
+        "firstSessionLabel": "First Session",
+        "touchUpLabel": "Touch-up",
+        "maintenanceLabel": "Maintenance",
+        "session1": "US$ 650.- (or US$ 450 in cash)",
+        "touchUp": "US$ 317.- (or US$ 180 in cash)",
+        "maintenance": "US$ 650.- (or US$ 475 in cash)",
+        "creditCardNote": "Visit our location to get 3 interest-free installments by paying with a physical credit card from any bank."
+      },
+      "importantInfo": {
+        "herpesTitle": "IMPORTANT: Herpes",
+        "herpesText": "If you have had herpes, please consult with your dermatologist to perform preventive treatment.",
+        "preparationTitle": "Preparation",
+        "preparationText": "Please come to the session with well-hydrated lips.",
+        "availability": "🚀 Only 2 appointments per week"
+      },
+      "cta": {
+        "heading": "Ready for Your Dream Lips?",
+        "text": "Discover the secret to naturally perfect lips with a hyper-realistic finish. Book your consultation with Mery.",
+        "button": "Book Consultation"
+      }
+    },
     "paramedicalTattoo": {
       "hero": {
         "title": "Paramedical Tattoo",
@@ -549,7 +590,7 @@
       },
       "browRefill": {
         "title": "Brow Refill",
-        "description": "Reactivates microblading density by tinting eyebrow skin with hyper-realistic shadow effect."
+        "description": "Reactivates nanoblading density by tinting eyebrow skin with hyper-realistic shadow effect."
       },
       "eyebrowLamination": {
         "title": "Eyebrow Lamination",

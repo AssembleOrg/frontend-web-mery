@@ -5,27 +5,70 @@ import { Footer } from '@/components/footer';
 import Image from 'next/image';
 import SimpleCourseCard from '@/components/simple-course-card';
 import SimpleCourseModal from '@/components/simple-course-modal';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { FormacionesSkeleton } from '@/components/formaciones/FormacionesSkeleton';
+import { FilterBanner } from '@/components/formaciones/FilterBanner';
+import { useState, useEffect, useMemo } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
-import { initialCourses } from '@/lib/seed-courses';
+import { getCourseImage, isAutostylismCourse } from '@/lib/utils';
+
+type CourseFilter = 'all' | 'professional' | 'autostylism';
 
 export default function FormacionesPage() {
-  const router = useRouter();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [filter, setFilter] = useState<CourseFilter>('all');
 
   // Get courses from admin store
-  const { getPublishedCourses, seedCourses } = useAdminStore();
+  const { fetchCategories } = useAdminStore();
 
-  // Seed initial courses on first load (if store is empty)
+  // Fetch courses from API on mount
   useEffect(() => {
-    seedCourses(initialCourses);
-  }, [seedCourses]);
+    const loadCourses = async () => {
+      setIsLoading(true);
+      try {
+        await fetchCategories();
+        // Get categories from store after fetch
+        const categories = useAdminStore.getState().categories;
 
-  // Get all published courses
-  const courses = getPublishedCourses();
+        // Convert categories to courses format
+        // Default: mostrar precios en ARS (mercado principal argentino)
+        const coursesData: Course[] = categories.map((cat): Course => {
+          return {
+            id: cat.id,
+            title: cat.name,
+            description: cat.description || '',
+            image: getCourseImage(cat.slug, cat.image),
+            price: cat.priceARS || 0,
+            priceARS: cat.priceARS || 0,
+            priceUSD: cat.priceUSD || 0,
+            isFree: cat.isFree || false,
+            priceDisplay: cat.isFree
+              ? 'Gratis'
+              : cat.priceARS > 0
+              ? `$${cat.priceARS.toLocaleString('es-AR')}`
+              : cat.priceUSD > 0
+              ? `U$S ${cat.priceUSD}`
+              : 'Gratis',
+            currency: 'ARS' as 'ARS' | 'USD', // Siempre ARS por defecto
+            slug: cat.slug,
+            isPublished: cat.isActive,
+            order: cat.order || 0,
+            isActive: cat.isActive,
+          };
+        });
+
+        setCourses(coursesData);
+      } catch (error) {
+        console.error('Error loading courses:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCourses();
+  }, [fetchCategories]);
 
   const handleCourseClick = (course: Course) => {
     setSelectedCourse(course);
@@ -37,91 +80,136 @@ export default function FormacionesPage() {
     setSelectedCourse(null);
   };
 
-  // Get auto-styling course for the featured banner
-  const autoStylingCourse = courses.find((c) => c.slug === 'auto-styling-cejas');
+  // Separate courses by type
+  const autostylismCourses = useMemo(
+    () => courses.filter((c) => isAutostylismCourse(c.slug, c.title)),
+    [courses]
+  );
 
-  const handleAutoStylingClick = () => {
-    if (autoStylingCourse) {
-      setSelectedCourse(autoStylingCourse);
-      setIsModalOpen(true);
-    }
-  };
+  const professionalCourses = useMemo(
+    () => courses.filter((c) => !isAutostylismCourse(c.slug, c.title)),
+    [courses]
+  );
 
-  // Filter out auto-styling from regular grid (show it in banner instead)
-  const regularCourses = courses.filter((c) => c.slug !== 'auto-styling-cejas');
+  // Filter courses based on selected filter
+  const filteredCourses = useMemo(() => {
+    if (filter === 'professional') return professionalCourses;
+    if (filter === 'autostylism') return autostylismCourses;
+    return courses;
+  }, [filter, courses, professionalCourses, autostylismCourses]);
+
+  // Memoize price calculations to avoid re-computing on every render
+  const coursesWithDisplayPrice = useMemo(
+    () =>
+      filteredCourses.map((course) => {
+        let priceDisplay: string;
+
+        if (course.isFree) {
+          priceDisplay = 'Gratis';
+        } else if (course.priceARS === 99999999) {
+          priceDisplay =
+            course.priceUSD > 0
+              ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+              : 'Consultar';
+        } else {
+          priceDisplay =
+            course.priceARS > 0
+              ? `$${course.priceARS.toLocaleString('es-AR')}`
+              : 'Gratis';
+        }
+
+        const isAutostylism = isAutostylismCourse(course.slug, course.title);
+
+        return { ...course, priceDisplay, isAutostylism };
+      }),
+    [filteredCourses]
+  );
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <>
+        <Navigation />
+        <FormacionesSkeleton />
+        <Footer />
+      </>
+    );
+  }
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div
+      className='min-h-screen bg-background'
+      suppressHydrationWarning
+    >
       <Navigation />
 
       <section className='w-full'>
         <div className='container mx-auto px-4 max-w-7xl'>
-          <Image
-            src='/Formacion-banner.png'
-            alt='Formaciones Mery García'
-            width={1920}
-            height={600}
-            className='w-full h-auto object-cover rounded-lg'
-            priority
-          />
+          <div className='relative w-full aspect-[16/5] rounded-lg overflow-hidden'>
+            <Image
+              src='/Formacion-banner.png'
+              alt='Formaciones Mery García'
+              fill
+              className='object-cover'
+              priority
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1280px'
+            />
+          </div>
         </div>
       </section>
 
-      {/* Auto Styling Banner */}
-      {autoStylingCourse && (
-        <section className='container mx-auto px-4 py-8 max-w-7xl'>
-          <div className='relative bg-gradient-to-r from-[#fbe8ea] to-[#f9bbc4] p-6 md:p-8 rounded-lg border-2 border-[#eba2a8] shadow-lg'>
-            {/* Badge "NUEVO" */}
-            <div className='absolute -top-3 left-6 bg-[#660e1b] text-white px-4 py-1 text-sm font-bold rounded-full'>
-              NUEVO
-            </div>
+      {/* Hero Filter Banners */}
+      <section className='container mx-auto px-4 py-8 max-w-7xl'>
+        <div className='flex gap-6 md:grid md:grid-cols-2 md:gap-6'>
+          <FilterBanner
+            title='Formaciones Profesionales'
+            description='Técnicas avanzadas para tu negocio'
+            image='/Img-home/home-1.webp'
+            onClick={() =>
+              setFilter(filter === 'professional' ? 'all' : 'professional')
+            }
+            isActive={filter === 'professional'}
+            showRibbon={false}
+          />
+          <FilterBanner
+            title='Autostylism'
+            description='Diseña tus cejas en casa'
+            image='/Img-home/home-3.webp'
+            onClick={() =>
+              setFilter(filter === 'autostylism' ? 'all' : 'autostylism')
+            }
+            isActive={filter === 'autostylism'}
+            showRibbon={true}
+          />
+        </div>
 
-            <div className='flex flex-col md:flex-row items-center justify-between gap-6'>
-              {/* Contenido del Banner */}
-              <div className='text-center md:text-left flex-1'>
-                <h2 className='text-2xl md:text-3xl font-primary font-semibold text-[#660e1b]/80 mb-3'>
-                  ¿Querés aprender a diseñar tus propias cejas?
-                </h2>
-                <p className='text-xl md:text-2xl lg:text-3xl font-primary font-black text-[#660e1b] mb-2'>
-                  {autoStylingCourse.title}
-                </p>
-                <p className='text-sm text-[#660e1b]/70 font-medium'>
-                  ✨ Sin experiencia requerida • 📱 100% Online • ⏰ 6 meses de
-                  acceso
-                </p>
-              </div>
-
-              {/* CTA Button */}
-              <div className='text-center'>
-                <div className='mb-3'>
-                  <span className='text-2xl font-primary font-bold text-[#660e1b]'>
-                    {autoStylingCourse.priceDisplay}
-                  </span>
-                  <p className='text-xs text-[#660e1b]/70'>
-                    Incluye certificación y materiales
-                  </p>
-                </div>
-                <button
-                  onClick={handleAutoStylingClick}
-                  className='bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-3 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform'
-                >
-                  🎯 Quiero Aprender
-                </button>
-              </div>
-            </div>
+        {/* Reset Filter Button */}
+        {filter !== 'all' && (
+          <div className='flex justify-center mt-6'>
+            <button
+              onClick={() => setFilter('all')}
+              className='px-6 py-2 rounded-full border-2 border-[#EBA2A8] bg-[#EBA2A8] text-white font-primary font-semibold hover:bg-[#f9bbc4] hover:border-[#f9bbc4] transition-all duration-300 shadow-md'
+            >
+              Ver Todos
+            </button>
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
-      <section className='container mx-auto px-4 pb-16 py-8 max-w-7xl'>
+      <section
+        className='container mx-auto px-4 pb-16 py-8 max-w-7xl'
+        suppressHydrationWarning
+      >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-          {regularCourses.map((course) => (
+          {coursesWithDisplayPrice.map((course) => (
             <SimpleCourseCard
               key={course.id}
               image={course.image}
               title={course.title}
               price={course.priceDisplay}
               description={course.description}
+              slug={course.slug}
+              isAutostylism={course.isAutostylism}
               onCourseClick={() => handleCourseClick(course)}
             />
           ))}
@@ -130,11 +218,13 @@ export default function FormacionesPage() {
 
       <Footer />
 
-      <SimpleCourseModal
-        course={selectedCourse}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+      {selectedCourse && (
+        <SimpleCourseModal
+          course={selectedCourse}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 }
