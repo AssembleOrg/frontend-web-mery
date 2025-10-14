@@ -1,6 +1,5 @@
 'use client';
 
-import { Fragment } from 'react';
 import { X, AlertCircle, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 
 interface DialogProps {

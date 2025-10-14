@@ -14,8 +14,8 @@ interface ServiceCardProps {
 export function ServiceCard({ title, image, description, href }: ServiceCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30">
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      <Link href={href as any}>
+      {/* @ts-expect-error - Next.js Link type mismatch with i18n routing */}
+      <Link href={href}>
         {/* Image Container */}
         <div className="relative h-80 bg-muted overflow-hidden">
           {image ? (

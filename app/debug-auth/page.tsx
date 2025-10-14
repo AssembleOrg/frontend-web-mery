@@ -21,7 +21,7 @@ export default function DebugAuthPage() {
         const res = await fetch('/api/auth/me', { credentials: 'include' });
         const text = await res.text();
         let body: any = null;
-        try { body = JSON.parse(text); } catch (e) { body = text; }
+        try { body = JSON.parse(text); } catch { body = text; }
         setResult({ status: res.status, ok: res.ok, body });
       } catch (err) {
         setError(String(err));

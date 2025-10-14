@@ -9,7 +9,6 @@ import {
   ShoppingBag,
   LogOut,
   BookOpen,
-  Clock,
   Trophy,
   Mail,
   Phone,

@@ -19,8 +19,8 @@ export function LanguageToggle() {
   const pathname = usePathname()
 
   const handleLanguageChange = (newLocale: 'es' | 'en') => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.replace(pathname as any, { locale: newLocale })
+    // @ts-expect-error - Next.js router type mismatch with i18n routing
+    router.replace(pathname, { locale: newLocale })
   }
 
   return (

@@ -16,7 +16,7 @@ export default function EditarCursoPage() {
   const courseId = params.id as string;
   const { showError } = useModal();
 
-  const { categories, fetchCategoryById, updateCategory, fetchVideos, videos, createVideo, updateVideo, deleteVideo } = useAdminStore();
+  const { categories, fetchCategoryById, updateCategory, fetchVideos, createVideo, updateVideo, deleteVideo } = useAdminStore();
   const [course, setCourse] = useState<any>(null);
   const [originalLessons, setOriginalLessons] = useState<any[]>([]);
   const [notFound, setNotFound] = useState(false);

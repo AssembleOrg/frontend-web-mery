@@ -65,7 +65,9 @@ export default function VimeoPlayer({
           markLessonCompleted(courseId, lessonId);
           setIsCompleted(true);
         }
-      } catch (err) {}
+      } catch {
+        // Ignore message parsing errors
+      }
     };
 
     window.addEventListener('message', handleMessage);

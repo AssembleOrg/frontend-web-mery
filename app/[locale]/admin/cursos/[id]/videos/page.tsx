@@ -27,11 +27,7 @@ export default function CursoVideosPage() {
   const courseId = params.id as string;
   const { showConfirm, showWarning, showSuccess, showError } = useModal();
 
-  // Race condition prevention ref
-  const loadingDataRef = useRef(false);
-
   const {
-    categories,
     videos,
     fetchCategoryById,
     fetchVideos,

@@ -1,0 +1,30 @@
+
+> my-app@0.1.0 build /media/charly/extras/Pistech/frontend-web-mery
+> next build
+
+ ⚠ Warning: Found multiple lockfiles. Selecting /media/charly/extras/Pistech/package-lock.json.
+   Consider removing the lockfiles at:
+   * /media/charly/extras/Pistech/frontend-web-mery/pnpm-lock.yaml
+
+   ▲ Next.js 15.4.5
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 8.0s
+   Linting and checking validity of types ...
+Failed to compile.
+
+./app/[locale]/admin/cursos/[id]/page.tsx:31:29
+Type error: Cannot find name 'categories'.
+
+[0m [90m 29 |[39m       [36mtry[39m {
+ [90m 30 |[39m         [90m// First check if course is in local state[39m
+[31m[1m>[22m[39m[90m 31 |[39m         [36mconst[39m localCourse [33m=[39m categories[33m.[39mfind(c [33m=>[39m c[33m.[39mid [33m===[39m courseId)[33m;[39m
+ [90m    |[39m                             [31m[1m^[22m[39m
+ [90m 32 |[39m         [36mlet[39m courseData[33m;[39m
+ [90m 33 |[39m         
+ [90m 34 |[39m         [36mif[39m (localCourse) {[0m
+Next.js build worker exited with code: 1 and signal: null
+ ELIFECYCLE  Command failed with exit code 1.

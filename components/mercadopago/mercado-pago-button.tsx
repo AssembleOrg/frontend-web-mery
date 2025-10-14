@@ -13,7 +13,7 @@ export function MercadoPagoButton() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { items, clearCart } = useCartStore();
+  const { items } = useCartStore();
 
   const handleCheckout = async () => {
     setIsLoading(true);

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Course, CourseCreateInput, CourseIncludeItem, Lesson } from '@/types/course';
-import { ChevronLeft, ChevronRight, Save, Eye, Loader2 } from 'lucide-react';
+import { Course, CourseCreateInput, Lesson } from '@/types/course';
+import { ChevronLeft, ChevronRight, Save, Loader2 } from 'lucide-react';
 import { BasicInfoStep } from './course-form-steps/basic-info-step';
 import { LessonsStep } from './course-form-steps/lessons-step';
 import { PreviewStep } from './course-form-steps/preview-step';

@@ -17,7 +17,6 @@ export default function SimpleCourseCard({
   title,
   price,
   description,
-  slug,
   isAutostylism = false,
   onCourseClick,
 }: SimpleCourseCardProps) {

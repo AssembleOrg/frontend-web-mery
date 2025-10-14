@@ -19,7 +19,6 @@ export default function CourseSidebar({
   selectedLesson,
   onLessonSelect,
   isLessonCompleted,
-  progressPercentage,
   totalLessons,
   className = '',
 }: CourseSidebarProps) {
@@ -35,7 +34,7 @@ export default function CourseSidebar({
 
       {/* Lista de videos */}
       <div className='max-h-96 overflow-y-auto'>
-        {course.lessons?.map((lesson, index) => {
+        {course.lessons?.map((lesson) => {
           const isCompleted = isLessonCompleted(course.id, lesson.id);
           const isSelected = selectedLesson?.id === lesson.id;
 

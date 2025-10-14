@@ -1,0 +1,202 @@
+
+> my-app@0.1.0 build /media/charly/extras/Pistech/frontend-web-mery
+> next build
+
+ ⚠ Warning: Found multiple lockfiles. Selecting /media/charly/extras/Pistech/package-lock.json.
+   Consider removing the lockfiles at:
+   * /media/charly/extras/Pistech/frontend-web-mery/pnpm-lock.yaml
+
+   ▲ Next.js 15.4.5
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 31.0s
+   Linting and checking validity of types ...
+
+./app/[locale]/admin/cursos/[id]/page.tsx
+19:71  Warning: 'videos' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./app/[locale]/admin/cursos/[id]/videos/page.tsx
+31:9  Warning: 'loadingDataRef' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+34:5  Warning: 'categories' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./app/[locale]/asesoramiento-express/page.tsx
+1:1  Warning: Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').
+
+./app/[locale]/contact/page.tsx
+10:9  Warning: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./app/[locale]/cursos/[id]/page.tsx
+237:6  Warning: React Hook useEffect has a missing dependency: 'courseId'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/[locale]/express-consultation/page.tsx
+1:1  Warning: Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').
+
+./app/[locale]/finalizar-compra/page.tsx
+7:10  Warning: 'Loader2' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./app/[locale]/mi-cuenta/page.tsx
+12:3  Warning: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./app/debug-auth/page.tsx
+24:49  Warning: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/admin/course-form.tsx
+4:37  Warning: 'CourseIncludeItem' is defined but never used.  @typescript-eslint/no-unused-vars
+5:43  Warning: 'Eye' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/course-sidebar.tsx
+22:3  Warning: 'progressPercentage' is defined but never used.  @typescript-eslint/no-unused-vars
+38:39  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/html5-video-player.tsx
+4:41  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/language-toggle.tsx
+22:5  Warning: Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').
+
+./components/mercadopago/mercado-pago-button.tsx
+16:18  Warning: 'clearCart' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./components/service-card.tsx
+17:8  Warning: Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').
+
+./components/simple-course-card.tsx
+20:3  Warning: 'slug' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/ui/dialog.tsx
+3:10  Warning: 'Fragment' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/vimeo-player.tsx
+68:16  Warning: 'err' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/72) ...
+   Generating static pages (18/72) 
+   Generating static pages (36/72) 
+   Generating static pages (54/72) 
+ ✓ Generating static pages (72/72)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                      Size  First Load JS
+┌ ○ /                                                           141 B         100 kB
+├ ○ /_not-found                                                 995 B         101 kB
+├ ● /[locale]                                                 5.32 kB         181 kB
+├   ├ /es
+├   └ /en
+├ ● /[locale]/about                                           3.66 kB         180 kB
+├   ├ /es/about
+├   └ /en/about
+├ ● /[locale]/admin                                           2.72 kB         105 kB
+├   ├ /es/admin
+├   └ /en/admin
+├ ● /[locale]/admin/cursos                                    4.87 kB         134 kB
+├   ├ /es/admin/cursos
+├   └ /en/admin/cursos
+├ ƒ /[locale]/admin/cursos/[id]                                2.3 kB         133 kB
+├ ƒ /[locale]/admin/cursos/[id]/videos                        6.85 kB         133 kB
+├ ● /[locale]/admin/cursos/nuevo                              1.27 kB         129 kB
+├   ├ /es/admin/cursos/nuevo
+├   └ /en/admin/cursos/nuevo
+├ ● /[locale]/asesoramiento-express                           3.08 kB         182 kB
+├   ├ /es/asesoramiento-express
+├   └ /en/asesoramiento-express
+├ ● /[locale]/cancellation-policy                              3.9 kB         180 kB
+├   ├ /es/cancellation-policy
+├   └ /en/cancellation-policy
+├ ● /[locale]/checkout/failure                                1.59 kB         105 kB
+├   ├ /es/checkout/failure
+├   └ /en/checkout/failure
+├ ● /[locale]/checkout/pending                                1.61 kB         105 kB
+├   ├ /es/checkout/pending
+├   └ /en/checkout/pending
+├ ● /[locale]/checkout/success                                1.76 kB         105 kB
+├   ├ /es/checkout/success
+├   └ /en/checkout/success
+├ ● /[locale]/compra-de-cursos                                6.46 kB         183 kB
+├   ├ /es/compra-de-cursos
+├   └ /en/compra-de-cursos
+├ ● /[locale]/contact                                         2.01 kB         181 kB
+├   ├ /es/contact
+├   └ /en/contact
+├ ƒ /[locale]/cursos/[id]                                     9.93 kB         194 kB
+├ ● /[locale]/express-consultation                            3.09 kB         182 kB
+├   ├ /es/express-consultation
+├   └ /en/express-consultation
+├ ● /[locale]/finalizar-compra                                5.63 kB         190 kB
+├   ├ /es/finalizar-compra
+├   └ /en/finalizar-compra
+├ ● /[locale]/first-masterclass-nanoblading                   5.31 kB         181 kB
+├   ├ /es/first-masterclass-nanoblading
+├   └ /en/first-masterclass-nanoblading
+├ ● /[locale]/formaciones                                     10.1 kB         189 kB
+├   ├ /es/formaciones
+├   └ /en/formaciones
+├ ● /[locale]/gift-card                                       5.26 kB         181 kB
+├   ├ /es/gift-card
+├   └ /en/gift-card
+├ ● /[locale]/login                                           2.58 kB         187 kB
+├   ├ /es/login
+├   └ /en/login
+├ ● /[locale]/mi-cuenta                                       6.14 kB         185 kB
+├   ├ /es/mi-cuenta
+├   └ /en/mi-cuenta
+├ ● /[locale]/politica-de-cancelaciones                        3.9 kB         180 kB
+├   ├ /es/politica-de-cancelaciones
+├   └ /en/politica-de-cancelaciones
+├ ● /[locale]/register                                        2.84 kB         187 kB
+├   ├ /es/register
+├   └ /en/register
+├ ● /[locale]/services/diseno-cejas                           4.09 kB         180 kB
+├   ├ /es/services/diseno-cejas
+├   └ /en/services/diseno-cejas
+├ ● /[locale]/services/lip-blush                              4.95 kB         181 kB
+├   ├ /es/services/lip-blush
+├   └ /en/services/lip-blush
+├ ● /[locale]/services/microblading-camuflaje                 4.57 kB         181 kB
+├   ├ /es/services/microblading-camuflaje
+├   └ /en/services/microblading-camuflaje
+├ ● /[locale]/services/nanoblading                            4.83 kB         181 kB
+├   ├ /es/services/nanoblading
+├   └ /en/services/nanoblading
+├ ● /[locale]/services/pecas-lunares                           5.5 kB         182 kB
+├   ├ /es/services/pecas-lunares
+├   └ /en/services/pecas-lunares
+├ ● /[locale]/services/scalp                                  4.61 kB         181 kB
+├   ├ /es/services/scalp
+├   └ /en/services/scalp
+├ ● /[locale]/services/styling-pestanas                       4.53 kB         181 kB
+├   ├ /es/services/styling-pestanas
+├   └ /en/services/styling-pestanas
+├ ● /[locale]/services/tatuaje-paramedico                     5.14 kB         181 kB
+├   ├ /es/services/tatuaje-paramedico
+├   └ /en/services/tatuaje-paramedico
+├ ● /[locale]/terminos-y-condiciones-formaciones-mery-garcia  3.08 kB         179 kB
+├   ├ /es/terminos-y-condiciones-formaciones-mery-garcia
+├   └ /en/terminos-y-condiciones-formaciones-mery-garcia
+├ ● /[locale]/verify-email                                    4.13 kB         180 kB
+├   ├ /es/verify-email
+├   └ /en/verify-email
+├ ƒ /api/create-preference                                      141 B         100 kB
+├ ƒ /api/cursos                                                 141 B         100 kB
+├ ƒ /api/cursos/[id]                                            141 B         100 kB
+├ ƒ /api/webhook                                                141 B         100 kB
+├ ○ /apple-icon.png                                               0 B            0 B
+├ ƒ /cursos/[id]                                               5.3 kB         116 kB
+└ ○ /debug-auth                                                 714 B         101 kB
++ First Load JS shared by all                                  100 kB
+  ├ chunks/0a9a203b-05d0810829eac7de.js                       54.1 kB
+  ├ chunks/7742-807269fa57ba843d.js                           44.1 kB
+  └ other shared chunks (total)                               1.94 kB
+
+
+ƒ Middleware                                                  88.7 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

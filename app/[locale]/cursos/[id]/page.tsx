@@ -234,7 +234,7 @@ export default function CursoDetallePage() {
     if (courseId) {
       loadCourse();
     }
-  }, [loadCourse]);
+  }, [loadCourse, courseId]);
 
   // --- Renderizado ---
 

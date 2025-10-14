@@ -4,7 +4,7 @@ import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useRouter, useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Loader2, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { CheckoutView } from '@/components/checkout/CheckoutView';

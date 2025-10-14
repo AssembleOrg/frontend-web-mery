@@ -4,10 +4,9 @@ import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { MapPin, MessageCircle, Mail, GraduationCap } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
-import { useTranslations } from 'next-intl';
 
 export default function ContactPage() {
-  const t = useTranslations('contact');
+  // const t = useTranslations('contact'); // TODO: Add translations when needed
   const handleWhatsAppGeneral = () => {
     const message = 'Hola, me interesan sus servicios. ¿Puedo tener más info?';
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
