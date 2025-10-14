@@ -5,8 +5,7 @@
  * ARQUITECTURA:
  * - Auto-inicialización con useEffect(() => {}, [])
  * - Orchestrates API calls (services) + state updates (stores)
- * - Loading/error states AQUÍ (NO en store)
- * - NUNCA store methods en useCallback dependencies
+ * - Loading/error states AQUÍ (NO en store) 
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -86,7 +85,6 @@ export function useUserCourses() {
         const errorMessage =
           err instanceof Error ? err.message : 'Error al cargar cursos';
         setError(errorMessage);
-        // If error is 401, clear courses (session invalid)
         if (
           err instanceof Error &&
           'status' in err &&
@@ -99,12 +97,12 @@ export function useUserCourses() {
       }
     };
 
-    if (isAuthenticated) {
+    if (token) {
       loadCourses();
-    } else {
+    } else if (!token && !isAuthenticated) {
       clearCourses();
     }
-  }, [isAuthenticated]); // CRITICAL: Only depend on isAuthenticated
+  }, [token, isAuthenticated]);
 
   // Refresh courses manually
   const refresh = useCallback(async () => {
@@ -171,7 +169,7 @@ export function useUserCourses() {
     } finally {
       setIsLoading(false);
     }
-  }, []); // CRITICAL: Empty array, NOT [setCourses, token]
+  }, []);
 
   return {
     courses,
