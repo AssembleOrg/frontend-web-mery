@@ -20,7 +20,12 @@ export default function AdminLayout({
     // Extract locale from pathname
     const locale = pathname.split('/')[1] || 'es';
 
-    console.log('[AdminLayout] auth check', { pathname, isLoading, isAuthenticated, user: user?.id });
+    console.log('[AdminLayout] auth check', {
+      pathname,
+      isLoading,
+      isAuthenticated,
+      user: user?.id,
+    });
 
     // Wait for auth to load
     if (isLoading) return;

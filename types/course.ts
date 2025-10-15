@@ -59,7 +59,7 @@ export interface Course {
   priceUSD: number; // Precio en Dólares
   isFree?: boolean; // Si el curso es gratuito
 
-  // Backward compatibility (deprecated - usar priceARS/priceUSD)
+  // Backward compatibility
   price?: number;
   priceDisplay?: string;
   currency?: 'USD' | 'ARS';

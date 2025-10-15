@@ -1,9 +1,9 @@
 /**
  * Auth Interceptor Hook
- * 
+ *
  * Listens for global authentication errors (401/403)
  * and automatically redirects to login page
- * 
+ *
  * This provides a centralized error handling mechanism
  * for all API calls across the application
  */
@@ -45,4 +45,3 @@ export function useAuthInterceptor() {
     };
   }, [router, locale, clearAuth]);
 }
-

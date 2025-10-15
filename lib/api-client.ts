@@ -87,7 +87,10 @@ interface VideoProgress {
  */
 function getAuthToken(): string | undefined {
   const token = Cookies.get('auth_token');
-  console.log('[api-client] getAuthToken called, result:', token ? `${token.substring(0, 20)}...` : 'undefined');
+  console.log(
+    '[api-client] getAuthToken called, result:',
+    token ? `${token.substring(0, 20)}...` : 'undefined'
+  );
   return token;
 }
 
@@ -144,8 +147,10 @@ async function apiRequest<T>(
 
     // SECURITY: Auto-redirect to login on authentication failures
     if (response.status === 401 || response.status === 403) {
-      console.warn('[api-client] Authentication failed (401/403), triggering logout');
-      
+      console.warn(
+        '[api-client] Authentication failed (401/403), triggering logout'
+      );
+
       // Trigger global auth error event
       if (typeof window !== 'undefined') {
         window.dispatchEvent(

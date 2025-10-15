@@ -39,26 +39,27 @@
   },
   "about": {
     "title": "About Me",
-    "description": "With over 20 years of experience, I am a self-taught professional specialized in cosmetic tattooing.",
+    "description": "With over 20 years of experience, I'm a self-taught professional specializing in cosmetic tattooing.",
     "page": {
       "hero": {
         "title": "Mery García",
         "subtitle": "Cosmetic Tattoo Specialist"
       },
       "content": {
-        "paragraph1": "For more than <strong>20 years</strong> I have specialized in the world of beauty. Self-taught by nature, I also trained as a Media Makeup Artist, preparing myself to work on sets for TV, magazines and important advertising campaigns, while I was strongly training in my main method which is <strong>cosmetic tattooing</strong>.",
-        "paragraph2": "Currently I dedicate 100% to cosmetic tattooing not only from my <strong>exclusive</strong> nanoblading method, but also all the most important techniques and aesthetics for the field. I conduct one of the most important courses in Argentina, specializing in my techniques with the best tools on the market.",
-        "paragraph3": "Today I lead a staff that integrates cosmetic tattoos and eyebrow and eyelash aesthetics, training with my online program those few who deserve to be \"my chosen ones with everything\".",
+        "paragraph1": "I've believed in the power of eyebrows for over <strong>20 years</strong>. I was completely self-taught until just a couple of years ago when I honed my craft internationally. I started experimenting with my own brows from a very young age, realizing that my true calling was art as it applies to beauty.",
+        "paragraph2": "Tenacious, meticulous, and passionate about my work, I trained as a fashion makeup artist for top brands and major magazines, all while building a strong reputation in my primary craft: brow styling.",
+        "paragraph3": "Today, I'm 100% focused on cosmetic tattooing—not just for brows with my exclusive Nanoblading technique, but also for lips with LipBlush, lashes with Lashes Line, and corrections using my own signature technique, Camuflaje Mixto.",
+        "paragraph4": "I now lead a team of talented cosmetic tattoo artists and brow and lash stylists, all trained with my signature approach, where it's clear that in my studio, 'the details are everything'.",
         "signature": {
-          "invitation": "You are invited to learn more about what it is today:",
-          "closing": "Cordially,",
+          "invitation": "I warmly invite you to come and see what we're all about.",
+          "closing": "Warmly,",
           "name": "Mery García"
         }
       },
       "cta": {
         "title": "Ready for your transformation?",
         "description": "Book your free consultation and discover how our treatments can enhance your natural beauty.",
-        "bookButton": "Book Free Consultation",
+        "bookButton": "Book a Free Consultation",
         "servicesButton": "View Services"
       }
     }

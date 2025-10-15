@@ -19,12 +19,6 @@ export default function AdminCursosPage() {
   const { showConfirm } = useModal();
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Prevent hydration issues
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // Load categories on mount
   useEffect(() => {
@@ -78,11 +72,6 @@ export default function AdminCursosPage() {
       toast.error(errorMessage);
     }
   };
-
-  // Prevent hydration mismatch
-  if (!isMounted) {
-    return null;
-  }
 
   if (isLoading) {
     return <CourseTableSkeleton />;

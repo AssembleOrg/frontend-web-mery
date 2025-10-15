@@ -8,9 +8,9 @@
  * - Loading/error states AQUÍ (NO en store)
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useUserCoursesStore } from '@/stores/user-courses-store';
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuth } from './useAuth';
 import { getUserCourses as getUserCoursesService } from '@/services/user-courses.service';
 import { getCategories } from '@/lib/api-client';
 import { UserCourse } from '@/types/course';
@@ -18,37 +18,29 @@ import { getCourseImage } from '@/lib/utils';
 
 export function useUserCourses() {
   const { courses, setCourses, clearCourses } = useUserCoursesStore();
-  const { token, isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isLoading: isAuthLoading, token, user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Auto-init: Load courses on mount if authenticated
+  const hasAttemptedInitialLoad = useRef(false);
+
   useEffect(() => {
     const loadCourses = async () => {
-      const currentToken = useAuthStore.getState().token;
-      const currentUser = useAuthStore.getState().user;
-
-      if (!currentToken) {
-        clearCourses();
+      if (!token || !user) {
         return;
       }
 
+      setIsLoading(true);
+      setError(null);
+
       try {
-        setIsLoading(true);
-        setError(null);
-
-        // Check if user is Admin or Subadmin
-        const isAdmin =
-          currentUser?.role === 'ADMIN' || currentUser?.role === 'SUBADMIN';
-
+        const isAdmin = user.role === 'ADMIN' || user.role === 'SUBADMIN';
         let coursesData: UserCourse[];
 
         if (isAdmin) {
-          // For admins: Load ALL active categories from backend
           const response = await getCategories({ isActive: true });
           const allCategories = response.data.data;
 
-          // Convert all categories to UserCourse format
           coursesData = allCategories.map((category: any) => ({
             courseId: category.id,
             course: {
@@ -73,13 +65,11 @@ export function useUserCourses() {
               totalLessons: category.videoCount || 0,
               progressPercentage: 0,
             },
-            hasAccess: true, // Admins have access to everything
+            hasAccess: true,
           }));
         } else {
-          // For regular users: Load only purchased courses
-          coursesData = await getUserCoursesService(currentToken);
+          coursesData = await getUserCoursesService(token);
         }
-
         setCourses(coursesData);
       } catch (err) {
         const errorMessage =
@@ -97,39 +87,33 @@ export function useUserCourses() {
       }
     };
 
-    if (token) {
-      loadCourses();
-    } else if (!token && !isAuthenticated) {
+    if (!isAuthLoading && isAuthenticated) {
+      if (!hasAttemptedInitialLoad.current) {
+        hasAttemptedInitialLoad.current = true;
+        loadCourses();
+      }
+    } else if (!isAuthLoading && !isAuthenticated) {
       clearCourses();
+      hasAttemptedInitialLoad.current = false;
     }
-  }, [token, isAuthenticated]);
+  }, [isAuthLoading, isAuthenticated, token, user, setCourses, clearCourses]);
 
-  // Refresh courses manually
   const refresh = useCallback(async () => {
-    const currentToken = useAuthStore.getState().token;
-    const currentUser = useAuthStore.getState().user;
-
-    if (!currentToken) {
+    if (!token || !user) {
       setError('No estás autenticado');
       return;
     }
 
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setIsLoading(true);
-      setError(null);
-
-      // Check if user is Admin or Subadmin
-      const isAdmin =
-        currentUser?.role === 'ADMIN' || currentUser?.role === 'SUBADMIN';
-
+      const isAdmin = user.role === 'ADMIN' || user.role === 'SUBADMIN';
       let coursesData: UserCourse[];
 
       if (isAdmin) {
-        // For admins: Load ALL active categories from backend
         const response = await getCategories({ isActive: true });
         const allCategories = response.data.data;
-
-        // Convert all categories to UserCourse format
         coursesData = allCategories.map((category: any) => ({
           courseId: category.id,
           course: {
@@ -154,26 +138,24 @@ export function useUserCourses() {
             totalLessons: category.videoCount || 0,
             progressPercentage: 0,
           },
-          hasAccess: true, // Admins have access to everything
+          hasAccess: true,
         }));
       } else {
-        // For regular users: Load only purchased courses
-        coursesData = await getUserCoursesService(currentToken);
+        coursesData = await getUserCoursesService(token);
       }
-
       setCourses(coursesData);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Error al cargar cursos';
+        err instanceof Error ? err.message : 'Error al recargar los cursos';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [token, user, setCourses]);
 
   return {
     courses,
-    isLoading,
+    isLoading: isLoading || isAuthLoading,
     error,
     refresh,
   };

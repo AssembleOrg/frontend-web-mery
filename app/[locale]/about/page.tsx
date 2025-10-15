@@ -76,6 +76,12 @@ export default async function AboutPage() {
                   </p>
                 </div>
 
+                <div>
+                  <p className='font-secondary text-muted-foreground leading-relaxed'>
+                    {content('paragraph4')}{' '}
+                  </p>
+                </div>
+
                 <div className='pt-4'>
                   <p className='font-secondary text-muted-foreground mb-2'>
                     {content('signature.invitation')}

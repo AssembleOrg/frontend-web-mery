@@ -3,12 +3,13 @@
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { LogIn, Mail, Lock } from 'lucide-react';
 import { RecoverPass } from '@/components/auth/RecoverPass';
 import { toast } from 'react-hot-toast';
 import { LoginSkeleton } from '@/components/auth/LoginSkeleton';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,12 +19,19 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showRecoverView, setShowRecoverView] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  //auto focus
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
   }, [error]);
+
+  useEffect(() => {
+    emailInputRef.current?.focus();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,12 +63,9 @@ export default function LoginPage() {
       <Navigation />
       <div className='container mx-auto px-4 py-16 max-w-md'>
         <div className='bg-card p-8 rounded-lg border'>
-          {/* --- 3. RENDERIZADO CONDICIONAL --- */}
           {showRecoverView ? (
-            // Si showRecoverView es true, muestra el componente de recuperación
             <RecoverPass onClose={() => setShowRecoverView(false)} />
           ) : (
-            // Si es false, muestra el formulario de login (tu código original)
             <>
               <div className='text-center mb-8'>
                 <LogIn className='w-12 h-12 mx-auto text-[#f9bbc4] mb-4' />
@@ -76,7 +81,6 @@ export default function LoginPage() {
                 onSubmit={handleSubmit}
                 className='space-y-6'
               >
-                {/* Email */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
                     Email
@@ -84,6 +88,7 @@ export default function LoginPage() {
                   <div className='relative'>
                     <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
                     <input
+                      ref={emailInputRef}
                       type='email'
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -94,7 +99,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Password */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
                     Contraseña
@@ -102,13 +106,29 @@ export default function LoginPage() {
                   <div className='relative'>
                     <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
                     <input
-                      type='password'
+                      type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
                       placeholder='Tu contraseña'
                       required
                     />
+                    <button
+                      type='button'
+                      onClick={() => setShowPassword(!showPassword)}
+                      className='absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                      aria-label={
+                        showPassword
+                          ? 'Ocultar contraseña'
+                          : 'Mostrar contraseña'
+                      }
+                    >
+                      {showPassword ? (
+                        <FaEyeSlash size={20} />
+                      ) : (
+                        <FaEye size={20} />
+                      )}
+                    </button>
                   </div>
                 </div>
 

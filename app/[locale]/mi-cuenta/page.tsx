@@ -233,7 +233,10 @@ export default function MiCuentaPage() {
               Detalles de la Cuenta
             </h2>
             <div className='bg-card p-6 rounded-lg border'>
-              <form onSubmit={handleProfileSubmit} className='space-y-6'>
+              <form
+                onSubmit={handleProfileSubmit}
+                className='space-y-6'
+              >
                 {/* Nombre Completo */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
