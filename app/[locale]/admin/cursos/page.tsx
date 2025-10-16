@@ -15,10 +15,13 @@ export default function AdminCursosPage() {
   const router = useRouter();
   const locale = (params.locale as string) || 'es';
 
-  const { fetchCategories, deleteCategory } = useAdminStore();
   const { showConfirm } = useModal();
-  const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Subscribe directly to admin store (auto-updates when categories change)
+  const categories = useAdminStore((state) => state.categories);
+  const fetchCategories = useAdminStore((state) => state.fetchCategories);
+  const deleteCategory = useAdminStore((state) => state.deleteCategory);
 
   // Load categories on mount
   useEffect(() => {
@@ -26,9 +29,6 @@ export default function AdminCursosPage() {
       setIsLoading(true);
       try {
         await fetchCategories();
-        // Get categories from store after fetch
-        const cats = useAdminStore.getState().categories;
-        setCategories(cats);
       } catch (error) {
         console.error('Error loading categories:', error);
       } finally {
@@ -55,9 +55,7 @@ export default function AdminCursosPage() {
       const success = await deleteCategory(id);
       if (success) {
         toast.success(`Curso "${courseName}" eliminado exitosamente`);
-        // Update local state after deletion
-        const updatedCategories = useAdminStore.getState().categories;
-        setCategories(updatedCategories);
+        // No need to update local state - store subscription handles it automatically
       } else {
         toast.error(
           'No se pudo eliminar el curso. Por favor intenta nuevamente.'

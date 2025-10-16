@@ -18,11 +18,40 @@ export default function FormacionesPage() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [courses, setCourses] = useState<Course[]>([]);
   const [filter, setFilter] = useState<CourseFilter>('all');
 
-  // Get courses from admin store
-  const { fetchCategories } = useAdminStore();
+  // Subscribe directly to admin store (auto-updates when categories change)
+  const categories = useAdminStore((state) => state.categories);
+  const fetchCategories = useAdminStore((state) => state.fetchCategories);
+
+  // Convert categories to courses format whenever categories change
+  const courses = useMemo(() => {
+    // Default: mostrar precios en ARS (mercado principal argentino)
+    return categories.map((cat): Course => {
+      return {
+        id: cat.id,
+        title: cat.name,
+        description: cat.description || '',
+        image: getCourseImage(cat.slug, cat.image),
+        price: cat.priceARS || 0,
+        priceARS: cat.priceARS || 0,
+        priceUSD: cat.priceUSD || 0,
+        isFree: cat.isFree || false,
+        priceDisplay: cat.isFree
+          ? 'Gratis'
+          : cat.priceARS > 0
+          ? `$${cat.priceARS.toLocaleString('es-AR')}`
+          : cat.priceUSD > 0
+          ? `U$S ${cat.priceUSD}`
+          : 'Gratis',
+        currency: 'ARS' as 'ARS' | 'USD', // Siempre ARS por defecto
+        slug: cat.slug,
+        isPublished: cat.isActive,
+        order: cat.order || 0,
+        isActive: cat.isActive,
+      };
+    });
+  }, [categories]);
 
   // Fetch courses from API on mount
   useEffect(() => {
@@ -30,37 +59,6 @@ export default function FormacionesPage() {
       setIsLoading(true);
       try {
         await fetchCategories();
-        // Get categories from store after fetch
-        const categories = useAdminStore.getState().categories;
-
-        // Convert categories to courses format
-        // Default: mostrar precios en ARS (mercado principal argentino)
-        const coursesData: Course[] = categories.map((cat): Course => {
-          return {
-            id: cat.id,
-            title: cat.name,
-            description: cat.description || '',
-            image: getCourseImage(cat.slug, cat.image),
-            price: cat.priceARS || 0,
-            priceARS: cat.priceARS || 0,
-            priceUSD: cat.priceUSD || 0,
-            isFree: cat.isFree || false,
-            priceDisplay: cat.isFree
-              ? 'Gratis'
-              : cat.priceARS > 0
-              ? `$${cat.priceARS.toLocaleString('es-AR')}`
-              : cat.priceUSD > 0
-              ? `U$S ${cat.priceUSD}`
-              : 'Gratis',
-            currency: 'ARS' as 'ARS' | 'USD', // Siempre ARS por defecto
-            slug: cat.slug,
-            isPublished: cat.isActive,
-            order: cat.order || 0,
-            isActive: cat.isActive,
-          };
-        });
-
-        setCourses(coursesData);
       } catch (error) {
         console.error('Error loading courses:', error);
       } finally {
