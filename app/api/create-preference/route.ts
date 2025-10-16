@@ -6,19 +6,42 @@ const client = new MercadoPagoConfig({
 });
 
 export async function POST(req: NextRequest) {
-  const rawBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  if (!rawBaseUrl) {
-    console.error('NEXT_PUBLIC_BASE_URL no está definida.');
+  // Validar configuración
+  const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+  
+  // URL del frontend para redirecciones (success/failure/pending)
+  const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || process.env.VERCEL_URL;
+  
+  // URL del backend para webhook
+  const backendUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  if (!accessToken) {
+    console.error('MERCADOPAGO_ACCESS_TOKEN no está definido.');
     return NextResponse.json(
-      { error: 'Configuración del servidor incompleta.' },
+      { error: 'Configuración del servidor incompleta: falta ACCESS_TOKEN de MercadoPago.' },
       { status: 500 }
     );
   }
 
-  const baseUrl = rawBaseUrl.replace(/\/$/, '');
+  if (!frontendUrl && !backendUrl) {
+    console.error('Ni NEXT_PUBLIC_FRONTEND_URL ni NEXT_PUBLIC_BASE_URL están definidas.');
+    return NextResponse.json(
+      { error: 'Configuración del servidor incompleta: falta URL del frontend.' },
+      { status: 500 }
+    );
+  }
+
+  // Para las redirecciones, usar frontend URL si existe, sino usar el backend URL como fallback
+  const redirectBaseUrl = (frontendUrl || backendUrl)!.replace(/\/$/, '');
+  // Para el webhook, usar backend URL si existe, sino frontend
+  const webhookBaseUrl = (backendUrl || frontendUrl)!.replace(/\/$/, '');
+  
+  console.log('[Create Preference] Frontend URL:', redirectBaseUrl);
+  console.log('[Create Preference] Webhook URL:', webhookBaseUrl);
 
   try {
     const { items, locale, userEmail } = await req.json();
+    console.log('[Create Preference] Datos recibidos:', { items, locale, userEmail });
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -35,40 +58,72 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const preferenceItems = items.map((item: any) => ({
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      quantity: Number(item.quantity),
-      unit_price: Number(item.price),
-      currency_id: 'ARS',
-    }));
+    const preferenceItems = items.map((item: any) => {
+      const quantity = Number(item.quantity);
+      const price = Number(item.price);
+      
+      if (isNaN(quantity) || quantity <= 0) {
+        throw new Error(`Cantidad inválida para el item: ${item.title}`);
+      }
+      if (isNaN(price) || price <= 0) {
+        throw new Error(`Precio inválido para el item: ${item.title}`);
+      }
+
+      return {
+        id: String(item.id),
+        title: item.title,
+        description: item.description || item.title,
+        quantity: quantity,
+        unit_price: price,
+        currency_id: 'ARS',
+      };
+    });
+
+    console.log('[Create Preference] Items procesados:', preferenceItems);
 
     const preference = await new Preference(client).create({
       body: {
         items: preferenceItems,
         payer: {
-          email: 'TESTUSER8883738017904117317@TESTUSER.COM',
+          email: userEmail,
         },
         metadata: {
           user_email: userEmail,
         },
         back_urls: {
-          success: `${baseUrl}/${effectiveLocale}/checkout/success`,
-          failure: `${baseUrl}/${effectiveLocale}/checkout/failure`,
-          pending: `${baseUrl}/${effectiveLocale}/checkout/pending`,
+          success: `${redirectBaseUrl}/${effectiveLocale}/checkout/success`,
+          failure: `${redirectBaseUrl}/${effectiveLocale}/checkout/failure`,
+          pending: `${redirectBaseUrl}/${effectiveLocale}/checkout/pending`,
         },
-        notification_url: `${baseUrl}/api/webhook`,
+        auto_return: 'approved',
+        notification_url: `${webhookBaseUrl}/api/webhook`,
       },
     });
 
-    if (!preference.init_point) {
-      throw new Error('No se pudo obtener la URL de pago (init_point).');
+    if (!preference.id) {
+      throw new Error('No se pudo crear la preferencia de pago.');
     }
 
-    return NextResponse.json({ url: preference.init_point });
+    console.log('[Create Preference] Preferencia creada:', {
+      id: preference.id,
+      init_point: preference.init_point,
+      sandbox_init_point: preference.sandbox_init_point
+    });
+
+    // Devuelve tanto el ID como la URL para compatibilidad
+    return NextResponse.json({ 
+      id: preference.id,
+      url: preference.init_point,
+      sandbox_init_point: preference.sandbox_init_point
+    });
   } catch (error: any) {
-    console.error('Error al crear la preferencia de Mercado Pago:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('[Create Preference] Error completo:', error);
+    console.error('[Create Preference] Stack:', error.stack);
+    console.error('[Create Preference] Causa:', error.cause);
+    
+    return NextResponse.json({ 
+      error: error.message || 'Error al crear la preferencia de pago',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }

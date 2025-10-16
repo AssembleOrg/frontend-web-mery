@@ -77,6 +77,12 @@ export default function FinalizarCompraPage() {
     }));
 
     try {
+      console.log('Enviando datos a MercadoPago:', {
+        items: itemsForAPI,
+        locale,
+        userEmail: user.email,
+      });
+
       const response = await fetch('/api/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,26 +95,34 @@ export default function FinalizarCompraPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('Error del servidor:', errorData);
         throw new Error(
-          errorData.message || 'Error en el servidor al crear la preferencia.'
+          errorData.error || 'Error en el servidor al crear la preferencia.'
         );
       }
 
-      const { url } = await response.json();
-      if (url) {
+      const data = await response.json();
+      console.log('Respuesta de MercadoPago:', data);
+
+      const paymentUrl = data.url || data.init_point || data.sandbox_init_point;
+      
+      if (paymentUrl) {
         toast.success('Redirigiendo a la pasarela de pago...', {
           id: 'payment-toast',
         });
-        router.push(url);
+        // Redirigir en una nueva ventana para evitar problemas
+        window.location.href = paymentUrl;
       } else {
-        throw new Error('No se recibió una URL de pago.');
+        console.error('Datos recibidos:', data);
+        throw new Error('No se recibió una URL de pago válida.');
       }
     } catch (err: any) {
+      console.error('Error completo:', err);
       toast.error(
         err.message || 'No se pudo procesar el pago. Intenta de nuevo.',
         { id: 'payment-toast' }
       );
-      console.error(err);
+      setError(err.message);
       setIsProcessing(false);
     }
   };
