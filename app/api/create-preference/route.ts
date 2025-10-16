@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       body: {
         items: preferenceItems,
         payer: {
-          email: 'TESTUSER8883738017904117317@TESTUSER.COM',
+          email: userEmail,
         },
         metadata: {
           user_email: userEmail,
