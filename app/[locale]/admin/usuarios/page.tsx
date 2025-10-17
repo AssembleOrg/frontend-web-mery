@@ -106,20 +106,19 @@ export default function AdminUsuariosPage() {
   const loadCategories = async () => {
     try {
       setIsLoadingCategories(true);
-      const token = getAuthToken();
       
-      const response = await fetch(`${API_BASE_URL}/video-categories`, {
+      // Usar el endpoint /categories/all que devuelve TODAS las categorías activas sin paginación
+      const response = await fetch(`${API_BASE_URL}/categories/all`, {
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
       });
 
       if (!response.ok) throw new Error('Error al cargar categorías');
 
+      // Backend retorna: { success, message, data: [...], timestamp }
       const responseData = await response.json();
-      // Backend retorna: { success, data: { data: [...], meta }, message }
-      const categoriesData = responseData.data?.data || responseData.data || [];
+      const categoriesData = responseData.data || [];
       setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (_error) {
       toast.error('Error al cargar categorías');
