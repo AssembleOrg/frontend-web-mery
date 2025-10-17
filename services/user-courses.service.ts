@@ -68,6 +68,7 @@ export const getUserCourses = async (token: string): Promise<UserCourse[]> => {
       updatedAt: new Date(category.updatedAt),
       order: category.order,
       isActive: category.isActive,
+      isPurchased: category.isPurchased || false, // From backend - true if user specifically purchased
     },
     enrolledAt: new Date(category.createdAt), // Use creation date as fallback
     progress: {

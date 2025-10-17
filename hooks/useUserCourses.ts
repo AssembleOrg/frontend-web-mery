@@ -57,6 +57,7 @@ export function useUserCourses() {
               updatedAt: new Date(category.updatedAt),
               order: category.order,
               isActive: category.isActive,
+              isPurchased: category.isPurchased || false,
             },
             enrolledAt: new Date(category.createdAt),
             progress: {
@@ -130,6 +131,7 @@ export function useUserCourses() {
             updatedAt: new Date(category.updatedAt),
             order: category.order,
             isActive: category.isActive,
+            isPurchased: category.isPurchased || false,
           },
           enrolledAt: new Date(category.createdAt),
           progress: {

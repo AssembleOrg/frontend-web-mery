@@ -23,7 +23,6 @@ export function decodeJWT(token: string): JWTPayload | null {
     // JWT format: header.payload.signature
     const parts = token.split('.');
     if (parts.length !== 3) {
-      console.error('[JWT] Invalid token format');
       return null;
     }
 
@@ -40,16 +39,14 @@ export function decodeJWT(token: string): JWTPayload | null {
     );
 
     const decoded = JSON.parse(jsonPayload) as JWTPayload;
-    
+
     // Basic validation
     if (!decoded.sub || !decoded.email || !decoded.role) {
-      console.error('[JWT] Missing required fields in token');
       return null;
     }
 
     return decoded;
-  } catch (error) {
-    console.error('[JWT] Failed to decode token:', error);
+  } catch (_error) {
     return null;
   }
 }

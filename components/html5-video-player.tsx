@@ -154,9 +154,6 @@ export default function HTML5VideoPlayer({
           className='w-full h-full object-cover'
           autoPlay={autoPlay}
           muted={muted}
-          onError={(e) => {
-            console.error('Video Error:', e);
-          }}
         />
 
         {/* Indicador de completado COMENTADO BY JULY*/}

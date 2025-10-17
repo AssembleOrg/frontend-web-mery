@@ -173,7 +173,7 @@ export default function MiCuentaPage() {
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div 
+                            <div
                               className="bg-pink-500 h-2 rounded-full transition-all duration-300"
                               style={{ width: `${progressPercentage}%` }}
                             />
@@ -225,17 +225,65 @@ export default function MiCuentaPage() {
         );
 
       case 'compras':
+        // Filtrar solo cursos comprados
+        const purchasedCourses = userCourses.filter(
+          (userCourse) => userCourse.course.isPurchased === true
+        );
+
         return (
           <div>
             <h2 className='text-2xl font-primary font-bold text-foreground mb-6'>
               Historial de Compras
             </h2>
-            <div className='bg-card p-8 rounded-lg border text-center'>
-              <ShoppingBag className='w-16 h-16 mx-auto text-muted-foreground mb-4' />
-              <p className='text-muted-foreground'>
-                No hay compras registradas en tu cuenta.
-              </p>
-            </div>
+
+            {loading ? (
+              <MiCuentaSkeleton />
+            ) : purchasedCourses.length === 0 ? (
+              <div className='bg-card p-8 rounded-lg border text-center'>
+                <ShoppingBag className='w-16 h-16 mx-auto text-muted-foreground mb-4' />
+                <p className='text-muted-foreground'>
+                  No hay compras registradas en tu cuenta.
+                </p>
+                <button
+                  onClick={() => router.push('/es/formaciones')}
+                  className='mt-4 bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-2 rounded-lg font-primary font-medium transition-colors duration-200'
+                >
+                  Explorar Cursos
+                </button>
+              </div>
+            ) : (
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                {purchasedCourses.map((userCourse) => {
+                  const { course } = userCourse;
+
+                  return (
+                    <div
+                      key={course.id}
+                      className='bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-shadow flex flex-col'
+                    >
+                      {/* Imagen del curso */}
+                      <div className='relative h-48 bg-gray-200 dark:bg-gray-700'>
+                        <div
+                          className='w-full h-full object-cover bg-cover bg-center'
+                          style={{ backgroundImage: `url(${course.image})` }}
+                        />
+                      </div>
+
+                      {/* Contenido */}
+                      <div className='p-6 flex flex-col h-full'>
+                        <h3 className='text-lg font-bold text-foreground mb-2'>
+                          {course.title}
+                        </h3>
+
+                        <p className='text-muted-foreground text-sm mb-4 line-clamp-2 flex-grow'>
+                          {course.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
 

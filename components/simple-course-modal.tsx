@@ -46,8 +46,8 @@ export default function SimpleCourseModal({
             setStreamUrl(result.streamUrl || null);
           }
         })
-        .catch((error) => {
-          console.error('[SimpleCourseModal] Error loading presentation video:', error);
+        .catch((_error) => {
+          // Error handled silently
         })
         .finally(() => {
           setLoadingVideo(false);

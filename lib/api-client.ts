@@ -132,10 +132,6 @@ async function apiRequest<T>(
 
     // SECURITY: Auto-redirect to login on authentication failures
     if (response.status === 401 || response.status === 403) {
-      console.warn(
-        '[api-client] Authentication failed (401/403), triggering logout'
-      );
-
       // Trigger global auth error event
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
@@ -569,11 +565,6 @@ export const getPresentationVideo = async (
       limit: '1',
     });
 
-    console.log(
-      '[API] Fetching presentation video:',
-      `${API_BASE_URL}/videos?${queryParams}`
-    );
-
     const response = await fetch(`${API_BASE_URL}/videos?${queryParams}`, {
       method: 'GET',
       headers: {
@@ -583,11 +574,6 @@ export const getPresentationVideo = async (
     });
 
     if (!response.ok) {
-      console.error(
-        '[API] Response not OK:',
-        response.status,
-        response.statusText
-      );
       return null;
     }
 
@@ -647,15 +633,10 @@ export const getPresentationVideo = async (
               streamUrl: finalStreamUrl,
             };
           } else {
-            console.warn(
-              '[API] Could not get stream URL (backend may require auth):',
-              streamResponse.status
-            );
             // Return video without stream URL
             return { video };
           }
-        } catch (streamError) {
-          console.warn('[API] Error getting stream URL:', streamError);
+        } catch (_streamError) {
           // Return video without stream URL
           return { video };
         }
@@ -663,8 +644,7 @@ export const getPresentationVideo = async (
     }
 
     return null;
-  } catch (error) {
-    console.error('[API] Error fetching presentation video:', error);
+  } catch (_error) {
     return null;
   }
 };

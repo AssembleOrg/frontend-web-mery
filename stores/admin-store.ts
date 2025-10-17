@@ -265,32 +265,24 @@ export const useAdminStore = create<AdminState & AdminActions>()(
       set({ isLoading: true, error: null });
       try {
         const response = await apiClient.getVideos({ categoryId });
-        console.log('[Admin Store] Videos response for category', categoryId, ':', response);
 
         const newVideos = response.data.data;
-        console.log('[Admin Store] New videos count:', newVideos.length);
 
         set((state) => {
           if (categoryId) {
             // Fusionar inteligentemente: remover videos viejos de esta categoría, agregar nuevos
-            console.log('[Admin Store] Before merge, total videos:', state.videos.length);
-
             // Filtrar videos de otras categorías (mantenerlos)
             const otherCategoryVideos = state.videos.filter(v => v.categoryId !== categoryId);
-            console.log('[Admin Store] Videos from other categories:', otherCategoryVideos.length);
 
             // Combinar: videos de otras categorías + nuevos videos de esta categoría
             state.videos = [...otherCategoryVideos, ...newVideos];
-            console.log('[Admin Store] After merge, total videos:', state.videos.length);
           } else {
             // Si no hay categoryId, reemplazar todo (carga global)
             state.videos = newVideos;
-            console.log('[Admin Store] Global load, total videos:', state.videos.length);
           }
           state.isLoading = false;
         });
       } catch (error) {
-        console.error('[Admin Store] Error fetching videos:', error);
         set({
           isLoading: false,
           error: error instanceof Error ? error.message : 'Failed to fetch videos'
@@ -334,17 +326,6 @@ export const useAdminStore = create<AdminState & AdminActions>()(
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          console.error('[Admin Store] Create video failed:', response.status, errorData);
-
-          // Manejar errores específicos
-          // if (response.status === 409) {
-          //   const error = new Error(`Ya existe un video con el slug "${video.slug}". Por favor usa un slug diferente.`);
-          //   set({
-          //     isLoading: false,
-          //     error: error.message
-          //   });
-          //   throw error;
-          // }
 
           const error = new Error(errorData.message || `Error ${response.status}: No se pudo crear el video`);
           set({
@@ -365,7 +346,6 @@ export const useAdminStore = create<AdminState & AdminActions>()(
 
         return newVideo;
       } catch (error) {
-        console.error('[Admin Store] Error creating video:', error);
         // El error ya fue seteado en el bloque if(!response.ok), solo propagar
         if (!(error instanceof Error && get().error)) {
           set({

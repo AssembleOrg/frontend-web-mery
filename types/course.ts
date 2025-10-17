@@ -71,6 +71,9 @@ export interface Course {
   order?: number;
   isActive?: boolean;
 
+  // Acceso del usuario autenticado (desde backend)
+  isPurchased?: boolean; // true si el usuario compró específicamente este curso
+
   // Contenido del modal (detalles completos)
   modalContent?: CourseModalContent;
 

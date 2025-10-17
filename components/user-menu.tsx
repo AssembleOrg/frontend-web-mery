@@ -56,7 +56,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
       setIsOpen(false);
       onNavigate?.();
       window.location.href = `/${locale}`;
-    } catch (error) {
+    } catch {
       // Forzar limpieza local y redirección incluso si hay error
       setIsOpen(false);
       onNavigate?.();

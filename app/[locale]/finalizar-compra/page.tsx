@@ -3,13 +3,14 @@
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { CheckoutView } from '@/components/checkout/CheckoutView';
 import { CheckoutSkeleton } from '@/components/checkout/CheckoutSkeleton';
 import { toast } from 'react-hot-toast';
+
 export default function FinalizarCompraPage() {
   const router = useRouter();
   const params = useParams();
@@ -18,43 +19,46 @@ export default function FinalizarCompraPage() {
   const { cart, totalARS, isLoading: isCartLoading } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    nombre: '',
-    apellido: '',
-    telefono: '',
-    pais: '',
-    ciudad: '',
-  });
+
+  // Compute initial form data based on user data
+  const initialFormData = useMemo(() => {
+    if (!user) {
+      return {
+        nombre: '',
+        apellido: '',
+      };
+    }
+
+    // Use firstName/lastName if available, otherwise parse name
+    let firstName = user.firstName || '';
+    let lastName = user.lastName || '';
+
+    if (!firstName && !lastName && user.name) {
+      const nameParts = user.name.trim().split(' ');
+      firstName = nameParts[0] || '';
+      lastName = nameParts.slice(1).join(' ') || '';
+    }
+
+    const formData = {
+      nombre: firstName,
+      apellido: lastName,
+    };
+
+    return formData;
+  }, [user]);
+
+  const [formData, setFormData] = useState(initialFormData);
+
+  // Update formData when initialFormData changes (user profile updated)
+  useEffect(() => {
+    setFormData(initialFormData);
+  }, [initialFormData]);
 
   useEffect(() => {
     if (!isAuthLoading && !isAuthenticated) {
       router.push(`/${locale}/login?redirect=/es/finalizar-compra`);
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
-
-  // Autocomplete - Fill form with user data if available
-  useEffect(() => {
-    if (user) {
-      // Use firstName/lastName if available, otherwise parse name
-      let firstName = user.firstName || '';
-      let lastName = user.lastName || '';
-      
-      if (!firstName && !lastName && user.name) {
-        const nameParts = user.name.trim().split(' ');
-        firstName = nameParts[0] || '';
-        lastName = nameParts.slice(1).join(' ') || '';
-      }
-      
-      setFormData((prev) => ({
-        ...prev,
-        nombre: firstName || prev.nombre,
-        apellido: lastName || prev.apellido,
-        telefono: user.phone || prev.telefono,
-        pais: user.country || prev.pais,
-        ciudad: user.city || prev.ciudad,
-      }));
-    }
-  }, [user]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -84,49 +88,36 @@ export default function FinalizarCompraPage() {
     }));
 
     try {
-      console.log('Enviando datos a MercadoPago:', {
-        items: itemsForAPI,
-        locale,
-        userId: user.id,        // ⭐ AGREGADO
-        userEmail: user.email,
-      });
-
       const response = await fetch('/api/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: itemsForAPI,
           locale,
-          userId: user.id,      // ⭐ AGREGADO: ID del usuario
+          userId: user.id,
           userEmail: user.email,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('Error del servidor:', errorData);
         throw new Error(
           errorData.error || 'Error en el servidor al crear la preferencia.'
         );
       }
 
       const data = await response.json();
-      console.log('Respuesta de MercadoPago:', data);
-
       const paymentUrl = data.url || data.init_point || data.sandbox_init_point;
-      
+
       if (paymentUrl) {
         toast.success('Redirigiendo a la pasarela de pago...', {
           id: 'payment-toast',
         });
-        // Redirigir en una nueva ventana para evitar problemas
         window.location.href = paymentUrl;
       } else {
-        console.error('Datos recibidos:', data);
         throw new Error('No se recibió una URL de pago válida.');
       }
     } catch (err: any) {
-      console.error('Error completo:', err);
       toast.error(
         err.message || 'No se pudo procesar el pago. Intenta de nuevo.',
         { id: 'payment-toast' }
@@ -138,8 +129,7 @@ export default function FinalizarCompraPage() {
 
   const isFormValid = !!(
     formData.nombre &&
-    formData.apellido &&
-    formData.telefono
+    formData.apellido
   );
 
   if (isAuthLoading || isCartLoading) {

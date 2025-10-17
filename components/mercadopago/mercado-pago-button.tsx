@@ -40,9 +40,8 @@ export function MercadoPagoButton() {
 
       const { id } = await response.json();
       setPreferenceId(id);
-    } catch (err: any) {
+    } catch (_err: any) {
       setError('No se pudo procesar el pago. Por favor, intenta de nuevo.');
-      console.error(err);
     } finally {
       setIsLoading(false);
     }

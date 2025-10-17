@@ -77,8 +77,7 @@ export default function AdminUsuariosPage() {
 
       const data = await response.json();
       setUsers(data.users || data);
-    } catch (error) {
-      console.error('Error loading users:', error);
+    } catch (_error) {
       toast.error('Error al cargar usuarios');
     } finally {
       setIsLoadingUsers(false);
@@ -94,8 +93,7 @@ export default function AdminUsuariosPage() {
 
       const data = await response.json();
       setCategories(data.categories || data);
-    } catch (error) {
-      console.error('Error loading categories:', error);
+    } catch (_error) {
       toast.error('Error al cargar categorías');
     } finally {
       setIsLoadingCategories(false);
@@ -111,8 +109,7 @@ export default function AdminUsuariosPage() {
 
       const data = await response.json();
       setUserCourses(data.categories || data);
-    } catch (error) {
-      console.error('Error loading user courses:', error);
+    } catch (_error) {
       toast.error('Error al cargar cursos del usuario');
       setUserCourses([]);
     } finally {
@@ -158,7 +155,6 @@ export default function AdminUsuariosPage() {
       setSelectedCategory('');
       loadUserCourses(selectedUser.id);
     } catch (error: any) {
-      console.error('Error assigning course:', error);
       toast.error(error.message || 'Error al asignar curso');
     } finally {
       setIsLoading(false);
@@ -193,7 +189,6 @@ export default function AdminUsuariosPage() {
       toast.success('Acceso al curso eliminado');
       loadUserCourses(selectedUser.id);
     } catch (error: any) {
-      console.error('Error removing course:', error);
       toast.error(error.message || 'Error al quitar curso');
     } finally {
       setIsLoading(false);

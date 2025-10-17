@@ -29,8 +29,8 @@ export default function AdminCursosPage() {
       setIsLoading(true);
       try {
         await fetchCategories();
-      } catch (error) {
-        console.error('Error loading categories:', error);
+      } catch (_error) {
+        // Error handled silently
       } finally {
         setIsLoading(false);
       }
@@ -62,7 +62,6 @@ export default function AdminCursosPage() {
         );
       }
     } catch (error) {
-      console.error('[AdminCursos] Error al eliminar curso:', error);
       const errorMessage =
         error instanceof Error
           ? error.message

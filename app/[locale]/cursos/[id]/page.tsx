@@ -51,16 +51,8 @@ export default function CursoDetallePage() {
   const courseProgress = getUserCourseProgress(courseId);
   const handleLessonSelect = useCallback(
     async (lesson: Lesson) => {
-      console.log(
-        '[CursoPage] Seleccionando lección:',
-        lesson.title,
-        'ID:',
-        lesson.id
-      );
-
       // Cancelar request anterior si existe
       if (lessonSelectAbortController.current) {
-        console.log('[CursoPage] Cancelando request anterior de lección');
         lessonSelectAbortController.current.abort();
       }
 
@@ -73,7 +65,6 @@ export default function CursoDetallePage() {
 
       // Solo intentamos cargar el video si hay token (usuario autenticado)
       if (!token) {
-        console.warn('[CursoPage] No hay token, no se puede cargar el video');
         return;
       }
 
@@ -81,27 +72,16 @@ export default function CursoDetallePage() {
       setStreamUrl(null);
 
       try {
-        console.log(
-          '[CursoPage] Solicitando stream URL para video:',
-          lesson.id
-        );
         // Llamamos al endpoint que nos da la URL segura de Vimeo
         const response = await getVideoStreamUrl(lesson.id);
 
         // Solo actualizar estado si el request no fue abortado
         if (!abortController.signal.aborted) {
-          console.log(
-            '[CursoPage] Stream URL recibida:',
-            response.data.streamUrl
-          );
           setStreamUrl(response.data.streamUrl);
-        } else {
-          console.log('[CursoPage] Request abortado, ignorando respuesta');
         }
-      } catch (error) {
+      } catch (_error) {
         // Solo mostrar error si el request no fue abortado
         if (!abortController.signal.aborted) {
-          console.error('[CursoPage] Error al obtener stream URL:', error);
           toast.error(
             'No se pudo cargar el video. Por favor intenta de nuevo.'
           );
@@ -124,7 +104,6 @@ export default function CursoDetallePage() {
 
     // Cancelar request anterior si existe
     if (loadCourseAbortController.current) {
-      console.log('[CursoPage] Cancelando carga anterior del curso');
       loadCourseAbortController.current.abort();
     }
 
@@ -132,15 +111,12 @@ export default function CursoDetallePage() {
     const abortController = new AbortController();
     loadCourseAbortController.current = abortController;
 
-    console.log('[CursoPage] Iniciando carga del curso:', courseId);
-
     try {
       // 1. Cargar detalles del curso
       const categoryData = await getCourseDetails(courseId);
 
       // Si el request fue abortado, salir temprano
       if (abortController.signal.aborted) {
-        console.log('[CursoPage] Carga de curso abortada');
         return;
       }
 
@@ -165,7 +141,6 @@ export default function CursoDetallePage() {
 
       // Si el request fue abortado, salir temprano
       if (abortController.signal.aborted) {
-        console.log('[CursoPage] Carga de curso abortada');
         return;
       }
 
@@ -207,20 +182,14 @@ export default function CursoDetallePage() {
         setCourse(courseData);
         setCurrentCourse(courseData);
 
-        console.log(
-          '[CursoPage] Curso cargado exitosamente, total de lecciones:',
-          lessons.length
-        );
-
         // Selección inicial
         if (lessons.length > 0) {
           handleLessonSelect(lessons[0]);
         }
       }
-    } catch (err) {
+    } catch (_err) {
       if (!abortController.signal.aborted) {
         setError('Error al cargar el curso');
-        console.error('[CursoPage] Error loading course:', err);
       }
     } finally {
       if (!abortController.signal.aborted) {

@@ -2,16 +2,13 @@
 'use client';
 
 import Image from 'next/image';
-import { CreditCard, User, Mail, Phone, MapPin } from 'lucide-react';
+import { CreditCard, User, Mail } from 'lucide-react';
 import type { Cart } from '@/lib/api-client';
 import type { User as UserType } from '@/types/auth';
 
 interface FormData {
   nombre: string;
   apellido: string;
-  telefono: string;
-  pais: string;
-  ciudad: string;
 }
 
 interface CheckoutViewProps {
@@ -97,19 +94,6 @@ export const CheckoutView = ({
                 <p className='text-xs text-muted-foreground mt-1'>
                   El acceso a los cursos será enviado a este email
                 </p>
-              </div>
-              <div className='mt-4'>
-                <label className='block text-sm font-medium text-foreground mb-2 items-center gap-2'>
-                  <Phone className='w-4 h-4 text-[#f9bbc4]' /> Teléfono *
-                </label>
-                <input
-                  type='tel'
-                  name='telefono'
-                  value={formData.telefono}
-                  onChange={handleInputChange}
-                  required
-                  className='w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent'
-                />
               </div>
             </div>
 

@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3001',
+        port: '3000',
         pathname: '/**',
       },
       {
@@ -41,8 +41,6 @@ const nextConfig: NextConfig = {
     // Development: proxy a localhost para evitar CORS
     // Production: proxy a Railway backend
     const backendUrl = process.env.NEXT_PUBLIC_BASE_URL;
-
-    console.log('[Next.js] Backend URL for API proxy:', backendUrl);
 
     return [
       {

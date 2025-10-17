@@ -11,7 +11,6 @@ export const useCartStore = create<CartState>()(
       addToCart: (course: Course) => {
         // Prevent USD courses from being added to cart
         if (course.currency === 'USD') {
-          console.warn('Cannot add USD course to cart:', course.title);
           return;
         }
 

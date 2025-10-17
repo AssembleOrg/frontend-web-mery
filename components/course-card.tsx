@@ -8,7 +8,7 @@ interface CourseCardProps {
 
 export default function CourseCard({ course, onOpenModal }: CourseCardProps) {
   const handleMoreInfo = () => {
-    onCourseClick?.(course);
+    onOpenModal(course);
   };
 
   return (

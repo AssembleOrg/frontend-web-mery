@@ -158,7 +158,10 @@ export const updateProfile = async (
   userId: string,
   data: UpdateProfileData
 ): Promise<{ user: any }> => {
-  const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+  // Try the new /auth/me endpoint first (recommended for users to update own profile)
+  // If it fails with 404, fallback to the old /users/:id endpoint (for admins updating users)
+
+  let response = await fetch(`${API_BASE_URL}/auth/me`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -167,6 +170,19 @@ export const updateProfile = async (
     credentials: 'include',
     body: JSON.stringify(data),
   });
+
+  // If /auth/me returns 404, try the old endpoint (backward compatibility)
+  if (response.status === 404) {
+    response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+  }
 
   if (!response.ok) {
     const errorData = await response

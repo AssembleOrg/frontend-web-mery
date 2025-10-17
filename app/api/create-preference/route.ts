@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
   const backendUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   if (!accessToken) {
-    console.error('MERCADOPAGO_ACCESS_TOKEN no está definido.');
     return NextResponse.json(
       { error: 'Configuración del servidor incompleta: falta ACCESS_TOKEN de MercadoPago.' },
       { status: 500 }
@@ -24,7 +23,6 @@ export async function POST(req: NextRequest) {
   }
 
   if (!frontendUrl && !backendUrl) {
-    console.error('Ni NEXT_PUBLIC_FRONTEND_URL ni NEXT_PUBLIC_BASE_URL están definidas.');
     return NextResponse.json(
       { error: 'Configuración del servidor incompleta: falta URL del frontend.' },
       { status: 500 }
@@ -35,13 +33,9 @@ export async function POST(req: NextRequest) {
   const redirectBaseUrl = (frontendUrl || backendUrl)!.replace(/\/$/, '');
   // Para el webhook, usar backend URL si existe, sino frontend
   const webhookBaseUrl = (backendUrl || frontendUrl)!.replace(/\/$/, '');
-  
-  console.log('[Create Preference] Frontend URL:', redirectBaseUrl);
-  console.log('[Create Preference] Webhook URL:', webhookBaseUrl);
 
   try {
     const { items, locale, userEmail, userId } = await req.json();
-    console.log('[Create Preference] Datos recibidos:', { items, locale, userEmail, userId });
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -86,11 +80,8 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    console.log('[Create Preference] Items procesados:', preferenceItems);
-
     // Extraer category IDs de los items
     const categoryIds = items.map((item: any) => item.id);
-    console.log('[Create Preference] Category IDs:', categoryIds);
 
     const preference = await new Preference(client).create({
       body: {
@@ -122,18 +113,6 @@ export async function POST(req: NextRequest) {
       throw new Error('No se pudo crear la preferencia de pago.');
     }
 
-    console.log('[Create Preference] Preferencia creada:', {
-      id: preference.id,
-      init_point: preference.init_point,
-      sandbox_init_point: preference.sandbox_init_point,
-      metadata: {
-        user_id: userId,
-        user_email: userEmail,
-        category_ids: categoryIds,
-      },
-      external_reference: `${userId}_${Date.now()}`,
-    });
-
     // Devuelve tanto el ID como la URL para compatibilidad
     return NextResponse.json({ 
       id: preference.id,
@@ -141,11 +120,7 @@ export async function POST(req: NextRequest) {
       sandbox_init_point: preference.sandbox_init_point
     });
   } catch (error: any) {
-    console.error('[Create Preference] Error completo:', error);
-    console.error('[Create Preference] Stack:', error.stack);
-    console.error('[Create Preference] Causa:', error.cause);
-    
-    return NextResponse.json({ 
+    return NextResponse.json({
       error: error.message || 'Error al crear la preferencia de pago',
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     }, { status: 500 });

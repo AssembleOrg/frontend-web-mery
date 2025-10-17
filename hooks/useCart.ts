@@ -11,6 +11,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
+import { toast } from 'react-hot-toast';
 import {
   getCart as getCartService,
   addToCart as addToCartService,
@@ -46,7 +47,6 @@ export function useCart() {
         const errorMessage =
           err instanceof Error ? err.message : 'Error al cargar el carrito';
         setError(errorMessage);
-        console.error('[useCart] Error loading cart:', err);
       } finally {
         setIsLoading(false);
       }
@@ -73,7 +73,22 @@ export function useCart() {
         const errorMessage =
           err instanceof Error ? err.message : 'Error al agregar al carrito';
         setError(errorMessage);
-        console.error('[useCart] Error adding to cart:', err);
+
+        // Show friendly toast based on error type
+        if (errorMessage.includes('Ya compraste')) {
+          toast.success('Ya compraste este curso. Puedes verlo en "Mis Cursos"', {
+            duration: 4000,
+          });
+        } else if (errorMessage.includes('carrito')) {
+          toast.error('Este curso ya está en tu carrito', {
+            duration: 3000,
+          });
+        } else {
+          toast.error(errorMessage, {
+            duration: 3000,
+          });
+        }
+
         return false;
       } finally {
         setIsLoading(false);
@@ -100,7 +115,6 @@ export function useCart() {
         const errorMessage =
           err instanceof Error ? err.message : 'Error al eliminar del carrito';
         setError(errorMessage);
-        console.error('[useCart] Error removing from cart:', err);
         return false;
       } finally {
         setIsLoading(false);
@@ -127,7 +141,6 @@ export function useCart() {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al vaciar el carrito';
       setError(errorMessage);
-      console.error('[useCart] Error clearing cart:', err);
       return false;
     } finally {
       setIsLoading(false);
@@ -151,7 +164,6 @@ export function useCart() {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al cargar resumen';
       setError(errorMessage);
-      console.error('[useCart] Error loading summary:', err);
       return null;
     } finally {
       setIsLoading(false);
@@ -174,7 +186,6 @@ export function useCart() {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al actualizar el carrito';
       setError(errorMessage);
-      console.error('[useCart] Error refreshing cart:', err);
     } finally {
       setIsLoading(false);
     }

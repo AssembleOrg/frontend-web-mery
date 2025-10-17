@@ -190,8 +190,7 @@ export function LessonsStep({
         'ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.',
         'Validación Exitosa'
       );
-    } catch (error) {
-      console.error('Error validating Vimeo ID:', error);
+    } catch (_error) {
       showError('Error al validar el ID de Vimeo. Verifica que sea correcto.');
     } finally {
       setLoadingVimeoData(false);

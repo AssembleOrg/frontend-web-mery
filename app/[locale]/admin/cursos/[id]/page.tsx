@@ -47,9 +47,7 @@ export default function EditarCursoPage() {
         // Load videos for this category
         await fetchVideos(courseId);
         const courseVideos = useAdminStore.getState().videos;
-        
-        console.log('[EditCourse] Loaded videos:', courseVideos);
-        
+
         // Convert videos to lessons format and sort by order
         const lessons = courseVideos
           .map((video: any) => ({
@@ -68,12 +66,10 @@ export default function EditarCursoPage() {
           ...courseData,
           lessons,
         };
-        
-        console.log('[EditCourse] Course with lessons:', courseWithLessons);
+
         setCourse(courseWithLessons);
         setOriginalLessons(lessons); // Save original lessons to compare on save
-      } catch (error) {
-        console.error('Error loading course:', error);
+      } catch (_error) {
         setNotFound(true);
       } finally {
         setIsLoading(false);
@@ -86,8 +82,6 @@ export default function EditarCursoPage() {
   const handleSubmit = async (courseData: CourseCreateInput) => {
     setIsSubmitting(true);
     try {
-      console.log('[EditarCurso] Iniciando actualización...');
-      
       // STEP 1: Update Category (basic course info)
       const categoryUpdates = {
         name: courseData.title,
@@ -101,7 +95,6 @@ export default function EditarCursoPage() {
         order: courseData.order || 0,
       };
 
-      console.log('[EditarCurso] Actualizando categoría:', categoryUpdates);
       const updatedCourse = await updateCategory(courseId, categoryUpdates);
 
       if (!updatedCourse) {
@@ -110,8 +103,6 @@ export default function EditarCursoPage() {
 
       // STEP 2: Manage Lessons (Videos)
       const newLessons = courseData.lessons || [];
-      console.log('[EditarCurso] Lecciones originales:', originalLessons);
-      console.log('[EditarCurso] Lecciones nuevas:', newLessons);
 
       // Identify lessons to delete (were in original but not in new)
       const lessonsToDelete = originalLessons.filter(
@@ -128,13 +119,8 @@ export default function EditarCursoPage() {
         (lesson) => !lesson.id.startsWith('lesson-') && originalLessons.find((orig) => orig.id === lesson.id)
       );
 
-      console.log('[EditarCurso] A eliminar:', lessonsToDelete.length);
-      console.log('[EditarCurso] A crear:', lessonsToCreate.length);
-      console.log('[EditarCurso] A actualizar:', lessonsToUpdate.length);
-
       // Delete videos
       for (const lesson of lessonsToDelete) {
-        console.log('[EditarCurso] Eliminando video:', lesson.id);
         await deleteVideo(lesson.id);
       }
 
@@ -144,11 +130,9 @@ export default function EditarCursoPage() {
 
         // Validar que el vimeoId esté presente
         if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
-          console.error('[EditarCurso] Error: Lección sin vimeoId:', lesson.title);
           throw new Error(`La lección "${lesson.title}" no tiene un ID de Vimeo válido`);
         }
 
-        console.log('[EditarCurso] Creando video:', lesson.title, 'vimeoId:', lesson.vimeoVideoId);
         const videoData = {
           title: lesson.title,
           description: lesson.description || '',
@@ -161,16 +145,12 @@ export default function EditarCursoPage() {
         const createdVideo = await createVideo(videoData);
 
         if (!createdVideo) {
-          console.error('[EditarCurso] Error: No se pudo crear el video:', lesson.title);
           throw new Error(`No se pudo crear el video "${lesson.title}"`);
         }
-
-        console.log('[EditarCurso] ✓ Video creado:', createdVideo.id);
       }
 
       // Update existing videos
       for (const lesson of lessonsToUpdate) {
-        console.log('[EditarCurso] Actualizando video:', lesson.id);
         const updates = {
           title: lesson.title,
           description: lesson.description || '',
@@ -180,12 +160,9 @@ export default function EditarCursoPage() {
         await updateVideo(lesson.id, updates);
       }
 
-      console.log('[EditarCurso] ✓ Curso y lecciones actualizados exitosamente');
-
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
-    } catch (error) {
-      console.error('[EditarCurso] Error:', error);
+    } catch (_error) {
       showError('Error al actualizar el curso. Por favor intenta nuevamente.');
     } finally {
       setIsSubmitting(false);

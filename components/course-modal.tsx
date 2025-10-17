@@ -7,22 +7,19 @@ interface CourseModalProps {
   course: Course | null;
   isOpen: boolean;
   onClose: () => void;
+  onEnroll?: (course: Course) => void;
 }
 
 export default function CourseModal({
   course,
   isOpen,
   onClose,
+  onEnroll,
 }: CourseModalProps) {
   if (!course) return null;
 
   const handleVideoClick = () => {
-    console.log(
-      'Video would play for course:',
-      course.title,
-      'Video ID:',
-      course.modalContent.videoId
-    );
+    // Video would play for course
   };
 
   return (

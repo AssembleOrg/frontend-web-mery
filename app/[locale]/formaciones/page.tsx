@@ -59,8 +59,8 @@ export default function FormacionesPage() {
       setIsLoading(true);
       try {
         await fetchCategories();
-      } catch (error) {
-        console.error('Error loading courses:', error);
+      } catch (_error) {
+        // Error handled silently
       } finally {
         setIsLoading(false);
       }

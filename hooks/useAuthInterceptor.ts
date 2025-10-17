@@ -20,15 +20,6 @@ export function useAuthInterceptor() {
 
   useEffect(() => {
     const handleUnauthorized = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      const { status, endpoint } = customEvent.detail || {};
-
-      console.error('[Auth Interceptor] Unauthorized request detected:', {
-        status,
-        endpoint,
-        redirectingTo: `/${locale}/login`,
-      });
-
       // Clear auth state
       clearAuth();
 

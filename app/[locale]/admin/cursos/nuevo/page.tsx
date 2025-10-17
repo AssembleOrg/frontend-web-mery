@@ -21,8 +21,6 @@ export default function NuevoCursoPage() {
   const handleSubmit = async (courseData: CourseCreateInput) => {
     setIsSubmitting(true);
     try {
-      console.log('[NuevoCurso] Iniciando creación de curso...');
-
       // STEP 1: Create Category (basic course info)
       const categoryData = {
         name: courseData.title,
@@ -36,30 +34,21 @@ export default function NuevoCursoPage() {
         isActive: courseData.isPublished || false,
       };
 
-      console.log('[NuevoCurso] Creando categoría:', categoryData);
       const newCourse = await createCategory(categoryData);
 
       if (!newCourse) {
         throw new Error('Failed to create course');
       }
 
-      console.log('[NuevoCurso] ✓ Categoría creada:', newCourse);
-
       // STEP 2: Create Lessons (Videos) if any
       const lessons = courseData.lessons || [];
 
       if (lessons.length > 0) {
-        console.log('[NuevoCurso] Creando', lessons.length, 'lecciones...');
-
         for (let index = 0; index < lessons.length; index++) {
           const lesson = lessons[index];
 
           // Validar que el vimeoId esté presente
           if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
-            console.error(
-              '[NuevoCurso] Error: Lección sin vimeoId:',
-              lesson.title
-            );
             throw new Error(
               `La lección "${lesson.title}" no tiene un ID de Vimeo válido`
             );
@@ -74,29 +63,13 @@ export default function NuevoCursoPage() {
             isPublished: lesson.isPublished ?? false,
           };
 
-          console.log(
-            '[NuevoCurso] Creando video:',
-            lesson.title,
-            'vimeoId:',
-            videoData.vimeoId
-          );
           const createdVideo = await createVideo(videoData);
 
           if (!createdVideo) {
-            console.error(
-              '[NuevoCurso] Error: No se pudo crear el video:',
-              lesson.title
-            );
             throw new Error(`No se pudo crear el video "${lesson.title}"`);
           }
-
-          console.log('[NuevoCurso] ✓ Video creado:', createdVideo.id);
         }
-
-        console.log('[NuevoCurso] ✓ Todas las lecciones creadas');
       }
-
-      console.log('[NuevoCurso] ✓ Curso y lecciones creados exitosamente');
 
       // Show success toast
       toast.success(`Curso "${courseData.title}" creado exitosamente`);
@@ -104,8 +77,6 @@ export default function NuevoCursoPage() {
       // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (error) {
-      console.error('[NuevoCurso] Error:', error);
-
       let errorMessage = 'Error desconocido al crear el curso';
 
       if (error instanceof Error) {

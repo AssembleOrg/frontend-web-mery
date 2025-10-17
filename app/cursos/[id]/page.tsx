@@ -64,9 +64,8 @@ export default function CursoDetallePage() {
           setSelectedLesson(firstLesson);
           setCurrentLesson(firstLesson);
         }
-      } catch (err) {
+      } catch (_err) {
         setError('Error al cargar el curso');
-        console.error('Error loading course:', err);
       } finally {
         setLoading(false);
       }

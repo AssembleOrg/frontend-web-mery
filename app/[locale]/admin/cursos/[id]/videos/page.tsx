@@ -65,7 +65,6 @@ export default function CursoVideosPage() {
   const loadData = async () => {
     // Cancelar request anterior si existe
     if (loadDataAbortController.current) {
-      console.log('[VideosPage] Cancelando carga anterior de datos');
       loadDataAbortController.current.abort();
     }
 
@@ -74,7 +73,6 @@ export default function CursoVideosPage() {
     loadDataAbortController.current = abortController;
 
     setIsLoading(true);
-    console.log('[VideosPage] Iniciando carga de datos para curso:', courseId);
 
     try {
       // Load course info
@@ -83,19 +81,12 @@ export default function CursoVideosPage() {
       // Solo actualizar estado si el request no fue abortado
       if (!abortController.signal.aborted && foundCourse) {
         setCourse(foundCourse);
-        console.log('[VideosPage] Curso cargado:', foundCourse.name);
       }
 
       // Load videos for this course
       await fetchVideos(courseId);
-
-      if (!abortController.signal.aborted) {
-        console.log('[VideosPage] Videos cargados exitosamente');
-      }
-    } catch (error) {
-      if (!abortController.signal.aborted) {
-        console.error('[VideosPage] Error loading data:', error);
-      }
+    } catch (_error) {
+      // Error handled silently
     } finally {
       if (!abortController.signal.aborted) {
         setIsLoading(false);
@@ -106,13 +97,6 @@ export default function CursoVideosPage() {
   useEffect(() => {
     // Usar el helper del store para obtener videos filtrados
     const filtered = getVideosByCategory(courseId);
-    console.log('[VideosPage] Total videos in store:', videos.length);
-    console.log(
-      '[VideosPage] Filtered videos for course',
-      courseId,
-      ':',
-      filtered.length
-    );
     setCourseVideos(filtered);
   }, [videos, courseId, getVideosByCategory]);
 
@@ -204,8 +188,7 @@ export default function CursoVideosPage() {
         'ID de Vimeo validado. Al guardar, se obtendrán automáticamente los datos del video.',
         'Validación Exitosa'
       );
-    } catch (error) {
-      console.error('Error validating Vimeo ID:', error);
+    } catch (_error) {
       showError('Error al validar el ID de Vimeo. Verifica que sea correcto.');
     } finally {
       setIsFetchingVimeo(false);
@@ -214,7 +197,6 @@ export default function CursoVideosPage() {
 
   const handleSave = async () => {
     if (!validateForm()) {
-      console.log('[VideosPage] Form data is not valid', errors);
       toast.error('Por favor completa todos los campos requeridos');
       return;
     }
@@ -222,19 +204,16 @@ export default function CursoVideosPage() {
     try {
       if (editingVideo) {
         // Update existing video
-        console.log('[VideosPage] Updating video:', editingVideo.id);
         const updates = {
           title: formData.title!,
           description: formData.description,
           order: formData.order,
           isPublished: formData.isPublished, // Include published status
         };
-        const result = await updateVideo(editingVideo.id, updates);
-        console.log('[VideosPage] Video updated:', result);
+        await updateVideo(editingVideo.id, updates);
         toast.success('Video actualizado exitosamente');
       } else {
         // Create new video
-        console.log('[VideosPage] Creating new video for course:', courseId);
         const newVideo: CreateVideoInput = {
           title: formData.title!,
           description: formData.description,
@@ -243,21 +222,15 @@ export default function CursoVideosPage() {
           order: formData.order || courseVideos.length,
           isPublished: formData.isPublished, // Include published status
         };
-        const result = await createVideo(newVideo as any);
-        console.log('[VideosPage] Video created:', result);
+        await createVideo(newVideo as any);
 
-        if (!result) {
-          throw new Error('Failed to create video - no result returned');
-        }
         toast.success('Video creado exitosamente');
       }
 
       // Reload data to ensure sync
-      console.log('[VideosPage] Reloading data after save...');
       await loadData();
       handleCancelEdit();
     } catch (error) {
-      console.error('[VideosPage] Error saving video:', error);
       // El error ya viene formateado desde admin-store.ts para errores 409
       const errorMessage =
         error instanceof Error
@@ -287,8 +260,7 @@ export default function CursoVideosPage() {
       await deleteVideo(videoId);
       await loadData();
       toast.success('Video eliminado exitosamente');
-    } catch (error) {
-      console.error('[VideosPage] Error deleting video:', error);
+    } catch (_error) {
       toast.error('Error al eliminar el video. Por favor intenta nuevamente.');
     }
   };
@@ -306,8 +278,7 @@ export default function CursoVideosPage() {
           ? 'Video publicado exitosamente'
           : 'Video despublicado exitosamente'
       );
-    } catch (error) {
-      console.error('[VideosPage] Error toggling publish status:', error);
+    } catch (_error) {
       toast.error(
         'Error al cambiar el estado de publicación. Por favor intenta nuevamente.'
       );
