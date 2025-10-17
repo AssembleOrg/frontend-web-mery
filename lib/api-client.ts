@@ -87,10 +87,6 @@ interface VideoProgress {
  */
 function getAuthToken(): string | undefined {
   const token = Cookies.get('auth_token');
-  console.log(
-    '[api-client] getAuthToken called, result:',
-    token ? `${token.substring(0, 20)}...` : 'undefined'
-  );
   return token;
 }
 
@@ -103,10 +99,6 @@ function getAuthHeaders(): HeadersInit {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
   };
-  console.log('[api-client] getAuthHeaders:', {
-    hasToken: !!token,
-    hasAuthHeader: !!(headers as any).Authorization,
-  });
   return headers;
 }
 
@@ -121,13 +113,6 @@ async function apiRequest<T>(
     ...getAuthHeaders(),
     ...options.headers,
   };
-
-  console.log('[api-client] Request:', {
-    endpoint,
-    method: options.method || 'GET',
-    hasAuthHeader: !!(headers as any).Authorization,
-    headers: headers, // Ver TODOS los headers
-  });
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -597,8 +582,6 @@ export const getPresentationVideo = async (
       credentials: 'include',
     });
 
-    console.log('[API] Response status:', response.status);
-
     if (!response.ok) {
       console.error(
         '[API] Response not OK:',
@@ -610,16 +593,11 @@ export const getPresentationVideo = async (
 
     const data: ApiResponse<{ data: Video[]; meta: PaginationMeta }> =
       await response.json();
-    console.log('[API] Full response data:', data);
 
     const videos = data.data.data;
-    console.log('[API] Videos array:', videos);
-    console.log('[API] Videos length:', videos?.length);
 
     if (videos && videos.length > 0) {
       const video = videos[0];
-      console.log('[API] First video:', video);
-      console.log('[API] First video order:', video.order);
 
       // For videos with order = 0 (presentation videos), try to get stream URL
       // This requires backend to allow public access to /stream for order = 0 videos
@@ -628,9 +606,6 @@ export const getPresentationVideo = async (
         video.order === undefined ||
         video.order === null
       ) {
-        console.log(
-          '[API] Found presentation video, attempting to get stream URL...'
-        );
 
         try {
           // Try to get stream URL (may fail if backend requires auth for all videos)
@@ -648,7 +623,6 @@ export const getPresentationVideo = async (
           if (streamResponse.ok) {
             const streamData = await streamResponse.json();
             const streamUrl = streamData.data?.streamUrl;
-            console.log('[API] Stream URL obtained:', streamUrl);
 
             // Si la URL no incluye parámetros de Vimeo necesarios, construir una URL más permisiva
             let finalStreamUrl = streamUrl;
@@ -666,7 +640,6 @@ export const getPresentationVideo = async (
               }
 
               finalStreamUrl = url.toString();
-              console.log('[API] Enhanced Vimeo URL:', finalStreamUrl);
             }
 
             return {
@@ -689,7 +662,6 @@ export const getPresentationVideo = async (
       }
     }
 
-    console.log('[API] No presentation video found (order 0)');
     return null;
   } catch (error) {
     console.error('[API] Error fetching presentation video:', error);

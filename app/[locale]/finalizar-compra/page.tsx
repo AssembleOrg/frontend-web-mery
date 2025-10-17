@@ -32,16 +32,23 @@ export default function FinalizarCompraPage() {
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
 
-  // Autocomplete
+  // Autocomplete - Fill form with user data if available
   useEffect(() => {
     if (user) {
-      const nameParts = user.name?.trim().split(' ') || [];
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
+      // Use firstName/lastName if available, otherwise parse name
+      let firstName = user.firstName || '';
+      let lastName = user.lastName || '';
+      
+      if (!firstName && !lastName && user.name) {
+        const nameParts = user.name.trim().split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.slice(1).join(' ') || '';
+      }
+      
       setFormData((prev) => ({
         ...prev,
-        nombre: firstName,
-        apellido: lastName,
+        nombre: firstName || prev.nombre,
+        apellido: lastName || prev.apellido,
         telefono: user.phone || prev.telefono,
         pais: user.country || prev.pais,
         ciudad: user.city || prev.ciudad,
@@ -77,38 +84,54 @@ export default function FinalizarCompraPage() {
     }));
 
     try {
+      console.log('Enviando datos a MercadoPago:', {
+        items: itemsForAPI,
+        locale,
+        userId: user.id,        // ⭐ AGREGADO
+        userEmail: user.email,
+      });
+
       const response = await fetch('/api/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: itemsForAPI,
           locale,
+          userId: user.id,      // ⭐ AGREGADO: ID del usuario
           userEmail: user.email,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('Error del servidor:', errorData);
         throw new Error(
-          errorData.message || 'Error en el servidor al crear la preferencia.'
+          errorData.error || 'Error en el servidor al crear la preferencia.'
         );
       }
 
-      const { url } = await response.json();
-      if (url) {
+      const data = await response.json();
+      console.log('Respuesta de MercadoPago:', data);
+
+      const paymentUrl = data.url || data.init_point || data.sandbox_init_point;
+      
+      if (paymentUrl) {
         toast.success('Redirigiendo a la pasarela de pago...', {
           id: 'payment-toast',
         });
-        router.push(url);
+        // Redirigir en una nueva ventana para evitar problemas
+        window.location.href = paymentUrl;
       } else {
-        throw new Error('No se recibió una URL de pago.');
+        console.error('Datos recibidos:', data);
+        throw new Error('No se recibió una URL de pago válida.');
       }
     } catch (err: any) {
+      console.error('Error completo:', err);
       toast.error(
         err.message || 'No se pudo procesar el pago. Intenta de nuevo.',
         { id: 'payment-toast' }
       );
-      console.error(err);
+      setError(err.message);
       setIsProcessing(false);
     }
   };

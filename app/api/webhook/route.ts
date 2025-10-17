@@ -24,50 +24,121 @@ const client = new MercadoPagoConfig({
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
+// GET handler for MercadoPago webhook verification
+export async function GET(request: NextRequest) {
+  console.log('[Webhook] GET request recibido - Verificación de MercadoPago');
+  
+  // MercadoPago hace GET para verificar que el webhook existe
+  return NextResponse.json({ 
+    status: 'ok',
+    message: 'Webhook endpoint is active',
+    timestamp: new Date().toISOString()
+  }, { status: 200 });
+}
+
 export async function POST(request: NextRequest) {
+  console.log('[Webhook] ========== Nueva notificación de MercadoPago ==========');
+  
   try {
     const body = await request.json();
+    console.log('[Webhook] Tipo de notificación:', body.type);
+    console.log('[Webhook] Datos recibidos:', JSON.stringify(body, null, 2));
 
     if (body.type === 'payment') {
       const paymentId = body.data.id;
+      console.log('[Webhook] Consultando pago ID:', paymentId);
+      
       const payment = await new Payment(client).get({ id: paymentId });
+      console.log('[Webhook] Estado del pago:', payment.status);
+      console.log('[Webhook] Email del usuario:', payment.metadata?.user_email);
+      console.log('[Webhook] Monto:', payment.transaction_amount, payment.currency_id);
 
       if (payment.status === 'approved') {
-        // Forward to backend API to create CategoryPurchase
-        // Backend should have POST /purchases/mercadopago-webhook endpoint
+        console.log('[Webhook] ✅ Pago aprobado - Reenviando al backend...');
+        
+        // Formatear items correctamente para el backend
+        const items = (payment.additional_info?.items || []).map((item: any) => ({
+          id: item.id || item.category_id,
+          title: item.title,
+          description: item.description || item.title,
+          quantity: Number(item.quantity) || 1,
+          unit_price: Number(item.unit_price),
+          currency_id: payment.currency_id || 'ARS',
+        }));
+
+        // Validar que tenemos el email del usuario
+        const userEmail = payment.metadata?.user_email || payment.payer?.email;
+        
+        if (!userEmail) {
+          console.error('[Webhook] ❌ No se encontró email del usuario en el pago');
+          console.error('[Webhook] Metadata:', payment.metadata);
+          console.error('[Webhook] Payer:', payment.payer);
+          throw new Error('User email not found in payment data');
+        }
+
+        if (items.length === 0) {
+          console.error('[Webhook] ❌ No se encontraron items en el pago');
+          console.error('[Webhook] Additional info:', payment.additional_info);
+          throw new Error('No items found in payment');
+        }
+        
+        const backendPayload = {
+          paymentId: String(payment.id),
+          userEmail: userEmail,
+          items: items,
+          amount: Number(payment.transaction_amount),
+          currency: payment.currency_id || 'ARS',
+          status: payment.status,
+          transactionId: String(payment.id),
+          paymentMethod: payment.payment_method_id,
+          payerEmail: payment.payer?.email,
+        };
+        
+        console.log('[Webhook] Payload para backend:', JSON.stringify(backendPayload, null, 2));
+        console.log('[Webhook] Items a enviar:', items.length);
+        
         try {
-          const backendResponse = await fetch(`${BACKEND_API_URL}/purchases/mercadopago-webhook`, {
+          const backendUrl = `${BACKEND_API_URL}/purchases/mercadopago-webhook`;
+          console.log('[Webhook] URL del backend:', backendUrl);
+          
+          const backendResponse = await fetch(backendUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              paymentId: payment.id,
-              userEmail: payment.metadata?.user_email,
-              items: payment.additional_info?.items,
-              amount: payment.transaction_amount,
-              currency: payment.currency_id,
-              status: payment.status,
-              transactionId: payment.id?.toString(),
-            }),
+            body: JSON.stringify(backendPayload),
           });
 
-          if (!backendResponse.ok) {
-            console.error('[Webhook] Backend processing failed:', await backendResponse.text());
+          if (backendResponse.ok) {
+            const backendData = await backendResponse.json();
+            console.log('[Webhook] ✅ Backend procesó exitosamente:', backendData);
+          } else {
+            const errorText = await backendResponse.text();
+            console.error('[Webhook] ❌ Backend falló (status', backendResponse.status, '):', errorText);
           }
-        } catch (backendError) {
-          console.error('[Webhook] Error forwarding to backend:', backendError);
+        } catch (backendError: any) {
+          console.error('[Webhook] ❌ Error al contactar backend:', backendError.message);
+          console.error('[Webhook] Stack:', backendError.stack);
           // Continue - don't fail webhook if backend is down
         }
+      } else {
+        console.log('[Webhook] ⚠️ Pago no aprobado, estado:', payment.status);
       }
+    } else {
+      console.log('[Webhook] Tipo de notificación ignorado:', body.type);
     }
 
+    console.log('[Webhook] ========== Fin de procesamiento ==========\n');
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error: any) {
-    console.error('[Webhook] Error processing webhook:', error);
+    console.error('[Webhook] ❌ ERROR CRÍTICO:', error.message);
+    console.error('[Webhook] Stack:', error.stack);
+    console.log('[Webhook] ========== Fin con error ==========\n');
+    
+    // Siempre retornar 200 para evitar que MercadoPago reintente
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
-      { status: 500 }
+      { received: true, error: error.message },
+      { status: 200 }
     );
   }
 }

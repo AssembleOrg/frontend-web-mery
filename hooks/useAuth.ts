@@ -70,26 +70,14 @@ export function useAuth() {
         resolveVerify = resolve;
       });
 
-      console.log(
-        '[useAuth] Iniciando verificación de sesión (única fuente de verdad: servidor)'
-      );
-
       try {
         const response = await meService();
         if (response && response.user) {
-          console.log(
-            '[useAuth] Sesión verificada exitosamente en servidor:',
-            response.user
-          );
           setAuth(response.user, response.token || null);
         } else {
           clearAuth();
         }
       } catch (err) {
-        console.error(
-          '[useAuth] Verificación de sesión fallida. El usuario no está logueado.',
-          err
-        );
         clearAuth();
       } finally {
         setSharedLoading(false);
@@ -172,19 +160,32 @@ export function useAuth() {
   const logout = useCallback(async () => {
     try {
       const currentToken = useAuthStore.getState().token;
-      if (currentToken) {
-        await logoutService(currentToken);
-      }
+      await logoutService(currentToken || undefined);
     } catch (err) {
-      console.error(
-        'Fallo en el logout del servidor, se procederá a limpiar localmente.',
-        err
-      );
+      // Silenciar error, continuar con limpieza local
     } finally {
+      // Limpiar estado de la aplicación
       clearAuth();
       useCartStore.getState().clearCart();
       useCourseStore.getState().clearCourseData();
       useUserCoursesStore.getState().clearCourses();
+      
+      // Limpiar todas las cookies posibles
+      const cookiesToDelete = ['auth_token', 'access_token', 'token', 'jwt', 'session'];
+      const domain = window.location.hostname;
+      const domains = [domain, `.${domain}`, ''];
+      
+      cookiesToDelete.forEach(cookieName => {
+        domains.forEach(d => {
+          document.cookie = `${cookieName}=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax`;
+          document.cookie = `${cookieName}=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure`;
+          document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+        });
+      });
+      
+      // Limpiar localStorage y sessionStorage
+      localStorage.clear();
+      sessionStorage.clear();
     }
   }, [clearAuth]);
 

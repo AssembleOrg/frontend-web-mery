@@ -27,12 +27,12 @@ export default function AdminDashboard() {
     },
     {
       title: 'Usuarios',
-      description: 'Próximamente: Gestión de usuarios y permisos',
+      description: 'Asignar cursos manualmente a usuarios',
       icon: FaUsers,
-      href: '#',
+      href: `/${locale}/admin/usuarios`,
       color: 'bg-[#FBE8EA] text-[#660e1b] hover:bg-[#F7CBCB]',
       iconBg: 'bg-[#F7CBCB]',
-      disabled: true,
+      disabled: false,
     },
     {
       title: 'Estadísticas',

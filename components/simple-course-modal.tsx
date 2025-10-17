@@ -35,14 +35,12 @@ export default function SimpleCourseModal({
   // Load presentation video (order 0) when modal opens
   useEffect(() => {
     if (isOpen && course?.id) {
-      console.log('[SimpleCourseModal] Loading presentation video for course:', course.id);
       setLoadingVideo(true);
       setPresentationVideo(null);
       setStreamUrl(null);
       
       getPresentationVideo(course.id)
         .then((result) => {
-          console.log('[SimpleCourseModal] Presentation video result:', result);
           if (result) {
             setPresentationVideo(result.video);
             setStreamUrl(result.streamUrl || null);

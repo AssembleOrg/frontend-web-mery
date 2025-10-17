@@ -51,9 +51,17 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
   const isAdmin = user.role === 'ADMIN';
 
   const handleLogout = async () => {
-    await logout();
-    setIsOpen(false);
-    onNavigate?.();
+    try {
+      await logout();
+      setIsOpen(false);
+      onNavigate?.();
+      window.location.href = `/${locale}`;
+    } catch (error) {
+      // Forzar limpieza local y redirección incluso si hay error
+      setIsOpen(false);
+      onNavigate?.();
+      window.location.href = `/${locale}`;
+    }
   };
 
   const handleMenuItemClick = () => {
