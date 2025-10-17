@@ -51,17 +51,12 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
   const isAdmin = user.role === 'ADMIN';
 
   const handleLogout = async () => {
-    console.log('[UserMenu] 🔴 Iniciando logout...');
     try {
       await logout();
-      console.log('[UserMenu] ✅ Logout completado');
       setIsOpen(false);
       onNavigate?.();
-      // ⭐ Forzar recarga completa para limpiar todo el estado
-      console.log('[UserMenu] 🔄 Forzando recarga completa...');
       window.location.href = `/${locale}`;
     } catch (error) {
-      console.error('[UserMenu] ❌ Error en logout:', error);
       // Forzar limpieza local y redirección incluso si hay error
       setIsOpen(false);
       onNavigate?.();

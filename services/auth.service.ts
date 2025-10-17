@@ -206,11 +206,10 @@ export const logout = async (token?: string): Promise<void> => {
     });
 
     if (!response.ok) {
-      console.warn('[Logout] Backend logout failed, but will continue with local cleanup');
+      // Silenciar, continuar con limpieza local
     }
   } catch (error) {
-    console.warn('[Logout] Error calling backend logout:', error);
-    // No lanzamos error, permitimos que el logout local continúe
+    // Silenciar, continuar con limpieza local
   }
 };
 

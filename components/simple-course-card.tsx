@@ -24,7 +24,7 @@ export default function SimpleCourseCard({
     if (onCourseClick) {
       onCourseClick();
     } else {
-      console.log('Course clicked:', { title, price });
+      if (onClick) {
     }
   };
 

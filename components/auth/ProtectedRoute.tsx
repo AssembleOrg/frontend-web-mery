@@ -18,8 +18,6 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const locale = (params.locale as string) || 'es';
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      console.log('[ProtectedRoute] No autenticado. Redirigiendo a login...');
-
       router.push(`/${locale}/login?redirect=${pathname}`);
     }
   }, [isLoading, isAuthenticated, router, pathname, locale]);
