@@ -162,16 +162,6 @@ export default function CourseModal({
                   </div>
                 )}
             </div>
-
-            {/* CTA Button */}
-            <button
-              onClick={() =>
-                console.log('Enroll clicked for course:', course.title)
-              }
-              className='w-full mt-6 bg-pink-600 hover:bg-pink-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors duration-200'
-            >
-              Inscribirse al Curso
-            </button>
           </div>
         </div>
       </div>

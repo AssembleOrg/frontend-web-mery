@@ -157,12 +157,6 @@ export default function HTML5VideoPlayer({
           onError={(e) => {
             console.error('Video Error:', e);
           }}
-          onLoadStart={() => {
-            console.log('Video load started');
-          }}
-          onCanPlay={() => {
-            console.log('Video can play');
-          }}
         />
 
         {/* Indicador de completado COMENTADO BY JULY*/}

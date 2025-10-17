@@ -23,8 +23,6 @@ export default function SimpleCourseCard({
   const handleClick = () => {
     if (onCourseClick) {
       onCourseClick();
-    } else {
-      console.log('Course clicked:', { title, price });
     }
   };
 

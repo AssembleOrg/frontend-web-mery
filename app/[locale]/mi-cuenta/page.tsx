@@ -69,10 +69,7 @@ export default function MiCuentaPage() {
   ];
 
   const handleLogout = async () => {
-    console.log('[MiCuentaPage] 🔴 Iniciando logout...');
     await logout();
-    console.log('[MiCuentaPage] ✅ Logout completado');
-    console.log('[MiCuentaPage] 🔄 Redirigiendo a home...');
     router.push('/es');
   };
 

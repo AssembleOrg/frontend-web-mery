@@ -322,10 +322,9 @@ export const useAdminStore = create<AdminState & AdminActions>()(
      * POST /videos
      */
     createVideo: async (video) => {
+      const state = get();
       set({ isLoading: true, error: null });
       try {
-        console.log('[Admin Store] Creating video:', video);
-
         const response = await fetch(`${API_BASE_URL}/videos`, {
           method: 'POST',
           headers: getAuthHeaders(),
@@ -357,13 +356,12 @@ export const useAdminStore = create<AdminState & AdminActions>()(
 
         const result = await response.json();
         const newVideo = result.data;
-        console.log('[Admin Store] Video created successfully:', newVideo);
 
-        set((state) => {
-          state.videos.push(newVideo);
-          console.log('[Admin Store] Video added to store. Total videos:', state.videos.length);
-          state.isLoading = false;
-        });
+        if (!newVideo) {
+          throw new Error('Failed to create video');
+        }
+
+        set({ videos: [...state.videos, newVideo] });
 
         return newVideo;
       } catch (error) {
@@ -457,8 +455,9 @@ export const useAdminStore = create<AdminState & AdminActions>()(
      * Helper para obtener videos filtrados por categoría desde el store
      */
     getVideosByCategory: (categoryId: string) => {
-      const videos = get().videos.filter(v => v.categoryId === categoryId);
-      console.log('[Admin Store] getVideosByCategory:', categoryId, 'count:', videos.length);
+      const videos = get().videos.filter(
+        (v) => v.categoryId === categoryId
+      );
       return videos;
     },
 
