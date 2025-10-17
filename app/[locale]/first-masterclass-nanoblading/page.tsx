@@ -114,7 +114,7 @@ export default function FirstMasterclassNanobladingPage() {
 
         <div className='w-full'>
           <div className='bg-card py-8 px-12 rounded-lg border-2 border-dashed border-[#eba2a8] shadow-lg'>
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-center'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 items-center'>
               <div className='text-center lg:text-left'>
                 <div className='flex items-center justify-center lg:justify-start gap-4 mb-4'>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -148,14 +148,6 @@ export default function FirstMasterclassNanobladingPage() {
                 </div>
               </div>
 
-              <div className='bg-[#fbe8ea] p-4 rounded-lg border border-dashed border-[#eba2a8] text-center'>
-                <p className='font-primary font-bold text-[#2b2b2b] text-lg'>
-                  Además, de manera presencial en el local
-                </p>
-                <p className='font-primary font-bold text-[#660e1b] text-xl mt-2'>
-                  HASTA 3 CUOTAS SIN INTERÉS
-                </p>
-              </div>
             </div>
           </div>
         </div>

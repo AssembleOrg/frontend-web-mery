@@ -189,7 +189,6 @@
         "session1": "First session: US$ 350.- (or US$ 192 in cash)",
         "touchUp": "Touch-up: US$ 190.- (or US$ 128 in cash)",
         "maintenance": "Maintenance: US$ 350.- (or US$ 192 in cash)",
-        "creditCard": "3 interest-free installments with a physical credit card at our location.",
         "molesTitle": "Moles",
         "molesText": "The cost of Moles varies and will be confirmed once Mery finalizes the design for you.",
         "kitTitle": "Aftercare Kit Included",
@@ -368,8 +367,7 @@
           "heading": "List Price (By & Only MERY GARCIA)",
           "session1": "First session: US$ 610.- (or US$ 420 in cash)",
           "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
-          "note": "A touch-up is considered the complementary service performed 30 to 60 days after the first Nanoblading service.",
-          "creditCardNote": "Visit our location to get 3 interest-free installments by paying with a physical credit card from any bank."
+          "note": "A touch-up is considered the complementary service performed 30 to 60 days after the first Nanoblading service."
         }
       },
       "camouflage": {
@@ -427,8 +425,7 @@
         "priceListTitle": "Service List Price",
         "session1": "First session: US$ 480.- (or US$ 320 in cash)",
         "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
-        "maintenance": "Maintenance: US$ 480.- (or US$ 320 in cash)",
-        "creditCardNote": "Visit our location to get 3 interest-free installments by paying with a physical credit card from any bank."
+        "maintenance": "Maintenance: US$ 480.- (or US$ 320 in cash)"
       },
       "cta": {
         "heading": "Ready to Enhance Your Gaze?",
@@ -495,8 +492,7 @@
         "maintenanceLabel": "Maintenance",
         "session1": "US$ 650.- (or US$ 450 in cash)",
         "touchUp": "US$ 317.- (or US$ 180 in cash)",
-        "maintenance": "US$ 650.- (or US$ 475 in cash)",
-        "creditCardNote": "Visit our location to get 3 interest-free installments by paying with a physical credit card from any bank."
+        "maintenance": "US$ 650.- (or US$ 475 in cash)"
       },
       "importantInfo": {
         "herpesTitle": "IMPORTANT: Herpes",
@@ -545,7 +541,6 @@
         "procedureText": "The first step is the consultation. We explain the procedure and answer all your questions. The number of sessions will depend on Mery's assessment and your skin's response. The service cost includes the aftercare kit.",
         "importantInfoHeading": "IMPORTANT: MEDICAL CERTIFICATE",
         "importantInfoText": "To undergo this procedure, you must present a medical certificate confirming that we can perform the service.",
-        "creditCardNote": "Visit our location to get 3 interest-free installments by paying with a physical credit card from any bank.",
         "cta": {
           "heading": "A Step Towards Restoration",
           "text": "Our artistic and professional approach is here to help you. Schedule a confidential consultation to discuss your needs.",

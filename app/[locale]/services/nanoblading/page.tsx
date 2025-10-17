@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
-import { Shield, AlertTriangle, CreditCard } from 'lucide-react';
+import { Shield, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
 
 export default function NanobladingCamouflagePage() {
@@ -73,10 +73,6 @@ export default function NanobladingCamouflagePage() {
                   <p className='text-sm italic'>
                     {t('nanoblading.pricing.note')}
                   </p>
-                </div>
-                <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
-                  <CreditCard className='h-6 w-6 mr-2' />
-                  <span>{t('nanoblading.pricing.creditCardNote')}</span>
                 </div>
               </div>
 

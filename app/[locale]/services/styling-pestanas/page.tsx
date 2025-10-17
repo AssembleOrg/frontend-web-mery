@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
-import { Sparkles, CreditCard } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 export default function LashesLinePage() {
@@ -93,12 +93,6 @@ export default function LashesLinePage() {
                       {t('pricing.maintenance').split(': ')[1]}
                     </p>
                   </div>
-                </div>
-                <div className='mt-6 alert-low border flex items-center justify-center text-sm p-3 rounded-lg'>
-                  <CreditCard className='h-4 w-4 mr-2 flex-shrink-0' />
-                  <span className='flex items-center text-sm font-primary/10 font-bold'>
-                    {t('pricing.creditCardNote')}
-                  </span>
                 </div>
               </div>
             </div>

@@ -183,7 +183,6 @@
         "session1": "Primera sesión: U$S 350.- (en efectivo U$S 192)",
         "touchUp": "Retoque: U$S 190.- (en efectivo U$S 128)",
         "maintenance": "Mantenimiento: U$S 350.- (en efectivo U$S 192)",
-        "creditCard": "3 cuotas sin interés con tarjeta física en nuestro local.",
         "molesTitle": "Lunares",
         "molesText": "El costo de los Lunares varía, a confirmar cuando Mery termine de definir el diseño para vos.",
         "kitTitle": "Kit de Cuidados Incluido",
@@ -362,8 +361,7 @@
           "heading": "Precio de Lista (By & Only MERY GARCIA)",
           "session1": "Primera sesión: U$S 610.- (en efectivo U$S 420)",
           "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
-          "note": "Se considera retoque al servicio realizado entre 30 y 60 días luego del primer servicio.",
-          "creditCardNote": "Acercate a nuestro local para acceder a 3 cuotas sin interés pagando con tarjeta física de cualquier banco."
+          "note": "Se considera retoque al servicio realizado entre 30 y 60 días luego del primer servicio."
         }
       },
       "camouflage": {
@@ -421,8 +419,7 @@
         "priceListTitle": "Precio de Lista del Servicio",
         "session1": "Primera sesión: U$S 480.- (en efectivo U$S 320)",
         "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
-        "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 320)",
-        "creditCardNote": "Acercate a nuestro local para acceder a 3 cuotas sin interés pagando con tarjeta física de cualquier banco."
+        "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 320)"
       },
       "cta": {
         "heading": "¿Lista para Potenciar tu Mirada?",
@@ -454,8 +451,7 @@
         "maintenanceLabel": "Mantenimiento",
         "session1": "U$S 650.- (en efectivo U$S 450)",
         "touchUp": "U$S 317.- (en efectivo U$S 180)",
-        "maintenance": "U$S 650.- (en efectivo U$S 475)",
-        "creditCardNote": "Acercate a nuestro local para acceder a 3 cuotas sin interés pagando con tarjeta física de cualquier banco."
+        "maintenance": "U$S 650.- (en efectivo U$S 475)"
       },
       "importantInfo": {
         "herpesTitle": "IMPORTANTE: Herpes",
@@ -539,7 +535,6 @@
         "procedureText": "La primera instancia es la consulta. En ella te contamos de qué se trata, cómo se hace, y despejamos todas tus dudas. La cantidad de sesiones estará sujeta al criterio de Mery y la respuesta de tu piel. El costo incluye el kit de cuidados.",
         "importantInfoHeading": "IMPORTANTE: CONSTANCIA MÉDICA",
         "importantInfoText": "Para poder realizar este procedimiento es necesario que presentes una constancia médica que avale que podemos realizar el servicio.",
-        "creditCardNote": "Acercate a nuestro local para acceder a 3 cuotas sin interés pagando con tarjeta física de cualquier banco.",
         "cta": {
           "heading": "Un Paso Hacia la Restauración",
           "text": "Nuestro enfoque artístico y profesional está aquí para ayudarte. Agenda una consulta confidencial para discutir tus necesidades.",

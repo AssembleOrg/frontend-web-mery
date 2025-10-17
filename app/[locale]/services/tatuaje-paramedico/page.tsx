@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
-import { Shield, AlertTriangle, CreditCard, Star, Clock } from 'lucide-react';
+import { Shield, AlertTriangle, Star, Clock } from 'lucide-react';
 import Image from 'next/image';
 
 export default function ParamedicalTattooPage() {
@@ -68,10 +68,6 @@ export default function ParamedicalTattooPage() {
                 <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                   {t('areola.pricing.note')}
                 </p>
-                <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
-                  <CreditCard className='h-6 w-6 mr-2' />
-                  <span>{tShared('creditCardNote')}</span>
-                </div>
               </div>
             </article>
 
@@ -101,10 +97,6 @@ export default function ParamedicalTattooPage() {
                 <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                   {t('nipple.pricing.note')}
                 </p>
-                <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
-                  <CreditCard className='h-6 w-6 mr-2' />
-                  <span>{tShared('creditCardNote')}</span>
-                </div>
               </div>
             </article>
           </div>
@@ -148,10 +140,6 @@ export default function ParamedicalTattooPage() {
                   <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                     {tNanoScalp('pricing.note')}
                   </p>
-                  <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
-                    <CreditCard className='h-6 w-6 mr-2' />
-                    <span>{tShared('creditCardNote')}</span>
-                  </div>
                 </div>
 
                 {/* Nano Scalp Important Info */}

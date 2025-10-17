@@ -12,7 +12,6 @@ import {
   Clock,
   Star,
   Package,
-  CreditCard,
   AlertTriangle,
   Baby,
 } from 'lucide-react';
@@ -132,12 +131,6 @@ export default function PecasLunaresPage() {
                   <p className='font-secondary'>{t('pricing.session1')}</p>
                   <p className='font-secondary'>{t('pricing.touchUp')}</p>
                   <p className='font-secondary'>{t('pricing.maintenance')}</p>
-                </div>
-                <div className='mt-4 alert-low border rounded-lg p-3 flex items-center text-sm font-primary/10 font-bold'>
-                  <CreditCard className='h-4 w-4 mr-2' />
-                  <span className='font-secondary'>
-                    {t('pricing.creditCard')}
-                  </span>
                 </div>
               </div>
               <div className='bg-card p-6 rounded-lg border'>
