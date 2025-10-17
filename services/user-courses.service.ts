@@ -46,8 +46,9 @@ export const getUserCourses = async (token: string): Promise<UserCourse[]> => {
   const categories = responseData.data?.data || responseData.data || [];
 
   // Filter only categories where user has access
+  // Exclude free courses (isFree=true) to prevent automatic access
   const userCategories = Array.isArray(categories)
-    ? categories.filter((cat: any) => cat.hasAccess || cat.isPurchased)
+    ? categories.filter((cat: any) => (cat.hasAccess || cat.isPurchased) && !cat.isFree)
     : [];
 
   // Convert Category to UserCourse format
