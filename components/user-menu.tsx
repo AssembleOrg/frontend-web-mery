@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { User as UserIcon, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { User as UserIcon, Settings, LogOut, ChevronDown, Users } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -145,14 +145,25 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
           <div className='py-1'>
             {/* Admin: Panel Admin primero */}
             {isAdmin && (
-              <Link
-                href={`/${locale}/admin/cursos`}
-                onClick={handleMenuItemClick}
-                className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-              >
-                <Settings className='w-5 h-5' />
-                <span className='font-medium'>Panel Admin</span>
-              </Link>
+              <>
+                <Link
+                  href={`/${locale}/admin/cursos`}
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <Settings className='w-5 h-5' />
+                  <span className='font-medium'>Panel Admin</span>
+                </Link>
+                
+                <Link
+                  href={`/${locale}/admin/usuarios`}
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <Users className='w-5 h-5' />
+                  <span className='font-medium'>Asignar Cursos</span>
+                </Link>
+              </>
             )}
 
             <Link

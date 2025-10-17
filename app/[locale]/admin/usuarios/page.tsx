@@ -5,6 +5,19 @@ import { useRouter, usePathname } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+
+// Helper para obtener el token de autenticación
+const getAuthToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const storage = JSON.parse(localStorage.getItem('auth-token-storage') || '{}');
+    return storage.state?.token || null;
+  } catch {
+    return null;
+  }
+};
+
 interface User {
   id: string;
   email: string;
@@ -67,18 +80,24 @@ export default function AdminUsuariosPage() {
   const loadUsers = async () => {
     try {
       setIsLoadingUsers(true);
-      const response = await fetch('/api/users', {
+      const token = getAuthToken();
+      
+      const response = await fetch(`${API_BASE_URL}/users`, {
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
       });
 
       if (!response.ok) throw new Error('Error al cargar usuarios');
 
-      const data = await response.json();
-      setUsers(data.users || data);
+      const responseData = await response.json();
+      // Backend retorna: { success, data: { data: [...], meta }, message }
+      const usersData = responseData.data?.data || responseData.data || [];
+      setUsers(Array.isArray(usersData) ? usersData : []);
     } catch (_error) {
       toast.error('Error al cargar usuarios');
+      setUsers([]);
     } finally {
       setIsLoadingUsers(false);
     }
@@ -87,14 +106,23 @@ export default function AdminUsuariosPage() {
   const loadCategories = async () => {
     try {
       setIsLoadingCategories(true);
-      const response = await fetch('/api/categories');
+      
+      // Usar el endpoint /categories/all que devuelve TODAS las categorías activas sin paginación
+      const response = await fetch(`${API_BASE_URL}/categories/all`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (!response.ok) throw new Error('Error al cargar categorías');
 
-      const data = await response.json();
-      setCategories(data.categories || data);
+      // Backend retorna: { success, message, data: [...], timestamp }
+      const responseData = await response.json();
+      const categoriesData = responseData.data || [];
+      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (_error) {
       toast.error('Error al cargar categorías');
+      setCategories([]);
     } finally {
       setIsLoadingCategories(false);
     }
@@ -103,12 +131,21 @@ export default function AdminUsuariosPage() {
   const loadUserCourses = async (userId: string) => {
     try {
       setIsLoadingUserCourses(true);
-      const response = await fetch(`/api/users/${userId}/categories`);
+      const token = getAuthToken();
+      
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/categories`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+      });
 
       if (!response.ok) throw new Error('Error al cargar cursos del usuario');
 
-      const data = await response.json();
-      setUserCourses(data.categories || data);
+      const responseData = await response.json();
+      // Backend retorna: { success, data: { data: [...], meta }, message }
+      const coursesData = responseData.data?.data || responseData.data || [];
+      setUserCourses(Array.isArray(coursesData) ? coursesData : []);
     } catch (_error) {
       toast.error('Error al cargar cursos del usuario');
       setUserCourses([]);
@@ -133,11 +170,13 @@ export default function AdminUsuariosPage() {
     try {
       setIsLoading(true);
       const category = categories.find((c) => c.id === selectedCategory);
+      const token = getAuthToken();
 
-      const response = await fetch(`/api/users/${selectedUser.id}/categories/${selectedCategory}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${selectedUser.id}/categories/${selectedCategory}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
         body: JSON.stringify({
           priceAtPurchase: 0, // Gratis (asignación manual)
@@ -173,11 +212,16 @@ export default function AdminUsuariosPage() {
 
     try {
       setIsLoading(true);
+      const token = getAuthToken();
 
       const response = await fetch(
-        `/api/users/${selectedUser.id}/categories/${categoryId}`,
+        `${API_BASE_URL}/users/${selectedUser.id}/categories/${categoryId}`,
         {
           method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
         }
       );
 
