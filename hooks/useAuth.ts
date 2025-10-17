@@ -170,21 +170,62 @@ export function useAuth() {
   );
 
   const logout = useCallback(async () => {
+    console.log('[useAuth] 🔴 Función logout llamada');
     try {
       const currentToken = useAuthStore.getState().token;
-      if (currentToken) {
-        await logoutService(currentToken);
-      }
+      console.log('[useAuth] 🔑 Token actual:', currentToken ? 'Existe' : 'No existe');
+      console.log('[useAuth] 📡 Llamando al backend /auth/logout (intento) ...');
+      // Llamar al backend para borrar cookies httpOnly (backend debe limpiar cookie aunque no le pasemos token)
+      await logoutService(currentToken || undefined);
+      console.log('[useAuth] ✅ Backend logout (intento) completado');
     } catch (err) {
       console.error(
-        'Fallo en el logout del servidor, se procederá a limpiar localmente.',
+        '[useAuth] ❌ Fallo en el logout del servidor, se procederá a limpiar localmente.',
         err
       );
     } finally {
+      console.log('[useAuth] 🧹 Iniciando limpieza local...');
+      
+      // Limpiar estado de la aplicación
+      console.log('[useAuth] 🗑️ Limpiando stores...');
       clearAuth();
       useCartStore.getState().clearCart();
       useCourseStore.getState().clearCourseData();
       useUserCoursesStore.getState().clearCourses();
+      console.log('[useAuth] ✅ Stores limpiados');
+      
+      // Limpiar todas las cookies posibles (incluyendo variantes)
+      console.log('[useAuth] 🍪 Limpiando cookies...');
+      const cookiesToDelete = ['auth_token', 'access_token', 'token', 'jwt', 'session'];
+      const domain = window.location.hostname;
+      const domains = [domain, `.${domain}`, ''];
+      
+      let cookiesDeleted = 0;
+      cookiesToDelete.forEach(cookieName => {
+        domains.forEach(d => {
+          // Con dominio
+          document.cookie = `${cookieName}=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax`;
+          document.cookie = `${cookieName}=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure`;
+          // Sin dominio
+          document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+          cookiesDeleted += 3;
+        });
+      });
+      console.log(`[useAuth] ✅ ${cookiesDeleted} intentos de borrado de cookies completados`);
+      
+      // Limpiar localStorage
+      console.log('[useAuth] 📦 Limpiando localStorage...');
+      const localStorageKeys = Object.keys(localStorage);
+      console.log(`[useAuth] 📊 localStorage tiene ${localStorageKeys.length} items antes de limpiar`);
+      localStorage.clear();
+      console.log('[useAuth] ✅ localStorage limpiado');
+      
+      // Limpiar sessionStorage
+      console.log('[useAuth] 📦 Limpiando sessionStorage...');
+      sessionStorage.clear();
+      console.log('[useAuth] ✅ sessionStorage limpiado');
+      
+      console.log('[useAuth] ✅ ✅ ✅ Limpieza completa de cookies y storage TERMINADA');
     }
   }, [clearAuth]);
 

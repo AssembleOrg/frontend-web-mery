@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
   console.log('[Create Preference] Webhook URL:', webhookBaseUrl);
 
   try {
-    const { items, locale, userEmail } = await req.json();
-    console.log('[Create Preference] Datos recibidos:', { items, locale, userEmail });
+    const { items, locale, userEmail, userId } = await req.json();
+    console.log('[Create Preference] Datos recibidos:', { items, locale, userEmail, userId });
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -54,6 +54,13 @@ export async function POST(req: NextRequest) {
     if (!userEmail) {
       return NextResponse.json(
         { error: 'Email de usuario requerido.' },
+        { status: 400 }
+      );
+    }
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'ID de usuario requerido.' },
         { status: 400 }
       );
     }
@@ -81,15 +88,24 @@ export async function POST(req: NextRequest) {
 
     console.log('[Create Preference] Items procesados:', preferenceItems);
 
+    // Extraer category IDs de los items
+    const categoryIds = items.map((item: any) => item.id);
+    console.log('[Create Preference] Category IDs:', categoryIds);
+
     const preference = await new Preference(client).create({
       body: {
         items: preferenceItems,
         payer: {
           email: userEmail,
         },
+        // ⭐ METADATA COMPLETA REQUERIDA POR EL BACKEND
         metadata: {
-          user_email: userEmail,
+          user_id: userId,                          // ⭐ CRÍTICO: ID del usuario
+          user_email: userEmail,                    // ⭐ CRÍTICO: Email del usuario
+          category_ids: JSON.stringify(categoryIds), // ⭐ CRÍTICO: IDs de categorías como JSON string
         },
+        // ⭐ EXTERNAL REFERENCE: Fallback para identificar usuario
+        external_reference: `${userId}_${Date.now()}`,
         back_urls: {
           success: `${redirectBaseUrl}/${effectiveLocale}/checkout/success`,
           failure: `${redirectBaseUrl}/${effectiveLocale}/checkout/failure`,
@@ -97,6 +113,8 @@ export async function POST(req: NextRequest) {
         },
         auto_return: 'approved',
         notification_url: `${webhookBaseUrl}/api/webhook`,
+        // Opcional: Statement descriptor (aparece en resumen de tarjeta)
+        statement_descriptor: 'MERY CURSOS',
       },
     });
 
@@ -107,7 +125,13 @@ export async function POST(req: NextRequest) {
     console.log('[Create Preference] Preferencia creada:', {
       id: preference.id,
       init_point: preference.init_point,
-      sandbox_init_point: preference.sandbox_init_point
+      sandbox_init_point: preference.sandbox_init_point,
+      metadata: {
+        user_id: userId,
+        user_email: userEmail,
+        category_ids: categoryIds,
+      },
+      external_reference: `${userId}_${Date.now()}`,
     });
 
     // Devuelve tanto el ID como la URL para compatibilidad

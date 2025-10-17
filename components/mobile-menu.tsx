@@ -6,6 +6,7 @@ import { Link } from '@/i18n/routing';
 import { Button } from './ui/button';
 import { ModeToggle } from './mode-toggle';
 import { LanguageToggle } from './language-toggle';
+import { CartIcon } from './cart-icon';
 import { useAuth } from '@/hooks/useAuth';
 import { UserMenu } from './user-menu';
 import { useRouter, useParams } from 'next/navigation';
@@ -119,22 +120,29 @@ export function MobileMenu() {
                 RESERVA TU CITA MG
               </a>
             </Button>
-            {isAuthenticated ? (
-              <div className='w-full'>
-                <UserMenu onNavigate={closeMenu} />
+            
+            {/* Cart and User Menu */}
+            <div className='flex items-center justify-between gap-3'>
+              <div className='flex-1'>
+                {isAuthenticated ? (
+                  <UserMenu onNavigate={closeMenu} />
+                ) : (
+                  <Button
+                    variant='outline'
+                    className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
+                    onClick={() => {
+                      router.push(`/${locale}/login`);
+                      closeMenu();
+                    }}
+                  >
+                    INICIAR SESIÓN
+                  </Button>
+                )}
               </div>
-            ) : (
-              <Button
-                variant='outline'
-                className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
-                onClick={() => {
-                  router.push(`/${locale}/login`);
-                  closeMenu();
-                }}
-              >
-                INICIAR SESIÓN
-              </Button>
-            )}
+              <div className='flex items-center'>
+                <CartIcon />
+              </div>
+            </div>
           </div>
 
           {/* Theme and Language toggles */}

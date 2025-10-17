@@ -56,19 +56,46 @@ export async function POST(request: NextRequest) {
       if (payment.status === 'approved') {
         console.log('[Webhook] ✅ Pago aprobado - Reenviando al backend...');
         
+        // Formatear items correctamente para el backend
+        const items = (payment.additional_info?.items || []).map((item: any) => ({
+          id: item.id || item.category_id,
+          title: item.title,
+          description: item.description || item.title,
+          quantity: Number(item.quantity) || 1,
+          unit_price: Number(item.unit_price),
+          currency_id: payment.currency_id || 'ARS',
+        }));
+
+        // Validar que tenemos el email del usuario
+        const userEmail = payment.metadata?.user_email || payment.payer?.email;
+        
+        if (!userEmail) {
+          console.error('[Webhook] ❌ No se encontró email del usuario en el pago');
+          console.error('[Webhook] Metadata:', payment.metadata);
+          console.error('[Webhook] Payer:', payment.payer);
+          throw new Error('User email not found in payment data');
+        }
+
+        if (items.length === 0) {
+          console.error('[Webhook] ❌ No se encontraron items en el pago');
+          console.error('[Webhook] Additional info:', payment.additional_info);
+          throw new Error('No items found in payment');
+        }
+        
         const backendPayload = {
-          paymentId: payment.id,
-          userEmail: payment.metadata?.user_email,
-          items: payment.additional_info?.items,
-          amount: payment.transaction_amount,
-          currency: payment.currency_id,
+          paymentId: String(payment.id),
+          userEmail: userEmail,
+          items: items,
+          amount: Number(payment.transaction_amount),
+          currency: payment.currency_id || 'ARS',
           status: payment.status,
-          transactionId: payment.id?.toString(),
+          transactionId: String(payment.id),
           paymentMethod: payment.payment_method_id,
           payerEmail: payment.payer?.email,
         };
         
         console.log('[Webhook] Payload para backend:', JSON.stringify(backendPayload, null, 2));
+        console.log('[Webhook] Items a enviar:', items.length);
         
         try {
           const backendUrl = `${BACKEND_API_URL}/purchases/mercadopago-webhook`;

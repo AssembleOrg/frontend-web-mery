@@ -7,6 +7,7 @@ import { Button } from './ui/button';
 import { SimpleLogo } from './simple-logo';
 import { MobileMenu } from './mobile-menu';
 import { UserMenu } from './user-menu';
+import { CartIcon } from './cart-icon';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -75,6 +76,11 @@ export function Navigation() {
                   RESERVA CITA
                 </a>
               </Button>
+            </div>
+
+            {/* Cart Icon */}
+            <div className='hidden 2xl:flex items-center ml-2'>
+              <CartIcon />
             </div>
 
             {/* User Menu / Login Button */}

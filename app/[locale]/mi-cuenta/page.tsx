@@ -30,7 +30,8 @@ export default function MiCuentaPage() {
 
   // Estado del formulario de perfil
   const [profileForm, setProfileForm] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     phone: '',
     country: '',
     city: '',
@@ -41,8 +42,19 @@ export default function MiCuentaPage() {
   // Cargar datos del usuario en el formulario
   useEffect(() => {
     if (user) {
+      // Use firstName/lastName if available, otherwise parse name
+      let firstName = user.firstName || '';
+      let lastName = user.lastName || '';
+      
+      if (!firstName && !lastName && user.name) {
+        const nameParts = user.name.trim().split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.slice(1).join(' ') || '';
+      }
+      
       setProfileForm({
-        name: user.name || '',
+        firstName,
+        lastName,
         phone: user.phone || '',
         country: user.country || '',
         city: user.city || '',
@@ -57,7 +69,10 @@ export default function MiCuentaPage() {
   ];
 
   const handleLogout = async () => {
+    console.log('[MiCuentaPage] 🔴 Iniciando logout...');
     await logout();
+    console.log('[MiCuentaPage] ✅ Logout completado');
+    console.log('[MiCuentaPage] 🔄 Redirigiendo a home...');
     router.push('/es');
   };
 
@@ -76,7 +91,8 @@ export default function MiCuentaPage() {
     setProfileError('');
 
     const result = await updateProfile({
-      name: profileForm.name,
+      firstName: profileForm.firstName || undefined,
+      lastName: profileForm.lastName || undefined,
       phone: profileForm.phone || undefined,
       country: profileForm.country || undefined,
       city: profileForm.city || undefined,
@@ -237,22 +253,41 @@ export default function MiCuentaPage() {
                 onSubmit={handleProfileSubmit}
                 className='space-y-6'
               >
-                {/* Nombre Completo */}
-                <div>
-                  <label className='block text-sm font-medium text-foreground mb-2'>
-                    Nombre Completo *
-                  </label>
-                  <div className='relative'>
-                    <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
-                    <input
-                      type='text'
-                      name='name'
-                      value={profileForm.name}
-                      onChange={handleProfileChange}
-                      className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
-                      placeholder='Juan Pérez'
-                      required
-                    />
+                {/* Nombre y Apellido */}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  <div>
+                    <label className='block text-sm font-medium text-foreground mb-2'>
+                      Nombre *
+                    </label>
+                    <div className='relative'>
+                      <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                      <input
+                        type='text'
+                        name='firstName'
+                        value={profileForm.firstName}
+                        onChange={handleProfileChange}
+                        className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                        placeholder='Juan'
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className='block text-sm font-medium text-foreground mb-2'>
+                      Apellido *
+                    </label>
+                    <div className='relative'>
+                      <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                      <input
+                        type='text'
+                        name='lastName'
+                        value={profileForm.lastName}
+                        onChange={handleProfileChange}
+                        className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                        placeholder='Pérez'
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
 

@@ -189,8 +189,29 @@ export const updateProfile = async (
   };
 };
 
-export const logout = async (token: string): Promise<void> => {
-  return Promise.resolve();
+export const logout = async (token?: string): Promise<void> => {
+  try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+      method: 'POST',
+      headers,
+      credentials: 'include', // Importante: permite que el backend borre las cookies httpOnly
+    });
+
+    if (!response.ok) {
+      console.warn('[Logout] Backend logout failed, but will continue with local cleanup');
+    }
+  } catch (error) {
+    console.warn('[Logout] Error calling backend logout:', error);
+    // No lanzamos error, permitimos que el logout local continúe
+  }
 };
 
 export const authService = {

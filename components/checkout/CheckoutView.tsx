@@ -114,7 +114,7 @@ export const CheckoutView = ({
             </div>
 
             {/* Location Information */}
-            <div className='bg-card p-6 rounded-lg border'>
+            {/* <div className='bg-card p-6 rounded-lg border'>
               <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
                 <MapPin className='w-5 h-5 text-[#f9bbc4]' /> Ubicación
               </h2>
@@ -152,7 +152,7 @@ export const CheckoutView = ({
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Payment Method */}
             <div className='bg-card p-6 rounded-lg border'>

@@ -32,16 +32,23 @@ export default function FinalizarCompraPage() {
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
 
-  // Autocomplete
+  // Autocomplete - Fill form with user data if available
   useEffect(() => {
     if (user) {
-      const nameParts = user.name?.trim().split(' ') || [];
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
+      // Use firstName/lastName if available, otherwise parse name
+      let firstName = user.firstName || '';
+      let lastName = user.lastName || '';
+      
+      if (!firstName && !lastName && user.name) {
+        const nameParts = user.name.trim().split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.slice(1).join(' ') || '';
+      }
+      
       setFormData((prev) => ({
         ...prev,
-        nombre: firstName,
-        apellido: lastName,
+        nombre: firstName || prev.nombre,
+        apellido: lastName || prev.apellido,
         telefono: user.phone || prev.telefono,
         pais: user.country || prev.pais,
         ciudad: user.city || prev.ciudad,
@@ -80,6 +87,7 @@ export default function FinalizarCompraPage() {
       console.log('Enviando datos a MercadoPago:', {
         items: itemsForAPI,
         locale,
+        userId: user.id,        // ⭐ AGREGADO
         userEmail: user.email,
       });
 
@@ -89,6 +97,7 @@ export default function FinalizarCompraPage() {
         body: JSON.stringify({
           items: itemsForAPI,
           locale,
+          userId: user.id,      // ⭐ AGREGADO: ID del usuario
           userEmail: user.email,
         }),
       });
