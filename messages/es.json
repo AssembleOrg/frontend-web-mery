@@ -210,29 +210,34 @@
       },
       "services": [
         {
-          "title": "Modelado de cejas con Staff MG",
+          "title": "Modelado de cejas by Staff MG",
           "price": "AR$ 39.000.-",
           "description": "Consiste en darle forma a las cejas, a través del cortado y la depilación artesanal, pelo por pelo, teniendo en cuenta el gusto de la persona y las proporciones del rostro."
         },
         {
-          "title": "Laminado de cejas",
+          "title": "Laminado de cejas by Staff MG",
           "price": "AR$ 39.000.-",
           "description": "Disciplinamos a través de un alisado químico, cejas rebeldes."
         },
         {
-          "title": "Tinte de cejas",
+          "title": "Tinte de cejas by Staff MG",
           "price": "AR$ 32.000.-",
           "description": "Le damos color a las cejas cuando estas son muy claritas o bien si tenes canas."
         },
         {
-          "title": "Brow Refill",
+          "title": "Brow Refill by Staff MG",
           "price": "AR$ 39.000.-",
           "description": "Reactiva y/o potencia el efecto de densidad de tu Nanoblading, tiñendo la piel de tus cejas con un juego de sombras de acabado hiperealista. También podés realizarlo si no tenés Nanoblading, pero igualmente querés lucir unas cejas densas, hiper pobladas y realistas por 20 días."
         },
         {
-          "title": "Lash Refill",
+          "title": "Lash Refill by Staff MG",
           "price": "AR$ 32.000.-",
           "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lashes Line, con un juego de sombras de acabado hiperealista."
+        },
+        {
+          "title": "Tinte de pestañas by Staff MG",
+          "price": "AR$ 32.000.-",
+          "description": "Damos color cuando son muy claras o en caso de tener canas, desde la base hasta la punta. No da volumen ni arqueado. Oscurece y potencia el color de tu propio pelo."
         }
       ],
       "cta": {

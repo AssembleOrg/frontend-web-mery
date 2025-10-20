@@ -15,6 +15,7 @@ export default function EyebrowStylingPage() {
     { key: '2' },
     { key: '3' },
     { key: '4' },
+    { key: '5' },
   ];
 
   return (

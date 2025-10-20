@@ -32,9 +32,11 @@ export function ServicePageLayout({
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
           <div className='text-center text-white'>
-            <h1 className='text-4xl md:text-5xl font-primary font-bold mb-4'>{title}</h1>
+            <h1 className='text-4xl md:text-5xl font-primary font-bold mb-4'>
+              {title}
+            </h1>
             <p className='text-xl font-secondary text-white/90'>
-              Tratamiento profesional especializado
+              Cosmetic Tattoo by Mery Garcia
             </p>
           </div>
         </div>

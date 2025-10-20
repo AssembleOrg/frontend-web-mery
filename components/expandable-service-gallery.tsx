@@ -25,6 +25,13 @@ export function ExpandableServiceGallery({
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslations('home');
 
+  const getServiceDescription = (serviceKey: string): string => {
+    const staffMGServices = ['eyebrowStyling'];
+    return staffMGServices.includes(serviceKey)
+      ? 'Tratamiento profesional by Staff MG'
+      : 'Cosmetic Tattoo by Mery Garcia';
+  };
+
   const beforeAfterUrls: Record<string, string> = {
     eyebrowStyling:
       'https://www.instagram.com/stories/highlights/17904023200243157/',
@@ -100,7 +107,7 @@ export function ExpandableServiceGallery({
                       {t(`services.${service.key}`)}
                     </h3>
                     <p className='text-sm font-secondary text-white/90 mb-3'>
-                      Tratamiento profesional especializado
+                      {getServiceDescription(service.key)}
                     </p>
                     <div className='flex gap-2'>
                       <Button
@@ -250,8 +257,8 @@ export function ExpandableServiceGallery({
                 `}
                 >
                   <p className='font-secondary text-white/90 text-sm md:text-base mb-4 line-clamp-2'>
-                    Tratamiento profesional especializado en{' '}
-                    {t(`services.${service.key}`).toLowerCase()}
+                    {getServiceDescription(service.key)}
+                    {/* {t(`services.${service.key}`).toLowerCase()} */}
                   </p>
 
                   <div className='flex gap-2 justify-center'>

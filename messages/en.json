@@ -216,29 +216,34 @@
       },
       "services": [
         {
-          "title": "Eyebrow Shaping with MG Staff",
+          "title": "Eyebrow Shaping by MG Staff",
           "price": "AR$ 39,000.-",
           "description": "It consists of shaping the eyebrows through trimming and artisanal, hair-by-hair tweezing, considering the person's taste and facial proportions."
         },
         {
-          "title": "Eyebrow Lamination",
+          "title": "Eyebrow Lamination by MG Staff",
           "price": "AR$ 39,000.-",
           "description": "We tame rebellious eyebrows through a chemical straightening process."
         },
         {
-          "title": "Eyebrow Tinting",
+          "title": "Eyebrow Tinting by MG Staff",
           "price": "AR$ 32,000.-",
           "description": "We add color to the eyebrows when they are very light or if you have gray hairs."
         },
         {
-          "title": "Brow Refill",
+          "title": "Brow Refill by MG Staff",
           "price": "AR$ 39,000.-",
           "description": "Reactivates and/or enhances the density effect of your Nanoblading by tinting the skin of your eyebrows with a hyper-realistic shadow play. You can also get it if you don't have Nanoblading but still want to show off dense, super-full, and realistic eyebrows for 20 days."
         },
         {
-          "title": "Lash Refill",
+          "title": "Lash Refill by MG Staff",
           "price": "AR$ 32,000.-",
           "description": "Reactivates and/or enhances the density effect of your Lashes Line service with a hyper-realistic shadow play."
+        },
+        {
+          "title": "Lash Tinting by MG Staff",
+          "price": "AR$ 32,000.-",
+          "description": "Darkens very light eyelashes, adds color and length. Lasts approximately one month."
         }
       ],
       "cta": {
