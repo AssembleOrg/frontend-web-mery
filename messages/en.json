@@ -19,7 +19,7 @@
     "quote": "I didn't choose the brow life. The brow life chose me.",
     "services": {
       "title": "Services",
-      "eyebrowStyling": "Eyebrow & Eyelash Design",
+      "eyebrowStyling": "Eyebrow & Eyelash Styling",
       "nanoblading": "Nanoblading & Camouflage",
       "microblading": "Microblading & Camouflage",
       "scalp": "Scalp",
@@ -208,7 +208,7 @@
     },
     "eyebrowStyling": {
       "hero": {
-        "title": "Eyebrow Styling",
+        "title": "Eyebrow & Eyelash Styling",
         "subtitle": "We are eyebrow specialists"
       },
       "intro": {

@@ -19,7 +19,7 @@ export default function ParamedicalTattooPage() {
       {/* Hero Section */}
       <section className='relative h-96 overflow-hidden'>
         <Image
-          src='/Img-home/handcraft.webp'
+          src='/Img-home/home-6.webp'
           alt={t('hero.title')}
           fill
           className='object-cover'

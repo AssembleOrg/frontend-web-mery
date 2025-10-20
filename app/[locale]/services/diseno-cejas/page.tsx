@@ -25,7 +25,7 @@ export default function EyebrowStylingPage() {
       {/* Hero Section */}
       <section className='relative h-96 overflow-hidden'>
         <Image
-          src='/img-home/home-1.webp'
+          src='/Img-home/home-1.webp'
           alt={t('hero.title')}
           fill
           className='object-cover'
