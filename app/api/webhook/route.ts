@@ -25,7 +25,6 @@ const client = new MercadoPagoConfig({
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 // GET handler for MercadoPago webhook verification
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(_request: NextRequest) {
   // MercadoPago hace GET para verificar que el webhook existe
   return NextResponse.json({

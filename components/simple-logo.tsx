@@ -12,11 +12,11 @@ export function SimpleLogo() {
     setMounted(true);
   }, []);
 
-  // Don't render until client-side mounted to avoid SSR issues
+  // Placeholder with same aspect ratio to prevent layout shift
   if (!mounted) {
     return (
       <div 
-        className="h-10 w-32"
+        className="h-7 md:h-9 lg:h-10 w-auto min-w-28 md:min-w-32"
         aria-hidden="true"
       />
     );
@@ -33,9 +33,9 @@ export function SimpleLogo() {
           : '/Img-home/Mery-logo-comestic-tattoo.png'
       }
       alt='Mery García Cosmetic Tattoo'
-      width={140}
-      height={42}
-      className='h-10 w-auto'
+      width={120}
+      height={36}
+      className='h-7 md:h-9 lg:h-10 w-auto'
       priority
       style={{
         objectFit: 'contain',

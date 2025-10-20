@@ -45,7 +45,6 @@ export function ExpandableServiceGallery({
       'https://www.instagram.com/stories/highlights/18019224445291012/',
     lipBlush: 'https://www.instagram.com/reel/CwX7F8nAOlJ/',
     paramedical: 'https://www.instagram.com/p/DLGOqHnype1/?img_index=1',
-    autostyling: 'https://www.instagram.com/p/DMqSOJNP5gr/?img_index=1',
   };
 
   // Detect mobile/touch devices
@@ -117,24 +116,26 @@ export function ExpandableServiceGallery({
                       >
                         Ver más
                       </Button>
-                      <Button
-                        size='sm'
-                        className={`backdrop-blur-sm flex items-center gap-1 ${
-                          beforeAfterUrls[service.key]
-                            ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
-                            : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
-                        }`}
-                        disabled={!beforeAfterUrls[service.key]}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (beforeAfterUrls[service.key]) {
-                            window.open(beforeAfterUrls[service.key], '_blank');
-                          }
-                        }}
-                      >
-                        <FaInstagram className='w-4 h-4' />
-                        Before & After
-                      </Button>
+                      {beforeAfterUrls[service.key] && (
+                        <Button
+                          size='sm'
+                          className={`backdrop-blur-sm flex items-center gap-1 ${
+                            beforeAfterUrls[service.key]
+                              ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
+                              : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
+                          }`}
+                          disabled={!beforeAfterUrls[service.key]}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (beforeAfterUrls[service.key]) {
+                              window.open(beforeAfterUrls[service.key], '_blank');
+                            }
+                          }}
+                        >
+                          <FaInstagram className='w-4 h-4' />
+                          Before & After
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -272,24 +273,26 @@ export function ExpandableServiceGallery({
                         Ver más
                       </Button>
                     </Link>
-                    <Button
-                      size='sm'
-                      className={`backdrop-blur-sm flex items-center gap-1 ${
-                        beforeAfterUrls[service.key]
-                          ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
-                          : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
-                      }`}
-                      disabled={!beforeAfterUrls[service.key]}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (beforeAfterUrls[service.key]) {
-                          window.open(beforeAfterUrls[service.key], '_blank');
-                        }
-                      }}
-                    >
-                      <FaInstagram className='w-4 h-4' />
-                      Before & After
-                    </Button>
+                    {beforeAfterUrls[service.key] && (
+                      <Button
+                        size='sm'
+                        className={`backdrop-blur-sm flex items-center gap-1 ${
+                          beforeAfterUrls[service.key]
+                            ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
+                            : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
+                        }`}
+                        disabled={!beforeAfterUrls[service.key]}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (beforeAfterUrls[service.key]) {
+                            window.open(beforeAfterUrls[service.key], '_blank');
+                          }
+                        }}
+                      >
+                        <FaInstagram className='w-4 h-4' />
+                        Before & After
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

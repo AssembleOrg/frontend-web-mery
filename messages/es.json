@@ -19,7 +19,7 @@
     "quote": "No elegí la vida de cejas. La vida de cejas me eligió a mí.",
     "services": {
       "title": "Servicios",
-      "eyebrowStyling": "Styling de Cejas",
+      "eyebrowStyling": "Styling de Cejas & Pestañas",
       "nanoblading": "Nanoblading & Camuflaje",
       "microblading": "Microblading & Camuflaje",
       "scalp": "Scalp",
@@ -202,8 +202,8 @@
     },
     "eyebrowStyling": {
       "hero": {
-        "title": "Styling de Cejas",
-        "subtitle": "Somos especialistas en cejas"
+        "title": "Styling de Cejas & Pestañas",
+        "subtitle": "Somos especialistas en cejas y pestañas"
       },
       "intro": {
         "heading": "¿Qué servicios podemos ofrecerte?"
@@ -255,7 +255,7 @@
         "heading": "¿QUÉ ES EL MICROBLADING?",
         "p1": "Es una técnica muy novedosa, aunque realmente antigua. Consiste en generar un tatuaje superficial mediante pequeños rasguños donde se inserta la tinta. De esta forma conseguimos un efecto súper real con un ACABADO PELO A PELO.",
         "p2": "Dura entre 8 meses y 1 año, dependiendo del tipo de piel y los cuidados que haya recibido. Pasado este tiempo, la piel queda limpia, sin rastro de tinta y sin dejar cicatriz.",
-        "p3": "¡Estás en buenas manos! Mery es una experta en cejas y atiende a más de 400 clientas al mes solo en servicios relacionados con cejas. Lleva más de 15 años trabajando en styling de cejas."
+        "p3": "¡Estás en buenas manos! Mery es una experta en cejas y atiende a más de 400 clientas al mes solo en servicios relacionados con cejas. Lleva más de 15 años trabajando en styling de cejas & pestañas."
       },
       "camouflage": {
         "heading": "¿QUÉ ES EL CAMUFLAJE?",

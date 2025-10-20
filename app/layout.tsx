@@ -4,7 +4,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Mery García - Tatuaje Cosmético',
   description:
-    'Especialista en tatuaje cosmético con más de 20 años de experiencia. Servicios de nanoblading, lip blush, styling de cejas y formaciones profesionales.',
+    'Especialista en tatuaje cosmético con más de 20 años de experiencia. Servicios de nanoblading, lip blush, styling de cejas & formaciones profesionales.',
 };
 
 export default function RootLayout({
