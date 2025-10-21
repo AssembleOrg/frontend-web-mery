@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { ModalProvider } from '@/contexts/modal-context';
 import { AuthInterceptorProvider } from '@/components/auth/AuthInterceptorProvider';
 import { Poppins } from 'next/font/google';
+import { dinLight, dinRegular, dinMedium, avantGardeAdmin } from '@/lib/fonts';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
 
@@ -38,9 +39,10 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       suppressHydrationWarning
+      className={`${dinLight.variable} ${dinRegular.variable} ${dinMedium.variable} ${avantGardeAdmin.variable} ${poppins.variable}`}
     >
       <body
-        className={`antialiased ${poppins.variable}`}
+        className='antialiased'
         suppressHydrationWarning
       >
         <ThemeProvider

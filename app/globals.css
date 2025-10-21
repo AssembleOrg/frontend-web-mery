@@ -1,65 +1,24 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* DIN Fonts */
-@font-face {
-  font-family: 'DIN';
-  src: url('/font/DIN-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'DIN';
-  src: url('/font/DIN-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'DIN';
-  src: url('/font/DIN-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Custom Font - AvantGarde LT Medium Regular */
-@font-face {
-  font-family: 'AvantGarde LT';
-  src: url('/font/AvantGarde LT Medium Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ITC Avant Garde - Admin Panel Font */
-@font-face {
-  font-family: 'ITC Avant Garde';
-  src: url('/font/ITCAvantGardeStd-Bk.woff2') format('woff2'),
-       url('/font/ITCAvantGardeStd-Bk.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* Custom Font Variables - Now loaded via next/font/local in lib/fonts.ts */
+/* @font-face declarations removed - handled by next/font for better Safari compatibility */
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Brand Fonts */
-  --font-primary: 'DIN', 'AvantGarde LT', sans-serif; /* Titles */
-  --font-secondary: var(--font-secondary), sans-serif; /* Body text */
-  --font-custom: 'AvantGarde LT', sans-serif; /* Special use */
+  /* Brand Fonts - Now using next/font variables */
+  --font-primary: var(--font-din-light), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; /* DIN Light - Titles */
+  --font-secondary: var(--font-secondary, 'Poppins', sans-serif); /* Poppins - Body text */
+  --font-custom: var(--font-avant-garde-admin), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* AvantGarde - Special use */
 
-  --font-sans: 'DIN', var(--font-secondary), var(--font-geist-sans);
+  --font-sans: var(--font-din-light), var(--font-secondary), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   --font-mono: var(--font-geist-mono);
 
   /* Default font families for Tailwind */
-  --default-font-family: 'DIN', 'AvantGarde LT', sans-serif;
+  --default-font-family: var(--font-din-light), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   --default-mono-font-family: var(--font-geist-mono), 'Courier New', monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -244,7 +203,7 @@
 @layer utilities {
   /* DIN Font Weight Utilities */
   .font-primary {
-    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+    font-family: var(--font-din-light), -apple-system, BlinkMacSystemFont,
       'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 300; /* Use Light as default */
     letter-spacing: normal; /* Reset any inherited letter-spacing */
@@ -252,20 +211,20 @@
   }
 
   .font-primary-regular {
-    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+    font-family: var(--font-din-regular), -apple-system, BlinkMacSystemFont,
       'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400; /* Regular when explicitly needed */
   }
 
   .font-primary-medium {
-    font-family: 'DIN', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+    font-family: var(--font-din-medium), -apple-system, BlinkMacSystemFont,
       'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 500; /* Medium for emphasis */
   }
 
   /* Admin Panel Font */
   .font-admin {
-    font-family: 'ITC Avant Garde', 'AvantGarde LT', -apple-system, BlinkMacSystemFont,
+    font-family: var(--font-avant-garde-admin), -apple-system, BlinkMacSystemFont,
       'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400;
   }

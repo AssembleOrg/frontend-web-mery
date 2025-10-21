@@ -77,7 +77,9 @@ export default function CourseModal({
               Descripción del Curso
             </h3>
             <p className='text-gray-600 leading-relaxed mb-6'>
-              {course.modalContent.detailedDescription}
+              {course.long_description ||
+                course.modalContent?.detailedDescription ||
+                course.description}
             </p>
 
             {/* Course Includes */}
