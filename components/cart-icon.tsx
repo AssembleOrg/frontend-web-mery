@@ -20,6 +20,10 @@ export function CartIcon() {
     router.push(`/${locale}/finalizar-compra`);
   };
 
+  if (itemCount === 0) {
+    return null;
+  }
+
   return (
     <button
       onClick={handleClick}

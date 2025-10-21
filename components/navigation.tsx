@@ -79,12 +79,12 @@ export function Navigation() {
             </div>
 
             {/* Cart Icon */}
-            <div className='hidden 2xl:flex items-center ml-2'>
+            <div className='hidden xl:flex items-center ml-2'>
               <CartIcon />
             </div>
 
             {/* User Menu / Login Button */}
-            <div className='hidden 2xl:flex items-center ml-2'>
+            <div className='hidden xl:flex items-center ml-2'>
               {isAuthenticated ? (
                 <UserMenu />
               ) : (
