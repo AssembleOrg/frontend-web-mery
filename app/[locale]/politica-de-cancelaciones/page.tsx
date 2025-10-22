@@ -37,7 +37,7 @@ export default function PoliticaCancelacionesPage() {
                   </h2>
                   <div className='space-y-3 font-secondary text-muted-foreground'>
                     <p>{t('commitmentText1')}</p>
-                    <p className='text-secondary font-bold'>
+                    <p className='text-primary font-bold'>
                       {t('commitmentText2')}
                     </p>
                     <p>{t('commitmentText3')}</p>
@@ -46,15 +46,17 @@ export default function PoliticaCancelacionesPage() {
               </div>
             </div>
 
-            <div className='alert-high bg-mg-burgundy/5 p-6 rounded-lg border shadow-sm'>
+            <div className='alert-high p-6 rounded-lg border shadow-sm'>
               <div className='flex items-start space-x-4'>
                 <AlertTriangle className='h-6 w-6 mt-1 flex-shrink-0' />
                 <div>
                   <h2 className='text-2xl text-primary font-bold mb-4'>
                     {t('consequencesTitle')}
                   </h2>
-                  <div className='space-y-3 text-secondary '>
-                    <p className='font-semibold '>{t('consequencesText')}</p>
+                  <div className='space-y-3 '>
+                    <p className='text-primary font-bold '>
+                      {t('consequencesText')}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -98,10 +100,10 @@ export default function PoliticaCancelacionesPage() {
             </div>
 
             <div className='text-center alert-low p-8 rounded-lg'>
-              <h3 className='text-xl text-secondary font-bold mb-3'>
+              <h3 className='text-xl font-primary font-bold mb-3'>
                 {t('closingTitle')}
               </h3>
-              <p className='text-secondary font-light leading-relaxed'>
+              <p className='font-secondary leading-relaxed'>
                 {t('closingText')}
               </p>
             </div>

@@ -59,13 +59,13 @@ export default function MiCuentaPage() {
       // Use firstName/lastName if available, otherwise parse name
       let firstName = user.firstName || '';
       let lastName = user.lastName || '';
-      
+
       if (!firstName && !lastName && user.name) {
         const nameParts = user.name.trim().split(' ');
         firstName = nameParts[0] || '';
         lastName = nameParts.slice(1).join(' ') || '';
       }
-      
+
       setProfileForm({
         firstName,
         lastName,
@@ -146,7 +146,7 @@ export default function MiCuentaPage() {
     try {
       // Obtener el token del localStorage
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         setPasswordError('No se encontró el token de autenticación');
         setIsChangingPassword(false);
@@ -544,8 +544,11 @@ export default function MiCuentaPage() {
                 <Key className='w-5 h-5' />
                 Cambiar Contraseña
               </h3>
-              
-              <form onSubmit={handlePasswordSubmit} className='space-y-4'>
+
+              <form
+                onSubmit={handlePasswordSubmit}
+                className='space-y-4'
+              >
                 {/* Nueva Contraseña */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
@@ -596,7 +599,9 @@ export default function MiCuentaPage() {
                     />
                     <button
                       type='button'
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       className='absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground'
                     >
                       {showConfirmPassword ? (
