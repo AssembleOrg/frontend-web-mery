@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
-import { Sparkles, AlertCircle, Heart } from 'lucide-react';
+import { AlertCircle, Heart } from 'lucide-react';
 import Image from 'next/image';
 
 export default function LipBlushPage() {
@@ -38,128 +38,120 @@ export default function LipBlushPage() {
       {/* Content */}
       <div className='container mx-auto px-4 py-16'>
         <div className='max-w-4xl mx-auto'>
-          {/* Intro Section */}
-          <section className='mb-12 text-center'>
-            <div className='inline-block bg-gradient-to-r from-primary/20 to-primary/5 p-4 rounded-full mb-6'>
-              <Heart className='h-10 w-10 text-primary' />
-            </div>
-            <p className='text-xl text-muted-foreground font-secondary leading-relaxed italic max-w-3xl mx-auto'>
-              {t('intro.text')}
-            </p>
-          </section>
-
-          {/* What is it Section */}
-          <section className='mb-12'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
-              {t('whatIsIt.heading')}
-            </h2>
-            <p className='text-muted-foreground font-secondary whitespace-pre-line mb-6'>
-              {t('whatIsIt.p1')}
-            </p>
-            <p className='text-muted-foreground font-secondary whitespace-pre-line'>
-              {t('whatIsIt.p2')}
-            </p>
-          </section>
-
-          {/* Service Image */}
-          <div className='relative w-full h-96 md:h-[500px] my-12 rounded-lg overflow-hidden'>
-            <Image
-              src='/Img-home/Lip-blush-1.webp'
-              alt='Lip Blush Service'
-              fill
-              className='object-cover'
-            />
-          </div>
-
-          {/* Pricing Section */}
+          {/* Bloque 1: Introducción y Precios (Todo en una tarjeta) */}
           <section className='mb-12'>
             <div className='bg-card border rounded-xl p-8'>
-              {/* Deposit Info */}
-              <div className='pb-6 border-b'>
-                <h3 className='text-xl font-bold font-primary text-foreground mb-3'>
+              <h2 className='text-3xl font-bold font-primary text-foreground mb-4'>
+                {t('introduction.heading')}
+              </h2>
+              <p className='text-muted-foreground font-secondary mb-6'>
+                {t('introduction.text')}
+              </p>
+
+              {/* Seña */}
+              <div className='mb-6 pb-6 border-b'>
+                <h3 className='text-xl font-semibold text-foreground mb-2'>
                   {t('pricing.depositTitle')}
                 </h3>
-                <p className='text-muted-foreground font-secondary mb-4'>
-                  {t('pricing.depositText')}
-                </p>
-                <p className='text-2xl mt-4 flex items-center font-primary/10 font-bold text-primary'>
+                <p className='text-2xl font-bold text-primary'>
                   {t('pricing.depositAmount')}
                 </p>
               </div>
 
+              {/* Lista de precios */}
               <div className='pt-6'>
-                <h3 className='text-xl font-bold text-foreground mb-4'>
+                <h3 className='text-xl font-bold text-foreground mb-6'>
                   {t('pricing.priceListTitle')}
                 </h3>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-center'>
-                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
-                    <p className='font-semibold font-primary text-foreground'>
+                <div className='space-y-4 font-secondary text-base'>
+                  <div className='flex justify-between items-center'>
+                    <p className='font-semibold text-foreground'>
                       {t('pricing.firstSessionLabel')}
                     </p>
-                    <p className='text-muted-foreground font-secondary break-words'>
+                    <p className='text-muted-foreground'>
                       {t('pricing.session1')}
                     </p>
                   </div>
-                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
-                    <p className='font-semibold font-primary text-foreground'>
+                  <div className='flex justify-between items-center'>
+                    <p className='font-semibold text-foreground'>
                       {t('pricing.touchUpLabel')}
                     </p>
-                    <p className='text-muted-foreground font-secondary break-words'>
+                    <p className='text-muted-foreground'>
                       {t('pricing.touchUp')}
                     </p>
                   </div>
-                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
-                    <p className='font-semibold font-primary text-foreground'>
+                  <div className='flex justify-between items-center'>
+                    <p className='font-semibold text-foreground'>
                       {t('pricing.maintenanceLabel')}
                     </p>
-                    <p className='text-muted-foreground font-secondary break-words'>
+                    <p className='text-muted-foreground'>
                       {t('pricing.maintenance')}
                     </p>
                   </div>
                 </div>
               </div>
+
+              {/* Textos promocionales y de disponibilidad */}
+              <div className='mt-8 text-center bg-muted/40 p-4 rounded-lg'>
+                <p className='font-bold text-primary mb-2'>
+                  {t('introduction.availability')}
+                </p>
+                <p className='italic text-muted-foreground text-sm'>
+                  {t('introduction.promoText')}
+                </p>
+              </div>
             </div>
           </section>
 
-          {/* Important Info Section */}
+          {/* Bloque 2: Descripción del Servicio con Imagen */}
           <section className='mb-12'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              {/* Herpes Warning */}
-              <div className='alert-high border rounded-lg p-6'>
-                <div className='flex items-start space-x-3 text-primary'>
-                  <AlertCircle className='h-6 w-6 mt-1 flex-shrink-0' />
-                  <div>
-                    <h3 className='text-lg font-bold font-primary mb-2'>
-                      {t('importantInfo.herpesTitle')}
-                    </h3>
-                    <p className='font-secondary text-sm'>
-                      {t('importantInfo.herpesText')}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className='relative w-full h-96 md:h-[500px] mb-8 rounded-lg overflow-hidden'>
+              <Image
+                src='/Img-home/Lip-blush-1.webp'
+                alt='Lip Blush Service'
+                fill
+                className='object-cover'
+              />
+            </div>
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
+              {t('whatIsIt.heading')}
+            </h2>
+            <div className='text-muted-foreground font-secondary space-y-4 whitespace-pre-line'>
+              <p>{t('whatIsIt.p1')}</p>
+              <p>{t('whatIsIt.p2')}</p>
+            </div>
+          </section>
 
-              {/* Preparation */}
-              <div className='alert-low border rounded-lg p-6'>
-                <div className='flex items-start space-x-3'>
-                  <Heart className='h-6 w-6 mt-1 flex-shrink-0' />
-                  <div>
-                    <h3 className='text-lg font-bold font-primary mb-2'>
-                      {t('importantInfo.preparationTitle')}
-                    </h3>
-                    <p className='font-secondary text-sm'>
-                      {t('importantInfo.preparationText')}
-                    </p>
-                  </div>
+          {/* Bloque 3: Información Importante */}
+          <section className='mb-12 space-y-6'>
+            {/* Herpes Warning */}
+            <div className='alert-high border rounded-lg p-6'>
+              <div className='flex items-start space-x-3 text-primary'>
+                <AlertCircle className='h-6 w-6 mt-1 flex-shrink-0' />
+                <div>
+                  <h3 className='text-lg font-bold font-primary mb-2'>
+                    {t('importantInfo.herpesTitle')}
+                  </h3>
+                  <p className='font-secondary text-sm'>
+                    {t('importantInfo.herpesText')}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Availability Notice */}
-            <div className='mt-6 bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-6 text-center'>
-              <p className='text-lg font-bold font-secondary text-primary'>
-                {t('importantInfo.availability')}
-              </p>
+            {/* Preparation */}
+            <div className='alert-low border rounded-lg p-6'>
+              <div className='flex items-start space-x-3'>
+                <Heart className='h-6 w-6 mt-1 flex-shrink-0' />
+                <div>
+                  <h3 className='text-lg font-bold font-primary mb-2'>
+                    {t('importantInfo.preparationTitle')}
+                  </h3>
+                  <p className='font-secondary text-sm'>
+                    {t('importantInfo.preparationText')}
+                  </p>
+                </div>
+              </div>
             </div>
           </section>
 

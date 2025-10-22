@@ -21,7 +21,8 @@ export default function LessonContent({
   );
 
   // ✅ Usar los nuevos campos: contenidos y downloads (prioridad sobre legacy fields)
-  const content = lesson.contenidos || lesson.description || 'Sin contenido disponible';
+  const content =
+    lesson.contenidos || lesson.description || 'Sin contenido disponible';
   const downloads = lesson.downloads || lesson.downloadableFiles || [];
 
   // Función para renderizar texto con negritas (**texto**)
@@ -34,7 +35,10 @@ export default function LessonContent({
           if (part.startsWith('**') && part.endsWith('**')) {
             const boldText = part.slice(2, -2);
             return (
-              <span key={index} className='font-semibold text-gray-800'>
+              <span
+                key={index}
+                className='font-semibold text-gray-800'
+              >
                 {boldText}
               </span>
             );
@@ -84,8 +88,16 @@ export default function LessonContent({
             {downloads.map((file: any, index: number) => {
               // ✅ Soporte para nuevo formato (VideoDownloadItem con texto, url_icon, url_file)
               // y formato legacy (string URL o DownloadableFile)
-              const fileUrl = file.url_file || file.url || (typeof file === 'string' ? file : null);
-              const fileText = file.texto || file.text || file.name || fileUrl?.split('/').pop()?.replace('.pdf', '') || `Documento ${index + 1}`;
+              const fileUrl =
+                file.url_file ||
+                file.url ||
+                (typeof file === 'string' ? file : null);
+              const fileText =
+                file.texto ||
+                file.text ||
+                file.name ||
+                fileUrl?.split('/').pop()?.replace('.pdf', '') ||
+                `Documento ${index + 1}`;
               const iconUrl = file.url_icon || '/icons/pdf.svg';
 
               if (!fileUrl) return null;

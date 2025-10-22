@@ -169,8 +169,8 @@
         "text": "El día de tu cita, previo a comenzar el trabajo, te contaremos de qué se trata, cómo se hace, cuánto demora, cuál es su valor y los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nJunto con Mery definen la forma, color y cantidad de pecas o lunares utilizando maquillaje para que de esa manera puedas tener una idea aproximada de cómo quedarían.\n\nUna vez que haya finalizado este espacio de consulta, Mery comenzará a realizarte el servicio."
       },
       "biosecurity": {
-        "heading": "NORMAS DE BIO-SEGURIDAD",
-        "text": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico.\n\nEs indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros.\n\nNo trabajaremos la zona en el caso de que se esté pasando por un proceso infeccioso, anemia, baja o nula cicatrización, como así también, si la persona tuviese por alguna razón orgánica o inducida, baja su respuesta inmunológica."
+        "heading": "NORMAS DE BIO-SEGURIDAD & PROCEDIMIENTO",
+        "text": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico.\n\nEs indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros.\n\nNo trabajaremos la zona en el caso de que se esté pasando por un proceso infeccioso, anemia, baja o nula cicatrización, como así también, si la persona tuviese por alguna razón orgánica o inducida, baja su respuesta inmunológica.\n\n El día de tu cita, previo a comenzar el trabajo, te contaremos de qué se trata, cómo se hace, cuánto demora, cuál es su valor y los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nJunto con Mery definen la forma, color y cantidad de pecas o lunares utilizando maquillaje para que de esa manera puedas tener una idea aproximada de cómo quedarían.\n\nUna vez que haya finalizado este espacio de consulta, Mery comenzará a realizarte el servicio. "
       },
       "pricing": {
         "heading": "Precio de Lista del Servicio",
@@ -429,18 +429,24 @@
     "lipBlush": {
       "hero": {
         "title": "Lip Blush",
-        "subtitle": "WE ARE BACK 💋 Labios hiper definidos, súper natural #ByMeryGarcia"
+        "subtitle": "Labios perfectos, color natural y duradero."
       },
       "intro": {
         "text": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
       },
+      "introduction": {
+        "heading": "WE ARE BACK 💋",
+        "text": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lip Blush, la misma no es reembolsable y no congela el valor de tu servicio.",
+        "availability": "🚀 Sólo 2 citas por semana",
+        "promoText": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
+      },
       "whatIsIt": {
         "heading": "¿QUÉ ES EL LIP BLUSH?",
-        "p1": "Es un servicio de tatuaje cosmético que dura entre 18 y 24 meses.\n\nConsiste en darle un color a los labios, respetando la colorimetría natural de la persona.\n\nNo buscamos dar un efecto de maquillaje, sino de boca ruborizada. No da brillo. Sin polvo, sin textura, como si el labio tuviese color 💋🍒",
-        "p2": "El procedimiento consta de una primera sesión y un retoque para terminar de definir unos labios perfectos a los 30 o 60 días."
+        "p1": "Es un servicio de tatuaje cosmético que dura entre 18 y 24 meses. El procedimiento consta de una primera sesión y un retoque para terminar de definir unos labios perfectos a los 30 o 60 días. \n\n Consiste en darle un color a los labios, respetando la colorimetría natural de la persona. No buscamos dar un efecto de maquillaje, sino de boca ruborizada. No da brillo. Sin polvo, sin textura, como si el labio tuviese color 💋🍒.",
+        "p2": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
       },
       "pricing": {
-        "depositTitle": "Consulta y Seña",
+        "depositTitle": "Seña",
         "depositText": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lip Blush, la misma no es reembolsable y no congela el valor de tu servicio:",
         "depositAmount": "Seña AR$ 100.000.-",
         "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
@@ -586,22 +592,22 @@
     "title": "Política de Cancelaciones",
     "subtitle": "Comprometidas con brindar el mejor servicio a todas nuestras clientas",
     "commitmentTitle": "Compromiso de Reserva",
-    "commitmentText1": "Hacer una reserva significa comprometerse con el servicio. Para cancelar tu cita, debes hacerlo con al menos 24 horas de anticipación.",
-    "commitmentText2": "Las cancelaciones deben realizarse exclusivamente a través de la web o aplicación oficial. No se aceptan cancelaciones por redes sociales o email.",
-    "consequencesTitle": "Consecuencias de No Presentarse",
-    "consequencesText": "Si no cancelas con 24 horas de anticipación o no te presentas a tu cita, tu próxima reserva tendrá las siguientes condiciones:",
-    "consequence1": "50% de costo adicional sobre el valor original del servicio",
-    "consequence2": "Posible negación de nueva cita a criterio del equipo",
-    "cosmeticRulesTitle": "Reglas Específicas para Tatuaje Cosmético",
-    "cosmeticRulesText": "Para servicios de tatuaje cosmético (nanoblading, lip blush, etc.):",
-    "cosmeticRule1": "El depósito no es reembolsable bajo ninguna circunstancia",
-    "cosmeticRule2": "Para reagendar después de un no-show, deberás pagar el depósito nuevamente",
+    "commitmentText1": "El realizar tu reserva implica la aceptación de nuestras condiciones. Estamos comprometidas con brindar un servicio personalizado y de excelencia a nuestras clientas.",
+    "commitmentText2": "Para cancelar tu cita debes hacerlo con al menos 48 horas de anticipación.",
+    "commitmentText3": "Reagenda tu cita desde nuestro portal para no perder la seña, ya que la misma no es reembolsable. En caso de cancelar, debe realizarse únicamente por nuestra web. No se aceptan cancelaciones por redes sociales o email.",
+    "consequencesTitle": "¿Qué sucede si no asisto?",
+    "consequencesText": "En caso de no acudir a tu cita o no reprogramar con 48hs de anticipación, deberás abonar el 50% de los servicios reservados.",
+    "cosmeticRulesTitle": "Condiciones Específicas para Servicios de Cosmetic Tattoo",
+    "cosmeticRule1": "El depósito no es reembolsable bajo ninguna circunstancia.",
+    "cosmeticRule2": "Es necesario contar con 3 horas de disponibilidad el día de tu cita.",
+    "cosmeticRule3": "No está permitido asistir con acompañantes ni menores de edad. ",
+    "cosmeticRule4": "Es importante que durante el procedimiento puedas desconectarte, por lo que no está permitido el uso del celular.",
     "exceptionalTitle": "Circunstancias Excepcionales",
     "exceptionalText1": "Entendemos que pueden surgir emergencias o situaciones imprevistas de último momento.",
     "exceptionalText2": "En casos excepcionales, puedes contactarnos a:",
     "exceptionalNote": "Nuestro equipo evaluará cada caso de manera individual y comprensiva.",
-    "closingTitle": "Trabajemos Juntas",
-    "closingText": "Esta política nos ayuda a organizar mejor nuestros horarios y brindar un servicio de excelencia a todas nuestras clientas. Agradecemos tu comprensión y colaboración para que más mujeres puedan disfrutar de nuestros servicios."
+    "closingTitle": "El compromiso de un excelente servicio es mutuo",
+    "closingText": "Ésta política nos ayuda a organizar mejor nuestros horarios y brindar un servicio de excelencia a todos nuestros clientes. Agradecemos tu compresión y colaboración para que más personas puedan disfrutar de nuestros servicios."
   },
   "expressConsultation": {
     "title": "Asesoramiento Express",

@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Clock, PlayCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, PlayCircle, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Course, Lesson } from '@/types/course';
 import {

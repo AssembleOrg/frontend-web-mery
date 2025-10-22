@@ -7,14 +7,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 
-import {
-  Shield,
-  Clock,
-  Star,
-  Package,
-  AlertTriangle,
-  Baby,
-} from 'lucide-react';
+import { Shield, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
 import { BookingCTA } from '@/components/booking-cta';
 
@@ -68,8 +61,7 @@ export default function PecasLunaresPage() {
               className='object-cover'
             />
           </div>
-
-          {/* Sección: Procedimiento */}
+          {/* 
           <section className='mb-12'>
             <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
               {t('procedure.heading')}
@@ -77,7 +69,7 @@ export default function PecasLunaresPage() {
             <p className='text-muted-foreground font-secondary whitespace-pre-line'>
               {t('procedure.text')}
             </p>
-          </section>
+          </section> */}
 
           {/* Sección: Bioseguridad */}
           <section className='mb-12'>
@@ -87,7 +79,9 @@ export default function PecasLunaresPage() {
                   <Shield className='h-8 w-8 mr-3' />
                   {t('biosecurity.heading')}
                 </h2>
-                <p className='font-secondary whitespace-pre-line'>{t('biosecurity.text')}</p>
+                <p className='font-secondary whitespace-pre-line'>
+                  {t('biosecurity.text')}
+                </p>
               </div>
             </div>
           </section>

@@ -175,8 +175,8 @@
         "text": "On the day of your appointment, before starting the work, we will tell you what it's about, how it's done, how long it takes, what its cost is, and the essential pre- and post-care, which are crucial.\n\nWe clear all your doubts so you're completely sure before proceeding.\n\nTogether with Mery, you define the shape, color, and quantity of freckles or moles using makeup so you can have an approximate idea of how they would look.\n\nOnce this consultation is over, Mery will begin to perform the service."
       },
       "biosecurity": {
-        "heading": "BIOSECURITY NORMS",
-        "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials, completion and signing of the person's consent form, and in some cases, a doctor's consent.\n\nRigorous hygiene and the person's commitment to caring for their skin with appropriate elements are essential to prevent infections, low pigmentation, or pigment changes, among others.\n\nWe will not work on the area if you are experiencing an infectious process, anemia, poor or no healing, or if you have low immune response for any organic or induced reason."
+        "heading": "BIOSECURITY NORMS & PROCEDURE",
+        "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials, completion and signing of the person's consent form, and in some cases, a doctor's consent.\n\nRigorous hygiene and the person's commitment to caring for their skin with appropriate elements are essential to prevent infections, low pigmentation, or pigment changes, among others.\n\nWe will not work on the area if you are experiencing an infectious process, anemia, poor or no healing, or if you have low immune response for any organic or induced reason. \n\n On the day of your appointment, before starting the work, we will tell you what it's about, how it's done, how long it takes, what its cost is, and the essential pre- and post-care, which are crucial.\n\nWe clear all your doubts so you're completely sure before proceeding.\n\nTogether with Mery, you define the shape, color, and quantity of freckles or moles using makeup so you can have an approximate idea of how they would look.\n\nOnce this consultation is over, Mery will begin to perform the service."
       },
       "pricing": {
         "heading": "Service Price List",
@@ -480,19 +480,21 @@
     "lipBlush": {
       "hero": {
         "title": "Lip Blush",
-        "subtitle": "WE ARE BACK 💋 Hyper-defined lips, super natural #ByMeryGarcia"
+        "subtitle": "Perfect lips, natural and long-lasting color."
       },
-      "intro": {
-        "text": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes✨"
+      "introduction": {
+        "heading": "WE ARE BACK 💋",
+        "text": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lip Blush session; it is non-refundable and does not lock in the price of your service.",
+        "availability": "🚀 Only 2 appointments per week",
+        "promoText": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes✨"
       },
       "whatIsIt": {
         "heading": "WHAT IS LIP BLUSH?",
-        "p1": "It is a cosmetic tattoo service that lasts between 18 and 24 months.\n\nIt consists of giving color to the lips, respecting the person's natural coloration.\n\nWe are not looking for a makeup effect, but rather a blushed mouth effect. No shine. Without powder, without texture, as if the lip had color 💋🍒",
-        "p2": "The procedure consists of a first session and a touch-up to finish defining perfect lips at 30 or 60 days."
+        "p1": "It is a cosmetic tattoo service that lasts between 18 and 24 months. The procedure consists of a first session and a touch-up to finish defining perfect lips at 30 or 60 days.\n\nIt consists of giving color to the lips, respecting the person's natural coloration. We are not looking for a makeup effect, but rather a blushed mouth effect. No shine. Without powder, without texture, as if the lip had color 💋🍒",
+        "p2": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes✨"
       },
       "pricing": {
-        "depositTitle": "Consultation and Deposit",
-        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lip Blush session; it is non-refundable and does not lock in the price of your service:",
+        "depositTitle": "Deposit",
         "depositAmount": "Deposit AR$ 100,000.-",
         "priceListTitle": "Service List Price with Mery Garcia",
         "firstSessionLabel": "First Session",
@@ -506,14 +508,12 @@
         "herpesTitle": "IMPORTANT: Herpes",
         "herpesText": "If you have had herpes, please consult with your dermatologist to perform preventive treatment.",
         "preparationTitle": "Preparation",
-        "preparationText": "Please come to the session with well-hydrated lips.",
-        "availability": "🚀 Only 2 appointments per week"
+        "preparationText": "Please come to the session with well-hydrated lips."
       },
       "cta": {
         "heading": "Ready for Your Dream Lips?",
         "text": "Discover the secret to naturally perfect lips with a hyper-realistic finish. Book your consultation with Mery.",
-        "button": "Book Consultation",
-        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
+        "button": "Book Consultation"
       }
     },
     "paramedicalTattoo": {
@@ -604,22 +604,22 @@
     "title": "Cancellation Policy",
     "subtitle": "Committed to providing the best service to all our clients",
     "commitmentTitle": "Reservation Commitment",
-    "commitmentText1": "Making a reservation means committing to the service. To cancel your appointment, you must do so at least 24 hours in advance.",
-    "commitmentText2": "Cancellations must be made exclusively through the official web or app. Cancellations via social media or email are not accepted.",
-    "consequencesTitle": "Consequences of No-Show",
-    "consequencesText": "If you don't cancel 24 hours in advance or don't show up for your appointment, your next reservation will have the following conditions:",
-    "consequence1": "50% additional cost on top of the original service value",
-    "consequence2": "Possible denial of new appointment at team's discretion",
-    "cosmeticRulesTitle": "Specific Rules for Cosmetic Tattoo",
-    "cosmeticRulesText": "For cosmetic tattoo services (nanoblading, lip blush, etc.):",
-    "cosmeticRule1": "The deposit is non-refundable under any circumstances",
-    "cosmeticRule2": "To reschedule after a no-show, you must pay the deposit again",
+    "commitmentText1": "Making your reservation implies acceptance of our terms. We are committed to providing a personalized and excellent service to our clients.",
+    "commitmentText2": "To cancel your appointment, you must do so at least 48 hours in advance.",
+    "commitmentText3": "Reschedule your appointment through our portal to avoid losing your deposit, as it is non-refundable. Cancellations must be made exclusively through our website. Cancellations via social media or email are not accepted.",
+    "consequencesTitle": "What happens if I don't show up?",
+    "consequencesText": "If you do not show up for your appointment or fail to reschedule at least 48 hours in advance, you will be required to pay 50% of the reserved services.",
+    "cosmeticRulesTitle": "Specific Conditions for Cosmetic Tattoo Services",
+    "cosmeticRule1": "The deposit is non-refundable under any circumstances.",
+    "cosmeticRule2": "It is necessary to have 3 hours of availability on the day of your appointment.",
+    "cosmeticRule3": "You are not allowed to bring guests or minors to your appointment.",
+    "cosmeticRule4": "It is important that you can disconnect during the procedure, so cell phone use is not permitted.",
     "exceptionalTitle": "Exceptional Circumstances",
     "exceptionalText1": "We understand that emergencies or unforeseen last-minute situations may arise.",
     "exceptionalText2": "In exceptional cases, you can contact us at:",
     "exceptionalNote": "Our team will evaluate each case individually and with understanding.",
-    "closingTitle": "Let's Work Together",
-    "closingText": "This policy helps us better organize our schedules and provide excellent service to all our clients. We appreciate your understanding and cooperation so that more women can enjoy our services."
+    "closingTitle": "A commitment to excellent service is mutual",
+    "closingText": "This policy helps us better organize our schedules and provide an excellent service to all our clients. We appreciate your understanding and cooperation so that more people can enjoy our services."
   },
   "expressConsultation": {
     "title": "Express Consultation",
