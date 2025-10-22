@@ -29,6 +29,8 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
         priceUSD: 0,
         isFree: false,
         isPublished: true, // Activo por default en nuevos cursos
+        long_description: '',
+        target: '',
         modalContent: {
           detailedDescription: '',
           includes: [],
@@ -52,6 +54,8 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
       isFree: courseData.isFree || false,
       isPublished: courseData.isPublished ?? courseData.isActive ?? false,
       order: courseData.order || 0,
+      long_description: courseData.long_description || '',
+      target: courseData.target || '',
       modalContent: courseData.modalContent || {
         detailedDescription: '',
         includes: [],

@@ -74,6 +74,10 @@ export interface Course {
   // Acceso del usuario autenticado (desde backend)
   isPurchased?: boolean; // true si el usuario compró específicamente este curso
 
+  // Campos adicionales de VideoCategory (priorizados sobre modalContent)
+  long_description?: string; // Descripción detallada (prioridad sobre modalContent.detailedDescription)
+  target?: string; // Público objetivo (prioridad sobre modalContent.targetAudience)
+
   // Contenido del modal (detalles completos)
   modalContent?: CourseModalContent;
 

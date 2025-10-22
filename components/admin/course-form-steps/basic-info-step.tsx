@@ -145,6 +145,44 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         </p>
       </div>
 
+      {/* Long Description */}
+      <div>
+        <label htmlFor='long_description' className='block text-sm font-medium text-gray-700 mb-2'>
+          Descripción Detallada
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - Se mostrará en el modal del curso)</span>
+        </label>
+        <textarea
+          id='long_description'
+          value={formData.long_description || ''}
+          onChange={(e) => updateFormData({ long_description: e.target.value })}
+          rows={6}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Descripción completa que aparecerá cuando se abra el modal del curso. Puedes usar dobles saltos de línea para separar párrafos.'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.long_description?.length || 0} caracteres • Tip: Usa dobles saltos de línea para crear párrafos
+        </p>
+      </div>
+
+      {/* Target Audience */}
+      <div>
+        <label htmlFor='target' className='block text-sm font-medium text-gray-700 mb-2'>
+          Público Objetivo
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - ¿A quién está dirigido?)</span>
+        </label>
+        <textarea
+          id='target'
+          value={formData.target || ''}
+          onChange={(e) => updateFormData({ target: e.target.value })}
+          rows={4}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Ej: Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos...'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.target?.length || 0} caracteres
+        </p>
+      </div>
+
       {/* Precios Bimonetarios */}
       <div className='space-y-4'>
         <div className='flex items-center gap-2 mb-2'>

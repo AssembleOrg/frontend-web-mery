@@ -13,5 +13,7 @@ export interface Course {
   image: string;
   price: string;
   description: string;
-  modalContent: CourseModalContent;
+  long_description?: string; // Prioridad sobre modalContent.detailedDescription
+  target?: string; // Prioridad sobre modalContent.targetAudience
+  modalContent?: CourseModalContent;
 }

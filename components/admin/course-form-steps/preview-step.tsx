@@ -125,6 +125,22 @@ export function PreviewStep({ formData }: PreviewStepProps) {
           <span className='text-sm text-gray-600'>Descripción Corta:</span>
           <p className='mt-1 text-gray-900'>{formData.description || '-'}</p>
         </div>
+
+        {formData.long_description && (
+          <div>
+            <span className='text-sm text-gray-600'>Descripción Detallada:</span>
+            <p className='mt-1 text-gray-900 whitespace-pre-line'>
+              {formData.long_description}
+            </p>
+          </div>
+        )}
+
+        {formData.target && (
+          <div>
+            <span className='text-sm text-gray-600'>Público Objetivo:</span>
+            <p className='mt-1 text-gray-900'>{formData.target}</p>
+          </div>
+        )}
       </div>
 
       {/* Lessons */}

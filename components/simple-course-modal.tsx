@@ -227,7 +227,9 @@ export default function SimpleCourseModal({
 
           <div className='px-6 pb-6 bg-white space-y-6'>
             <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
-              {course.modalContent?.detailedDescription ? (
+              {course.long_description ? (
+                renderTextWithParagraphs(course.long_description)
+              ) : course.modalContent?.detailedDescription ? (
                 renderTextWithParagraphs(
                   course.modalContent.detailedDescription
                 )
@@ -435,7 +437,8 @@ export default function SimpleCourseModal({
                 ¿A quién está dirigido?
               </h3>
               <p className='text-[#2b2b2b] leading-relaxed'>
-                {course.modalContent?.targetAudience ||
+                {course.target ||
+                  course.modalContent?.targetAudience ||
                   `Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas en ${course.title.toLowerCase()}, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos y obtener resultados más naturales y duraderos.`}
               </p>
             </div>
