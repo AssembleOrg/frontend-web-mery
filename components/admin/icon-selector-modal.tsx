@@ -12,8 +12,8 @@ interface IconSelectorModalProps {
 
 const AVAILABLE_ICONS = [
   { path: '/intro-icon.png', label: 'Introducción' },
-  { path: '/pdf-icon.png', label: 'PDF' },
-  { path: '/video-icon.png', label: 'Video' },
+  { path: '/icons/pdf.svg', label: 'PDF' },
+  { path: '/icons/play.svg', label: 'Video' },
 ];
 
 export function IconSelectorModal({

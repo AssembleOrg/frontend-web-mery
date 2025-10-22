@@ -20,21 +20,30 @@ export default function LessonContent({
     'content'
   );
 
-  // Contenido específico por curso y lección usando courseId + lesson.order
-  // Este objeto debe llenarse dinámicamente desde el backend o lesson.description
-  const courseContent: Record<
-    string,
-    Record<number, { content: string; downloads: any[] }>
-  > = {
-    // Objeto vacío - los datos ahora vienen del backend en lesson.description y lesson.downloadableFiles
+  // ✅ Usar los nuevos campos: contenidos y downloads (prioridad sobre legacy fields)
+  const content = lesson.contenidos || lesson.description || 'Sin contenido disponible';
+  const downloads = lesson.downloads || lesson.downloadableFiles || [];
+
+  // Función para renderizar texto con negritas (**texto**)
+  const renderTextWithBold = (text: string) => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+
+    return (
+      <div className='space-y-2'>
+        {parts.map((part, index) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            const boldText = part.slice(2, -2);
+            return (
+              <span key={index} className='font-semibold text-gray-800'>
+                {boldText}
+              </span>
+            );
+          }
+          return <span key={index}>{part}</span>;
+        })}
+      </div>
+    );
   };
-
-  // Lookup usando courseId + lesson.order
-  const extras = courseContent[courseId]?.[lesson.order];
-
-  // Si no hay extras hardcodeados, usar los datos del lesson directamente
-  const content = extras?.content || lesson.description || 'Sin contenido disponible';
-  const downloads = extras?.downloads || lesson.downloadableFiles || [];
 
   return (
     <div
@@ -65,44 +74,44 @@ export default function LessonContent({
       </div>
 
       {/* Tab Content */}
-      <div className='p-6 bg-[#EBA2A8]'>
+      <div className='p-6 bg-[#FDE8EB]'>
         {activeTab === 'content' ? (
-          <div className='text-white leading-relaxed'>
-            <p className='whitespace-pre-line'>{content}</p>
+          <div className='text-gray-700 leading-relaxed whitespace-pre-line'>
+            {renderTextWithBold(content)}
           </div>
         ) : downloads && downloads.length > 0 ? (
           <div className='space-y-3'>
             {downloads.map((file: any, index: number) => {
-              // Soporte para ambos formatos: string (URL) o objeto DownloadableFile
-              const pdfUrl = typeof file === 'string' ? file : file.url;
-              const fileName =
-                (typeof file === 'object' ? file.name : null) ||
-                pdfUrl.split('/').pop()?.replace('.pdf', '') ||
-                `Documento ${index + 1}`;
-              const formattedName = fileName.replace(/-/g, ' ');
+              // ✅ Soporte para nuevo formato (VideoDownloadItem con texto, url_icon, url_file)
+              // y formato legacy (string URL o DownloadableFile)
+              const fileUrl = file.url_file || file.url || (typeof file === 'string' ? file : null);
+              const fileText = file.texto || file.text || file.name || fileUrl?.split('/').pop()?.replace('.pdf', '') || `Documento ${index + 1}`;
+              const iconUrl = file.url_icon || '/icons/pdf.svg';
+
+              if (!fileUrl) return null;
 
               return (
                 <a
                   key={index}
-                  href={pdfUrl}
+                  href={fileUrl}
                   download
                   target='_blank'
                   rel='noopener noreferrer'
                   className='flex items-center gap-4 p-4 bg-white/90 hover:bg-white rounded-lg transition-colors group border border-white/50 hover:border-white shadow-sm'
                 >
                   <Image
-                    src='/pdf-icon.png'
-                    alt='PDF'
+                    src={iconUrl}
+                    alt='Archivo'
                     width={32}
                     height={32}
-                    className='w-8 h-8 flex-shrink-0'
+                    className='w-8 h-8 flex-shrink-0 object-contain'
                   />
                   <div className='flex-1 min-w-0'>
                     <p className='text-[#2B2B2B] font-medium text-sm group-hover:text-[#660e1b] transition-colors'>
-                      {formattedName}
+                      {fileText}
                     </p>
                     <p className='text-xs text-[#545454] mt-1'>
-                      Click para descargar PDF
+                      Click para descargar
                     </p>
                   </div>
                   <svg
@@ -124,11 +133,11 @@ export default function LessonContent({
           </div>
         ) : (
           <div className='text-center py-12'>
-            <FileText className='w-16 h-16 text-white/60 mx-auto mb-4' />
-            <p className='text-white text-sm font-medium mb-2'>
+            <FileText className='w-16 h-16 text-gray-400 mx-auto mb-4' />
+            <p className='text-gray-600 text-sm font-medium mb-2'>
               Sin descargas disponibles
             </p>
-            <p className='text-xs text-white/80'>
+            <p className='text-xs text-gray-500'>
               Esta lección no tiene materiales adicionales para descargar
             </p>
           </div>
