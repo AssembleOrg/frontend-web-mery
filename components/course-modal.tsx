@@ -60,7 +60,7 @@ export default function CourseModal({
               <p className='text-gray-600 font-medium'>
                 Click para reproducir video
               </p>
-              {course.modalContent.videoId && (
+              {course.modalContent?.videoId && (
                 <p className='text-sm text-gray-500 mt-1'>
                   Video ID: {course.modalContent.videoId}
                 </p>
@@ -83,7 +83,7 @@ export default function CourseModal({
             </p>
 
             {/* Course Includes */}
-            {course.modalContent.includes &&
+            {course.modalContent?.includes &&
               course.modalContent.includes.length > 0 && (
                 <div className='mb-6'>
                   <h4 className='font-semibold text-gray-900 mb-3'>
@@ -122,7 +122,7 @@ export default function CourseModal({
               </div>
 
               {/* Duration */}
-              {course.modalContent.duration && (
+              {course.modalContent?.duration && (
                 <div className='flex justify-between py-2 border-b border-gray-200'>
                   <span className='text-gray-600'>Duración:</span>
                   <span className='font-semibold text-gray-900'>
@@ -132,7 +132,7 @@ export default function CourseModal({
               )}
 
               {/* Level */}
-              {course.modalContent.level && (
+              {course.modalContent?.level && (
                 <div className='flex justify-between py-2 border-b border-gray-200'>
                   <span className='text-gray-600'>Nivel:</span>
                   <span className='font-semibold text-gray-900'>
@@ -142,7 +142,7 @@ export default function CourseModal({
               )}
 
               {/* Requirements */}
-              {course.modalContent.requirements &&
+              {course.modalContent?.requirements &&
                 course.modalContent.requirements.length > 0 && (
                   <div>
                     <h4 className='font-semibold text-gray-900 mb-3'>

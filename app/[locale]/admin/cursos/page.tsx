@@ -4,7 +4,7 @@ import { useAdminStore } from '@/stores';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { CourseTableSkeleton } from '@/components/admin/course-table-skeleton';
 import { useModal } from '@/contexts/modal-context';
@@ -89,13 +89,30 @@ export default function AdminCursosPage() {
             Administra todos los cursos y formaciones
           </p>
         </div>
-        <Link
-          href={`/${locale}/admin/cursos/nuevo`}
-          className='inline-flex items-center gap-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl'
-        >
-          <PlusCircle className='w-5 h-5' />
-          Crear Nuevo Curso
-        </Link>
+        <div className='flex gap-3'>
+          <button
+            onClick={() => {
+              if (confirm('¿Limpiar caché del navegador? Esto recargará la página.')) {
+                localStorage.removeItem('course-progress-storage');
+                localStorage.removeItem('user-courses-storage');
+                toast.success('Caché limpiado');
+                window.location.reload();
+              }
+            }}
+            className='inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl'
+            title='Limpiar caché de cursos del navegador'
+          >
+            <RefreshCw className='w-5 h-5' />
+            Limpiar Caché
+          </button>
+          <Link
+            href={`/${locale}/admin/cursos/nuevo`}
+            className='inline-flex items-center gap-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl'
+          >
+            <PlusCircle className='w-5 h-5' />
+            Crear Nuevo Curso
+          </Link>
+        </div>
       </div>
 
       {/* Courses Table */}

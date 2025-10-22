@@ -30,22 +30,9 @@ export default function HTML5VideoPlayer({
   const { markLessonCompleted, isLessonCompleted } = useCourseStore();
   const isCompleted = isLessonCompleted(courseId, lessonId);
 
-  // URLs de videos de ejemplo (simulando contenido real)
-  const videoSources = {
-    dQw4w9WgXcQ: '/emilia-formaciones.mp4', // Lección 1: Introducción
-    '826655207':
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', // Lección 2: Técnicas
-    '869659871':
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', // Lección 3: Anatomía
-    '898120707':
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', // Lección 4: Nanoblading
-    default:
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-  };
-
-  const videoSrc =
-    videoSources[vimeoVideoId as keyof typeof videoSources] ||
-    videoSources.default;
+  // URLs de videos de ejemplo eliminadas - ahora se obtienen del backend
+  // El vimeoVideoId ahora debería ser una URL completa del backend
+  const videoSrc = vimeoVideoId; // Asumimos que vimeoVideoId es la URL del video desde el backend
 
   // Efecto para reiniciar el video cuando cambia la lección
   useEffect(() => {

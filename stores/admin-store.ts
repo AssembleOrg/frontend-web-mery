@@ -7,12 +7,23 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { apiClient } from '@/lib/api-client';
 import Cookies from 'js-cookie';
+import { CourseIncludeItem } from '@/types/course';
 
 interface Category {
   id: string;
   name: string;
   slug: string;
   description?: string;
+  long_description?: string;
+  long_description_en?: string;
+  target?: string;
+  target_en?: string;
+  modalidad?: string;
+  modalidad_en?: string;
+  learn?: string;
+  learn_en?: string;
+  includes_category?: CourseIncludeItem[];
+  includes_category_en?: CourseIncludeItem[];
   image?: string;
   priceARS: number;
   priceUSD: number;
@@ -270,8 +281,8 @@ export const useAdminStore = create<AdminState & AdminActions>()(
 
         set((state) => {
           if (categoryId) {
-            // Fusionar inteligentemente: remover videos viejos de esta categoría, agregar nuevos
-            // Filtrar videos de otras categorías (mantenerlos)
+            // ✅ FIX: Limpiar videos viejos de esta categoría y mantener SOLO los actualizados
+            // Esto previene acumulación de videos duplicados/obsoletos
             const otherCategoryVideos = state.videos.filter(v => v.categoryId !== categoryId);
 
             // Combinar: videos de otras categorías + nuevos videos de esta categoría

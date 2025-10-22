@@ -116,21 +116,39 @@ export default function SimpleCourseModal({
   const courseInCart = isInCart(course.id);
   const buttonDisabled = addingToCart || cartLoading;
 
-  // Function to render text with paragraph breaks
+  // Function to render text with paragraph breaks and bold support
   const renderTextWithParagraphs = (text: string) => {
     const paragraphs = text
       .split('\n\n')
       .filter((paragraph) => paragraph.trim() !== '');
+    
     return (
-      <div className='space-y-4'>
-        {paragraphs.map((paragraph, index) => (
-          <p
-            key={index}
-            className='text-[#2b2b2b] leading-relaxed text-left'
-          >
-            {paragraph.trim()}
-          </p>
-        ))}
+      <div className='space-y-4 font-primary'>
+        {paragraphs.map((paragraph, index) => {
+          // Split by ** to find bold sections
+          const parts = paragraph.split(/(\*\*[^*]+\*\*)/g);
+          
+          return (
+            <p
+              key={index}
+              className='text-[#2b2b2b] leading-relaxed text-left'
+              style={{ whiteSpace: 'pre-line', fontWeight: 300 }}
+            >
+              {parts.map((part, partIndex) => {
+                // Check if this part is bold (wrapped in **)
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  const boldText = part.slice(2, -2);
+                  return (
+                    <span key={partIndex} className='font-primary-medium'>
+                      {boldText}
+                    </span>
+                  );
+                }
+                return <span key={partIndex}>{part}</span>;
+              })}
+            </p>
+          );
+        })}
       </div>
     );
   };
@@ -405,7 +423,44 @@ export default function SimpleCourseModal({
               )}
             </div>
 
-            {course.modalContent?.includes &&
+            {/* Modalidad */}
+            {course.modalidad && course.modalidad.trim() !== '' && (
+              <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
+                <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-3 text-center'>
+                  Modalidad
+                </h3>
+                {renderTextWithParagraphs(course.modalidad)}
+              </div>
+            )}
+
+            {/* ¿Qué aprenderás? */}
+            {course.learn && course.learn.trim() !== '' && (
+              <div className='bg-white p-6 rounded-lg border border-[#f0e6e8]'>
+                <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-4'>
+                  ¿Qué vas a aprender?
+                </h3>
+                {renderTextWithParagraphs(course.learn)}
+              </div>
+            )}
+
+            {/* ¿Qué incluye? - Prioridad a includes_category sobre modalContent.includes */}
+            {(course.includes_category && course.includes_category.length > 0) ? (
+              <div>
+                <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
+                  ¿Qué incluye este curso?
+                </h3>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {course.includes_category.map((item, index) => (
+                    <CourseInclude
+                      key={index}
+                      iconImage={item.url_icon}
+                      text={item.texto || item.text || ''}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              course.modalContent?.includes &&
               course.modalContent.includes.length > 0 && (
                 <div>
                   <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
@@ -422,7 +477,8 @@ export default function SimpleCourseModal({
                     ))}
                   </div>
                 </div>
-              )}
+              )
+            )}
 
             {course.modalContent?.specialNotes && (
               <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-4 rounded-lg text-center'>
@@ -432,7 +488,8 @@ export default function SimpleCourseModal({
               </div>
             )}
 
-            <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
+            {course?.target?.trim() !== '' && (
+              <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
               <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-4'>
                 ¿A quién está dirigido?
               </h3>
@@ -442,6 +499,7 @@ export default function SimpleCourseModal({
                   `Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas en ${course.title.toLowerCase()}, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos y obtener resultados más naturales y duraderos.`}
               </p>
             </div>
+            )}
 
             {course.modalContent?.additionalInfo && (
               <div className='bg-white p-4 rounded-lg border border-[#e9ecef] text-center'>

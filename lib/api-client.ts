@@ -3,6 +3,7 @@
  * Following API documentation from api.md
  */
 
+import { CourseIncludeItem } from '@/types/course';
 import Cookies from 'js-cookie';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -40,6 +41,16 @@ export interface Category {
   name: string;
   slug: string;
   description?: string;
+  long_description?: string;
+  long_description_en?: string;
+  target?: string;
+  target_en?: string;
+  modalidad?: string;
+  modalidad_en?: string;
+  learn?: string;
+  learn_en?: string;
+  includes_category?: CourseIncludeItem[];
+  includes_category_en?: CourseIncludeItem[];
   image?: string;
   priceARS: number;
   priceUSD: number;
@@ -61,6 +72,8 @@ export interface Video {
   thumbnail?: string;
   duration?: number;
   categoryId: string;
+  contenidos?: string; // Nuevo: contenido de texto de la lección
+  downloads?: any[]; // Nuevo: array JSONB de archivos descargables
   category?: {
     id: string;
     name: string;
@@ -303,6 +316,8 @@ export interface CreateVideoInput {
   isPublished?: boolean;
   metaTitle?: string;
   metaDescription?: string;
+  contenidos?: string; // Nuevo: contenido de texto de la lección
+  downloads?: any[]; // Nuevo: array JSONB de archivos descargables
 }
 
 export interface UpdateVideoInput {
@@ -310,6 +325,8 @@ export interface UpdateVideoInput {
   description?: string;
   categoryId?: string;
   order?: number;
+  contenidos?: string; // Nuevo: contenido de texto de la lección
+  downloads?: any[]; // Nuevo: array JSONB de archivos descargables
   isPublished?: boolean;
   publishedAt?: string;
   metaTitle?: string;

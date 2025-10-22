@@ -4,12 +4,22 @@ export interface CourseIncludeItem {
   icon?: LucideIcon;
   iconImage?: string;
   text: string;
+  texto?: string; // Alias para compatibilidad con JSONB del backend
+  url_icon?: string; // URL del icono desde el backend
 }
 
 export interface DownloadableFile {
   name: string;
   url: string;
   type: 'pdf' | 'doc' | 'zip';
+}
+
+// Nuevo: Item de descarga para videos (JSONB)
+export interface VideoDownloadItem {
+  texto?: string; // Texto descriptivo del archivo (ej: "Manual de técnicas avanzadas")
+  text?: string; // Alias para compatibilidad
+  url_icon?: string; // URL del icono (ej: /icons/pdf.svg)
+  url_file?: string; // URL del archivo descargable
 }
 
 export interface Lesson {
@@ -21,7 +31,11 @@ export interface Lesson {
   order: number;
   isPublished?: boolean;
   isCompleted?: boolean;
-  downloadableFiles?: DownloadableFile[];
+  downloadableFiles?: DownloadableFile[]; // Legacy - mantener para compatibilidad
+  
+  // Nuevos campos para contenidos y descargas
+  contenidos?: string; // Contenido de texto de la lección (puede usar markdown **bold**)
+  downloads?: VideoDownloadItem[]; // Array JSONB de archivos descargables
 }
 
 export interface CourseProgress {
@@ -75,10 +89,24 @@ export interface Course {
   isPurchased?: boolean; // true si el usuario compró específicamente este curso
 
   // Campos adicionales de VideoCategory (priorizados sobre modalContent)
-  long_description?: string; // Descripción detallada (prioridad sobre modalContent.detailedDescription)
-  target?: string; // Público objetivo (prioridad sobre modalContent.targetAudience)
+  long_description?: string; // Descripción detallada ES (prioridad sobre modalContent.detailedDescription)
+  long_description_en?: string; // Descripción detallada EN
+  target?: string; // Público objetivo ES (prioridad sobre modalContent.targetAudience)
+  target_en?: string; // Público objetivo EN
+  
+  // Modalidad del curso
+  modalidad?: string; // Modalidad ES (ej: "Online", "Presencial", "Híbrido")
+  modalidad_en?: string; // Modalidad EN
+  
+  // Lo que aprenderás
+  learn?: string; // Qué aprenderás ES
+  learn_en?: string; // Qué aprenderás EN
+  
+  // Lo que incluye el curso (formato estructurado JSONB)
+  includes_category?: CourseIncludeItem[]; // Incluye ES (array de {texto, url_icon})
+  includes_category_en?: CourseIncludeItem[]; // Incluye EN (array de {texto, url_icon})
 
-  // Contenido del modal (detalles completos)
+  // Contenido del modal (detalles completos - legado)
   modalContent?: CourseModalContent;
 
   // Lecciones (para plataforma de aprendizaje)
