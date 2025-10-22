@@ -26,6 +26,8 @@ export default function NuevoCursoPage() {
         name: courseData.title,
         slug: courseData.slug,
         description: courseData.description,
+        long_description: courseData.long_description || '',
+        target: courseData.target || '',
         image: courseData.image,
         priceARS: courseData.priceARS || 0,
         priceUSD: courseData.priceUSD || 0,

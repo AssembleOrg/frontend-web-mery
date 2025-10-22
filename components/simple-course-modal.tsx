@@ -116,21 +116,39 @@ export default function SimpleCourseModal({
   const courseInCart = isInCart(course.id);
   const buttonDisabled = addingToCart || cartLoading;
 
-  // Function to render text with paragraph breaks
+  // Function to render text with paragraph breaks and bold support
   const renderTextWithParagraphs = (text: string) => {
     const paragraphs = text
       .split('\n\n')
       .filter((paragraph) => paragraph.trim() !== '');
+    
     return (
-      <div className='space-y-4'>
-        {paragraphs.map((paragraph, index) => (
-          <p
-            key={index}
-            className='text-[#2b2b2b] leading-relaxed text-left'
-          >
-            {paragraph.trim()}
-          </p>
-        ))}
+      <div className='space-y-4 font-primary'>
+        {paragraphs.map((paragraph, index) => {
+          // Split by ** to find bold sections
+          const parts = paragraph.split(/(\*\*[^*]+\*\*)/g);
+          
+          return (
+            <p
+              key={index}
+              className='text-[#2b2b2b] leading-relaxed text-left'
+              style={{ whiteSpace: 'pre-line', fontWeight: 300 }}
+            >
+              {parts.map((part, partIndex) => {
+                // Check if this part is bold (wrapped in **)
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  const boldText = part.slice(2, -2);
+                  return (
+                    <span key={partIndex} className='font-primary-medium'>
+                      {boldText}
+                    </span>
+                  );
+                }
+                return <span key={partIndex}>{part}</span>;
+              })}
+            </p>
+          );
+        })}
       </div>
     );
   };
@@ -432,7 +450,8 @@ export default function SimpleCourseModal({
               </div>
             )}
 
-            <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
+            {course?.target?.trim() !== '' && (
+              <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
               <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-4'>
                 ¿A quién está dirigido?
               </h3>
@@ -442,6 +461,7 @@ export default function SimpleCourseModal({
                   `Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas en ${course.title.toLowerCase()}, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos y obtener resultados más naturales y duraderos.`}
               </p>
             </div>
+            )}
 
             {course.modalContent?.additionalInfo && (
               <div className='bg-white p-4 rounded-lg border border-[#e9ecef] text-center'>

@@ -32,6 +32,8 @@ export default function FormacionesPage() {
         id: cat.id,
         title: cat.name,
         description: cat.description || '',
+        long_description: cat.long_description || '',
+        target: cat.target || '',
         image: getCourseImage(cat.slug, cat.image),
         price: cat.priceARS || 0,
         priceARS: cat.priceARS || 0,

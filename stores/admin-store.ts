@@ -13,6 +13,8 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
+  long_description?: string;
+  target?: string;
   image?: string;
   priceARS: number;
   priceUSD: number;

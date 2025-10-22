@@ -48,6 +48,8 @@ export function useUserCourses() {
               slug: category.slug,
               title: category.name,
               description: category.description || '',
+              long_description: category.long_description || '',
+              target: category.target || '',
               image: getCourseImage(category.slug, category.image),
               priceARS: category.priceARS || 0,
               priceUSD: category.priceUSD || 0,
