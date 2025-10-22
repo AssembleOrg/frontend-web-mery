@@ -48,34 +48,35 @@ export default function PecasLunaresPage() {
 
       {/* Contenido principal */}
       <div className='container mx-auto px-4 py-16'>
-        <div className='max-w-4xl mx-auto'>
+        <div className='max-w-6xl mx-auto'>
           {/* Sección: ¿Qué es? */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
-              <Star className='h-8 w-8 text-primary mr-3' />
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
               {t('whatIsIt.heading')}
             </h2>
-            <div className='prose prose-lg max-w-none text-muted-foreground font-secondary space-y-4'>
-              <p className='text-lg leading-relaxed font-secondary'>
-                {t('whatIsIt.p1')}
-              </p>
-              <p
-                className='text-lg leading-relaxed font-secondary'
-                dangerouslySetInnerHTML={{ __html: t.raw('whatIsIt.p2') }}
-              />
-            </div>
+            <p className='text-muted-foreground font-secondary whitespace-pre-line'>
+              {t('whatIsIt.p1')}
+            </p>
           </section>
 
-          {/* Sección: Proceso */}
-          <section className='mb-12 bg-muted/30 rounded-lg p-8'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
-              <Clock className='h-8 w-8 text-primary mr-3' />
-              {t('process.heading')}
+          {/* Imagen del servicio */}
+          <div className='relative w-full h-96 md:h-[500px] my-12 rounded-lg overflow-hidden'>
+            <Image
+              src='/Img-home/home-4.webp'
+              alt='Freckles & Moles Service'
+              fill
+              className='object-cover'
+            />
+          </div>
+
+          {/* Sección: Procedimiento */}
+          <section className='mb-12'>
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
+              {t('procedure.heading')}
             </h2>
-            <div className='text-muted-foreground font-secondary space-y-4'>
-              <p className='font-secondary'>{t('process.p1')}</p>
-              <p className='font-secondary'>{t('process.p2')}</p>
-            </div>
+            <p className='text-muted-foreground font-secondary whitespace-pre-line'>
+              {t('procedure.text')}
+            </p>
           </section>
 
           {/* Sección: Bioseguridad */}
@@ -86,33 +87,7 @@ export default function PecasLunaresPage() {
                   <Shield className='h-8 w-8 mr-3' />
                   {t('biosecurity.heading')}
                 </h2>
-                <p className='mb-4 font-secondary'>{t('biosecurity.intro')}</p>
-                <ul className='space-y-3 font-secondary'>
-                  <li className='flex items-start space-x-3'>
-                    <div className='w-2 h-2 bg-[var(--mg-burgundy)] rounded-full mt-2 flex-shrink-0'></div>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: t.raw('biosecurity.li1'),
-                      }}
-                    />
-                  </li>
-                  <li className='flex items-start space-x-3'>
-                    <div className='w-2 h-2 bg-[var(--mg-burgundy)] rounded-full mt-2 flex-shrink-0'></div>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: t.raw('biosecurity.li2'),
-                      }}
-                    />
-                  </li>
-                  <li className='flex items-start space-x-3'>
-                    <div className='w-2 h-2 bg-[var(--mg-burgundy)] rounded-full mt-2 flex-shrink-0'></div>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: t.raw('biosecurity.li3'),
-                      }}
-                    />
-                  </li>
-                </ul>
+                <p className='font-secondary whitespace-pre-line'>{t('biosecurity.text')}</p>
               </div>
             </div>
           </section>
@@ -128,58 +103,38 @@ export default function PecasLunaresPage() {
                   {t('pricing.frecklesTitle')}
                 </h3>
                 <div className='space-y-3 text-muted-foreground font-secondary'>
-                  <p className='font-secondary'>{t('pricing.session1')}</p>
-                  <p className='font-secondary'>{t('pricing.touchUp')}</p>
-                  <p className='font-secondary'>{t('pricing.maintenance')}</p>
+                  <p>{t('pricing.session1')}</p>
+                  <p>{t('pricing.touchUp')}</p>
+                  <p>{t('pricing.maintenance')}</p>
                 </div>
               </div>
               <div className='bg-card p-6 rounded-lg border'>
                 <h3 className='font-bold text-xl font-primary text-foreground mb-4'>
                   {t('pricing.molesTitle')}
                 </h3>
-                <p className='text-muted-foreground font-secondary mb-4'>
+                <p className='text-muted-foreground font-secondary mb-6'>
                   {t('pricing.molesText')}
                 </p>
-
-                <div className='alert-low border rounded-lg p-4'>
-                  <div className='burgundy-text flex items-start space-x-3'>
-                    <Package className='h-5 w-5 mt-1' />
-                    <div>
-                      <h4 className='font-semibold font-primary'>
-                        {t('pricing.kitTitle')}
-                      </h4>
-                      <p className='text-sm font-secondary'>
-                        {t('pricing.kitText')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <p className='text-muted-foreground font-secondary text-sm'>
+                  {t('pricing.kitText')}
+                </p>
               </div>
             </div>
-            <p className='text-xs text-center text-muted-foreground font-secondary mt-4'>
+            <p className='text-xs text-center text-muted-foreground font-secondary mt-6'>
               {t('pricing.disclaimer')}
             </p>
           </section>
 
-          {/* Sección: Consideraciones */}
+          {/* Sección: Embarazadas */}
           <section className='mb-12'>
             <div className='alert-high border rounded-lg p-6'>
               <h2 className='text-3xl font-bold font-primary text-primary mb-6 flex items-center'>
                 <AlertTriangle className='h-8 w-8 text-primary mr-3' />
                 {t('importantInfo.heading')}
               </h2>
-
-              <div className='flex items-start space-x-4'>
-                <Baby className='h-8 w-8 text-primary flex-shrink-0' />
-                <div>
-                  <h3 className='font-semibold font-primary text-primary'>
-                    {t('importantInfo.pregnancyTitle')}
-                  </h3>
-                  <p className='font-secondary text-primary'>
-                    {t('importantInfo.pregnancyText')}
-                  </p>
-                </div>
-              </div>
+              <p className='font-secondary text-primary'>
+                {t('importantInfo.pregnancyText')}
+              </p>
             </div>
           </section>
 

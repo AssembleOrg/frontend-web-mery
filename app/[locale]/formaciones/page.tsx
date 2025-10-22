@@ -182,12 +182,13 @@ export default function FormacionesPage() {
           <FilterBanner
             title='Autostylism'
             description='Diseña tus cejas en casa'
-            image='/Img-home/home-3.webp'
+            image='/Img-home/autostyling-gris.webp'
             onClick={() =>
               setFilter(filter === 'autostylism' ? 'all' : 'autostylism')
             }
             isActive={filter === 'autostylism'}
             showRibbon={true}
+            imageClassName='object-[center_100%]'
           />
         </div>
 

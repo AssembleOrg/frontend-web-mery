@@ -162,37 +162,30 @@
       },
       "whatIsIt": {
         "heading": "¿En qué consiste el servicio?",
-        "p1": "En el caso de las pecas es una técnica muy novedosa, consta en generar un tatuaje muy superficial por medio de pequeños puntos donde se inserta la tinta y así lograr un efecto híper realista con acabado del tipo peca o lunar.",
-        "p2": "La durabilidad oscila entre los <strong>5 a 6 meses máximo</strong>, según el tipo de piel y el cuidado que haya recibido. Finalizado este tiempo la piel queda <strong>LIMPIA</strong>, sin registro de tinta alguna y sin dejar cicatriz."
+        "p1": "En el caso de las pecas es una técnica muy novedosa, consta en generar un tatuaje muy superficial por medio de pequeños puntos donde se inserta la tinta y así lograr un efecto híper realista con acabado del tipo peca o lunar.\n\nLa durabilidad oscila entre los 5 meses a 6 meses máximo, según el tipo de piel y el cuidado que haya recibido. Finalizado este tiempo la piel queda LIMPIA, sin registro de tinta alguna y sin dejar cicatriz."
       },
-      "process": {
-        "heading": "El Proceso de tu Cita",
-        "p1": "El día de tu cita, previo a comenzar el trabajo, te contaremos de qué se trata, cómo se hace, cuánto demora, cuál es su valor y los cuidados previos y posteriores, los cuales son fundamentales. Despejamos todas tus dudas para que estés bien segura antes de realizarlo.",
-        "p2": "Junto con Mery definen la forma, color y cantidad de pecas o lunares utilizando maquillaje para que de esa manera puedas tener una idea aproximada de cómo quedarían. Una vez que haya finalizado este espacio de consulta, Mery comenzará a realizarte el servicio."
+      "procedure": {
+        "heading": "PROCEDIMIENTO",
+        "text": "El día de tu cita, previo a comenzar el trabajo, te contaremos de qué se trata, cómo se hace, cuánto demora, cuál es su valor y los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nJunto con Mery definen la forma, color y cantidad de pecas o lunares utilizando maquillaje para que de esa manera puedas tener una idea aproximada de cómo quedarían.\n\nUna vez que haya finalizado este espacio de consulta, Mery comenzará a realizarte el servicio."
       },
       "biosecurity": {
-        "heading": "Normas de Bioseguridad",
-        "intro": "Como cualquier incisión, requiere normas estrictas de bio-seguridad. Es indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones o cambios en el pigmento.",
-        "li1": "Uso de elementos <strong>100% descartables o esterilizables</strong>.",
-        "li2": "Llenado y firmado de <strong>consentimiento de la persona</strong> y, en algunos casos, consentimiento de un médico.",
-        "li3": "<strong>Contraindicaciones:</strong> No trabajaremos la zona si se está pasando por un proceso infeccioso, anemia, baja o nula cicatrización, o si la persona tuviese baja su respuesta inmunológica."
+        "heading": "NORMAS DE BIO-SEGURIDAD",
+        "text": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico.\n\nEs indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros.\n\nNo trabajaremos la zona en el caso de que se esté pasando por un proceso infeccioso, anemia, baja o nula cicatrización, como así también, si la persona tuviese por alguna razón orgánica o inducida, baja su respuesta inmunológica."
       },
       "pricing": {
-        "heading": "Precios del Servicio",
-        "frecklesTitle": "Pecas",
+        "heading": "Precio de Lista del Servicio",
+        "frecklesTitle": "PECAS",
         "session1": "Primera sesión: U$S 350.- (en efectivo U$S 192)",
         "touchUp": "Retoque: U$S 190.- (en efectivo U$S 128)",
         "maintenance": "Mantenimiento: U$S 350.- (en efectivo U$S 192)",
-        "molesTitle": "Lunares",
+        "molesTitle": "LUNARES",
         "molesText": "El costo de los Lunares varía, a confirmar cuando Mery termine de definir el diseño para vos.",
-        "kitTitle": "Kit de Cuidados Incluido",
-        "kitText": "El costo incluye el kit de cuidados posteriores: un jabón neutro y un agua esterilizada.",
-        "disclaimer": "* Los valores pueden modificarse sin previo aviso."
+        "kitText": "El costo incluye el kit de cuidados posteriores, contiene un jabón neutro y un agua esterilizada especialmente creado para el post de nuestros servicios.",
+        "disclaimer": "Los valores pueden modificarse sin previo aviso."
       },
       "importantInfo": {
-        "heading": "Información Importante",
-        "pregnancyTitle": "Embarazo y Lactancia",
-        "pregnancyText": "Al no existir ningún tipo de estudio que confirme que la pigmentación NO es inocua durante la etapa de embarazo, decidimos no realizar este servicio. Pero, en etapa de lactancia y con expresa autorización firmada por tu medico, si puede realizarse el servicio."
+        "heading": "EMBARAZADAS",
+        "pregnancyText": "Al no existir ningún tipo de estudio que confirme que la pigmentación NO es inocua durante la etapa de embarazo, decidimos no realizar este servicio. Pero, en etapa de lactancia y con expresa autorización firmada por tu médico, sí puede realizarse el servicio."
       },
       "cta": {
         "heading": "¿Lista para tu transformación?",
@@ -359,19 +352,19 @@
       },
       "nanoblading": {
         "heading": "¿QUÉ ES EL NANOBLADING By & Only MERY GARCIA?",
-        "p1": "Es la técnica más avanzada de tatuaje cosmético de cejas. Si estás buscando mejorar la forma de tus cejas, completar zonas donde no tenés mucho crecimiento o nada de pelo, o donde haya cicatrices, este servicio es el indicado para vos.",
-        "p2": "Permite lograr excelentes resultados en todo tipo de pieles, mayor hiperrealismo y un acabado imperceptible. Genera menor trauma, mayor durabilidad y vibración del color. El procedimiento se realiza con máquina pero con agujas aún más pequeñas que permiten terminaciones plásticas infinitas.",
-        "p3": "Recomendamos ésta técnica para casos de alopecias, tricotilomanías, pieles maduras o muy finas, o tratamientos oncológicos, pero también brinda resultados óptimos en pieles normales sin dificultad de crecimiento y/o con cicatrices.",
+        "p1": "Es la técnica más avanzada de cosmetic tattoo de cejas. Servicio único y exclusivo brindado por MG y su Staff. Si estás buscando mejorar la forma de tus cejas, completar o rellenar zonas donde no tenés mucho crecimiento, o nada de pelo, o donde haya cicatrices, este servicio es el indicado para vos.",
+        "p2": "Permite lograr excelentes resultados en todo tipo de pieles, mayor hiper realismo y un acabado imperceptible. Genera menor trauma en la piel, mayor durabilidad y vibración del color. El procedimiento se realiza con máquina a la misma profundidad del Nanoblading (muy superficial) pero con agujas aún más pequeñas que permiten terminaciones plásticas infinitas (sombras, trazos, ramilletes de pelos, etc.) Recomendamos ésta técnica para casos de alopecias, tricotilomanías, pieles maduras o muy finas, o tratamientos oncológicos. Pero también brinda resultados óptimos en pieles normales sin dificultad de crecimiento y/o con cicatrices.",
+        "p3": "Más de cuatro años de práctica y perfeccionamientos constantes en el exterior dieron por resultado que el último año Mery Garcia utilizara Nanoblading para dar respuesta a todas las personas que buscan mejorar sus cejas a través del tatuaje cosmético.",
         "pricing": {
           "heading": "Precio de Lista (By & Only MERY GARCIA)",
           "session1": "Primera sesión: U$S 610.- (en efectivo U$S 420)",
           "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
-          "note": "Se considera retoque al servicio realizado entre 30 y 60 días luego del primer servicio."
+          "note": "Se considera retoque al servicio complemento de primera sesión realizado entre 30 a 60 días luego del primer servicio de Nanoblading. Una vez tomada tu consulta, para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio de Nanoblading #ByMeryGarcia"
         }
       },
       "camouflage": {
         "heading": "¿QUÉ ES EL CAMUFLAJE?",
-        "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de Dermopigmentación como de Microblading.",
+        "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de Dermopigmentación como de Nanoblading.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas.\n\nTu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio:",
         "pricing": {
           "heading": "Precio de Lista (Cada Sesión)",
           "technique": "Técnica Mixta: U$S 710.- (en efectivo U$S 475)",
@@ -382,26 +375,27 @@
         "cases": [
           {
             "title": "CEJA CON PIGMENTACIÓN CORRECTA, PERO FORMA INCORRECTA",
-            "description": "En este caso la ceja tiene un color correcto, pero la forma no es armoniosa. Borraremos los bordes excedentes para dar una forma acorde. La cantidad de sesiones dependerá de la intensidad y profundidad de la tinta. Entre sesión y sesión debe pasar un mes."
+            "description": "En este caso la ceja tiene un color correcto para la piel de la clienta, pero la forma no es armoniosa para su rostro. Ej: si la ceja fuese muy ancha, borraremos los bordes excedentes para dar una forma acorde al rostro de la clienta.\n\nLa cantidad de sesiones de borrado dependerán de la intensidad y profundidad de la tinta.\n\nEn este caso puntual, se evita la etapa de neutralización del color, ya que el mismo está ok y no hace falta modificarlo, solo borrarlo.\n\nUna vez que tenemos un ancho, largo y arco acorde, realizaremos el diseño de la caja y textura con la técnica de Nanoblading.\n\nEs importante aclarar que entre sesión y sesión debe pasar un mes para que la piel cicatrice correctamente."
           },
           {
             "title": "CEJA CON PIGMENTACIÓN Y FORMA INCORRECTA",
-            "description": "En este caso la ceja tiene una forma poco armoniosa y un color no deseado (azulado, gris, etc.). Lo primero que se realiza es la corrección del color y se borran los contornos necesarios. En una nueva sesión, realizaremos el diseño con Nanoblading. Entre sesión y sesión debe pasar un mes."
+            "description": "En este caso la ceja tiene una forma poco armoniosa para la clienta, además de un color no deseado (azulado, gris, verdoso, etc.).\n\nLo primero que se realiza es la corrección del color para neutralizarlo, calentando la tinta, si fuera necesario.\n\nAl tener además una forma incorrecta, ej.: es muy ancha, se borrarán también los contornos que hagan falta.\n\nUna vez cicatrizada la ceja y en una nueva sesión, realizaremos el diseño de la caja y textura con la técnica de Nanoblading. En esta misma sesión, si hiciera falta, se podrán terminar de \"borrar\" los sobrantes, siendo entonces adicional al Nanoblading esta nueva sesión de camuflaje.\n\nUn mes pasada la sesión de Nanoblading, se evalúa si es necesario intensificar los trazos y se termina de perfeccionar el borrado/suavizado de cualquier tinta que haya quedado de más.\n\nEs importante aclarar que entre sesión y sesión debe pasar un mes para que la piel cicatrice correctamente."
           },
           {
-            "title": "CEJA CON PIGMENTACIÓN INCORRECTA, PERO FORMA CORRECTA",
-            "description": "En este caso la ceja tiene una forma armoniosa, pero el color no es el deseado. Lo primero que se realiza es la corrección del color. Una vez cicatrizada, en una nueva sesión, realizaremos el diseño con Nanoblading. Entre sesión y sesión debe pasar un mes."
+            "title": "CEJA CON PIGMENTACIÓN INCORRECTA, PERO CON FORMA CORRECTA",
+            "description": "En este caso la ceja tiene una forma armoniosa para la clienta, pero el color no es el deseado.\n\nLo primero que se realiza es la corrección del color para neutralizarlo, calentando la tinta y combinado con un ácido suave para diluir el pigmento.\n\nUna vez cicatrizada la ceja y en una nueva sesión, realizaremos el diseño de la caja y textura con la técnica de Nanoblading.\n\nEs importante aclarar que entre sesión y sesión debe pasar un mes para que la piel cicatrice correctamente."
           }
         ]
       },
       "shared": {
         "procedureHeading": "PROCEDIMIENTO",
-        "procedureTextNano": "En la consulta definimos la forma y te las maquillamos para que veas una idea aproximada. El servicio se divide en dos partes: la primera sesión y, de ser necesario, un retoque entre 30 y 60 días después. Pasados los 3 meses se considera mantenimiento.",
-        "procedureTextCamu": "En la consulta, Mery definirá cuál de los tres casos de camuflaje es el tuyo. La cantidad de sesiones dependerá de su criterio y la respuesta de tu piel. Una vez finalizado el camuflaje, podrás realizarte Nanoblading (costo adicional) para dar la textura deseada.",
-        "biosecurityHeading": "NORMAS DE BIOSEGURIDAD",
-        "biosecurityText": "Como cualquier incisión, requiere normas estrictas: elementos 100% descartables o esterilizables, y el llenado y firmado de consentimiento. Es indispensable una higiene rigurosa y el compromiso de la persona en cuidar su piel para evitar complicaciones.",
+        "procedureTextNano": "La primera instancia es la etapa de consulta.\n\nEn la consulta te contamos de qué se trata, cómo se hace, cuánto demora, cuánto dura el efecto y los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nJunto con Mery y su Staff definen la forma más natural para tu rostro, el ancho y largo que quieren lograr y en ese momento te las maquilla rellenando las partes que hagan falta, de esa manera tenés una idea aproximada de cómo quedaría.\n\nLa consulta es clave para informarte y que sepas los procedimientos, para confirmar que estás apta para realizarlo y que podés respetar las consignas de los cuidados.\n\nUna vez que hayas hecho la consulta y estés decidida, podrás tomar tu primer turno para Nanoblading.\n\nEste se divide en 2 partes: La 1.º sesión, y de ser necesario un retoque o 2.ª sesión, ésta se realizará entre los 30 y 60 días (no antes ni después); con el fin de evaluar el trabajo final cicatrizado 100% teniendo en cuenta el resultado y el deseo de la persona.\n\nPasadas estas dos instancias y cumplidos los tres meses de haber completado el servicio, pasa a considerarse como mantenimiento.\n\nPodrás pedir turno de mantenimiento pasado este tiempo, pero SIEMPRE aconsejamos que hagan una visita para que Mery les dé el ok, ya que muchas veces es el modelado lo que vuelve a darle la forma correcta a las cejas, sin necesidad de realizar Mantenimiento de Nanoblading y así evitar sobre trabajar la zona dejando los trazos compactos y sin gracia, perdiendo por completo la naturalidad del trabajo.",
+        "procedureTextCamu": "La primera instancia es la etapa de consulta.\n\nEn la consulta te contamos de qué se trata, cómo se hace, cuánto demora, los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nMery definirá cuál de los tres casos de camuflaje es el tuyo, pudiendo definir la corrección acorde en tu caso puntual. Juntas deciden la forma más natural para tu rostro, el ancho y largo que quieren lograr y en ese momento te las maquilla rellenando las partes que hagan falta, de esa manera tenés una idea aproximada de cómo quedaría.\n\nLa consulta es clave para informarte y que sepas los procedimientos, para confirmar que estás apta para realizarlo y que podés respetar las consignas de los cuidados.\n\nUna vez que hayas hecho la consulta y estés decidida, podrás tomar tu primer turno para Camuflaje.\n\nLa cantidad de sesiones estará sujeta al criterio de Mery, y a la respuesta de la piel de cada clienta. Una vez hayas finalizado las sesiones de Camuflaje, podrás realizarte Nanoblading para darle la textura deseada a tus cejas.\n\nEl costo del servicio incluye el kit de cuidados (agua destilada y jabón neutro).\n\nEl servicio de Nanoblading tiene un valor adicional al de Camuflaje.\n(Ver costos arriba)",
+        "biosecurityHeading": "NORMAS DE BIO-SEGURIDAD",
+        "biosecurityText": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico. Es indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros.",
         "pregnantWomenHeading": "EMBARAZADAS",
-        "pregnantWomenText": "Al no existir estudios que confirmen que el servicio NO es inocuo durante el embarazo, decidimos no realizarlo. En etapa de lactancia y con expresa autorización firmada por tu médico, sí puede realizarse.",
+        "pregnantWomenTextNano": "Al no existir ningún tipo de estudio que confirme que el Nanoblading NO es inocuo durante la etapa de embarazo, decidimos no realizar este servicio. Pero, en etapa de lactancia y con expresa autorización firmada por tu médico, sí puede realizarse Nanoblading.",
+        "pregnantWomenTextCamu": "Al no existir ningún tipo de estudio que confirme que el Camuflaje NO es inocuo durante la etapa de embarazo, decidimos no realizar este servicio. Pero, en etapa de lactancia y con expresa autorización firmada por tu médico, si puede realizarse Camuflaje.",
         "cta": {
           "heading": "¿Lista para la Ceja de tus Sueños?",
           "text": "Confía en los expertos para lograr el aspecto natural y perfecto que siempre has deseado. Reserva hoy tu consulta.",
@@ -415,11 +409,11 @@
         "subtitle": "Un efecto óptico de mayor volumen y densidad para tu mirada."
       },
       "intro": {
-        "text": "⚡Lashes Line ⚡ ¡Nuevo Servicio en #TattoCosmetic #ByMeryGarcia! ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares. ✨Prepárate para lucir una mirada increíble pero sobre todo natural.✨"
+        "text": "⚡Lashes Line ⚡New Service en #TattoCosmetic #ByMeryGarcia ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares By Mery Garcia & Staff. ✨Preparate para lucir una mirada increíble pero sobre todo natural ✨"
       },
       "pricing": {
         "depositTitle": "Consulta y Seña",
-        "depositText": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión, la misma no es reembolsable y no congela el valor de tu servicio:",
+        "depositText": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lashes Line, la misma no es reembolsable y no congela el valor de tu servicio:",
         "depositAmount": "Seña AR$ 100.000.-",
         "priceListTitle": "Precio de Lista del Servicio",
         "session1": "Primera sesión: U$S 480.- (en efectivo U$S 320)",
@@ -442,9 +436,8 @@
       },
       "whatIsIt": {
         "heading": "¿QUÉ ES EL LIP BLUSH?",
-        "p1": "Es un servicio de tatuaje cosmético que aporta color y definición de acabado hiperrealista. No buscamos una boca con efecto maquillado, sino que emulando la textura del labio ganamos una expresión más joven y fresca sin perder naturalidad.",
-        "p2": "No aporta volumen, no genera brillo, labios sin makeup con mucha más frescura. Sin polvo, sin textura, como si el labio tuviese color natural 💋🍒",
-        "p3": "El resultado dura entre 12 y 24 meses dependiendo de cada persona. El procedimiento consta de una primera sesión y un retoque para terminar de definir el diseño que Mery creó para vos a los 30 o 60 días."
+        "p1": "Es un servicio de tatuaje cosmético que dura entre 18 y 24 meses.\n\nConsiste en darle un color a los labios, respetando la colorimetría natural de la persona.\n\nNo buscamos dar un efecto de maquillaje, sino de boca ruborizada. No da brillo. Sin polvo, sin textura, como si el labio tuviese color 💋🍒",
+        "p2": "El procedimiento consta de una primera sesión y un retoque para terminar de definir unos labios perfectos a los 30 o 60 días."
       },
       "pricing": {
         "depositTitle": "Consulta y Seña",
@@ -452,10 +445,10 @@
         "depositAmount": "Seña AR$ 100.000.-",
         "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
         "firstSessionLabel": "Primera Sesión",
-        "touchUpLabel": "Retoque",
-        "maintenanceLabel": "Mantenimiento",
         "session1": "U$S 650.- (en efectivo U$S 450)",
+        "touchUpLabel": "Retoque",
         "touchUp": "U$S 317.- (en efectivo U$S 180)",
+        "maintenanceLabel": "Mantenimiento",
         "maintenance": "U$S 650.- (en efectivo U$S 475)"
       },
       "importantInfo": {
@@ -512,34 +505,75 @@
         "subtitle": "Restaurando la confianza a través del arte y la precisión."
       },
       "areola": {
-        "heading": "¿QUÉ ES AREOLA HARMONIZATION?",
-        "p1": "Es una técnica de micropigmentación para disimular la apariencia de las cicatrices, mezclándolas con el tono de la piel circundante sin perder realismo. Este procedimiento está recomendado para personas con cicatrices post-quirúrgicas, lesiones estéticas o para corregir asimetrías.",
+        "heading": "¿QUÉ ES EL AREOLA HARMONIZATION?",
+        "p1": "El Areola Harmonization es una técnica que utiliza la micropigmentación o tatuaje cosmético para disimular la apariencia de las cicatrices, haciendo que se mezclen con el tono de la piel circundante sin perder realismo y naturalidad.\n\nEsta técnica implica la implantación de pigmentos en la zona de la cicatriz para igualar el color y minimizar su visibilidad.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas.\n\nEste procedimiento está recomendado para personas que presentan cicatrices post quirúrgicas, causadas por lesiones estéticas en areola, o para aquellas personas que deseen corregir asimetrías.\n\nEs importante aclarar que entre sesión y sesión debe pasar 6 semanas para que la piel cicatrice correctamente.",
         "pricing": {
-          "heading": "Precio de Lista",
+          "heading": "Precio de Lista del Servicio",
           "deposit": "Seña: AR$ 100.000.-",
           "session1": "Primera sesión: U$S 480.- (en efectivo U$S 420)",
           "touchUp": "Retoque: U$S 240.- (en efectivo U$S 180)",
-          "note": "Se considera retoque al servicio complemento realizado 6 semanas luego del primer servicio."
+          "note": "Se considera retoque al servicio complemento de primera sesión realizado 6 semanas luego del primer servicio. Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
+        },
+        "procedure": {
+          "heading": "PROCEDIMIENTO",
+          "text": "La primera instancia es la etapa de consulta.\n\nEn la consulta te contamos de qué se trata, cómo se hace, cuánto demora, los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nLa consulta es clave para informarte y que sepas los procedimientos, para confirmar que estás apta para realizarlo y que podés respetar las consignas de los cuidados.\n\nUna vez que hayas hecho la consulta y estés decidida, podrás tomar tu primer turno para Camuflaje de cicatrices.\n\nLa cantidad de sesiones estará sujeta al criterio de Mery, y a la respuesta de la piel de cada clienta.\n\nEl costo del servicio incluye el kit de cuidados (agua destilada y jabón neutro)."
+        },
+        "biosecurity": {
+          "heading": "NORMAS DE BIO-SEGURIDAD",
+          "text": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico.\n\nEs indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros."
+        },
+        "importantInfo": {
+          "heading": "IMPORTANTE",
+          "text": "Para poder realizar este procedimiento es necesario que presentes una constancia médica que avale que podemos realizar el servicio.\n\nADJUNTAR CONSTANCIA MÉDICA"
         }
       },
       "nipple": {
-        "heading": "¿QUÉ ES NIPPLE RECONSTRUCTION?",
-        "p1": "Es una técnica de tatuaje cosmético 3D que puede ayudar a corregir asimetrías, mejorar la apariencia de cicatrices o cubrir imperfecciones en la zona de la areola y pezón. Recomendado para personas con cicatrices post-quirúrgicas, reconstrucción mamaria o cicatrices por lesiones.",
+        "heading": "¿QUÉ ES EL NIPPLE RECONSTRUCTION?",
+        "p1": "Es una técnica de tatuaje cosmético 3D que puede ayudar a corregir asimetrías, mejorar apariencia de cicatrices o cubrir imperfecciones en la zona de la areola y pezón.\n\nEste procedimiento está recomendado para personas que presentan cicatrices post quirúrgicas, reconstrucción mamaria, cicatrices causadas por lesiones.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas.\n\nEs importante aclarar que entre sesión y sesión debe pasar un mes para que la piel cicatrice correctamente.\n\n Tu consulta con Mery & Staff MG es un tiempo para vos, para saldar tus dudas y que puedas elegir si Mery García es la artista para vos. Para reservar ese espacio debes abonar una seña quedando a cuenta de tu primera sesión de Nipple Reconstruction, la misma no es reembolsable y no congela el valor de tu servicio.",
         "pricing": {
-          "heading": "Precio de Lista",
+          "heading": "Precio de Lista del Servicio",
           "deposit": "Seña: AR$ 100.000.-",
           "session1": "Primera sesión: U$S 520.- (en efectivo U$S 450)",
           "touchUp": "Retoque: U$S 240.- (en efectivo U$S 180)",
-          "note": "Se considera retoque al servicio complemento realizado 6 semanas luego del primer servicio."
+          "note": "Se considera retoque al servicio complemento de primera sesión realizado 6 semanas luego del primer servicio. Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
+        },
+        "procedure": {
+          "heading": "PROCEDIMIENTO",
+          "text": "La primera instancia es la etapa de consulta.\n\nEn la consulta te contamos de qué se trata, cómo se hace, cuánto demora, los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nLa consulta es clave para informarte y que sepas los procedimientos, para confirmar que estás apta para realizarlo y que podés respetar las consignas de los cuidados.\n\nUna vez que hayas hecho la consulta y estés decidida, podrás tomar tu primer turno para NIPPLE RECONSTRUCTION.\n\nLa cantidad de sesiones estará sujeta al criterio de Mery, y a la respuesta de la piel de cada clienta.\n\nEl costo del servicio incluye el kit de cuidados (agua destilada y jabón neutro)."
+        },
+        "biosecurity": {
+          "heading": "NORMAS DE BIO-SEGURIDAD",
+          "text": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico.\n\nEs indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros."
+        },
+        "importantInfo": {
+          "heading": "IMPORTANTE",
+          "text": "Para poder realizar este procedimiento es necesario que presentes una constancia médica que avale que podemos realizar el servicio.\n\nADJUNTAR CONSTANCIA MÉDICA"
+        }
+      },
+      "nanoscalp": {
+        "heading": "¿QUÉ ES EL NANO SCALP?",
+        "p1": "Es un tatuaje cosmético que consiste en implantar pigmento en el cuero cabelludo y piel generando líneas de cabello hiperrealista.\n\nDesde la primera sesión notarás un efecto óptico de densidad mayor capilar, de forma natural que irá aumentando progresivamente sesión tras sesión.\n\nEste procedimiento está recomendado para personas con cicatrices post lifting, falta de crecimiento del cabello, remolinos hasta alopecias frontales fibrozantes.\n\nEs importante aclarar que entre sesión y sesión debe pasar un mes para que la piel cicatrice correctamente.",
+        "pricing": {
+          "heading": "Precio de Lista del Servicio",
+          "deposit": "Seña: AR$ 100.000.-",
+          "session1": "Primera sesión: U$S 520.- (en efectivo U$S 450)",
+          "session2": "Segunda sesión: U$S 520.- (en efectivo U$S 450)",
+          "note": "Se necesita una segunda sesión complemento de la primera sesión realizada entre 30 a 60 días luego del primer servicio de Nano Scalp. Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
+        },
+        "procedure": {
+          "heading": "PROCEDIMIENTO",
+          "text": "La primera instancia es la etapa de consulta.\n\nEn la consulta te contamos de qué se trata, cómo se hace, cuánto demora, los cuidados previos y posteriores, los cuales son fundamentales.\n\nDespejamos todas tus dudas para que estés bien segura antes de realizarlo.\n\nLa consulta es clave para informarte y que sepas los procedimientos, para confirmar que estás apta para realizarlo y que podés respetar las consignas de los cuidados.\n\nUna vez que hayas hecho la consulta y estés decidida, podrás tomar tu primer turno para Nano Scalp.\n\nLa cantidad de sesiones estará sujeta al criterio de Mery, y a la respuesta de la piel de cada clienta.\n\nEl costo del servicio incluye el kit de cuidados (agua destilada y jabón neutro)."
+        },
+        "biosecurity": {
+          "heading": "NORMAS DE BIO-SEGURIDAD",
+          "text": "Como cualquier incisión, requiere normas estrictas de bio-seguridad, como elementos 100% descartables o esterilizables, el llenado y firmado de consentimiento de la persona y en algunos casos, consentimiento de un médico.\n\nEs indispensable una higiene rigurosa y el compromiso de la persona de cuidar su piel con los elementos adecuados con el fin de evitar infecciones, baja pigmentación o cambios en el pigmento, entre otros."
+        },
+        "importantInfo": {
+          "heading": "IMPORTANTE",
+          "text": "Para poder realizar este procedimiento es necesario que presentes una constancia médica que avale que podemos realizar el servicio.\n\nADJUNTAR CONSTANCIA MÉDICA"
         }
       },
       "shared": {
-        "biosecurityHeading": "NORMAS DE BIO-SEGURIDAD",
-        "biosecurityText": "Como cualquier incisión, requiere normas estrictas: elementos 100% descartables, y consentimiento firmado. Es indispensable una higiene rigurosa y el compromiso de la persona en cuidar su piel para evitar complicaciones.",
-        "procedureHeading": "PROCEDIMIENTO DE CONSULTA",
-        "procedureText": "La primera instancia es la consulta. En ella te contamos de qué se trata, cómo se hace, y despejamos todas tus dudas. La cantidad de sesiones estará sujeta al criterio de Mery y la respuesta de tu piel. El costo incluye el kit de cuidados.",
-        "importantInfoHeading": "IMPORTANTE: CONSTANCIA MÉDICA",
-        "importantInfoText": "Para poder realizar este procedimiento es necesario que presentes una constancia médica que avale que podemos realizar el servicio.",
         "cta": {
           "heading": "Un Paso Hacia la Restauración",
           "text": "Nuestro enfoque artístico y profesional está aquí para ayudarte. Agenda una consulta confidencial para discutir tus necesidades.",

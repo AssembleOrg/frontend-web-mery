@@ -45,40 +45,57 @@ export default function EyebrowStylingPage() {
 
       {/* Content */}
       <div className='container mx-auto px-4 py-16'>
-        <div className='max-w-4xl mx-auto'>
-          {/* Services List Section */}
-          <section className='mb-12'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-8 text-center'>
-              {t('intro.heading')}
-            </h2>
-            <div className='space-y-8'>
-              {services.map((service) => (
-                <div
-                  key={service.key}
-                  className='bg-card p-6 rounded-lg border'
-                >
-                  <div className='flex flex-col sm:flex-row justify-between sm:items-center mb-2'>
-                    <h3 className='text-xl font-bold font-primary text-foreground'>
-                      {t(`services.${service.key}.title`)}
-                    </h3>
-                    <p className='text-lg font-semibold font-primary/10 text-primary mt-2 sm:mt-0'>
-                      {t(`services.${service.key}.price`)}
-                    </p>
-                  </div>
-                  <p className='text-muted-foreground font-secondary'>
-                    {t(`services.${service.key}.description`)}
-                  </p>
-                </div>
-              ))}
+        <div className='max-w-7xl mx-auto'>
+          <div className='grid grid-cols-1 lg:grid-cols-[400px_1fr] xl:grid-cols-[500px_1fr] gap-12'>
+            {/* Left Column - Image (Desktop Only) */}
+            <div className='hidden lg:block'>
+              <div className='sticky top-24 h-[800px] rounded-lg overflow-hidden'>
+                <Image
+                  src='/Img-home/home-1.webp'
+                  alt='Eyebrow Styling Services'
+                  fill
+                  className='object-cover'
+                />
+              </div>
             </div>
-          </section>
 
-          <BookingCTA
-            heading={t('cta.heading')}
-            text={t('cta.text')}
-            mainButtonText={t('cta.button')}
-            showExpressButton={false}
-          />
+            {/* Right Column - Content */}
+            <div>
+              {/* Services List Section */}
+              <section className='mb-12'>
+                <h2 className='text-3xl font-bold font-primary text-foreground mb-8'>
+                  {t('intro.heading')}
+                </h2>
+                <div className='space-y-8'>
+                  {services.map((service) => (
+                    <div
+                      key={service.key}
+                      className='bg-card p-6 rounded-lg border'
+                    >
+                      <div className='flex flex-col sm:flex-row justify-between sm:items-center mb-2'>
+                        <h3 className='text-xl font-bold font-primary text-foreground'>
+                          {t(`services.${service.key}.title`)}
+                        </h3>
+                        <p className='text-lg font-semibold font-primary/10 text-primary mt-2 sm:mt-0'>
+                          {t(`services.${service.key}.price`)}
+                        </p>
+                      </div>
+                      <p className='text-muted-foreground font-secondary'>
+                        {t(`services.${service.key}.description`)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <BookingCTA
+                heading={t('cta.heading')}
+                text={t('cta.text')}
+                mainButtonText={t('cta.button')}
+                showExpressButton={false}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
