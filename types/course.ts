@@ -14,6 +14,14 @@ export interface DownloadableFile {
   type: 'pdf' | 'doc' | 'zip';
 }
 
+// Nuevo: Item de descarga para videos (JSONB)
+export interface VideoDownloadItem {
+  texto?: string; // Texto descriptivo del archivo (ej: "Manual de técnicas avanzadas")
+  text?: string; // Alias para compatibilidad
+  url_icon?: string; // URL del icono (ej: /icons/pdf.svg)
+  url_file?: string; // URL del archivo descargable
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -23,7 +31,11 @@ export interface Lesson {
   order: number;
   isPublished?: boolean;
   isCompleted?: boolean;
-  downloadableFiles?: DownloadableFile[];
+  downloadableFiles?: DownloadableFile[]; // Legacy - mantener para compatibilidad
+  
+  // Nuevos campos para contenidos y descargas
+  contenidos?: string; // Contenido de texto de la lección (puede usar markdown **bold**)
+  downloads?: VideoDownloadItem[]; // Array JSONB de archivos descargables
 }
 
 export interface CourseProgress {

@@ -146,17 +146,32 @@ export default function CursoDetallePage() {
 
       // Nota: Como vimos, videosData no trae vimeoId, pero eso ya no importa
       // porque usaremos handleLessonSelect para obtener la URL de streaming.
-      const lessons: Lesson[] = videosData.map((video) => ({
-        id: video.id,
-        title: video.title,
-        description: video.description || '',
-        vimeoVideoId: '', // Ya no es crítico tenerlo aquí
-        duration: video.duration
-          ? `${Math.floor(video.duration / 60)}m ${video.duration % 60}s`
-          : 'N/A',
-        order: video.order || 0,
-        isPublished: video.isPublished,
-      }));
+      const lessons: Lesson[] = videosData.map((video) => {
+        // ✅ Parsear downloads si viene como string JSON
+        let parsedDownloads = video.downloads || [];
+        if (typeof parsedDownloads === 'string') {
+          try {
+            parsedDownloads = JSON.parse(parsedDownloads);
+          } catch (e) {
+            console.error('Error parsing downloads for video:', video.title, e);
+            parsedDownloads = [];
+          }
+        }
+
+        return {
+          id: video.id,
+          title: video.title,
+          description: video.description || '',
+          vimeoVideoId: '', // Ya no es crítico tenerlo aquí
+          duration: video.duration
+            ? `${Math.floor(video.duration / 60)}m ${video.duration % 60}s`
+            : 'N/A',
+          order: video.order || 0,
+          isPublished: video.isPublished,
+          contenidos: video.contenidos || '', // ✅ Incluir contenidos
+          downloads: parsedDownloads, // ✅ Incluir downloads (parseado si es necesario)
+        };
+      });
 
       // 4. Construir el objeto del curso
       const courseData: Course = {
@@ -329,23 +344,7 @@ export default function CursoDetallePage() {
                           </div>
                         </div>
 
-                        {/* Información de la lección */}
-                        <div className='max-w-4xl mx-auto'>
-                          <div className='bg-[#2d2d2d]/80 backdrop-blur-sm rounded-lg shadow-xl border border-gray-700 p-6'>
-                            <p className='text-gray-300 leading-relaxed text-center'>
-                              {selectedLesson.description}
-                            </p>
-
-                            {selectedLesson.duration && (
-                              <div className='flex items-center justify-center mt-4 pt-4 border-t border-gray-600'>
-                                <Clock className='w-4 h-4 text-[#f9bbc4] mr-2' />
-                                <span className='text-sm text-gray-400'>
-                                  Duración: {selectedLesson.duration}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                        {/* Información de la lección - Eliminado el bloque de duración */}
 
                         {/* Contenido adicional de la lección */}
                         <div className='max-w-4xl mx-auto'>

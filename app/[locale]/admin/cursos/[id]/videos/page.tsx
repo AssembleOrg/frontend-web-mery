@@ -43,7 +43,7 @@ export default function CursoVideosPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingVideo, setEditingVideo] = useState<any>(null);
   const [formData, setFormData] = useState<
-    Partial<CreateVideoInput> & { isPublished?: boolean }
+    Partial<CreateVideoInput> & { isPublished?: boolean; downloads?: any[] }
   >({
     title: '',
     description: '',
@@ -51,6 +51,8 @@ export default function CursoVideosPage() {
     categoryId: courseId,
     order: 0,
     isPublished: true, // ✅ Por defecto publicado
+    contenidos: '', // ✅ Nuevo campo
+    downloads: [], // ✅ Nuevo campo JSONB
   });
   const [isFetchingVimeo, setIsFetchingVimeo] = useState(false);
   const [isSaving, setIsSaving] = useState(false); // ✅ Estado para bloquear botón mientras guarda
@@ -131,6 +133,8 @@ export default function CursoVideosPage() {
       categoryId: video.categoryId,
       order: video.order || 0,
       isPublished: video.isPublished || false, // Load current published status
+      contenidos: video.contenidos || '', // ✅ Cargar contenidos
+      downloads: video.downloads || [], // ✅ Cargar downloads
     });
     setErrors({});
   };
@@ -145,6 +149,8 @@ export default function CursoVideosPage() {
       categoryId: courseId,
       order: 0,
       isPublished: true, // ✅ Por defecto publicado al cancelar
+      contenidos: '', // ✅ Resetear contenidos
+      downloads: [], // ✅ Resetear downloads
     });
     setErrors({});
   };
@@ -214,6 +220,8 @@ export default function CursoVideosPage() {
           description: formData.description,
           order: formData.order,
           isPublished: formData.isPublished, // Include published status
+          contenidos: formData.contenidos || '', // ✅ Incluir contenidos
+          downloads: formData.downloads || [], // ✅ Incluir downloads
         };
         await updateVideo(editingVideo.id, updates);
         toast.success('Video actualizado exitosamente');
@@ -226,6 +234,8 @@ export default function CursoVideosPage() {
           categoryId: courseId,
           order: formData.order || courseVideos.length,
           isPublished: formData.isPublished, // Include published status
+          contenidos: formData.contenidos || '', // ✅ Incluir contenidos
+          downloads: formData.downloads || [], // ✅ Incluir downloads
         };
         await createVideo(newVideo as any);
 
@@ -385,6 +395,111 @@ export default function CursoVideosPage() {
                 className='text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                 placeholder='Descripción del contenido del video...'
               />
+            </div>
+
+            {/* Contenidos (Nuevo campo para tab "CONTENIDOS") */}
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Contenidos
+                <span className='ml-2 text-xs font-normal text-gray-500'>(Texto que aparece en la pestaña CONTENIDOS)</span>
+              </label>
+              <textarea
+                value={formData.contenidos || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, contenidos: e.target.value })
+                }
+                rows={6}
+                className='text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                placeholder='Contenido detallado de la lección (se mostrará en la pestaña CONTENIDOS)...'
+              />
+              <p className='mt-1 text-xs text-gray-500'>
+                Este texto aparecerá en la pestaña &quot;CONTENIDOS&quot; al visualizar el video
+              </p>
+            </div>
+
+            {/* Downloads (Nuevo campo JSONB para tab "DESCARGAS") */}
+            <div className='space-y-3'>
+              <div className='flex items-center justify-between'>
+                <label className='block text-sm font-medium text-gray-700'>
+                  Descargas
+                  <span className='ml-2 text-xs font-normal text-gray-500'>(Archivos que aparecen en la pestaña DESCARGAS)</span>
+                </label>
+                <button
+                  type='button'
+                  onClick={() => {
+                    const newDownload = {
+                      texto: '',
+                      url_icon: '/icons/pdf.svg',
+                      url_file: '',
+                    };
+                    setFormData({
+                      ...formData,
+                      downloads: [...(formData.downloads || []), newDownload],
+                    });
+                  }}
+                  className='flex items-center gap-1 px-3 py-1 text-sm bg-[#660e1b] text-white rounded-lg hover:bg-[#4a0a13] transition-colors'
+                >
+                  <PlusCircle className='w-4 h-4' />
+                  Agregar archivo
+                </button>
+              </div>
+
+              {formData.downloads && formData.downloads.length > 0 ? (
+                <div className='space-y-2'>
+                  {formData.downloads.map((item: any, index: number) => (
+                    <div key={index} className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'>
+                      <div className='flex-1 space-y-2'>
+                        <input
+                          type='text'
+                          value={item.texto || ''}
+                          onChange={(e) => {
+                            const newDownloads = [...(formData.downloads || [])];
+                            newDownloads[index] = { ...newDownloads[index], texto: e.target.value };
+                            setFormData({ ...formData, downloads: newDownloads });
+                          }}
+                          placeholder='Texto del archivo (ej: Manual de técnicas PDF)'
+                          className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent text-black'
+                        />
+                        <input
+                          type='text'
+                          value={item.url_icon || ''}
+                          onChange={(e) => {
+                            const newDownloads = [...(formData.downloads || [])];
+                            newDownloads[index] = { ...newDownloads[index], url_icon: e.target.value };
+                            setFormData({ ...formData, downloads: newDownloads });
+                          }}
+                          placeholder='URL del icono (ej: /pdf-icon.png)'
+                          className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent text-black'
+                        />
+                        <input
+                          type='text'
+                          value={item.url_file || ''}
+                          onChange={(e) => {
+                            const newDownloads = [...(formData.downloads || [])];
+                            newDownloads[index] = { ...newDownloads[index], url_file: e.target.value };
+                            setFormData({ ...formData, downloads: newDownloads });
+                          }}
+                          placeholder='URL del archivo descargable (ej: /pdf-mery/manual.pdf)'
+                          className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent text-black'
+                        />
+                      </div>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          const newDownloads = (formData.downloads || []).filter((_, i) => i !== index);
+                          setFormData({ ...formData, downloads: newDownloads });
+                        }}
+                        className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
+                        title='Eliminar archivo'
+                      >
+                        <Trash2 className='w-4 h-4' />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className='text-sm text-gray-500 italic'>No hay archivos agregados. Haz clic en &quot;Agregar archivo&quot; para empezar.</p>
+              )}
             </div>
 
             {/* Vimeo ID */}

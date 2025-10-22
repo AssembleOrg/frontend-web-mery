@@ -72,6 +72,8 @@ export interface Video {
   thumbnail?: string;
   duration?: number;
   categoryId: string;
+  contenidos?: string; // Nuevo: contenido de texto de la lección
+  downloads?: any[]; // Nuevo: array JSONB de archivos descargables
   category?: {
     id: string;
     name: string;
@@ -314,6 +316,8 @@ export interface CreateVideoInput {
   isPublished?: boolean;
   metaTitle?: string;
   metaDescription?: string;
+  contenidos?: string; // Nuevo: contenido de texto de la lección
+  downloads?: any[]; // Nuevo: array JSONB de archivos descargables
 }
 
 export interface UpdateVideoInput {
@@ -321,6 +325,8 @@ export interface UpdateVideoInput {
   description?: string;
   categoryId?: string;
   order?: number;
+  contenidos?: string; // Nuevo: contenido de texto de la lección
+  downloads?: any[]; // Nuevo: array JSONB de archivos descargables
   isPublished?: boolean;
   publishedAt?: string;
   metaTitle?: string;
