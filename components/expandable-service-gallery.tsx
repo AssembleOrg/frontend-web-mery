@@ -63,7 +63,7 @@ export function ExpandableServiceGallery({
   if (isMobile) {
     return (
       <div className='w-full max-w-7xl mx-auto'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'>
           {services.map((service) => (
             <div
               key={service.key}
@@ -102,10 +102,10 @@ export function ExpandableServiceGallery({
 
                   {/* Content */}
                   <div className='absolute bottom-0 left-0 right-0 p-4 text-white'>
-                    <h3 className='text-lg font-primary font-semibold mb-2 text-white'>
+                    <h3 className='text-lg font-primary font-semibold mb-2 text-white break-words'>
                       {t(`services.${service.key}`)}
                     </h3>
-                    <p className='text-sm font-secondary text-white/90 mb-3'>
+                    <p className='text-sm font-secondary text-white/90 mb-3 break-words'>
                       {getServiceDescription(service.key)}
                     </p>
                     <div className='flex gap-2'>

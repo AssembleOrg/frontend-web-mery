@@ -50,16 +50,26 @@ export default function LipBlushPage() {
 
           {/* What is it Section */}
           <section className='mb-12'>
-            <h2 className='text-3xl font-bold font-primary text-foreground mb-6 flex items-center'>
-              <Sparkles className='h-8 w-8 text-primary mr-3' />
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
               {t('whatIsIt.heading')}
             </h2>
-            <div className='prose prose-lg max-w-none text-muted-foreground font-secondary space-y-4'>
-              <p className='font-secondary'>{t('whatIsIt.p1')}</p>
-              <p className='font-secondary'>{t('whatIsIt.p2')}</p>
-              <p className='font-secondary'>{t('whatIsIt.p3')}</p>
-            </div>
+            <p className='text-muted-foreground font-secondary whitespace-pre-line mb-6'>
+              {t('whatIsIt.p1')}
+            </p>
+            <p className='text-muted-foreground font-secondary whitespace-pre-line'>
+              {t('whatIsIt.p2')}
+            </p>
           </section>
+
+          {/* Service Image */}
+          <div className='relative w-full h-96 md:h-[500px] my-12 rounded-lg overflow-hidden'>
+            <Image
+              src='/Img-home/Lip-blush-1.webp'
+              alt='Lip Blush Service'
+              fill
+              className='object-cover'
+            />
+          </div>
 
           {/* Pricing Section */}
           <section className='mb-12'>
@@ -81,28 +91,28 @@ export default function LipBlushPage() {
                 <h3 className='text-xl font-bold text-foreground mb-4'>
                   {t('pricing.priceListTitle')}
                 </h3>
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 text-center'>
-                  <div className='bg-muted/40 p-4 rounded-lg'>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-center'>
+                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
                     <p className='font-semibold font-primary text-foreground'>
                       {t('pricing.firstSessionLabel')}
                     </p>
-                    <p className='text-muted-foreground font-secondary'>
+                    <p className='text-muted-foreground font-secondary break-words'>
                       {t('pricing.session1')}
                     </p>
                   </div>
-                  <div className='bg-muted/40 p-4 rounded-lg'>
+                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
                     <p className='font-semibold font-primary text-foreground'>
                       {t('pricing.touchUpLabel')}
                     </p>
-                    <p className='text-muted-foreground font-secondary'>
+                    <p className='text-muted-foreground font-secondary break-words'>
                       {t('pricing.touchUp')}
                     </p>
                   </div>
-                  <div className='bg-muted/40 p-4 rounded-lg'>
+                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
                     <p className='font-semibold font-primary text-foreground'>
                       {t('pricing.maintenanceLabel')}
                     </p>
-                    <p className='text-muted-foreground font-secondary'>
+                    <p className='text-muted-foreground font-secondary break-words'>
                       {t('pricing.maintenance')}
                     </p>
                   </div>

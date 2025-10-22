@@ -48,6 +48,16 @@ export default function LashesLinePage() {
             </p>
           </section>
 
+          {/* Service Image */}
+          <div className='relative w-full h-96 md:h-[500px] my-12 rounded-lg overflow-hidden'>
+            <Image
+              src='/Img-home/home-8.webp'
+              alt='Lashes Line Service'
+              fill
+              className='object-cover'
+            />
+          </div>
+
           {/* Pricing Section */}
           <section className='mb-12'>
             <div className='bg-card border rounded-xl p-8'>
@@ -68,28 +78,28 @@ export default function LashesLinePage() {
                 <h3 className='text-xl font-bold text-foreground mb-4'>
                   {t('pricing.priceListTitle')}
                 </h3>
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 text-center'>
-                  <div className='bg-muted/40 p-4 rounded-lg'>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-center'>
+                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
                     <p className='font-semibold font-primary text-foreground'>
                       Primera Sesión
                     </p>
-                    <p className='text-muted-foreground font-secondary'>
+                    <p className='text-muted-foreground font-secondary break-words'>
                       {t('pricing.session1').split(': ')[1]}
                     </p>
                   </div>
-                  <div className='bg-muted/40 p-4 rounded-lg'>
+                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
                     <p className='font-semibold font-primary text-foreground'>
                       Retoque
                     </p>
-                    <p className='text-muted-foreground font-secondary'>
+                    <p className='text-muted-foreground font-secondary break-words'>
                       {t('pricing.touchUp').split(': ')[1]}
                     </p>
                   </div>
-                  <div className='bg-muted/40 p-4 rounded-lg'>
+                  <div className='bg-muted/40 p-4 md:p-6 rounded-lg'>
                     <p className='font-semibold font-primary text-foreground'>
                       Mantenimiento
                     </p>
-                    <p className='text-muted-foreground font-secondary'>
+                    <p className='text-muted-foreground font-secondary break-words'>
                       {t('pricing.maintenance').split(': ')[1]}
                     </p>
                   </div>

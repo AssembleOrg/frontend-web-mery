@@ -146,16 +146,16 @@ export default function GiftCardPage() {
                   <h2 className='text-2xl font-primary font-bold text-foreground mb-6'>
                     {content('occasions.title')}
                   </h2>
-                  <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                     {content
                       .raw('occasions.list')
                       .map((occasion: string, index: number) => (
                         <div
                           key={index}
-                          className='flex items-center space-x-3 p-3 bg-card rounded-lg border'
+                          className='flex items-center space-x-3 p-3 md:p-4 bg-card rounded-lg border'
                         >
                           <Gift className='h-5 w-5 text-primary flex-shrink-0' />
-                          <span className='text-muted-foreground font-medium'>
+                          <span className='text-muted-foreground font-medium break-words'>
                             {occasion}
                           </span>
                         </div>

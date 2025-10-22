@@ -76,12 +76,33 @@ export default function NanobladingCamouflagePage() {
                 </div>
               </div>
 
+              {/* Service Image */}
+              <div className='relative w-full h-[30rem] md:h-[500px] my-4'>
+                <Image
+                  src='/Img-home/nanoblading.webp'
+                  alt='Nanoblading Service'
+                  fill
+                  className='object-cover'
+                />
+              </div>
+
               <h3 className='text-2xl font-bold text-foreground mt-8 mb-4'>
                 {t('shared.procedureHeading')}
               </h3>
-              <p className='text-muted-foreground'>
+              <p className='text-muted-foreground whitespace-pre-line'>
                 {t('shared.procedureTextNano')}
               </p>
+
+              {/* Nanoblading Pregnancy Section */}
+              <div className='alert-high border rounded-lg p-6 mt-8'>
+                <div className='text-primary'>
+                  <h4 className='text-xl font-bold mb-4 flex items-center'>
+                    <AlertTriangle className='h-6 w-6 mr-3' />
+                    {t('shared.pregnantWomenHeading')}
+                  </h4>
+                  <p className='text-sm'>{t('shared.pregnantWomenTextNano')}</p>
+                </div>
+              </div>
             </article>
 
             {/* Camouflage Column */}
@@ -89,7 +110,9 @@ export default function NanobladingCamouflagePage() {
               <h2 className='text-3xl font-primary font-bold text-foreground mb-6'>
                 {t('camouflage.heading')}
               </h2>
-              <p className='text-muted-foreground mb-6'>{t('camouflage.p1')}</p>
+              <p className='text-muted-foreground mb-6 whitespace-pre-line'>
+                {t('camouflage.p1')}
+              </p>
 
               <div className='mt-8 bg-card p-6 rounded-lg border'>
                 <h3 className='text-xl font-primary font-bold text-foreground mb-4'>
@@ -118,7 +141,7 @@ export default function NanobladingCamouflagePage() {
                     <h4 className='font-bold text-sm uppercase'>
                       {t(`camouflage.cases.${caseItem.key}.title`)}
                     </h4>
-                    <p className='text-sm mt-2'>
+                    <p className='text-sm mt-2 whitespace-pre-line'>
                       {t(`camouflage.cases.${caseItem.key}.description`)}
                     </p>
                   </div>
@@ -127,33 +150,34 @@ export default function NanobladingCamouflagePage() {
               <h3 className='text-2xl font-bold text-foreground mt-8 mb-4'>
                 {t('shared.procedureHeading')}
               </h3>
-              <p className='text-muted-foreground'>
+              <p className='text-muted-foreground whitespace-pre-line'>
                 {t('shared.procedureTextCamu')}
               </p>
+
+              {/* Camouflage Pregnancy Section */}
+              <div className='alert-high border rounded-lg p-6 mt-8'>
+                <div className='text-primary'>
+                  <h4 className='text-xl font-bold mb-4 flex items-center'>
+                    <AlertTriangle className='h-6 w-6 mr-3' />
+                    {t('shared.pregnantWomenHeading')}
+                  </h4>
+                  <p className='text-sm'>{t('shared.pregnantWomenTextCamu')}</p>
+                </div>
+              </div>
             </article>
           </div>
 
-          {/* Shared Information Section */}
+          {/* Biosecurity Section */}
           <section className='mt-16 pt-12 border-t'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-12'>
-              <div className='alert-low border rounded-lg p-6'>
-                <div className='burgundy-text'>
-                  <h2 className='text-2xl font-bold mb-4 flex items-center'>
-                    <Shield className='h-7 w-7 mr-3' />
-                    {t('shared.biosecurityHeading')}
-                  </h2>
-                  <p>{t('shared.biosecurityText')}</p>
-                </div>
-              </div>
-
-              <div className='alert-high border rounded-lg p-6'>
-                <div className='text-primary'>
-                  <h2 className='text-2xl font-bold mb-4 flex items-center'>
-                    <AlertTriangle className='h-7 w-7 mr-3' />
-                    {t('shared.pregnantWomenHeading')}
-                  </h2>
-                  <p>{t('shared.pregnantWomenText')}</p>
-                </div>
+            <div className='alert-low border rounded-lg p-6'>
+              <div className='burgundy-text'>
+                <h2 className='text-2xl font-bold mb-4 flex items-center'>
+                  <Shield className='h-7 w-7 mr-3' />
+                  {t('shared.biosecurityHeading')}
+                </h2>
+                <p className='whitespace-pre-line'>
+                  {t('shared.biosecurityText')}
+                </p>
               </div>
             </div>
           </section>
@@ -165,6 +189,25 @@ export default function NanobladingCamouflagePage() {
             mainButtonText={t('shared.cta.button')}
             showExpressButton={false}
           />
+
+          {/* Conditions Section */}
+          <section className='mt-2 pt-2 border-t'>
+            <h2 className='text-xl font-primary font-bold text-foreground mb-6'>
+              CONDICIONES
+            </h2>
+            <div className='bg-muted/30 p-4 rounded-lg'>
+              <p className='font-secondary text-muted-foreground whitespace-pre-line'>
+                Valores no aplicables a agenda de Special Pass. Los valores
+                pueden modificarse sin previo aviso. Para que la reserva del
+                turno de primer sesión de Nanoblading sea efectiva, se deberá
+                abonar una seña de $30.000 el día de la consulta. En caso de
+                querer modificar la fecha de tu cita, deberás realizarlo
+                directamente desde tu cuenta, para no perder el valor total de
+                la seña, la misma no es reembolsable y no congela el valor de tu
+                servicio.
+              </p>
+            </div>
+          </section>
         </div>
       </div>
 

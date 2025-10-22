@@ -8,6 +8,7 @@ import { Link } from '@/i18n/routing';
 interface BookingCTAProps {
   heading?: string;
   text?: string;
+  text2?: string;
   mainButtonText?: string;
   showExpressButton?: boolean;
 }
@@ -16,6 +17,7 @@ interface BookingCTAProps {
 export function BookingCTA({
   heading,
   text,
+  text2,
   mainButtonText,
   showExpressButton = true,
 }: BookingCTAProps) {
@@ -38,7 +40,7 @@ export function BookingCTA({
             {text || t('description')}
           </p>
 
-          {/* Policy Link */}
+          {/* Policy Link and Optional Text2 */}
           <div className='mb-8'>
             <Link
               href='/politica-de-cancelaciones'
@@ -46,6 +48,7 @@ export function BookingCTA({
             >
               {t('policyLink')}
             </Link>
+
           </div>
 
           {/* CTA Buttons */}
@@ -65,6 +68,8 @@ export function BookingCTA({
               </a>
             </Button>
 
+              
+
             {showExpressButton && (
               <Button
                 variant='outline'
@@ -79,6 +84,12 @@ export function BookingCTA({
               </Button>
             )}
           </div>
+
+          {text2 && (
+              <p className='text-xs font-secondary text-muted-foreground mt-3'>
+                {text2}
+              </p>
+            )}
 
           {/* Additional info */}
           {showExpressButton && (

@@ -179,7 +179,7 @@ export default function AdminUsuariosPage() {
           ...(token && { 'Authorization': `Bearer ${token}` }),
         },
         body: JSON.stringify({
-          priceAtPurchase: 0, // Gratis (asignación manual)
+          amount: 0, // Gratis (asignación manual)
           currency: 'ARS',
           notes: 'Asignación manual por administrador',
         }),

@@ -168,42 +168,36 @@
       },
       "whatIsIt": {
         "heading": "What does the service consist of?",
-        "p1": "In the case of freckles, it is a very innovative technique that consists of creating a very superficial tattoo through small dots where the ink is inserted to achieve a hyper-realistic effect with a freckle or mole-like finish.",
-        "p2": "The durability ranges from <strong>5 to 6 months maximum</strong>, depending on the skin type and aftercare. After this period, the skin is left <strong>CLEAN</strong>, with no trace of ink and no scarring."
+        "p1": "In the case of freckles, it is a very innovative technique that consists of creating a very superficial tattoo through small dots where the ink is inserted to achieve a hyper-realistic effect with a freckle or mole-like finish.\n\nDurability ranges from 5 to 6 months maximum, depending on skin type and aftercare received. After this period, the skin is left CLEAN, with no trace of ink and no scarring."
       },
-      "process": {
-        "heading": "Your Appointment Process",
-        "p1": "On the day of your appointment, before starting the work, we will tell you what it is about, how it is done, how long it takes, its cost, and the essential pre- and post-care. We clear all your doubts so you can be completely sure before proceeding.",
-        "p2": "Together with Mery, you will define the shape, color, and quantity of freckles or moles using makeup so you can have an approximate idea of how they would look. Once this consultation is over, Mery will begin to perform the service."
+      "procedure": {
+        "heading": "PROCEDURE",
+        "text": "On the day of your appointment, before starting the work, we will tell you what it's about, how it's done, how long it takes, what its cost is, and the essential pre- and post-care, which are crucial.\n\nWe clear all your doubts so you're completely sure before proceeding.\n\nTogether with Mery, you define the shape, color, and quantity of freckles or moles using makeup so you can have an approximate idea of how they would look.\n\nOnce this consultation is over, Mery will begin to perform the service."
       },
       "biosecurity": {
-        "heading": "Biosecurity Standards",
-        "intro": "Like any incision, it requires strict biosecurity standards. Rigorous hygiene and the person's commitment to caring for their skin with the appropriate elements are essential to avoid infections or pigment changes.",
-        "li1": "Use of <strong>100% disposable or sterilizable</strong> materials.",
-        "li2": "Completion and signing of the <strong>person's consent form</strong> and, in some cases, a doctor's consent.",
-        "li3": "<strong>Contraindications:</strong> We will not work on the area if you are experiencing an infectious process, anemia, poor or no healing, or if your immune response is low."
+        "heading": "BIOSECURITY NORMS",
+        "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials, completion and signing of the person's consent form, and in some cases, a doctor's consent.\n\nRigorous hygiene and the person's commitment to caring for their skin with appropriate elements are essential to prevent infections, low pigmentation, or pigment changes, among others.\n\nWe will not work on the area if you are experiencing an infectious process, anemia, poor or no healing, or if you have low immune response for any organic or induced reason."
       },
       "pricing": {
-        "heading": "Service Pricing",
-        "frecklesTitle": "Freckles",
+        "heading": "Service Price List",
+        "frecklesTitle": "FRECKLES",
         "session1": "First session: US$ 350.- (or US$ 192 in cash)",
         "touchUp": "Touch-up: US$ 190.- (or US$ 128 in cash)",
         "maintenance": "Maintenance: US$ 350.- (or US$ 192 in cash)",
-        "molesTitle": "Moles",
-        "molesText": "The cost of Moles varies and will be confirmed once Mery finalizes the design for you.",
-        "kitTitle": "Aftercare Kit Included",
-        "kitText": "The cost includes the aftercare kit: a neutral soap and sterile water.",
-        "disclaimer": "* Prices are subject to change without prior notice."
+        "molesTitle": "MOLES",
+        "molesText": "The cost of Moles varies, to be confirmed when Mery finishes defining the design for you.",
+        "kitText": "The cost includes the aftercare kit, contains neutral soap and sterile water specially created for the aftercare of our services.",
+        "disclaimer": "Prices may be subject to change without prior notice."
       },
       "importantInfo": {
-        "heading": "Important Information",
-        "pregnancyTitle": "Pregnancy and Breastfeeding",
+        "heading": "PREGNANT WOMEN",
         "pregnancyText": "As there are no studies confirming that pigmentation is harmless during pregnancy, we have decided not to perform this service. However, it can be done during breastfeeding with express signed authorization from your doctor."
       },
       "cta": {
         "heading": "Ready for your transformation?",
         "text": "Book your appointment through our web app to enhance your natural beauty.",
-        "button": "Book Your Appointment"
+        "button": "Book Your Appointment",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "eyebrowStyling": {
@@ -248,8 +242,9 @@
       ],
       "cta": {
         "heading": "Ready for perfect eyebrows?",
-        "text": "Our specialists are ready to transform your look. Book your appointment!",
-        "button": "Book Appointment"
+        "text": "Our specialists are ready to transform your look. Book your appointment now!",
+        "button": "Book Appointment",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "microbladingCamouflage": {
@@ -265,7 +260,7 @@
       },
       "camouflage": {
         "heading": "WHAT IS CAMOUFLAGE?",
-        "p1": "It is a service that combines dermopigmentation, color correction, texture and structure so as to IMPROVE THE ASPECT of previous mal practice or a work that is deteriorated due to dermopigmentation or Microblading.",
+        "p1": "It is a service that combines depigmentation, color correction, texture, and structure to IMPROVE THE APPEARANCE of a poorly done or deteriorated job from either Dermopigmentation or Microblading. During the consultation phase, we can tell you what type of service you need. Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
         "p2": "In the case of Camouflage there are three needs:",
         "cases": [
           {
@@ -290,10 +285,13 @@
         "biosecurityHeading": "BIOSECURITY NORMS",
         "biosecurityText": "Like any other incision it requires strict biosecurity norms, such as elements that are 100% disposable or sterilized. We request a form that is filled out and signed by each client and in some cases by a doctor too. Rigorous hygiene and the commitment of taking the appropriate care are crucial to avoid infections or changes in the pigmentation.",
         "pregnantWomenHeading": "PREGNANT WOMEN",
-        "pregnantWomenText": "There is no type of study which confirms that this service is harmless for pregnant women, so we decide not to provide this service to women who are expecting a baby. After pregnancy and during the breastfeeding period, with a doctor’s authorization, it can be done.",
-        "ctaHeading": "Ready for Your New Eyebrows?",
-        "ctaText": "Trust the experts to achieve the natural and perfect look you've always wanted. Book your consultation today.",
-        "ctaButton": "Book Consultation"
+        "pregnantWomenText": "There is no type of study which confirms that this service is harmless for pregnant women, so we decide not to provide this service to women who are expecting a baby. After pregnancy and during the breastfeeding period, with a doctor’s authorization, it can be done."
+      },
+      "cta": {
+        "heading": "Ready for Your New Eyebrows?",
+        "text": "Trust the experts to achieve the natural and perfect look you've always wanted. Book your consultation today.",
+        "button": "Book Consultation",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "scalp": {
@@ -321,9 +319,10 @@
         "text": "There is no type of study which confirms that this service is harmless for pregnant women, so we decide not to provide this service to women who are expecting a baby. After pregnancy and during the breastfeeding period, with a doctor’s authorization, it can be done."
       },
       "cta": {
-        "heading": "Ready to Regain Your Confidence?",
-        "text": "Nano Scalp offers a definitive, natural-looking solution. Book a free consultation to find out how we can help you.",
-        "button": "Book Free Consultation"
+        "heading": "Ready to Reclaim Your Confidence?",
+        "text": "Nano Scalp offers a definitive and natural-looking solution. Book a free consultation to discover how we can help you.",
+        "button": "Book Free Consultation",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "eyelashStyling": {
@@ -349,9 +348,10 @@
         "text": "All appointments are given in our shops or our site at Appointments Online. Here you can choose the service, the professional in charge and the branch where you would like to take it. For special appointments outside Buenos Aires, you have to be ready to our news posted on our social networks. For further information, contact us via WhatsApp at 11 6159-2591"
       },
       "cta": {
-        "heading": "Ready for a Striking Look?",
-        "text": "Enhance your natural beauty with our eyelash styling services. Book your appointment now.",
-        "button": "Book Appointment"
+        "heading": "Ready for an impactful look?",
+        "text": "Enhance your natural beauty with our Lash Line services. Book your appointment now.",
+        "button": "Book Appointment",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "nanobladingCamouflage": {
@@ -360,24 +360,24 @@
         "subtitle": "The most advanced cosmetic eyebrow tattoo technique"
       },
       "pricingInfo": {
-        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
+        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Nanoblading session; it is non-refundable and does not lock in the price of your service:",
         "depositAmount": "Deposit AR$ 100,000.-"
       },
       "nanoblading": {
         "heading": "WHAT IS NANOBLADING By & Only MERY GARCIA?",
-        "p1": "It's the most advanced cosmetic eyebrow tattoo technique. If you're looking to improve the shape of your eyebrows, fill in areas with little to no hair growth, or cover scars, this service is for you.",
-        "p2": "It achieves excellent results on all skin types, with greater hyper-realism and an imperceptible finish. It causes less trauma, offers longer durability, and better color vibrancy. The procedure is done with a machine but with even smaller needles, allowing for infinite artistic finishes.",
-        "p3": "We recommend this technique for cases of alopecia, trichotillomania, mature or very thin skin, or oncology treatments, but it also provides optimal results on normal skin without growth issues and/or with scars.",
+        "p1": "It's the most advanced cosmetic tattoo technique for eyebrows. A unique and exclusive service provided by MG and her Staff. If you're looking to improve the shape of your eyebrows, fill in or add volume to areas with little to no hair growth, or cover scars, this service is the right one for you.",
+        "p2": "It achieves excellent results on all skin types, with greater hyper-realism and an imperceptible finish. It causes less trauma to the skin, offers greater durability, and better color vibrancy. The procedure is performed with a machine at the same depth as Nanoblading (very superficial) but with even smaller needles that allow for infinite artistic finishes (shadows, strokes, hair clusters, etc.) We recommend this technique for cases of alopecia, trichotillomania, mature or very thin skin, or oncology treatments. But it also provides optimal results on normal skin without growth issues and/or with scars.",
+        "p3": "More than four years of practice and constant refinements abroad resulted in Mery Garcia using Nanoblading last year to provide answers to all people seeking to improve their eyebrows through cosmetic tattooing.",
         "pricing": {
           "heading": "List Price (By & Only MERY GARCIA)",
           "session1": "First session: US$ 610.- (or US$ 420 in cash)",
           "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
-          "note": "A touch-up is considered the complementary service performed 30 to 60 days after the first Nanoblading service."
+          "note": "A touch-up is considered the complementary service performed 30 to 60 days after the first Nanoblading service. Once you've had your consultation, to book your appointment with Mery you will need to make a deposit that will count towards your Nanoblading service #ByMeryGarcia"
         }
       },
       "camouflage": {
         "heading": "WHAT IS CAMOUFLAGE?",
-        "p1": "It is a service that combines depigmentation, color correction, texture, and structure to IMPROVE THE APPEARANCE of a poorly done or deteriorated job from either Dermopigmentation or Microblading.",
+        "p1": "It is a service that combines depigmentation, color correction, texture, and structure to IMPROVE THE APPEARANCE of a poorly done or deteriorated job from either Dermopigmentation or Nanoblading.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nYour consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
         "pricing": {
           "heading": "List Price (Per Session)",
           "technique": "Mixed Technique: US$ 710.- (or US$ 475 in cash)",
@@ -387,31 +387,33 @@
         "casesHeading": "In the case of CAMOUFLAGE, there are three needs:",
         "cases": [
           {
-            "title": "EYEBROW WITH CORRECT PIGMENTATION, BUT INCORRECT SHAPE",
-            "description": "In this case, the eyebrow has the right color, but the shape is not harmonious. We will erase the excess borders to create a suitable shape. The number of sessions will depend on the intensity and depth of the ink. There must be a one-month gap between sessions."
+            "title": "EYEBROW WITH CORRECT PIGMENTATION, BUT WITH CORRECT SHAPE",
+            "description": "In this case, the eyebrow has the correct color for the client's skin, but the shape is not harmonious for their face.\n\nE.g. if the eyebrow were too thick, we will erase the excess borders to create a shape suited to the client's face.\n\nThe number of erase sessions will depend on the intensity and depth of the ink.\n\nIn this particular case, we avoid the color neutralization stage, since the color is fine and there's no need to change it, only erase it.\n\nOnce we have a suitable width, length and arch, we will perform the box design and texture with the Nanoblading technique.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly."
           },
           {
             "title": "EYEBROW WITH INCORRECT PIGMENTATION AND SHAPE",
-            "description": "In this case, the eyebrow has a disharmonious shape and an undesired color (bluish, grayish, etc.). The first step is to correct the color and erase the necessary contours. In a new session, we will design with the Nanoblading technique. There must be a one-month gap between sessions."
+            "description": "In this case, the eyebrow has a disharmonious shape for the client, plus an undesired color (bluish, grayish, greenish, etc.).\n\nThe first step is to correct the color to neutralize it, warming the ink if necessary.\n\nSince it also has an incorrect shape, e.g. it's too thick, we will also erase the necessary contours.\n\nOnce the eyebrow has healed and in a new session, we will perform the box design and texture with the Nanoblading technique.\n\nIn this same session, if needed, we can finish \"erasing\" the remnants, making this new camouflage session additional to the Nanoblading.\n\nOne month after the Nanoblading session, we evaluate whether it is necessary to intensify the strokes and finish perfecting the erasing/smoothing of any leftover ink.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly."
           },
           {
-            "title": "EYEBROW WITH INCORRECT PIGMENTATION, BUT CORRECT SHAPE",
-            "description": "In this case, the eyebrow has a harmonious shape, but the color is not desired. The first step is to correct the color. Once healed, in a new session, we will design with the Nanoblading technique. There must be a one-month gap between sessions."
+            "title": "EYEBROW WITH INCORRECT PIGMENTATION, BUT WITH CORRECT SHAPE",
+            "description": "In this case, the eyebrow has a harmonious shape for the client, but the color is not desired.\n\nThe first step is to correct the color to neutralize it, warming the ink and combined with a mild acid to dilute the pigment.\n\nOnce the eyebrow has healed and in a new session, we will perform the box design and texture with the Nanoblading technique.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly."
           }
         ]
       },
       "shared": {
         "procedureHeading": "PROCEDURE",
-        "procedureTextNano": "In the consultation, we define the shape and apply makeup to give you an approximate idea. The service is divided into two parts: the first session and, if necessary, a touch-up 30 to 60 days later. After 3 months, it is considered maintenance.",
-        "procedureTextCamu": "In the consultation, Mery will determine which of the three camouflage cases is yours. The number of sessions will depend on her judgment and your skin's response. After completing the camouflage, you can undergo Nanoblading (additional cost) for the desired texture.",
+        "procedureTextNano": "The first step is the consultation stage.\n\nIn the consultation we tell you what it's about, how it's done, how long it takes, how long the effect lasts, and the previous and post-care, which are essential.\n\nWe clear all your doubts so you're confident before proceeding.\n\nTogether with Mery and her Staff, you define the most natural shape for your face, the width and length you want to achieve, and at that moment she applies makeup filling in the parts that need it, so you have an approximate idea of how it would look.\n\nThe consultation is key to inform you and so you know the procedures, to confirm that you're suitable for it and that you can follow the aftercare guidelines.\n\nOnce you've had the consultation and are decided, you can book your first appointment for Nanoblading.\n\nThis is divided into 2 parts: The 1st session, and if necessary a touch-up or 2nd session, this will be performed between 30 and 60 days (not before or after); in order to evaluate the final healed work 100% taking into account the result and the person's desire.\n\nAfter these two stages and three months have passed since completing the service, it is considered maintenance.\n\nYou can book a maintenance appointment after this time, but we ALWAYS recommend that you have a visit so Mery can give you the ok, since many times it's the styling that gives the eyebrows the correct shape again, without needing to perform Nanoblading Maintenance and thus avoid over-working the area leaving the strokes compact and lifeless, completely losing the naturalness of the work.",
+        "procedureTextCamu": "The first step is the consultation stage.\n\nIn the consultation we tell you what it's about, how it's done, how long it takes, and the previous and post-care, which are essential.\n\nWe clear all your doubts so you're confident before proceeding.\n\nMery will determine which of the three camouflage cases is yours, being able to define the correction suited to your particular case.\n\nTogether you decide the most natural shape for your face, the width and length you want to achieve, and at that moment she applies makeup filling in the parts that need it, so you have an approximate idea of how it would look.\n\nThe consultation is key to inform you and so you know the procedures, to confirm that you're suitable for it and that you can follow the aftercare guidelines.\n\nOnce you've had the consultation and are decided, you can book your first appointment for Camouflage.\n\nThe number of sessions will be subject to Mery's judgment and each client's skin response.\n\nOnce you've completed your Camouflage sessions, you can undergo Nanoblading to give your eyebrows the desired texture.\n\nThe cost of the service includes the aftercare kit (distilled water and neutral soap).\n\nThe Nanoblading service has an additional cost to the Camouflage service.\n\n(See prices above)",
         "biosecurityHeading": "BIOSECURITY NORMS",
         "biosecurityText": "Like any incision, it requires strict standards: 100% disposable or sterilizable materials and a signed consent form. Rigorous hygiene and a personal commitment to aftercare are essential to prevent complications.",
         "pregnantWomenHeading": "PREGNANT WOMEN",
-        "pregnantWomenText": "As no studies confirm the service is harmless during pregnancy, we do not perform it. However, it can be done during lactation with express signed authorization from your doctor.",
+        "pregnantWomenTextNano": "As no studies confirm that Nanoblading is harmless during pregnancy, we do not perform this service. However, it can be done during lactation with express signed authorization from your doctor, and Nanoblading can be performed.",
+        "pregnantWomenTextCamu": "As no studies confirm that Camouflage is harmless during pregnancy, we do not perform this service. However, it can be done during lactation with express signed authorization from your doctor, and Camouflage can be performed.",
         "cta": {
           "heading": "Ready for the Eyebrows of Your Dreams?",
-          "text": "Trust the experts to achieve the natural, perfect look you've always wanted. Book your consultation today.",
-          "button": "Book Consultation"
+          "text": "Trust our experts to achieve the natural and perfect look you've always wanted. Book your consultation today.",
+          "button": "Book Consultation",
+          "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
         }
       }
     },
@@ -421,11 +423,11 @@
         "subtitle": "An optical effect of greater volume and density for your look."
       },
       "intro": {
-        "text": "⚡Lashes Line ⚡ New Service in #TattoCosmetic #ByMeryGarcia! What are we looking for? A super #Natural effect. We don't simulate an outlined eye, but rather an optical illusion of greater volume and density. It coexists perfectly with other services, like lash lifting and tinting, and of course, spectacular eyebrows by Mery Garcia & Staff. ✨Get ready to show off an incredible, but above all, natural look.✨"
+        "text": "⚡Lashes Line ⚡New Service in #TattoCosmetic #ByMeryGarcia What are we looking for? A super #Natural effect, we don't simulate an outlined eye, but rather an optical illusion of greater volume and density. It coexists perfectly with other services, like lash lifting and tinting, and of course, spectacular eyebrows By Mery Garcia & Staff. ✨Preparate to show off an incredible, but above all, natural look ✨"
       },
       "pricing": {
         "depositTitle": "Consultation and Deposit",
-        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
+        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lashes Line session; it is non-refundable and does not lock in the price of your service:",
         "depositAmount": "Deposit AR$ 100,000.-",
         "priceListTitle": "Service List Price",
         "session1": "First session: US$ 480.- (or US$ 320 in cash)",
@@ -433,9 +435,10 @@
         "maintenance": "Maintenance: US$ 480.- (or US$ 320 in cash)"
       },
       "cta": {
-        "heading": "Ready to Enhance Your Gaze?",
-        "text": "Discover the secret to denser, more defined lashes with an imperceptible finish. Book your consultation.",
-        "button": "Book Consultation"
+        "heading": "Ready to Enhance Your Look?",
+        "text": "Discover the secret to fuller and more defined lashes with an imperceptible finish. Book your consultation.",
+        "button": "Book Consultation",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "nanoscalp": {
@@ -468,9 +471,10 @@
         "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials and a signed consent form. Rigorous hygiene and a commitment to caring for your skin are essential."
       },
       "cta": {
-        "heading": "Ready for a Change?",
-        "text": "Regain your hair's density with a natural and undetectable finish. Schedule your consultation for a personalized assessment.",
-        "button": "Schedule Consultation"
+        "heading": "Ready for the Change?",
+        "text": "Regain your hair density with a natural and undetectable finish. Schedule your consultation for a personalized evaluation.",
+        "button": "Schedule Consultation",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "lipBlush": {
@@ -483,9 +487,8 @@
       },
       "whatIsIt": {
         "heading": "WHAT IS LIP BLUSH?",
-        "p1": "It's a cosmetic tattoo service that provides color and definition with a hyper-realistic finish. We're not looking for a made-up mouth effect, but rather by emulating the lip texture we gain a younger and fresher expression without losing naturalness.",
-        "p2": "It doesn't add volume, it doesn't create shine, lips without makeup with much more freshness. No powder, no texture, as if the lip had natural color 💋🍒",
-        "p3": "The result lasts between 12 and 24 months depending on each person. The procedure consists of a first session and a touch-up to finish defining the design that Mery created for you at 30 or 60 days."
+        "p1": "It is a cosmetic tattoo service that lasts between 18 and 24 months.\n\nIt consists of giving color to the lips, respecting the person's natural coloration.\n\nWe are not looking for a makeup effect, but rather a blushed mouth effect. No shine. Without powder, without texture, as if the lip had color 💋🍒",
+        "p2": "The procedure consists of a first session and a touch-up to finish defining perfect lips at 30 or 60 days."
       },
       "pricing": {
         "depositTitle": "Consultation and Deposit",
@@ -493,10 +496,10 @@
         "depositAmount": "Deposit AR$ 100,000.-",
         "priceListTitle": "Service List Price with Mery Garcia",
         "firstSessionLabel": "First Session",
-        "touchUpLabel": "Touch-up",
-        "maintenanceLabel": "Maintenance",
         "session1": "US$ 650.- (or US$ 450 in cash)",
+        "touchUpLabel": "Touch-up",
         "touchUp": "US$ 317.- (or US$ 180 in cash)",
+        "maintenanceLabel": "Maintenance",
         "maintenance": "US$ 650.- (or US$ 475 in cash)"
       },
       "importantInfo": {
@@ -509,7 +512,8 @@
       "cta": {
         "heading": "Ready for Your Dream Lips?",
         "text": "Discover the secret to naturally perfect lips with a hyper-realistic finish. Book your consultation with Mery.",
-        "button": "Book Consultation"
+        "button": "Book Consultation",
+        "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
     "paramedicalTattoo": {
@@ -519,37 +523,79 @@
       },
       "areola": {
         "heading": "WHAT IS AREOLA HARMONIZATION?",
-        "p1": "It is a micropigmentation technique used to conceal the appearance of scars, making them blend with the surrounding skin tone while maintaining realism and naturalness. This procedure is recommended for individuals with post-surgical scars, aesthetic injuries to the areola, or for those wishing to correct asymmetries.",
+        "p1": "Areola Harmonization is a technique that uses micropigmentation or cosmetic tattoo to conceal the appearance of scars, making them blend with the surrounding skin tone without losing realism and naturalness.\n\nThis technique involves the implantation of pigments in the scar area to match the color and minimize its visibility.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nThis procedure is recommended for individuals with post-surgical scars, caused by aesthetic injuries to the areola, or for those wishing to correct asymmetries.\n\nIt is important to note that there must be a 6-week gap between sessions for the skin to heal properly.",
         "pricing": {
-          "heading": "List Price",
+          "heading": "Service List Price",
           "deposit": "Deposit: AR$ 100,000.-",
           "session1": "First session: US$ 480.- (or US$ 420 in cash)",
           "touchUp": "Touch-up: US$ 240.- (or US$ 180 in cash)",
-          "note": "A touch-up is the complementary service performed 6 weeks after the first session."
+          "note": "A touch-up is considered the complementary service performed 6 weeks after the first session. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
+        },
+        "procedure": {
+          "heading": "PROCEDURE",
+          "text": "The first step is the consultation phase.\n\nIn the consultation, we tell you what it's about, how it's done, how long it takes, the pre- and post-care, which are essential.\n\nWe clear all your doubts so you're completely sure before proceeding.\n\nThe consultation is key to inform you and so you know the procedures, to confirm that you're suitable for it and that you can follow the aftercare guidelines.\n\nOnce you've had the consultation and are decided, you can book your first appointment for Scar Camouflage.\n\nThe number of sessions will be subject to Mery's judgment and each client's skin response.\n\nThe service cost includes the aftercare kit (distilled water and neutral soap)."
+        },
+        "biosecurity": {
+          "heading": "BIOSECURITY NORMS",
+          "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials, completion and signing of the person's consent form, and in some cases, a doctor's consent.\n\nRigorous hygiene and the person's commitment to caring for their skin with appropriate elements are essential to prevent infections, low pigmentation, or pigment changes, among others."
+        },
+        "importantInfo": {
+          "heading": "IMPORTANT",
+          "text": "To undergo this procedure, you must present a medical certificate confirming that we can perform the service.\n\nATTACH MEDICAL CERTIFICATE"
         }
       },
       "nipple": {
         "heading": "WHAT IS NIPPLE RECONSTRUCTION?",
-        "p1": "This is a 3D cosmetic tattoo technique that can help correct asymmetries, improve the appearance of scars, or cover imperfections in the areola and nipple area. It is recommended for individuals with post-surgical scars, breast reconstruction, or scars from injuries.",
+        "p1": "It is a 3D cosmetic tattoo technique that can help correct asymmetries, improve the appearance of scars, or cover imperfections in the areola and nipple area.\n\nThis procedure is recommended for individuals with post-surgical scars, breast reconstruction, scars caused by injuries.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly.",
         "pricing": {
-          "heading": "List Price",
+          "heading": "Service List Price",
           "deposit": "Deposit: AR$ 100,000.-",
           "session1": "First session: US$ 520.- (or US$ 450 in cash)",
           "touchUp": "Touch-up: US$ 240.- (or US$ 180 in cash)",
-          "note": "A touch-up is the complementary service performed 6 weeks after the first session."
+          "note": "A touch-up is considered the complementary service performed 6 weeks after the first session. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
+        },
+        "procedure": {
+          "heading": "PROCEDURE",
+          "text": "The first step is the consultation phase.\n\nIn the consultation, we tell you what it's about, how it's done, how long it takes, the pre- and post-care, which are essential.\n\nWe clear all your doubts so you're completely sure before proceeding.\n\nThe consultation is key to inform you and so you know the procedures, to confirm that you're suitable for it and that you can follow the aftercare guidelines.\n\nOnce you've had the consultation and are decided, you can book your first appointment for NIPPLE RECONSTRUCTION.\n\nThe number of sessions will be subject to Mery's judgment and each client's skin response.\n\nThe service cost includes the aftercare kit (distilled water and neutral soap)."
+        },
+        "biosecurity": {
+          "heading": "BIOSECURITY NORMS",
+          "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials, completion and signing of the person's consent form, and in some cases, a doctor's consent.\n\nRigorous hygiene and the person's commitment to caring for their skin with appropriate elements are essential to prevent infections, low pigmentation, or pigment changes, among others."
+        },
+        "importantInfo": {
+          "heading": "IMPORTANT",
+          "text": "To undergo this procedure, you must present a medical certificate confirming that we can perform the service.\n\nATTACH MEDICAL CERTIFICATE"
+        }
+      },
+      "nanoscalp": {
+        "heading": "WHAT IS NANO SCALP?",
+        "p1": "It is a cosmetic tattoo that consists of implanting pigment into the scalp and skin to create hyper-realistic hair lines.\n\nFrom the first session, you will notice an optical effect of greater hair density, in a natural way that will increase progressively with each session.\n\nThis procedure is recommended for people with post-lift scars, lack of hair growth, cowlicks, up to fibrosing frontal alopecia.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly.",
+        "pricing": {
+          "heading": "Service List Price",
+          "deposit": "Deposit: AR$ 100,000.-",
+          "session1": "First session: US$ 520.- (or US$ 450 in cash)",
+          "session2": "Second session: US$ 520.- (or US$ 450 in cash)",
+          "note": "A second complementary session is required 30 to 60 days after the first Nano Scalp service. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
+        },
+        "procedure": {
+          "heading": "PROCEDURE",
+          "text": "The first step is the consultation phase.\n\nIn the consultation, we tell you what it's about, how it's done, how long it takes, the pre- and post-care, which are essential.\n\nWe clear all your doubts so you're completely sure before proceeding.\n\nThe consultation is key to inform you and so you know the procedures, to confirm that you're suitable for it and that you can follow the aftercare guidelines.\n\nOnce you've had the consultation and are decided, you can book your first appointment for Nano Scalp.\n\nThe number of sessions will be subject to Mery's judgment and each client's skin response.\n\nThe service cost includes the aftercare kit (distilled water and neutral soap)."
+        },
+        "biosecurity": {
+          "heading": "BIOSECURITY NORMS",
+          "text": "Like any incision, it requires strict biosecurity standards, such as 100% disposable or sterilizable materials, completion and signing of the person's consent form, and in some cases, a doctor's consent.\n\nRigorous hygiene and the person's commitment to caring for their skin with appropriate elements are essential to prevent infections, low pigmentation, or pigment changes, among others."
+        },
+        "importantInfo": {
+          "heading": "IMPORTANT",
+          "text": "To undergo this procedure, you must present a medical certificate confirming that we can perform the service.\n\nATTACH MEDICAL CERTIFICATE"
         }
       },
       "shared": {
-        "biosecurityHeading": "BIOSECURITY NORMS",
-        "biosecurityText": "Like any incision, it requires strict standards: 100% disposable materials and a signed consent form. Rigorous hygiene and a personal commitment to aftercare are essential to prevent complications.",
-        "procedureHeading": "CONSULTATION PROCEDURE",
-        "procedureText": "The first step is the consultation. We explain the procedure and answer all your questions. The number of sessions will depend on Mery's assessment and your skin's response. The service cost includes the aftercare kit.",
-        "importantInfoHeading": "IMPORTANT: MEDICAL CERTIFICATE",
-        "importantInfoText": "To undergo this procedure, you must present a medical certificate confirming that we can perform the service.",
         "cta": {
           "heading": "A Step Towards Restoration",
           "text": "Our artistic and professional approach is here to help you. Schedule a confidential consultation to discuss your needs.",
-          "button": "Schedule Confidential Consultation"
+          "button": "Schedule Confidential Consultation",
+          "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
         }
       }
     }

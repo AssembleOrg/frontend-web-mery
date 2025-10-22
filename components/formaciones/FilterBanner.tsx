@@ -9,6 +9,7 @@ interface FilterBannerProps {
   onClick: () => void;
   isActive: boolean;
   showRibbon?: boolean;
+  imageClassName?: string;
 }
 
 export function FilterBanner({
@@ -18,6 +19,7 @@ export function FilterBanner({
   onClick,
   isActive,
   showRibbon = false,
+  imageClassName,
 }: FilterBannerProps) {
   return (
     <div className='relative flex-1 md:flex-none'>
@@ -37,7 +39,7 @@ export function FilterBanner({
             src={image}
             alt={title}
             fill
-            className='object-cover'
+            className={`object-cover ${imageClassName || ''}`}
             sizes='(max-width: 768px) 100vw, 50vw'
             priority
           />
