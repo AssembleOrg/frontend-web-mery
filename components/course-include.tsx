@@ -9,6 +9,27 @@ interface CourseIncludeProps {
 }
 
 export default function CourseInclude({ icon: Icon, iconImage, text, className = '' }: CourseIncludeProps) {
+  // Function to render text with bold support
+  const renderTextWithBold = (inputText: string) => {
+    const parts = inputText.split(/(\*\*[^*]+\*\*)/g);
+    
+    return (
+      <span className='text-sm font-primary text-[#2b2b2b] leading-relaxed' style={{ fontWeight: 300 }}>
+        {parts.map((part, index) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            const boldText = part.slice(2, -2);
+            return (
+              <span key={index} className='font-primary-medium'>
+                {boldText}
+              </span>
+            );
+          }
+          return <span key={index}>{part}</span>;
+        })}
+      </span>
+    );
+  };
+
   return (
     <div className={`flex items-center gap-3 p-4 bg-[#faf6f7] rounded-lg border border-[#f0e6e8] ${className}`}>
       <div className='flex-shrink-0 w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm border border-[#e9ecef]'>
@@ -24,7 +45,7 @@ export default function CourseInclude({ icon: Icon, iconImage, text, className =
           <Icon className='w-6 h-6 text-[#660e1b]' />
         ) : null}
       </div>
-      <span className='text-sm font-medium text-[#2b2b2b] leading-relaxed'>{text}</span>
+      {renderTextWithBold(text)}
     </div>
   );
 }

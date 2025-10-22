@@ -4,6 +4,8 @@ export interface CourseIncludeItem {
   icon?: LucideIcon;
   iconImage?: string;
   text: string;
+  texto?: string; // Alias para compatibilidad con JSONB del backend
+  url_icon?: string; // URL del icono desde el backend
 }
 
 export interface DownloadableFile {
@@ -75,10 +77,24 @@ export interface Course {
   isPurchased?: boolean; // true si el usuario compró específicamente este curso
 
   // Campos adicionales de VideoCategory (priorizados sobre modalContent)
-  long_description?: string; // Descripción detallada (prioridad sobre modalContent.detailedDescription)
-  target?: string; // Público objetivo (prioridad sobre modalContent.targetAudience)
+  long_description?: string; // Descripción detallada ES (prioridad sobre modalContent.detailedDescription)
+  long_description_en?: string; // Descripción detallada EN
+  target?: string; // Público objetivo ES (prioridad sobre modalContent.targetAudience)
+  target_en?: string; // Público objetivo EN
+  
+  // Modalidad del curso
+  modalidad?: string; // Modalidad ES (ej: "Online", "Presencial", "Híbrido")
+  modalidad_en?: string; // Modalidad EN
+  
+  // Lo que aprenderás
+  learn?: string; // Qué aprenderás ES
+  learn_en?: string; // Qué aprenderás EN
+  
+  // Lo que incluye el curso (formato estructurado JSONB)
+  includes_category?: CourseIncludeItem[]; // Incluye ES (array de {texto, url_icon})
+  includes_category_en?: CourseIncludeItem[]; // Incluye EN (array de {texto, url_icon})
 
-  // Contenido del modal (detalles completos)
+  // Contenido del modal (detalles completos - legado)
   modalContent?: CourseModalContent;
 
   // Lecciones (para plataforma de aprendizaje)

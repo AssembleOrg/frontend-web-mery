@@ -46,7 +46,9 @@ export default function EditarCursoPage() {
 
         // Load videos for this category
         await fetchVideos(courseId);
-        const courseVideos = useAdminStore.getState().videos;
+        
+        // ✅ FIX: Filtrar SOLO los videos de este curso específico
+        const courseVideos = useAdminStore.getState().getVideosByCategory(courseId);
 
         // Convert videos to lessons format and sort by order
         const lessons = courseVideos
@@ -88,7 +90,15 @@ export default function EditarCursoPage() {
         slug: courseData.slug,
         description: courseData.description,
         long_description: courseData.long_description || '',
+        long_description_en: courseData.long_description_en || '',
         target: courseData.target || '',
+        target_en: courseData.target_en || '',
+        modalidad: courseData.modalidad || '',
+        modalidad_en: courseData.modalidad_en || '',
+        learn: courseData.learn || '',
+        learn_en: courseData.learn_en || '',
+        includes_category: courseData.includes_category || [],
+        includes_category_en: courseData.includes_category_en || [],
         image: courseData.image,
         priceARS: courseData.priceARS || 0,
         priceUSD: courseData.priceUSD || 0,

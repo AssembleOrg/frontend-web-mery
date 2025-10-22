@@ -9,6 +9,26 @@ interface PreviewStepProps {
 }
 
 export function PreviewStep({ formData }: PreviewStepProps) {
+  // Helper to render text with bold markdown
+  const renderPreviewText = (text: string) => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+    
+    return (
+      <>
+        {parts.map((part, index) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            const boldText = part.slice(2, -2);
+            return (
+              <strong key={index} className='font-semibold'>
+                {boldText}
+              </strong>
+            );
+          }
+          return <span key={index}>{part}</span>;
+        })}
+      </>
+    );
+  };
   return (
     <div className='space-y-6'>
       <div>
@@ -128,17 +148,105 @@ export function PreviewStep({ formData }: PreviewStepProps) {
 
         {formData.long_description && (
           <div>
-            <span className='text-sm text-gray-600'>Descripción Detallada:</span>
+            <span className='text-sm text-gray-600'>Descripción Detallada (ES):</span>
             <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {formData.long_description}
+              {renderPreviewText(formData.long_description)}
+            </p>
+          </div>
+        )}
+
+        {formData.long_description_en && (
+          <div>
+            <span className='text-sm text-gray-600'>Detailed Description (EN):</span>
+            <p className='mt-1 text-gray-900 whitespace-pre-line'>
+              {renderPreviewText(formData.long_description_en)}
             </p>
           </div>
         )}
 
         {formData.target && (
           <div>
-            <span className='text-sm text-gray-600'>Público Objetivo:</span>
+            <span className='text-sm text-gray-600'>Público Objetivo (ES):</span>
             <p className='mt-1 text-gray-900'>{formData.target}</p>
+          </div>
+        )}
+
+        {formData.target_en && (
+          <div>
+            <span className='text-sm text-gray-600'>Target Audience (EN):</span>
+            <p className='mt-1 text-gray-900'>{formData.target_en}</p>
+          </div>
+        )}
+
+        {formData.modalidad && (
+          <div>
+            <span className='text-sm text-gray-600'>Modalidad (ES):</span>
+            <p className='mt-1 text-gray-900 whitespace-pre-line'>
+              {renderPreviewText(formData.modalidad)}
+            </p>
+          </div>
+        )}
+
+        {formData.modalidad_en && (
+          <div>
+            <span className='text-sm text-gray-600'>Modality (EN):</span>
+            <p className='mt-1 text-gray-900 whitespace-pre-line'>
+              {renderPreviewText(formData.modalidad_en)}
+            </p>
+          </div>
+        )}
+
+        {formData.learn && (
+          <div>
+            <span className='text-sm text-gray-600'>¿Qué aprenderás? (ES):</span>
+            <p className='mt-1 text-gray-900 whitespace-pre-line'>
+              {renderPreviewText(formData.learn)}
+            </p>
+          </div>
+        )}
+
+        {formData.learn_en && (
+          <div>
+            <span className='text-sm text-gray-600'>What will you learn? (EN):</span>
+            <p className='mt-1 text-gray-900 whitespace-pre-line'>
+              {renderPreviewText(formData.learn_en)}
+            </p>
+          </div>
+        )}
+
+        {formData.includes_category && formData.includes_category.length > 0 && (
+          <div>
+            <span className='text-sm text-gray-600'>¿Qué incluye? (ES):</span>
+            <div className='mt-2 space-y-2'>
+              {formData.includes_category.map((item, index) => (
+                <div key={index} className='flex items-start gap-2 p-2 bg-gray-50 rounded'>
+                  {item.url_icon && (
+                    <span className='text-xs text-gray-500'>🖼️</span>
+                  )}
+                  <p className='text-sm text-gray-900'>
+                    {renderPreviewText(item.texto || item.text || '')}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {formData.includes_category_en && formData.includes_category_en.length > 0 && (
+          <div>
+            <span className='text-sm text-gray-600'>What does it include? (EN):</span>
+            <div className='mt-2 space-y-2'>
+              {formData.includes_category_en.map((item, index) => (
+                <div key={index} className='flex items-start gap-2 p-2 bg-gray-50 rounded'>
+                  {item.url_icon && (
+                    <span className='text-xs text-gray-500'>🖼️</span>
+                  )}
+                  <p className='text-sm text-gray-900'>
+                    {renderPreviewText(item.texto || item.text || '')}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

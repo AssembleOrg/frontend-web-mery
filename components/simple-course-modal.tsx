@@ -423,7 +423,44 @@ export default function SimpleCourseModal({
               )}
             </div>
 
-            {course.modalContent?.includes &&
+            {/* Modalidad */}
+            {course.modalidad && course.modalidad.trim() !== '' && (
+              <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
+                <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-3 text-center'>
+                  Modalidad
+                </h3>
+                {renderTextWithParagraphs(course.modalidad)}
+              </div>
+            )}
+
+            {/* ¿Qué aprenderás? */}
+            {course.learn && course.learn.trim() !== '' && (
+              <div className='bg-white p-6 rounded-lg border border-[#f0e6e8]'>
+                <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-4'>
+                  ¿Qué vas a aprender?
+                </h3>
+                {renderTextWithParagraphs(course.learn)}
+              </div>
+            )}
+
+            {/* ¿Qué incluye? - Prioridad a includes_category sobre modalContent.includes */}
+            {(course.includes_category && course.includes_category.length > 0) ? (
+              <div>
+                <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
+                  ¿Qué incluye este curso?
+                </h3>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {course.includes_category.map((item, index) => (
+                    <CourseInclude
+                      key={index}
+                      iconImage={item.url_icon}
+                      text={item.texto || item.text || ''}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              course.modalContent?.includes &&
               course.modalContent.includes.length > 0 && (
                 <div>
                   <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
@@ -440,7 +477,8 @@ export default function SimpleCourseModal({
                     ))}
                   </div>
                 </div>
-              )}
+              )
+            )}
 
             {course.modalContent?.specialNotes && (
               <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-4 rounded-lg text-center'>

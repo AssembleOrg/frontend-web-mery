@@ -1,8 +1,8 @@
 'use client';
 
-import { CourseCreateInput } from '@/types/course';
+import { CourseCreateInput, CourseIncludeItem } from '@/types/course';
 import Image from 'next/image';
-import { Upload } from 'lucide-react';
+import { Upload, Plus, Trash2 } from 'lucide-react';
 import { useModal } from '@/contexts/modal-context';
 
 interface BasicInfoStepProps {
@@ -13,6 +13,30 @@ interface BasicInfoStepProps {
 
 export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoStepProps) {
   const { showError } = useModal();
+  
+  // Helper functions for includes_category management
+  const addIncludeItem = (language: 'es' | 'en') => {
+    const field = language === 'es' ? 'includes_category' : 'includes_category_en';
+    const currentItems = formData[field] || [];
+    updateFormData({
+      [field]: [...currentItems, { texto: '', url_icon: '' }],
+    });
+  };
+
+  const updateIncludeItem = (language: 'es' | 'en', index: number, updates: Partial<CourseIncludeItem>) => {
+    const field = language === 'es' ? 'includes_category' : 'includes_category_en';
+    const currentItems = [...(formData[field] || [])];
+    currentItems[index] = { ...currentItems[index], ...updates };
+    updateFormData({ [field]: currentItems });
+  };
+
+  const removeIncludeItem = (language: 'es' | 'en', index: number) => {
+    const field = language === 'es' ? 'includes_category' : 'includes_category_en';
+    const currentItems = formData[field] || [];
+    updateFormData({
+      [field]: currentItems.filter((_, i) => i !== index),
+    });
+  };
   const handlePriceARSChange = (value: string) => {
     const priceARS = parseFloat(value) || 0;
     updateFormData({ priceARS });
@@ -167,7 +191,7 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
       {/* Target Audience */}
       <div>
         <label htmlFor='target' className='block text-sm font-medium text-gray-700 mb-2'>
-          Público Objetivo
+          Público Objetivo (ES)
           <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - ¿A quién está dirigido?)</span>
         </label>
         <textarea
@@ -181,6 +205,226 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         <p className='mt-1 text-xs text-gray-500'>
           {formData.target?.length || 0} caracteres
         </p>
+      </div>
+
+      {/* Target Audience EN */}
+      <div>
+        <label htmlFor='target_en' className='block text-sm font-medium text-gray-700 mb-2'>
+          Target Audience (EN)
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional - Who is it for?)</span>
+        </label>
+        <textarea
+          id='target_en'
+          value={formData.target_en || ''}
+          onChange={(e) => updateFormData({ target_en: e.target.value })}
+          rows={4}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Ex: This course is designed for beauty professionals who want to perfect their techniques, from beginners with basic knowledge to experts looking to update their methods...'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.target_en?.length || 0} caracteres
+        </p>
+      </div>
+
+      {/* Long Description EN */}
+      <div>
+        <label htmlFor='long_description_en' className='block text-sm font-medium text-gray-700 mb-2'>
+          Detailed Description (EN)
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional - Will be shown in course modal)</span>
+        </label>
+        <textarea
+          id='long_description_en'
+          value={formData.long_description_en || ''}
+          onChange={(e) => updateFormData({ long_description_en: e.target.value })}
+          rows={6}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Complete description that will appear when opening the course modal. You can use double line breaks to separate paragraphs. Use **text** for bold.'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.long_description_en?.length || 0} characters • Tip: Use double line breaks for paragraphs, **text** for bold
+        </p>
+      </div>
+
+      {/* Modalidad */}
+      <div>
+        <label htmlFor='modalidad' className='block text-sm font-medium text-gray-700 mb-2'>
+          Modalidad (ES)
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional)</span>
+        </label>
+        <textarea
+          id='modalidad'
+          value={formData.modalidad || ''}
+          onChange={(e) => updateFormData({ modalidad: e.target.value })}
+          rows={3}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Ej: Formación **100% online** con acceso inmediato. Puedes usar dobles saltos de línea para párrafos y **texto** para negritas.'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.modalidad?.length || 0} caracteres • Tip: Usa dobles saltos de línea para párrafos, **texto** para negritas
+        </p>
+      </div>
+
+      {/* Modalidad EN */}
+      <div>
+        <label htmlFor='modalidad_en' className='block text-sm font-medium text-gray-700 mb-2'>
+          Modality (EN)
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional)</span>
+        </label>
+        <textarea
+          id='modalidad_en'
+          value={formData.modalidad_en || ''}
+          onChange={(e) => updateFormData({ modalidad_en: e.target.value })}
+          rows={3}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Ex: **100% online** training with immediate access. Use double line breaks for paragraphs and **text** for bold.'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.modalidad_en?.length || 0} characters • Tip: Use double line breaks for paragraphs, **text** for bold
+        </p>
+      </div>
+
+      {/* Learn */}
+      <div>
+        <label htmlFor='learn' className='block text-sm font-medium text-gray-700 mb-2'>
+          ¿Qué vas a aprender? (ES)
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional)</span>
+        </label>
+        <textarea
+          id='learn'
+          value={formData.learn || ''}
+          onChange={(e) => updateFormData({ learn: e.target.value })}
+          rows={5}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='Técnicas **avanzadas** de aplicación de pigmento. Cada línea será un punto separado. Usa **texto** para negritas y dobles saltos de línea para párrafos.'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.learn?.length || 0} caracteres • Tip: Usa saltos de línea simples para listas, **texto** para negritas
+        </p>
+      </div>
+
+      {/* Learn EN */}
+      <div>
+        <label htmlFor='learn_en' className='block text-sm font-medium text-gray-700 mb-2'>
+          What will you learn? (EN)
+          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional)</span>
+        </label>
+        <textarea
+          id='learn_en'
+          value={formData.learn_en || ''}
+          onChange={(e) => updateFormData({ learn_en: e.target.value })}
+          rows={5}
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          placeholder='**Advanced** pigment application techniques. Each line will be a separate point. Use **text** for bold and double line breaks for paragraphs.'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          {formData.learn_en?.length || 0} characters • Tip: Use single line breaks for lists, **text** for bold
+        </p>
+      </div>
+
+      {/* Includes Category (ES) */}
+      <div className='space-y-3'>
+        <div className='flex items-center justify-between'>
+          <label className='block text-sm font-medium text-gray-700'>
+            ¿Qué incluye el curso? (ES)
+            <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - Lista estructurada)</span>
+          </label>
+          <button
+            type='button'
+            onClick={() => addIncludeItem('es')}
+            className='flex items-center gap-1 px-3 py-1 text-sm bg-[#660e1b] text-white rounded-lg hover:bg-[#4a0a13] transition-colors'
+          >
+            <Plus className='w-4 h-4' />
+            Agregar ítem
+          </button>
+        </div>
+        
+        {formData.includes_category && formData.includes_category.length > 0 ? (
+          <div className='space-y-2'>
+            {formData.includes_category.map((item, index) => (
+              <div key={index} className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'>
+                <div className='flex-1 space-y-2'>
+                  <input
+                    type='text'
+                    value={item.texto || item.text || ''}
+                    onChange={(e) => updateIncludeItem('es', index, { texto: e.target.value, text: e.target.value })}
+                    placeholder='Texto del ítem (ej: Videos HD de alta calidad)'
+                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                  />
+                  <input
+                    type='text'
+                    value={item.url_icon || ''}
+                    onChange={(e) => updateIncludeItem('es', index, { url_icon: e.target.value })}
+                    placeholder='URL del icono (opcional, ej: /icons/video.svg)'
+                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                  />
+                </div>
+                <button
+                  type='button'
+                  onClick={() => removeIncludeItem('es', index)}
+                  className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
+                  title='Eliminar ítem'
+                >
+                  <Trash2 className='w-4 h-4' />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className='text-sm text-gray-500 italic'>No hay ítems agregados. Haz clic en &quot;Agregar ítem&quot; para empezar.</p>
+        )}
+      </div>
+
+      {/* Includes Category (EN) */}
+      <div className='space-y-3'>
+        <div className='flex items-center justify-between'>
+          <label className='block text-sm font-medium text-gray-700'>
+            What does the course include? (EN)
+            <span className='ml-2 text-xs font-normal text-gray-500'>(Optional - Structured list)</span>
+          </label>
+          <button
+            type='button'
+            onClick={() => addIncludeItem('en')}
+            className='flex items-center gap-1 px-3 py-1 text-sm bg-[#660e1b] text-white rounded-lg hover:bg-[#4a0a13] transition-colors'
+          >
+            <Plus className='w-4 h-4' />
+            Add item
+          </button>
+        </div>
+        
+        {formData.includes_category_en && formData.includes_category_en.length > 0 ? (
+          <div className='space-y-2'>
+            {formData.includes_category_en.map((item, index) => (
+              <div key={index} className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'>
+                <div className='flex-1 space-y-2'>
+                  <input
+                    type='text'
+                    value={item.texto || item.text || ''}
+                    onChange={(e) => updateIncludeItem('en', index, { texto: e.target.value, text: e.target.value })}
+                    placeholder='Item text (ex: High-quality HD videos)'
+                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                  />
+                  <input
+                    type='text'
+                    value={item.url_icon || ''}
+                    onChange={(e) => updateIncludeItem('en', index, { url_icon: e.target.value })}
+                    placeholder='Icon URL (optional, ex: /icons/video.svg)'
+                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                  />
+                </div>
+                <button
+                  type='button'
+                  onClick={() => removeIncludeItem('en', index)}
+                  className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
+                  title='Remove item'
+                >
+                  <Trash2 className='w-4 h-4' />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className='text-sm text-gray-500 italic'>No items added. Click &quot;Add item&quot; to start.</p>
+        )}
       </div>
 
       {/* Precios Bimonetarios */}

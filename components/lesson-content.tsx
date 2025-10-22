@@ -21,217 +21,20 @@ export default function LessonContent({
   );
 
   // Contenido específico por curso y lección usando courseId + lesson.order
+  // Este objeto debe llenarse dinámicamente desde el backend o lesson.description
   const courseContent: Record<
     string,
     Record<number, { content: string; downloads: any[] }>
   > = {
-    // ============================================
-    // CURSO: Autostyling Estilismo de cejas
-    // ID: cmgiq73k90000li1vnzzy7l39
-    // ============================================
-    cmgiq73k90000li1vnzzy7l39: {
-      0: {
-        content: `En este capítulo podrás aprender:
-
-    Las fases del ciclo vital del pelo.
-    Deficiencias y anomalías en el crecimiento del vello.
-    Como crear la caja, nuestra principal herramienta de diseño.
-    Partes de la Ceja.
-    Tiempos del pelo.`,
-        downloads: [],
-      },
-      1: {
-        content: `En este capítulo podrás aprender:
-
-    Concepto de estructura (proporciones aceptables)
-    Definición de Textura o trama (disposición del pelo)
-    Densidad (proporciones correctas)`,
-        downloads: [],
-      },
-      2: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio de Modelado de Cejas. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/estilismo-cejas/Servicios-Modelado.pdf'],
-      },
-      3: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio de Laminado o Alisado de Cejas. Conocé todas las herramientas e insumos que utilizo y que recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/estilismo-cejas/Servicios-Laminado.pdf'],
-      },
-      4: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestros servicios de Maquillaje hiper realista de Cejas. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/estilismo-cejas/Servicios-Maquillaje.pdf'],
-      },
-      5: {
-        content: `En este capítulo te cuento como creé esta increíble técnica que brinda respuesta a infinidad de casos. Sus fundamentos y su lógica. Porque todo tiene una explicación te voy a compartir todo acerca de este servicio exclusivo By Mery Garcia.`,
-        downloads: [],
-      },
-      6: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio exclusivo: Refill created By Mery Garcia. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/refill/Servicios-Refill.pdf'],
-      },
-      7: {
-        content: `En este capítulo te cuento como creé esta increíble técnica que brinda respuesta a infinidad de casos. Sus fundamentos y su lógica. Porque todo tiene una explicación te voy a compartir todo acerca de este servicio exclusivo By Mery Garcia.`,
-        downloads: [],
-      },
-      8: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio exclusivo: Refill created By Mery Garcia. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: [],
-      },
-      9: {
-        content: `En este video te muestro como realizar tus prácticas para poder aplicar todos los conceptos aprendidos acerca de esta técnica..`,
-        downloads: [],
-      },
-    },
-
-    // ============================================
-    // CURSO: Estilismo de ceja
-    // ID: cmghaunrh0000gxi93jbbd0oa
-    // ============================================
-    cmghaunrh0000gxi93jbbd0oa: {
-      0: {
-        content: `En este capítulo podrás aprender:
-    Las fases del ciclo vital del pelo.
-    Deficiencias y anomalías en el crecimiento del vello.
-    Como crear la caja, nuestra principal herramienta de diseño.
-    Partes de la Ceja.  Tiempos del pelo.`,
-        downloads: [
-          '/pdf-mery/estilismo-cejas/Estilismo-de-Cejas-Capitulo-I.pdf',
-          '/pdf-mery/mat-consultas/Mat-de-consulta-Las-cejas-a-traves-de-las-decadas.pdf',
-          '/pdf-mery/mat-consultas/Mat-de-consulta-Visagismo.pdf',
-        ],
-      },
-      1: {
-        content: `En este capítulo podrás aprender:
-    Concepto de estructura (proporciones aceptables)
-    Definición de Textura o trama (disposición del pelo)
-    Densidad (proporciones correctas)`,
-        downloads: [
-          '/pdf-mery/estilismo-cejas/Estilismo-de-Cejas-Capitulo-II.pdf',
-        ],
-      },
-      2: {
-        content: `
-
-En este video te muestro como realizar tus prácticas para poder aplicar todos los conceptos aprendidos. 
-
-    ✔ Práctica de caja en revistas.
-    ✔ Práctica de tiempos del pelo, proporciones de estructura y densidad en fotos.
-    ✔ Ejercicio de Estructura, proporciones y textura descargable. Imprimilo para poder resolverlo.
-
-`,
-        downloads: ['/pdf-mery/practicas/Practicas-para-imprimir.pdf'],
-      },
-      3: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio de Modelado de Cejas. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/estilismo-cejas/Servicios-Modelado.pdf'],
-      },
-      4: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio de Laminado o Alisado de Cejas. Conocé todas las herramientas e insumos que utilizo y que recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/estilismo-cejas/Servicios-Laminado.pdf'],
-      },
-      5: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestros servicios de Maquillaje hiper realista de Cejas. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/estilismo-cejas/Servicios-Maquillaje.pdf'],
-      },
-      6: {
-        content: `En este capítulo te cuento como creé esta increíble técnica que brinda respuesta a infinidad de casos. Sus fundamentos y su lógica. Porque todo tiene una explicación te voy a compartir todo acerca de este servicio exclusivo By Mery Garcia.`,
-        downloads: ['/pdf-mery/refill/Refill-Teoria-y-fundamentos.pdf'],
-      },
-      7: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio exclusivo: Refill created By Mery Garcia. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: ['/pdf-mery/refill/Servicios-Refill.pdf'],
-      },
-      8: {
-        content: `En este video te muestro como realizar tus prácticas para poder aplicar todos los conceptos aprendidos acerca de esta técnica. `,
-        downloads: [],
-      },
-    },
-
-    // ============================================
-    // CURSO: Camuflaje
-    // ID: cmgj1h3qk000mo11vxtffk6ny
-    // ============================================
-    cmgj1h3qk000mo11vxtffk6ny: {
-      0: {
-        content: `Introducción`,
-        downloads: ['/pdf-mery/camuflaje/CAMUFLAJE-SIMPLE-Introduccion.pdf'],
-      },
-      1: {
-        content: `Fundamentos`,
-        downloads: ['/pdf-mery/camuflaje/CAMUFLAJE-SIMPLE-Fundamentals.pdf'],
-      },
-      2: {
-        content: `Movimientos`,
-        downloads: ['/pdf-mery/camuflaje/CAMUFLAJE-SIMPLE-Colorimetria.pdf'],
-      },
-      3: {
-        content: `Anestesia y Consulta`,
-        downloads: [
-          '/pdf-mery/camuflaje/CAMUFLAJE-SIMPLE-Piel-y-profundidad.pdf',
-        ],
-      },
-      4: {
-        content: `Paso a Paso`,
-        downloads: ['/pdf-mery/camuflaje/CAMUFLAJE-SIMPLE-Paso-a-Paso.pdf'],
-      },
-    },
-
-    // ============================================
-    // CURSO: Microblading
-    // ID: cmgizyuju0000ql1vruyxxpi8
-    // ============================================
-    cmgizyuju0000ql1vruyxxpi8: {
-      0: {
-        content: `Bievenido al primer capitulo.`,
-        downloads: ['/pdf-mery/microblading/Microblading-Introduccion.pdf'],
-      },
-      1: {
-        content: `En este video te muestro los principales aspectos a tener en cuenta con respecto a la higiene y cuidados durante el proceso de armado y desarmado de tu estación de trabajo. En el PDF te brindo mucha más información acerca de Bioseguridad para que brindes un servicio seguro, cuidando a tus clientas, tu equipo y tu persona.`,
-        downloads: [
-          '/pdf-mery/microblading/Microblading-Higiene-armado-y-desarmado-de-estacion.pdf',
-        ],
-      },
-      2: {
-        content: `En este capítulo podrás aprender:
-
-    Las capas de la piel.
-    El músculo superciliar: como regular la profundidad.
-    El movimiento pendular.
-    En que casos no es oportuno realizar el servicio de Microblading.`,
-        downloads: [
-          '/pdf-mery/microblading/Microblading-Piel-y-Profundidad.pdf',
-        ],
-      },
-      3: {
-        content: `En este capítulo te muestro los dos dibujos posibles dentro de la técnica MG para crear la trama. Trama unidireccional y trama bidireccional.`,
-        downloads: [
-          '/pdf-mery/microblading/Microblading-Dibujo-y-estructura.pdf',
-        ],
-      },
-      4: {
-        content: `En este video dedicado 100% a Colorimetría te muestro como formar el principal color con el que trabajaremos: El Marrón. Además, te muestro toda la colorimetría aplicada a los pigmentos: mi selección y mis combinaciones.`,
-        downloads: ['/pdf-mery/microblading/Microblading-Colorimetria.pdf'],
-      },
-      5: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestros servicios de Maquillaje hiper realista de Cejas. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: [],
-      },
-      6: {
-        content: `En este capítulo te cuento como creé esta increíble técnica que brinda respuesta a infinidad de casos. Sus fundamentos y su lógica. Porque todo tiene una explicación te voy a compartir todo acerca de este servicio exclusivo By Mery Garcia.`,
-        downloads: [],
-      },
-      7: {
-        content: `Te muestro el paso a paso, de principio a fin, de nuestro servicio exclusivo: Refill created By Mery Garcia. Conocé todas las herramientas e insumos que utilizo y recomiendo. Lográ resultados increíbles.`,
-        downloads: [],
-      },
-    },
+    // Objeto vacío - los datos ahora vienen del backend en lesson.description y lesson.downloadableFiles
   };
 
   // Lookup usando courseId + lesson.order
   const extras = courseContent[courseId]?.[lesson.order];
 
-  if (!extras) {
-    return null;
-  }
+  // Si no hay extras hardcodeados, usar los datos del lesson directamente
+  const content = extras?.content || lesson.description || 'Sin contenido disponible';
+  const downloads = extras?.downloads || lesson.downloadableFiles || [];
 
   return (
     <div
@@ -265,12 +68,15 @@ En este video te muestro como realizar tus prácticas para poder aplicar todos l
       <div className='p-6 bg-[#EBA2A8]'>
         {activeTab === 'content' ? (
           <div className='text-white leading-relaxed'>
-            <p className='whitespace-pre-line'>{extras.content}</p>
+            <p className='whitespace-pre-line'>{content}</p>
           </div>
-        ) : extras.downloads && extras.downloads.length > 0 ? (
+        ) : downloads && downloads.length > 0 ? (
           <div className='space-y-3'>
-            {extras.downloads.map((pdfUrl: string, index: number) => {
+            {downloads.map((file: any, index: number) => {
+              // Soporte para ambos formatos: string (URL) o objeto DownloadableFile
+              const pdfUrl = typeof file === 'string' ? file : file.url;
               const fileName =
+                (typeof file === 'object' ? file.name : null) ||
                 pdfUrl.split('/').pop()?.replace('.pdf', '') ||
                 `Documento ${index + 1}`;
               const formattedName = fileName.replace(/-/g, ' ');

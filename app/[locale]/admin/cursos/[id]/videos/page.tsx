@@ -50,8 +50,10 @@ export default function CursoVideosPage() {
     vimeoId: '',
     categoryId: courseId,
     order: 0,
+    isPublished: true, // ✅ Por defecto publicado
   });
   const [isFetchingVimeo, setIsFetchingVimeo] = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // ✅ Estado para bloquear botón mientras guarda
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Race condition prevention: AbortController para cancelar requests
@@ -83,7 +85,8 @@ export default function CursoVideosPage() {
         setCourse(foundCourse);
       }
 
-      // Load videos for this course
+      // ✅ FIX: Load videos SOLO para este curso específico
+      // Esto reemplazará los videos viejos de este curso en el store
       await fetchVideos(courseId);
     } catch (_error) {
       // Error handled silently
@@ -141,7 +144,7 @@ export default function CursoVideosPage() {
       vimeoId: '',
       categoryId: courseId,
       order: 0,
-      isPublished: false,
+      isPublished: true, // ✅ Por defecto publicado al cancelar
     });
     setErrors({});
   };
@@ -201,6 +204,8 @@ export default function CursoVideosPage() {
       return;
     }
 
+    setIsSaving(true); // ✅ Bloquear botón
+
     try {
       if (editingVideo) {
         // Update existing video
@@ -239,6 +244,8 @@ export default function CursoVideosPage() {
       toast.error(errorMessage, {
         duration: 5000, // Mostrar por 5 segundos para errores importantes
       });
+    } finally {
+      setIsSaving(false); // ✅ Desbloquear botón
     }
   };
 
@@ -478,14 +485,25 @@ export default function CursoVideosPage() {
             <div className='flex gap-3 pt-4'>
               <button
                 onClick={handleSave}
-                className='inline-flex items-center gap-2 px-6 py-3 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors'
+                disabled={isSaving}
+                className='inline-flex items-center gap-2 px-6 py-3 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors'
               >
-                <Save className='w-4 h-4' />
-                Guardar Video
+                {isSaving ? (
+                  <>
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <Save className='w-4 h-4' />
+                    Guardar Video
+                  </>
+                )}
               </button>
               <button
                 onClick={handleCancelEdit}
-                className='inline-flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors'
+                disabled={isSaving}
+                className='inline-flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700 rounded-lg transition-colors'
               >
                 <X className='w-4 h-4' />
                 Cancelar

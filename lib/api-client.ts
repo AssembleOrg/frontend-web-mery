@@ -3,6 +3,7 @@
  * Following API documentation from api.md
  */
 
+import { CourseIncludeItem } from '@/types/course';
 import Cookies from 'js-cookie';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -40,6 +41,16 @@ export interface Category {
   name: string;
   slug: string;
   description?: string;
+  long_description?: string;
+  long_description_en?: string;
+  target?: string;
+  target_en?: string;
+  modalidad?: string;
+  modalidad_en?: string;
+  learn?: string;
+  learn_en?: string;
+  includes_category?: CourseIncludeItem[];
+  includes_category_en?: CourseIncludeItem[];
   image?: string;
   priceARS: number;
   priceUSD: number;
