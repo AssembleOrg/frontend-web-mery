@@ -17,7 +17,6 @@ export default function SimpleCourseCard({
   title,
   price,
   description,
-  isAutostylism = false,
   onCourseClick,
 }: SimpleCourseCardProps) {
   const handleClick = () => {
@@ -41,7 +40,7 @@ export default function SimpleCourseCard({
       </div>
 
       {/* Ribbon */}
-      {isAutostylism && (
+      {/* {isAutostylism && (
         <div className='absolute top-0 left-0 z-20 pointer-events-none'>
           <Image
             src='/autostylism-ribbon.png'
@@ -52,7 +51,7 @@ export default function SimpleCourseCard({
             style={{ transform: 'translate(-5%, -25%) rotate(-15deg)' }}
           />
         </div>
-      )}
+      )} */}
 
       {/* Course Content */}
       <div className='p-4 flex flex-col flex-grow'>

@@ -66,9 +66,6 @@ export default function LashesLinePage() {
                 <h3 className='text-xl font-bold font-primary text-foreground mb-3'>
                   {t('pricing.depositTitle')}
                 </h3>
-                <p className='text-muted-foreground font-secondary mb-4'>
-                  {t('pricing.depositText')}
-                </p>
                 <p className='text-sm mt-4 flex items-center font-primary/10 font-bold text-primary'>
                   {t('pricing.depositAmount')}
                 </p>
@@ -114,6 +111,10 @@ export default function LashesLinePage() {
             text={t('cta.text')}
             mainButtonText={t('cta.button')}
             showExpressButton={false}
+            consultationButtonText={t('cta.consultationButton')}
+            firstSessionButtonText={t('cta.firstSessionButton')}
+            consultationWhatsAppMessage={`Hola! Me gustaría reservar una cita de consulta para Lashes Line.`}
+            firstSessionWhatsAppMessage={`Hola! Me gustaría reservar mi primera sesión de Lashes Line.`}
           />
         </div>
       </div>

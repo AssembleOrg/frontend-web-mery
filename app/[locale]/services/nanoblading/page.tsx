@@ -200,7 +200,7 @@ export default function NanobladingCamouflagePage() {
                 Valores no aplicables a agenda de Special Pass. Los valores
                 pueden modificarse sin previo aviso. Para que la reserva del
                 turno de primer sesión de Nanoblading sea efectiva, se deberá
-                abonar una seña de $30.000 el día de la consulta. En caso de
+                abonar una seña de $100.000 el día de la consulta. En caso de
                 querer modificar la fecha de tu cita, deberás realizarlo
                 directamente desde tu cuenta, para no perder el valor total de
                 la seña, la misma no es reembolsable y no congela el valor de tu

@@ -85,7 +85,7 @@
     "description": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
     "reserve": "Book Now",
     "express": "Express Consultation",
-    "info": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
+    "info": "If you want to know the services we have available for you and their values, go to Express Advice before booking your appointment. This advice is an approximate since once you are in our salon we will be able to personally recommend the services indicated for you ❤️",
     "policyLink": "Cancellation policy"
   },
   "giftCard": {
@@ -241,7 +241,7 @@
         }
       ],
       "cta": {
-        "heading": "Ready for perfect eyebrows?",
+        "heading": "Ready for amazing eyebrows?",
         "text": "Our specialists are ready to transform your look. Book your appointment now!",
         "button": "Book Appointment",
         "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
@@ -366,8 +366,8 @@
       "nanoblading": {
         "heading": "WHAT IS NANOBLADING By & Only MERY GARCIA?",
         "p1": "It's the most advanced cosmetic tattoo technique for eyebrows. A unique and exclusive service provided by MG and her Staff. If you're looking to improve the shape of your eyebrows, fill in or add volume to areas with little to no hair growth, or cover scars, this service is the right one for you.",
-        "p2": "It achieves excellent results on all skin types, with greater hyper-realism and an imperceptible finish. It causes less trauma to the skin, offers greater durability, and better color vibrancy. The procedure is performed with a machine at the same depth as Nanoblading (very superficial) but with even smaller needles that allow for infinite artistic finishes (shadows, strokes, hair clusters, etc.) We recommend this technique for cases of alopecia, trichotillomania, mature or very thin skin, or oncology treatments. But it also provides optimal results on normal skin without growth issues and/or with scars.",
-        "p3": "More than four years of practice and constant refinements abroad resulted in Mery Garcia using Nanoblading last year to provide answers to all people seeking to improve their eyebrows through cosmetic tattooing.",
+        "p2": "It achieves excellent results on all skin types, with greater hyper-realism and an imperceptible finish. It causes less trauma to the skin, offers greater durability, and better color vibrancy. The procedure is performed with a machine at the same depth as Microblading (very superficial) but with even smaller needles that allow for infinite artistic finishes (shadows, strokes, hair clusters, etc.) We recommend this technique for cases of alopecia, trichotillomania, mature or very thin skin, or oncology treatments. But it also provides optimal results on normal skin without growth issues and/or with scars.",
+        "p3": "Over 10 years of experience and constant improvements in Cosmetic Tattooing led Mery Garcia to use Nanoblading last year to provide solutions to all people seeking to enhance their eyebrows through cosmetic tattooing.",
         "pricing": {
           "heading": "List Price (By & Only MERY GARCIA)",
           "session1": "First session: US$ 610.- (or US$ 420 in cash)",
@@ -377,7 +377,7 @@
       },
       "camouflage": {
         "heading": "WHAT IS CAMOUFLAGE?",
-        "p1": "It is a service that combines depigmentation, color correction, texture, and structure to IMPROVE THE APPEARANCE of a poorly done or deteriorated job from either Dermopigmentation or Nanoblading.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nYour consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
+        "p1": "It is a service that combines depigmentation, color correction, texture, and structure to IMPROVE THE APPEARANCE of a poorly done or deteriorated job from either Dermopigmentation or Microblading.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nYour consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
         "pricing": {
           "heading": "List Price (Per Session)",
           "technique": "Mixed Technique: US$ 710.- (or US$ 475 in cash)",
@@ -438,6 +438,8 @@
         "heading": "Ready to Enhance Your Look?",
         "text": "Discover the secret to fuller and more defined lashes with an imperceptible finish. Book your consultation.",
         "button": "Book Consultation",
+        "consultationButton": "Book Consultation Appointment",
+        "firstSessionButton": "Book First Session",
         "accessInfo": "By creating your username and password you'll have access to the available appointment calendar for each service."
       }
     },
@@ -480,7 +482,7 @@
     "lipBlush": {
       "hero": {
         "title": "Lip Blush",
-        "subtitle": "Perfect lips, natural and long-lasting color."
+        "subtitle": "Defined and natural lips. Hyper-realistic, long-lasting color."
       },
       "introduction": {
         "heading": "WE ARE BACK 💋",
@@ -513,7 +515,9 @@
       "cta": {
         "heading": "Ready for Your Dream Lips?",
         "text": "Discover the secret to naturally perfect lips with a hyper-realistic finish. Book your consultation with Mery.",
-        "button": "Book Consultation"
+        "button": "Book Consultation",
+        "consultationButton": "Book Consultation Appointment",
+        "firstSessionButton": "Book First Session"
       }
     },
     "paramedicalTattoo": {

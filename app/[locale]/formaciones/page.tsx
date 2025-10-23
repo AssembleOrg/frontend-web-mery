@@ -177,17 +177,15 @@ export default function FormacionesPage() {
               setFilter(filter === 'professional' ? 'all' : 'professional')
             }
             isActive={filter === 'professional'}
-            showRibbon={false}
           />
           <FilterBanner
-            title='Autostylism'
+            title='Auto Styling'
             description='Diseña tus cejas en casa'
             image='/Img-home/autostyling-gris.webp'
             onClick={() =>
               setFilter(filter === 'autostylism' ? 'all' : 'autostylism')
             }
             isActive={filter === 'autostylism'}
-            showRibbon={true}
             imageClassName='object-[center_100%]'
           />
         </div>

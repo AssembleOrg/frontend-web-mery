@@ -10,15 +10,23 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* Brand Fonts - Now using next/font variables */
-  --font-primary: var(--font-din-light), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; /* DIN Light - Titles */
-  --font-secondary: var(--font-secondary, 'Poppins', sans-serif); /* Poppins - Body text */
-  --font-custom: var(--font-avant-garde-admin), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* AvantGarde - Special use */
+  --font-primary: var(--font-din-light), -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; /* DIN Light - Titles */
+  --font-secondary: var(
+    --font-secondary,
+    'Poppins',
+    sans-serif
+  ); /* Poppins - Body text */
+  --font-custom: var(--font-avant-garde-admin), -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif; /* AvantGarde - Special use */
 
-  --font-sans: var(--font-din-light), var(--font-secondary), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-sans: var(--font-din-light), var(--font-secondary), -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   --font-mono: var(--font-geist-mono);
 
   /* Default font families for Tailwind */
-  --default-font-family: var(--font-din-light), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --default-font-family: var(--font-din-light), -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   --default-mono-font-family: var(--font-geist-mono), 'Courier New', monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -72,9 +80,9 @@
 
   /* Alert Patterns */
   --mg-alert-high: var(
-    --mg-burgundy
-  ); /* High attention: burgundy bg, pink text */
-  --mg-alert-high-text: var(--mg-pink);
+    --mg-pink-light
+  ); /* High attention: pink light bg (same as alert-low) */
+  --mg-alert-high-text: var(--mg-burgundy);
   --mg-alert-low: var(
     --mg-pink-light
   ); /* Low attention: pink bg, burgundy text */
@@ -128,8 +136,8 @@
   --mg-gray: #a0a0a0; /* Lighter gray for text */
 
   /* Alert Patterns - Dark Mode */
-  --mg-alert-high: #8b1538;
-  --mg-alert-high-text: #eba2a8;
+  --mg-alert-high: #fbe8ea;
+  --mg-alert-high-text: #8b1538;
   --mg-alert-low: #fbe8ea;
   --mg-alert-low-text: #8b1538;
 
@@ -224,8 +232,8 @@
 
   /* Admin Panel Font */
   .font-admin {
-    font-family: var(--font-avant-garde-admin), -apple-system, BlinkMacSystemFont,
-      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-family: var(--font-avant-garde-admin), -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400;
   }
 
@@ -252,8 +260,18 @@
 
   /* Brand Alert Utilities */
   .alert-high {
-    background-color: var(--mg-alert-high);
-    color: var(--mg-alert-high-text);
+    background-color: var(--mg-alert-low);
+    color: var(--mg-alert-low-text);
+  }
+
+  .alert-high h1,
+  .alert-high h2,
+  .alert-high h3,
+  .alert-high h4,
+  .alert-high h5,
+  .alert-high h6,
+  .alert-high p {
+    color: var(--mg-alert-low-text) !important;
   }
 
   .alert-low {

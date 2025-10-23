@@ -11,6 +11,10 @@ interface BookingCTAProps {
   text2?: string;
   mainButtonText?: string;
   showExpressButton?: boolean;
+  consultationButtonText?: string;
+  firstSessionButtonText?: string;
+  consultationWhatsAppMessage?: string;
+  firstSessionWhatsAppMessage?: string;
 }
 
 // 2. Aplicamos las props al componente
@@ -20,8 +24,18 @@ export function BookingCTA({
   text2,
   mainButtonText,
   showExpressButton = true,
+  consultationButtonText,
+  firstSessionButtonText,
+  consultationWhatsAppMessage,
+  firstSessionWhatsAppMessage,
 }: BookingCTAProps) {
   const t = useTranslations('booking');
+
+  // WhatsApp handler
+  const handleWhatsApp = (message: string) => {
+    const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <section className='py-20'>
@@ -53,35 +67,57 @@ export function BookingCTA({
 
           {/* CTA Buttons */}
           <div className='flex flex-col sm:flex-row gap-4 justify-center items-center mb-12'>
-            <Button
-              size='lg'
-              className='px-8 py-3 text-lg'
-              asChild
-            >
-              <a
-                href='https://merygarciabooking.com/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Calendar className='h-5 w-5 mr-2' />
-                {mainButtonText || t('reserve')}
-              </a>
-            </Button>
+            {/* Show dual buttons if both consultation and first session are provided */}
+            {consultationButtonText && firstSessionButtonText ? (
+              <>
+                <Button
+                  size='lg'
+                  className='px-8 py-3 text-lg'
+                  onClick={() => handleWhatsApp(consultationWhatsAppMessage || 'Hola! Me gustaría reservar una cita de consulta.')}
+                >
+                  <Calendar className='h-5 w-5 mr-2' />
+                  {consultationButtonText}
+                </Button>
+                <Button
+                  size='lg'
+                  className='px-8 py-3 text-lg'
+                  onClick={() => handleWhatsApp(firstSessionWhatsAppMessage || 'Hola! Me gustaría reservar mi primera sesión.')}
+                >
+                  <Calendar className='h-5 w-5 mr-2' />
+                  {firstSessionButtonText}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  size='lg'
+                  className='px-8 py-3 text-lg'
+                  asChild
+                >
+                  <a
+                    href='https://merygarciabooking.com/'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <Calendar className='h-5 w-5 mr-2' />
+                    {mainButtonText || t('reserve')}
+                  </a>
+                </Button>
 
-              
-
-            {showExpressButton && (
-              <Button
-                variant='outline'
-                size='lg'
-                className='px-8 py-3 text-lg hover:bg-transparent hover:text-primary'
-                asChild
-              >
-                <Link href='/asesoramiento-express'>
-                  <Clock className='h-5 w-5 mr-2' />
-                  {t('express')}
-                </Link>
-              </Button>
+                {showExpressButton && (
+                  <Button
+                    variant='outline'
+                    size='lg'
+                    className='px-8 py-3 text-lg hover:bg-transparent hover:text-primary'
+                    asChild
+                  >
+                    <Link href='/asesoramiento-express'>
+                      <Clock className='h-5 w-5 mr-2' />
+                      {t('express')}
+                    </Link>
+                  </Button>
+                )}
+              </>
             )}
           </div>
 
