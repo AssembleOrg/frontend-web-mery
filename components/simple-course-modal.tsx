@@ -38,7 +38,7 @@ export default function SimpleCourseModal({
       setLoadingVideo(true);
       setPresentationVideo(null);
       setStreamUrl(null);
-      
+
       getPresentationVideo(course.id)
         .then((result) => {
           if (result) {
@@ -91,27 +91,31 @@ export default function SimpleCourseModal({
     setAddingToCart(true);
     const success = await addCourse(course.id);
     setAddingToCart(false);
-    
+
     if (success) {
       onClose();
       router.push('/es/compra-de-cursos');
     } else {
       // El error ya fue manejado por useCart
-      showError('No se pudo agregar el curso al carrito. Por favor intenta nuevamente.');
+      showError(
+        'No se pudo agregar el curso al carrito. Por favor intenta nuevamente.'
+      );
     }
   };
 
   // Si el precio ARS es placeholder (99.999.999), mostrar USD
   const isPlaceholderPrice = course.priceARS === 99999999;
-  
+
   // Determinar qué precio mostrar
-  const displayPrice = isPlaceholderPrice && course.priceUSD > 0
-    ? `USD ${course.priceUSD.toLocaleString('en-US')}`
-    : course.priceDisplay;
-  
+  const displayPrice =
+    isPlaceholderPrice && course.priceUSD > 0
+      ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+      : course.priceDisplay;
+
   // Para usuarios internacionales, mostrar opción de WhatsApp con USD (solo si NO es placeholder)
-  const showUSDOption = !isPlaceholderPrice && course.priceUSD && course.priceUSD > 0;
-  
+  const showUSDOption =
+    !isPlaceholderPrice && course.priceUSD && course.priceUSD > 0;
+
   // Check if course is already in cart
   const courseInCart = isInCart(course.id);
   const buttonDisabled = addingToCart || cartLoading;
@@ -121,13 +125,13 @@ export default function SimpleCourseModal({
     const paragraphs = text
       .split('\n\n')
       .filter((paragraph) => paragraph.trim() !== '');
-    
+
     return (
       <div className='space-y-4 font-primary'>
         {paragraphs.map((paragraph, index) => {
           // Split by ** to find bold sections
           const parts = paragraph.split(/(\*\*[^*]+\*\*)/g);
-          
+
           return (
             <p
               key={index}
@@ -139,7 +143,10 @@ export default function SimpleCourseModal({
                 if (part.startsWith('**') && part.endsWith('**')) {
                   const boldText = part.slice(2, -2);
                   return (
-                    <span key={partIndex} className='font-primary-medium'>
+                    <span
+                      key={partIndex}
+                      className='font-primary-medium'
+                    >
                       {boldText}
                     </span>
                   );
@@ -198,11 +205,19 @@ export default function SimpleCourseModal({
                   </p>
                   <div className='bg-amber-50 border border-amber-200 rounded-lg p-3 mb-2'>
                     <p className='text-xs text-amber-800'>
-                      ⚠️ El backend requiere configuración adicional para videos públicos
+                      ⚠️ El backend requiere configuración adicional para videos
+                      públicos
                     </p>
                   </div>
                   <p className='text-xs text-gray-500'>
-                    El endpoint <code className='bg-gray-200 px-1 rounded text-[10px]'>/videos/:id/stream</code> debe permitir acceso público para videos con <code className='bg-gray-200 px-1 rounded text-[10px]'>order = 0</code>
+                    El endpoint{' '}
+                    <code className='bg-gray-200 px-1 rounded text-[10px]'>
+                      /videos/:id/stream
+                    </code>{' '}
+                    debe permitir acceso público para videos con{' '}
+                    <code className='bg-gray-200 px-1 rounded text-[10px]'>
+                      order = 0
+                    </code>
                   </p>
                 </div>
               </div>
@@ -271,9 +286,6 @@ export default function SimpleCourseModal({
                     <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                       {displayPrice}
                     </p>
-                    <p className='text-white/90 text-xs mt-1'>
-                      Incluye certificación y materiales
-                    </p>
                     <p className='text-white/90 text-sm mt-2 font-semibold'>
                       💬 Consultar por este curso vía WhatsApp
                     </p>
@@ -310,9 +322,6 @@ export default function SimpleCourseModal({
                         También disponible en U$S {course.priceUSD}
                       </p>
                     )}
-                    <p className='text-white/90 text-xs mt-1'>
-                      Incluye certificación y materiales
-                    </p>
                   </div>
 
                   <button
@@ -351,9 +360,7 @@ export default function SimpleCourseModal({
                     <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                       {displayPrice}
                     </p>
-                    <p className='text-white/90 text-xs mt-1'>
-                      Incluye certificación y materiales
-                    </p>
+
                     <p className='text-white/90 text-sm mt-2 font-semibold'>
                       💬 Consultar por este curso vía WhatsApp
                     </p>
@@ -382,9 +389,6 @@ export default function SimpleCourseModal({
                         También disponible en U$S {course.priceUSD}
                       </p>
                     )}
-                    <p className='text-white/90 text-xs mt-1'>
-                      Incluye certificación y materiales
-                    </p>
                   </div>
 
                   <div className='flex flex-col space-y-3'>
@@ -444,7 +448,7 @@ export default function SimpleCourseModal({
             )}
 
             {/* ¿Qué incluye? - Prioridad a includes_category sobre modalContent.includes */}
-            {(course.includes_category && course.includes_category.length > 0) ? (
+            {course.includes_category && course.includes_category.length > 0 ? (
               <div>
                 <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
                   ¿Qué incluye este curso?
@@ -490,15 +494,15 @@ export default function SimpleCourseModal({
 
             {course?.target?.trim() !== '' && (
               <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
-              <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-4'>
-                ¿A quién está dirigido?
-              </h3>
-              <p className='text-[#2b2b2b] leading-relaxed'>
-                {course.target ||
-                  course.modalContent?.targetAudience ||
-                  `Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas en ${course.title.toLowerCase()}, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos y obtener resultados más naturales y duraderos.`}
-              </p>
-            </div>
+                <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-4'>
+                  ¿A quién está dirigido?
+                </h3>
+                <p className='text-[#2b2b2b] leading-relaxed'>
+                  {course.target ||
+                    course.modalContent?.targetAudience ||
+                    `Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas en ${course.title.toLowerCase()}, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos y obtener resultados más naturales y duraderos.`}
+                </p>
+              </div>
             )}
 
             {course.modalContent?.additionalInfo && (

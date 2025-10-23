@@ -69,7 +69,7 @@ export default function AdminLayout({
                 </span>
               </div>
               <div>
-                <button
+                {/* <button
                   onClick={() => {
                     const locale = pathname.split('/')[1] || 'es';
                     router.push(`/${locale}`);
@@ -77,7 +77,7 @@ export default function AdminLayout({
                   className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md'
                 >
                   Volver al Sitio
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

@@ -85,7 +85,7 @@
     "description": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
     "reserve": "Reservar",
     "express": "Asesoramiento Express",
-    "info": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
+    "info": "Si queres conocer los servicios que tenemos disponibles para vos y sus valores ingresa en Asesoramiento Express antes de reservar tu cita. Este asesoramiento en aproximado ya que una vez en nuestro salón vamos a poder recomendarte de manera personalizada los servicios indicados para vos ❤️",
     "policyLink": "Política de cancelaciones"
   },
   "giftCard": {
@@ -234,7 +234,7 @@
         }
       ],
       "cta": {
-        "heading": "¿Lista para unas cejas perfectas?",
+        "heading": "¿Lista para unas cejas increíbles?",
         "text": "Nuestros especialistas están listos para transformar tu mirada. ¡Reservá tu turno!",
         "button": "Reservar Turno"
       }
@@ -353,8 +353,8 @@
       "nanoblading": {
         "heading": "¿QUÉ ES EL NANOBLADING By & Only MERY GARCIA?",
         "p1": "Es la técnica más avanzada de cosmetic tattoo de cejas. Servicio único y exclusivo brindado por MG y su Staff. Si estás buscando mejorar la forma de tus cejas, completar o rellenar zonas donde no tenés mucho crecimiento, o nada de pelo, o donde haya cicatrices, este servicio es el indicado para vos.",
-        "p2": "Permite lograr excelentes resultados en todo tipo de pieles, mayor hiper realismo y un acabado imperceptible. Genera menor trauma en la piel, mayor durabilidad y vibración del color. El procedimiento se realiza con máquina a la misma profundidad del Nanoblading (muy superficial) pero con agujas aún más pequeñas que permiten terminaciones plásticas infinitas (sombras, trazos, ramilletes de pelos, etc.) Recomendamos ésta técnica para casos de alopecias, tricotilomanías, pieles maduras o muy finas, o tratamientos oncológicos. Pero también brinda resultados óptimos en pieles normales sin dificultad de crecimiento y/o con cicatrices.",
-        "p3": "Más de cuatro años de práctica y perfeccionamientos constantes en el exterior dieron por resultado que el último año Mery Garcia utilizara Nanoblading para dar respuesta a todas las personas que buscan mejorar sus cejas a través del tatuaje cosmético.",
+        "p2": "Permite lograr excelentes resultados en todo tipo de pieles, mayor hiper realismo y un acabado imperceptible. Genera menor trauma en la piel, mayor durabilidad y vibración del color. El procedimiento se realiza con máquina a la misma profundidad del Microblading (muy superficial) pero con agujas aún más pequeñas que permiten terminaciones plásticas infinitas (sombras, trazos, ramilletes de pelos, etc.) Recomendamos ésta técnica para casos de alopecias, tricotilomanías, pieles maduras o muy finas, o tratamientos oncológicos. Pero también brinda resultados óptimos en pieles normales sin dificultad de crecimiento y/o con cicatrices.",
+        "p3": "Más de 10 años de experiencia y perfeccionamientos en Comestic Tattoo dieron por resultado que el último año Mery Garcia utilizara Nanoblading para dar respuesta a todas las personas que buscan mejorar sus cejas a través del tatuaje cosmético.",
         "pricing": {
           "heading": "Precio de Lista (By & Only MERY GARCIA)",
           "session1": "Primera sesión: U$S 610.- (en efectivo U$S 420)",
@@ -364,7 +364,7 @@
       },
       "camouflage": {
         "heading": "¿QUÉ ES EL CAMUFLAJE?",
-        "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de Dermopigmentación como de Nanoblading.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas.\n\nTu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio:",
+        "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de Dermopigmentación como de Microblading.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas.\n\nTu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio:",
         "pricing": {
           "heading": "Precio de Lista (Cada Sesión)",
           "technique": "Técnica Mixta: U$S 710.- (en efectivo U$S 475)",
@@ -412,8 +412,7 @@
         "text": "⚡Lashes Line ⚡New Service en #TattoCosmetic #ByMeryGarcia ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares By Mery Garcia & Staff. ✨Preparate para lucir una mirada increíble pero sobre todo natural ✨"
       },
       "pricing": {
-        "depositTitle": "Consulta y Seña",
-        "depositText": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lashes Line, la misma no es reembolsable y no congela el valor de tu servicio:",
+        "depositTitle": "Seña",
         "depositAmount": "Seña AR$ 100.000.-",
         "priceListTitle": "Precio de Lista del Servicio",
         "session1": "Primera sesión: U$S 480.- (en efectivo U$S 320)",
@@ -423,13 +422,15 @@
       "cta": {
         "heading": "¿Lista para Potenciar tu Mirada?",
         "text": "Descubre el secreto de unas pestañas más densas y definidas con un acabado imperceptible. Reserva tu consulta.",
-        "button": "Reservar Consulta"
+        "button": "Reservar Consulta",
+        "consultationButton": "Reservar Cita de Consulta",
+        "firstSessionButton": "Reservar Primera Sesión"
       }
     },
     "lipBlush": {
       "hero": {
         "title": "Lip Blush",
-        "subtitle": "Labios perfectos, color natural y duradero."
+        "subtitle": "Labios definidos y naturales. Color híper realista y duradero."
       },
       "intro": {
         "text": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
@@ -443,11 +444,10 @@
       "whatIsIt": {
         "heading": "¿QUÉ ES EL LIP BLUSH?",
         "p1": "Es un servicio de tatuaje cosmético que dura entre 18 y 24 meses. El procedimiento consta de una primera sesión y un retoque para terminar de definir unos labios perfectos a los 30 o 60 días. \n\n Consiste en darle un color a los labios, respetando la colorimetría natural de la persona. No buscamos dar un efecto de maquillaje, sino de boca ruborizada. No da brillo. Sin polvo, sin textura, como si el labio tuviese color 💋🍒.",
-        "p2": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
+        "p2": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, sú per natural #ByMeryGarcia bebés✨"
       },
       "pricing": {
         "depositTitle": "Seña",
-        "depositText": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lip Blush, la misma no es reembolsable y no congela el valor de tu servicio:",
         "depositAmount": "Seña AR$ 100.000.-",
         "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
         "firstSessionLabel": "Primera Sesión",
@@ -466,8 +466,10 @@
       },
       "cta": {
         "heading": "¿Lista para tus Labios de Ensueño?",
-        "text": "Descubre el secreto de unos labios naturalmente perfectos con un acabado hiperrealista. Reserva tu consulta con Mery.",
-        "button": "Reservar Consulta"
+        "text": "Descubre el secreto de unos labios naturalmente perfectos con un acabado hiperrealista. Reserva tu cita con Mery.",
+        "button": "Reservar Cita",
+        "consultationButton": "Reservar Cita de Consulta",
+        "firstSessionButton": "Reservar Primera Sesión"
       }
     },
     "nanoscalp": {
@@ -508,7 +510,7 @@
     "paramedicalTattoo": {
       "hero": {
         "title": "Paramedical Tattoo",
-        "subtitle": "Restaurando la confianza a través del arte y la precisión."
+        "subtitle": "Recupera la confianza a través del arte, el color y la precisión."
       },
       "areola": {
         "heading": "¿QUÉ ES EL AREOLA HARMONIZATION?",
