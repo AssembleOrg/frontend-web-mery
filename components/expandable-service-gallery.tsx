@@ -11,7 +11,7 @@ interface Service {
   key: string;
   href: string;
   image: string;
-  hoverImage?: string; // Optional hover image for special effects (e.g., SVG color change)
+  hoverImage?: string;
 }
 
 interface ExpandableServiceGalleryProps {
@@ -27,6 +27,11 @@ export function ExpandableServiceGallery({
 
   const getServiceDescription = (serviceKey: string): string => {
     const staffMGServices = ['eyebrowStyling'];
+    
+    if (serviceKey === 'autostyling') {
+      return 'Una formación para que aprendas a realizarte los servicios de estilismo de cejas que AMAS de la mano de MG & Staff ✨';
+    }
+    
     return staffMGServices.includes(serviceKey)
       ? 'Tratamiento profesional by Staff MG'
       : 'Cosmetic Tattoo by Mery Garcia';
@@ -128,7 +133,10 @@ export function ExpandableServiceGallery({
                           onClick={(e) => {
                             e.preventDefault();
                             if (beforeAfterUrls[service.key]) {
-                              window.open(beforeAfterUrls[service.key], '_blank');
+                              window.open(
+                                beforeAfterUrls[service.key],
+                                '_blank'
+                              );
                             }
                           }}
                         >
