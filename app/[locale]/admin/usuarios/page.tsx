@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, redirect } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
@@ -59,11 +59,30 @@ export default function AdminUsuariosPage() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isLoadingUserCourses, setIsLoadingUserCourses] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
-  // Cargar usuarios
+  // Resetear página cuando cambia el término de búsqueda
   useEffect(() => {
-    loadUsers();
-  }, []);
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [searchTerm]);
+
+  // Cargar usuarios cuando cambia el término de búsqueda o la página
+  useEffect(() => {
+    // Si hay búsqueda, esperar al menos 3 caracteres
+    if (searchTerm && searchTerm.trim().length > 0 && searchTerm.trim().length < 3) {
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+      loadUsers();
+    }, 300); // Debounce de 300ms para evitar muchas peticiones
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, currentPage, pageSize]);
 
   // Cargar categorías
   useEffect(() => {
@@ -82,7 +101,22 @@ export default function AdminUsuariosPage() {
       setIsLoadingUsers(true);
       const token = getAuthToken();
       
-      const response = await fetch(`${API_BASE_URL}/users`, {
+      // Construir query params según el UserQueryDto del backend
+      const params = new URLSearchParams();
+      params.append('page', currentPage.toString());
+      params.append('limit', pageSize.toString());
+      params.append('sortBy', 'createdAt');
+      params.append('sortOrder', 'desc');
+      
+      // Si hay término de búsqueda, usar el parámetro "search" del backend
+      if (searchTerm.trim()) {
+        params.append('search', searchTerm.trim());
+      }
+
+      const url = `${API_BASE_URL}/users?${params.toString()}`;
+      console.log('🔍 Cargando usuarios:', url);
+      
+      const response = await fetch(url, {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
@@ -94,7 +128,15 @@ export default function AdminUsuariosPage() {
       const responseData = await response.json();
       // Backend retorna: { success, data: { data: [...], meta }, message }
       const usersData = responseData.data?.data || responseData.data || [];
+      const meta = responseData.data?.meta;
+      
       setUsers(Array.isArray(usersData) ? usersData : []);
+      
+      // Actualizar metadata de paginación si está disponible
+      if (meta) {
+        setTotalUsers(meta.total || 0);
+        setCurrentPage(meta.page || 1);
+      }
     } catch (_error) {
       toast.error('Error al cargar usuarios');
       setUsers([]);
@@ -239,20 +281,23 @@ export default function AdminUsuariosPage() {
     }
   };
 
-  const filteredUsers = users.filter((user) => {
-    const searchLower = searchTerm.toLowerCase();
-    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.toLowerCase();
-    const name = (user.name || '').toLowerCase();
-    return (
-      user.email.toLowerCase().includes(searchLower) ||
-      fullName.includes(searchLower) ||
-      name.includes(searchLower)
-    );
-  });
-
   const availableCategories = categories.filter(
     (cat) => !userCourses.some((uc) => uc.categoryId === cat.id)
   );
+
+  const totalPages = Math.ceil(totalUsers / pageSize);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="space-y-6 font-admin">
@@ -265,7 +310,7 @@ export default function AdminUsuariosPage() {
           </p>
         </div>
         <button
-          onClick={() => router.push(`/${locale}/admin`)}
+          onClick={() => redirect('/mi-cuenta')}
           className="text-gray-600 hover:text-gray-900"
         >
           ← Volver al Dashboard
@@ -278,30 +323,37 @@ export default function AdminUsuariosPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Buscar Usuario</h2>
 
           {/* Buscador */}
-          <div className="relative mb-4">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por email o nombre..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-            />
+          <div className="mb-4">
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Buscar por email o nombre (mín. 3 caracteres)..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            {searchTerm && searchTerm.trim().length > 0 && searchTerm.trim().length < 3 && (
+              <p className="text-xs text-amber-600 mt-1 ml-1">
+                Escribe al menos 3 caracteres para buscar
+              </p>
+            )}
           </div>
 
           {/* Lista de usuarios */}
-          <div className="space-y-2 max-h-[600px] overflow-y-auto">
+          <div className="space-y-2 max-h-[500px] overflow-y-auto">
             {isLoadingUsers ? (
               <div className="text-center py-8">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-500"></div>
                 <p className="mt-2 text-gray-600">Cargando usuarios...</p>
               </div>
-            ) : filteredUsers.length === 0 ? (
+            ) : users.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 {searchTerm ? 'No se encontraron usuarios' : 'No hay usuarios'}
               </div>
             ) : (
-              filteredUsers.map((user) => (
+              users.map((user) => (
                 <button
                   key={user.id}
                   onClick={() => setSelectedUser(user)}
@@ -341,6 +393,34 @@ export default function AdminUsuariosPage() {
               ))
             )}
           </div>
+
+          {/* Paginación */}
+          {!isLoadingUsers && users.length > 0 && (
+            <div className="mt-4 flex items-center justify-between border-t pt-4">
+              <div className="text-sm text-gray-600">
+                Mostrando {users.length} de {totalUsers} usuarios
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  Anterior
+                </button>
+                <span className="text-sm text-gray-600">
+                  Página {currentPage} de {totalPages}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage >= totalPages}
+                  className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Panel derecho: Asignar cursos */}
