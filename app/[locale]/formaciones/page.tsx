@@ -20,13 +20,10 @@ export default function FormacionesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<CourseFilter>('all');
 
-  // Subscribe directly to admin store (auto-updates when categories change)
   const categories = useAdminStore((state) => state.categories);
   const fetchCategories = useAdminStore((state) => state.fetchCategories);
 
-  // Convert categories to courses format whenever categories change
   const courses = useMemo(() => {
-    // Default: mostrar precios en ARS (mercado principal argentino)
     return categories.map((cat): Course => {
       return {
         id: cat.id,
@@ -48,13 +45,13 @@ export default function FormacionesPage() {
         priceUSD: cat.priceUSD || 0,
         isFree: cat.isFree || false,
         priceDisplay: cat.isFree
-          ? 'Gratis'
+          ? ''
           : cat.priceARS > 0
           ? `$${cat.priceARS.toLocaleString('es-AR')}`
           : cat.priceUSD > 0
           ? `U$S ${cat.priceUSD}`
-          : 'Gratis',
-        currency: 'ARS' as 'ARS' | 'USD', // Siempre ARS por defecto
+          : '',
+        currency: 'ARS' as 'ARS' | 'USD',
         slug: cat.slug,
         isPublished: cat.isActive,
         order: cat.order || 0,
@@ -63,7 +60,6 @@ export default function FormacionesPage() {
     });
   }, [categories]);
 
-  // Fetch courses from API on mount
   useEffect(() => {
     const loadCourses = async () => {
       setIsLoading(true);
@@ -88,7 +84,6 @@ export default function FormacionesPage() {
     setSelectedCourse(null);
   };
 
-  // Separate courses by type
   const autostylismCourses = useMemo(
     () => courses.filter((c) => isAutostylismCourse(c.slug, c.title)),
     [courses]
@@ -99,21 +94,28 @@ export default function FormacionesPage() {
     [courses]
   );
 
-  // Filter courses based on selected filter
   const filteredCourses = useMemo(() => {
     if (filter === 'professional') return professionalCourses;
     if (filter === 'autostylism') return autostylismCourses;
     return courses;
   }, [filter, courses, professionalCourses, autostylismCourses]);
 
-  // Memoize price calculations to avoid re-computing on every render
+  const sortedCourses = useMemo(() => {
+    return [...filteredCourses].sort((a, b) => {
+      const orderA = a.order ?? Infinity;
+      const orderB = b.order ?? Infinity;
+      if (orderA === orderB) return 0;
+
+      return orderA - orderB;
+    });
+  }, [filteredCourses]);
+
   const coursesWithDisplayPrice = useMemo(
     () =>
-      filteredCourses.map((course) => {
+      sortedCourses.map((course) => {
         let priceDisplay: string;
-
         if (course.isFree) {
-          priceDisplay = 'Gratis';
+          priceDisplay = '';
         } else if (course.priceARS === 99999999) {
           priceDisplay =
             course.priceUSD > 0
@@ -123,17 +125,14 @@ export default function FormacionesPage() {
           priceDisplay =
             course.priceARS > 0
               ? `$${course.priceARS.toLocaleString('es-AR')}`
-              : 'Gratis';
+              : '';
         }
-
         const isAutostylism = isAutostylismCourse(course.slug, course.title);
-
         return { ...course, priceDisplay, isAutostylism };
       }),
-    [filteredCourses]
+    [sortedCourses]
   );
 
-  // Show loading state
   if (isLoading) {
     return (
       <>
@@ -150,7 +149,6 @@ export default function FormacionesPage() {
       suppressHydrationWarning
     >
       <Navigation />
-
       <section className='w-full'>
         <div className='container mx-auto px-4 max-w-7xl'>
           <div className='relative w-full aspect-[16/5] rounded-lg overflow-hidden'>
@@ -165,8 +163,6 @@ export default function FormacionesPage() {
           </div>
         </div>
       </section>
-
-      {/* Hero Filter Banners */}
       <section className='container mx-auto px-4 py-8 max-w-7xl'>
         <div className='flex gap-6 md:grid md:grid-cols-2 md:gap-6'>
           <FilterBanner
@@ -189,8 +185,6 @@ export default function FormacionesPage() {
             imageClassName='object-[center_100%]'
           />
         </div>
-
-        {/* Reset Filter Button */}
         {filter !== 'all' && (
           <div className='flex justify-center mt-6'>
             <button
@@ -202,7 +196,6 @@ export default function FormacionesPage() {
           </div>
         )}
       </section>
-
       <section
         className='container mx-auto px-4 pb-16 py-8 max-w-7xl'
         suppressHydrationWarning
@@ -222,9 +215,7 @@ export default function FormacionesPage() {
           ))}
         </div>
       </section>
-
       <Footer />
-
       {selectedCourse && (
         <SimpleCourseModal
           course={selectedCourse}

@@ -92,7 +92,11 @@ export default function AdminCursosPage() {
         <div className='flex gap-3'>
           <button
             onClick={() => {
-              if (confirm('¿Limpiar caché del navegador? Esto recargará la página.')) {
+              if (
+                confirm(
+                  '¿Limpiar caché del navegador? Esto recargará la página.'
+                )
+              ) {
                 localStorage.removeItem('course-progress-storage');
                 localStorage.removeItem('user-courses-storage');
                 toast.success('Caché limpiado');
@@ -192,7 +196,7 @@ export default function AdminCursosPage() {
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm font-semibold text-gray-900'>
                         {category.isFree
-                          ? 'Gratis'
+                          ? ''
                           : category.priceARS > 0
                           ? `$ ${category.priceARS.toLocaleString()}`
                           : '-'}
@@ -201,7 +205,7 @@ export default function AdminCursosPage() {
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm font-semibold text-gray-900'>
                         {category.isFree
-                          ? 'Gratis'
+                          ? ''
                           : category.priceUSD > 0
                           ? `U$S ${category.priceUSD.toLocaleString()}`
                           : '-'}

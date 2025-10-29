@@ -58,8 +58,8 @@ export default function SimpleCourseModal({
   if (!course) return null;
 
   const handleWhatsApp = () => {
-    // Si es un curso en USD (placeholder price), incluir el precio en el mensaje
-    const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0;
+    // Si es un curso en USD (placeholder price) y NO es gratuito, incluir el precio en el mensaje
+    const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0 && !course.isFree;
     const priceInfo = isUSDCourse
       ? ` (USD ${course.priceUSD.toLocaleString('en-US')})`
       : '';
@@ -103,8 +103,8 @@ export default function SimpleCourseModal({
     }
   };
 
-  // Si el precio ARS es placeholder (99.999.999), mostrar USD
-  const isPlaceholderPrice = course.priceARS === 99999999;
+  // Si el precio ARS es placeholder (99.999.999) O es un curso gratuito, mostrar solo WhatsApp
+  const isPlaceholderPrice = course.priceARS === 99999999 || course.isFree;
 
   // Determinar qué precio mostrar
   const displayPrice =

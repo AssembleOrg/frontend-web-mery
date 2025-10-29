@@ -11,27 +11,38 @@ interface BasicInfoStepProps {
   errors: Record<string, string>;
 }
 
-export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoStepProps) {
+export function BasicInfoStep({
+  formData,
+  updateFormData,
+  errors,
+}: BasicInfoStepProps) {
   const { showError } = useModal();
-  
+
   // Helper functions for includes_category management
   const addIncludeItem = (language: 'es' | 'en') => {
-    const field = language === 'es' ? 'includes_category' : 'includes_category_en';
+    const field =
+      language === 'es' ? 'includes_category' : 'includes_category_en';
     const currentItems = formData[field] || [];
     updateFormData({
       [field]: [...currentItems, { texto: '', url_icon: '' }],
     });
   };
 
-  const updateIncludeItem = (language: 'es' | 'en', index: number, updates: Partial<CourseIncludeItem>) => {
-    const field = language === 'es' ? 'includes_category' : 'includes_category_en';
+  const updateIncludeItem = (
+    language: 'es' | 'en',
+    index: number,
+    updates: Partial<CourseIncludeItem>
+  ) => {
+    const field =
+      language === 'es' ? 'includes_category' : 'includes_category_en';
     const currentItems = [...(formData[field] || [])];
     currentItems[index] = { ...currentItems[index], ...updates };
     updateFormData({ [field]: currentItems });
   };
 
   const removeIncludeItem = (language: 'es' | 'en', index: number) => {
-    const field = language === 'es' ? 'includes_category' : 'includes_category_en';
+    const field =
+      language === 'es' ? 'includes_category' : 'includes_category_en';
     const currentItems = formData[field] || [];
     updateFormData({
       [field]: currentItems.filter((_, i) => i !== index),
@@ -66,7 +77,10 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      showError('Por favor selecciona un archivo de imagen válido', 'Formato inválido');
+      showError(
+        'Por favor selecciona un archivo de imagen válido',
+        'Formato inválido'
+      );
       return;
     }
 
@@ -96,13 +110,17 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           Información Básica del Curso
         </h3>
         <p className='text-gray-600'>
-          Completa los datos principales que se mostrarán en la tarjeta del curso
+          Completa los datos principales que se mostrarán en la tarjeta del
+          curso
         </p>
       </div>
 
       {/* Title */}
       <div>
-        <label htmlFor='title' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='title'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Título del Curso *
         </label>
         <input
@@ -115,12 +133,17 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           }`}
           placeholder='Ej: ESTILISMO DE CEJAS ® - MÓDULO 1'
         />
-        {errors.title && <p className='mt-1 text-sm text-red-600'>{errors.title}</p>}
+        {errors.title && (
+          <p className='mt-1 text-sm text-red-600'>{errors.title}</p>
+        )}
       </div>
 
       {/* Slug */}
       <div>
-        <label htmlFor='slug' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='slug'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Slug (URL amigable) *
         </label>
         <div className='flex gap-2'>
@@ -142,15 +165,44 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
             Generar
           </button>
         </div>
-        {errors.slug && <p className='mt-1 text-sm text-red-600'>{errors.slug}</p>}
+        {errors.slug && (
+          <p className='mt-1 text-sm text-red-600'>{errors.slug}</p>
+        )}
         <p className='mt-1 text-xs text-gray-500'>
           URL: /cursos/{formData.slug || 'slug-del-curso'}
         </p>
       </div>
 
+      <div>
+        <label
+          htmlFor='order'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
+          Orden de Aparición en Formaciones
+        </label>
+        <input
+          type='number'
+          id='order'
+          name='order'
+          value={formData.order ?? 0}
+          onChange={(e) =>
+            updateFormData({ order: parseInt(e.target.value, 10) || 0 })
+          }
+          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+          min='0'
+        />
+        <p className='mt-1 text-xs text-gray-500'>
+          Define la posición del curso en la página de Formaciones. El número
+          más bajo (ej: 1) aparece primero. Si no estás seguro, déjalo en 0.
+        </p>
+      </div>
+
       {/* Description */}
       <div>
-        <label htmlFor='description' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='description'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Descripción Corta *
         </label>
         <textarea
@@ -163,7 +215,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           }`}
           placeholder='Descripción que aparecerá en la tarjeta del curso'
         />
-        {errors.description && <p className='mt-1 text-sm text-red-600'>{errors.description}</p>}
+        {errors.description && (
+          <p className='mt-1 text-sm text-red-600'>{errors.description}</p>
+        )}
         <p className='mt-1 text-xs text-gray-500'>
           {formData.description?.length || 0} caracteres
         </p>
@@ -171,9 +225,14 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
       {/* Long Description */}
       <div>
-        <label htmlFor='long_description' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='long_description'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Descripción Detallada
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - Se mostrará en el modal del curso)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Opcional - Se mostrará en el modal del curso)
+          </span>
         </label>
         <textarea
           id='long_description'
@@ -184,15 +243,21 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           placeholder='Descripción completa que aparecerá cuando se abra el modal del curso. Puedes usar dobles saltos de línea para separar párrafos.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.long_description?.length || 0} caracteres • Tip: Usa dobles saltos de línea para crear párrafos
+          {formData.long_description?.length || 0} caracteres • Tip: Usa dobles
+          saltos de línea para crear párrafos
         </p>
       </div>
 
       {/* Target Audience */}
       <div>
-        <label htmlFor='target' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='target'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Público Objetivo (ES)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - ¿A quién está dirigido?)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Opcional - ¿A quién está dirigido?)
+          </span>
         </label>
         <textarea
           id='target'
@@ -209,9 +274,14 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
       {/* Target Audience EN */}
       <div>
-        <label htmlFor='target_en' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='target_en'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Target Audience (EN)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional - Who is it for?)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Optional - Who is it for?)
+          </span>
         </label>
         <textarea
           id='target_en'
@@ -228,28 +298,41 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
       {/* Long Description EN */}
       <div>
-        <label htmlFor='long_description_en' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='long_description_en'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Detailed Description (EN)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional - Will be shown in course modal)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Optional - Will be shown in course modal)
+          </span>
         </label>
         <textarea
           id='long_description_en'
           value={formData.long_description_en || ''}
-          onChange={(e) => updateFormData({ long_description_en: e.target.value })}
+          onChange={(e) =>
+            updateFormData({ long_description_en: e.target.value })
+          }
           rows={6}
           className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
           placeholder='Complete description that will appear when opening the course modal. You can use double line breaks to separate paragraphs. Use **text** for bold.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.long_description_en?.length || 0} characters • Tip: Use double line breaks for paragraphs, **text** for bold
+          {formData.long_description_en?.length || 0} characters • Tip: Use
+          double line breaks for paragraphs, **text** for bold
         </p>
       </div>
 
       {/* Modalidad */}
       <div>
-        <label htmlFor='modalidad' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='modalidad'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Modalidad (ES)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Opcional)
+          </span>
         </label>
         <textarea
           id='modalidad'
@@ -260,15 +343,21 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           placeholder='Ej: Formación **100% online** con acceso inmediato. Puedes usar dobles saltos de línea para párrafos y **texto** para negritas.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.modalidad?.length || 0} caracteres • Tip: Usa dobles saltos de línea para párrafos, **texto** para negritas
+          {formData.modalidad?.length || 0} caracteres • Tip: Usa dobles saltos
+          de línea para párrafos, **texto** para negritas
         </p>
       </div>
 
       {/* Modalidad EN */}
       <div>
-        <label htmlFor='modalidad_en' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='modalidad_en'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           Modality (EN)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Optional)
+          </span>
         </label>
         <textarea
           id='modalidad_en'
@@ -279,15 +368,21 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           placeholder='Ex: **100% online** training with immediate access. Use double line breaks for paragraphs and **text** for bold.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.modalidad_en?.length || 0} characters • Tip: Use double line breaks for paragraphs, **text** for bold
+          {formData.modalidad_en?.length || 0} characters • Tip: Use double line
+          breaks for paragraphs, **text** for bold
         </p>
       </div>
 
       {/* Learn */}
       <div>
-        <label htmlFor='learn' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='learn'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           ¿Qué vas a aprender? (ES)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Opcional)
+          </span>
         </label>
         <textarea
           id='learn'
@@ -298,15 +393,21 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           placeholder='Técnicas **avanzadas** de aplicación de pigmento. Cada línea será un punto separado. Usa **texto** para negritas y dobles saltos de línea para párrafos.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.learn?.length || 0} caracteres • Tip: Usa saltos de línea simples para listas, **texto** para negritas
+          {formData.learn?.length || 0} caracteres • Tip: Usa saltos de línea
+          simples para listas, **texto** para negritas
         </p>
       </div>
 
       {/* Learn EN */}
       <div>
-        <label htmlFor='learn_en' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label
+          htmlFor='learn_en'
+          className='block text-sm font-medium text-gray-700 mb-2'
+        >
           What will you learn? (EN)
-          <span className='ml-2 text-xs font-normal text-gray-500'>(Optional)</span>
+          <span className='ml-2 text-xs font-normal text-gray-500'>
+            (Optional)
+          </span>
         </label>
         <textarea
           id='learn_en'
@@ -317,7 +418,8 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           placeholder='**Advanced** pigment application techniques. Each line will be a separate point. Use **text** for bold and double line breaks for paragraphs.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.learn_en?.length || 0} characters • Tip: Use single line breaks for lists, **text** for bold
+          {formData.learn_en?.length || 0} characters • Tip: Use single line
+          breaks for lists, **text** for bold
         </p>
       </div>
 
@@ -326,7 +428,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         <div className='flex items-center justify-between'>
           <label className='block text-sm font-medium text-gray-700'>
             ¿Qué incluye el curso? (ES)
-            <span className='ml-2 text-xs font-normal text-gray-500'>(Opcional - Lista estructurada)</span>
+            <span className='ml-2 text-xs font-normal text-gray-500'>
+              (Opcional - Lista estructurada)
+            </span>
           </label>
           <button
             type='button'
@@ -337,23 +441,35 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
             Agregar ítem
           </button>
         </div>
-        
+
         {formData.includes_category && formData.includes_category.length > 0 ? (
           <div className='space-y-2'>
             {formData.includes_category.map((item, index) => (
-              <div key={index} className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'>
+              <div
+                key={index}
+                className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'
+              >
                 <div className='flex-1 space-y-2'>
                   <input
                     type='text'
                     value={item.texto || item.text || ''}
-                    onChange={(e) => updateIncludeItem('es', index, { texto: e.target.value, text: e.target.value })}
+                    onChange={(e) =>
+                      updateIncludeItem('es', index, {
+                        texto: e.target.value,
+                        text: e.target.value,
+                      })
+                    }
                     placeholder='Texto del ítem (ej: Videos HD de alta calidad)'
                     className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                   />
                   <input
                     type='text'
                     value={item.url_icon || ''}
-                    onChange={(e) => updateIncludeItem('es', index, { url_icon: e.target.value })}
+                    onChange={(e) =>
+                      updateIncludeItem('es', index, {
+                        url_icon: e.target.value,
+                      })
+                    }
                     placeholder='URL del icono (opcional, ej: /icons/video.svg)'
                     className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                   />
@@ -370,7 +486,10 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
             ))}
           </div>
         ) : (
-          <p className='text-sm text-gray-500 italic'>No hay ítems agregados. Haz clic en &quot;Agregar ítem&quot; para empezar.</p>
+          <p className='text-sm text-gray-500 italic'>
+            No hay ítems agregados. Haz clic en &quot;Agregar ítem&quot; para
+            empezar.
+          </p>
         )}
       </div>
 
@@ -379,7 +498,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         <div className='flex items-center justify-between'>
           <label className='block text-sm font-medium text-gray-700'>
             What does the course include? (EN)
-            <span className='ml-2 text-xs font-normal text-gray-500'>(Optional - Structured list)</span>
+            <span className='ml-2 text-xs font-normal text-gray-500'>
+              (Optional - Structured list)
+            </span>
           </label>
           <button
             type='button'
@@ -390,23 +511,36 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
             Add item
           </button>
         </div>
-        
-        {formData.includes_category_en && formData.includes_category_en.length > 0 ? (
+
+        {formData.includes_category_en &&
+        formData.includes_category_en.length > 0 ? (
           <div className='space-y-2'>
             {formData.includes_category_en.map((item, index) => (
-              <div key={index} className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'>
+              <div
+                key={index}
+                className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'
+              >
                 <div className='flex-1 space-y-2'>
                   <input
                     type='text'
                     value={item.texto || item.text || ''}
-                    onChange={(e) => updateIncludeItem('en', index, { texto: e.target.value, text: e.target.value })}
+                    onChange={(e) =>
+                      updateIncludeItem('en', index, {
+                        texto: e.target.value,
+                        text: e.target.value,
+                      })
+                    }
                     placeholder='Item text (ex: High-quality HD videos)'
                     className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                   />
                   <input
                     type='text'
                     value={item.url_icon || ''}
-                    onChange={(e) => updateIncludeItem('en', index, { url_icon: e.target.value })}
+                    onChange={(e) =>
+                      updateIncludeItem('en', index, {
+                        url_icon: e.target.value,
+                      })
+                    }
                     placeholder='Icon URL (optional, ex: /icons/video.svg)'
                     className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
                   />
@@ -423,25 +557,36 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
             ))}
           </div>
         ) : (
-          <p className='text-sm text-gray-500 italic'>No items added. Click &quot;Add item&quot; to start.</p>
+          <p className='text-sm text-gray-500 italic'>
+            No items added. Click &quot;Add item&quot; to start.
+          </p>
         )}
       </div>
 
       {/* Precios Bimonetarios */}
       <div className='space-y-4'>
         <div className='flex items-center gap-2 mb-2'>
-          <h4 className='text-sm font-semibold text-gray-900'>Precios (Sistema Bimonetario)</h4>
-          <span className='text-xs bg-[#FBE8EA] text-[#660e1b] px-2 py-1 rounded'>Ambos precios coexisten</span>
+          <h4 className='text-sm font-semibold text-gray-900'>
+            Precios (Sistema Bimonetario)
+          </h4>
+          <span className='text-xs bg-[#FBE8EA] text-[#660e1b] px-2 py-1 rounded'>
+            Ambos precios coexisten
+          </span>
         </div>
-        
+
         <div className='grid grid-cols-2 gap-4'>
           {/* Precio ARS */}
           <div>
-            <label htmlFor='priceARS' className='block text-sm font-medium text-gray-700 mb-2'>
+            <label
+              htmlFor='priceARS'
+              className='block text-sm font-medium text-gray-700 mb-2'
+            >
               Precio en Pesos (ARS) *
             </label>
             <div className='relative'>
-              <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'>$</span>
+              <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'>
+                $
+              </span>
               <input
                 type='number'
                 id='priceARS'
@@ -455,7 +600,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
                 placeholder='280000'
               />
             </div>
-            {errors.priceARS && <p className='mt-1 text-sm text-red-600'>{errors.priceARS}</p>}
+            {errors.priceARS && (
+              <p className='mt-1 text-sm text-red-600'>{errors.priceARS}</p>
+            )}
             <p className='mt-1 text-xs text-gray-500'>
               Vista: ${(formData.priceARS || 0).toLocaleString('es-AR')} ARS
             </p>
@@ -463,11 +610,16 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
           {/* Precio USD */}
           <div>
-            <label htmlFor='priceUSD' className='block text-sm font-medium text-gray-700 mb-2'>
+            <label
+              htmlFor='priceUSD'
+              className='block text-sm font-medium text-gray-700 mb-2'
+            >
               Precio en Dólares (USD) *
             </label>
             <div className='relative'>
-              <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'>U$S</span>
+              <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'>
+                U$S
+              </span>
               <input
                 type='number'
                 id='priceUSD'
@@ -481,7 +633,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
                 placeholder='200'
               />
             </div>
-            {errors.priceUSD && <p className='mt-1 text-sm text-red-600'>{errors.priceUSD}</p>}
+            {errors.priceUSD && (
+              <p className='mt-1 text-sm text-red-600'>{errors.priceUSD}</p>
+            )}
             <p className='mt-1 text-xs text-gray-500'>
               Vista: U$S {(formData.priceUSD || 0).toLocaleString('en-US')}
             </p>
@@ -496,15 +650,18 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
             checked={formData.isFree || false}
             onChange={(e) => {
               const isFree = e.target.checked;
-              updateFormData({ 
+              updateFormData({
                 isFree,
                 priceARS: isFree ? 0 : formData.priceARS,
-                priceUSD: isFree ? 0 : formData.priceUSD
+                priceUSD: isFree ? 0 : formData.priceUSD,
               });
             }}
             className='w-4 h-4 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b]'
           />
-          <label htmlFor='isFree' className='text-sm font-medium text-gray-700'>
+          <label
+            htmlFor='isFree'
+            className='text-sm font-medium text-gray-700'
+          >
             Curso gratuito (establece ambos precios en 0)
           </label>
         </div>
@@ -513,8 +670,18 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
         <div className='p-4 bg-[#FBE8EA] rounded-lg border border-[#F7CBCB]'>
           <div className='flex gap-3'>
             <div className='flex-shrink-0'>
-              <svg className='w-5 h-5 text-[#EBA2A8]' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+              <svg
+                className='w-5 h-5 text-[#EBA2A8]'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                />
               </svg>
             </div>
             <div className='flex-1'>
@@ -522,8 +689,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
                 Sistema Bimonetario
               </h4>
               <p className='text-sm text-[#2B2B2B]'>
-                Los usuarios argentinos verán el precio en ARS (pesos) por defecto y podrán comprar directamente.
-                Los usuarios de otros países verán el precio en USD.
+                Los usuarios argentinos verán el precio en ARS (pesos) por
+                defecto y podrán comprar directamente. Los usuarios de otros
+                países verán el precio en USD.
               </p>
             </div>
           </div>
@@ -556,9 +724,12 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
               <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                 <Upload className='w-10 h-10 mb-3 text-gray-400' />
                 <p className='mb-2 text-sm text-gray-600'>
-                  <span className='font-semibold'>Haz clic para subir</span> o arrastra una imagen
+                  <span className='font-semibold'>Haz clic para subir</span> o
+                  arrastra una imagen
                 </p>
-                <p className='text-xs text-gray-500'>PNG, JPG, WEBP (máx. 2MB)</p>
+                <p className='text-xs text-gray-500'>
+                  PNG, JPG, WEBP (máx. 2MB)
+                </p>
               </div>
             </label>
           </div>
@@ -573,11 +744,14 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
                   height={192}
                   className='w-48 h-48 object-cover rounded-lg'
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Error+al+cargar+imagen';
+                    (e.target as HTMLImageElement).src =
+                      'https://via.placeholder.com/400x300?text=Error+al+cargar+imagen';
                   }}
                 />
                 <div className='flex-1'>
-                  <p className='text-sm font-medium text-gray-700 mb-2'>✓ Imagen cargada</p>
+                  <p className='text-sm font-medium text-gray-700 mb-2'>
+                    ✓ Imagen cargada
+                  </p>
                   <p className='text-xs text-gray-500 mb-4'>
                     La imagen se mostrará en la tarjeta del curso
                   </p>
@@ -609,7 +783,9 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           </div>
         )}
 
-        {errors.image && <p className='mt-2 text-sm text-red-600'>{errors.image}</p>}
+        {errors.image && (
+          <p className='mt-2 text-sm text-red-600'>{errors.image}</p>
+        )}
       </div>
 
       {/* Published Status */}
@@ -621,11 +797,16 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
           onChange={(e) => updateFormData({ isPublished: e.target.checked })}
           className='w-4 h-4 text-[#660e1b] border-gray-300 rounded focus:ring-[#660e1b]'
         />
-        <label htmlFor='isPublished' className='text-sm font-medium text-gray-700'>
+        <label
+          htmlFor='isPublished'
+          className='text-sm font-medium text-gray-700'
+        >
           Publicar curso inmediatamente
         </label>
         <span className='ml-auto text-xs text-gray-500'>
-          {formData.isPublished ? '✓ Visible para usuarios' : 'Guardado como borrador'}
+          {formData.isPublished
+            ? '✓ Visible para usuarios'
+            : 'Guardado como borrador'}
         </span>
       </div>
     </div>
