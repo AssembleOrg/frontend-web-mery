@@ -8,6 +8,7 @@ export const config = {
   // - api routes
   // - _next (Next.js internals)
   // - _static (inside /public)
+  // - after-care routes (no locale prefix needed)
   // - files with extensions (e.g. favicon.ico)
-  matcher: ['/((?!api|_next|_static|.*\\..*).*)']
+  matcher: ['/((?!api|_next|_static|after-care-.*|.*\\..*).*)'],
 };

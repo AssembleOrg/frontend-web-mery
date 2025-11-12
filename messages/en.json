@@ -684,5 +684,11 @@
     "badges": {
       "new": "NEW"
     }
+  },
+  "notFound": {
+    "title": "404",
+    "heading": "Page Not Found",
+    "message": "Sorry, the page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to Home"
   }
 }

@@ -5,17 +5,8 @@ import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ModalProvider } from '@/contexts/modal-context';
 import { AuthInterceptorProvider } from '@/components/auth/AuthInterceptorProvider';
-import { Poppins } from 'next/font/google';
-import { dinLight, dinRegular, dinMedium, avantGardeAdmin } from '@/lib/fonts';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-secondary',
-  display: 'swap',
-});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -36,66 +27,55 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      className={`${dinLight.variable} ${dinRegular.variable} ${dinMedium.variable} ${avantGardeAdmin.variable} ${poppins.variable}`}
+    <ThemeProvider
+      attribute='class'
+      defaultTheme='light'
+      enableSystem
+      disableTransitionOnChange
     >
-      <body
-        className='antialiased'
-        suppressHydrationWarning
-      >
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='light'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextIntlClientProvider messages={messages}>
-            <ModalProvider>
-              <AuthInterceptorProvider>
-                {children}
-                <Script
-                  src='https://sdk.mercadopago.com/js/v2'
-                  strategy='lazyOnload'
-                />
-              </AuthInterceptorProvider>
-            </ModalProvider>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+      <NextIntlClientProvider messages={messages}>
+        <ModalProvider>
+          <AuthInterceptorProvider>
+            {children}
+            <Script
+              src='https://sdk.mercadopago.com/js/v2'
+              strategy='lazyOnload'
+            />
+          </AuthInterceptorProvider>
+        </ModalProvider>
+      </NextIntlClientProvider>
 
-        <Toaster
-          position='top-right'
-          toastOptions={{
+      <Toaster
+        position='top-right'
+        toastOptions={{
+          style: {
+            background: '#2B2B2B',
+            color: '#FBE8EA',
+            borderRadius: '8px',
+            border: '1px solid #545454',
+          },
+          error: {
             style: {
-              background: '#2B2B2B',
-              color: '#FBE8EA',
-              borderRadius: '8px',
-              border: '1px solid #545454',
+              background: '#660e1b',
+              color: 'white',
             },
-            error: {
-              style: {
-                background: '#660e1b',
-                color: 'white',
-              },
-              iconTheme: {
-                primary: 'white',
-                secondary: '#660e1b',
-              },
+            iconTheme: {
+              primary: 'white',
+              secondary: '#660e1b',
             },
-            success: {
-              style: {
-                background: '#f9bbc4',
-                color: '#660e1b',
-              },
-              iconTheme: {
-                primary: '#660e1b',
-                secondary: 'white',
-              },
+          },
+          success: {
+            style: {
+              background: '#f9bbc4',
+              color: '#660e1b',
             },
-          }}
-        />
-      </body>
-    </html>
+            iconTheme: {
+              primary: '#660e1b',
+              secondary: 'white',
+            },
+          },
+        }}
+      />
+    </ThemeProvider>
   );
 }
