@@ -58,8 +58,8 @@
       },
       "cta": {
         "title": "¿Lista para tu transformación?",
-        "description": "Reservá tu consulta gratuita y descubrí cómo nuestros tratamientos pueden realzar tu belleza natural.",
-        "bookButton": "Reservar Consulta Gratuita",
+        "description": "Reservá tu consulta y descubrí cómo nuestros tratamientos pueden realzar tu belleza natural.",
+        "bookButton": "Reservar Consulta",
         "servicesButton": "Ver Servicios"
       }
     }
@@ -85,7 +85,7 @@
     "description": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
     "reserve": "Reservar",
     "express": "Asesoramiento Express",
-    "info": "Si queres conocer los servicios que tenemos disponibles para vos y sus valores ingresa en Asesoramiento Express antes de reservar tu cita. Este asesoramiento en aproximado ya que una vez en nuestro salón vamos a poder recomendarte de manera personalizada los servicios indicados para vos ❤️",
+    "info": "Si queres conocer los servicios que tenemos disponibles para vos y sus valores ingresa en Asesoramiento Express antes de reservar tu cita. Este asesoramiento es aproximado ya que una vez en nuestro salón vamos a poder recomendarte de manera personalizada los servicios indicados para vos ❤️",
     "policyLink": "Política de cancelaciones"
   },
   "giftCard": {
@@ -271,7 +271,7 @@
       },
       "shared": {
         "procedureHeading": "PROCEDIMIENTO",
-        "procedureConsultation": "La primera instancia es la consulta, que es gratuita. Solo se cobrará el stylism de cejas si es necesario. Durante esta consulta te contaremos de qué se trata el procedimiento, cómo se realiza, cuánto tiempo lleva y los cruciales cuidados previos y posteriores. Despejaremos todas tus dudas para que estés completamente segura antes de realizarlo.",
+        "procedureConsultation": "La primera instancia es la consulta. Solo se cobrará el stylism de cejas si es necesario. Durante esta consulta te contaremos de qué se trata el procedimiento, cómo se realiza, cuánto tiempo lleva y los cruciales cuidados previos y posteriores. Despejaremos todas tus dudas para que estés completamente segura antes de realizarlo.",
         "procedureMicroblading": "Una vez realizada tu primera consulta y si estás decidida, puedes reservar tu primera cita para Microblading. El precio se divide en dos partes: la primera sesión y un retoque necesario en una segunda sesión (entre 30 y 60 días después) que tiene un costo adicional. Pasados los tres meses, se considerará mantenimiento.",
         "procedureCamouflage": "Una vez realizada tu consulta, puedes reservar tu cita para Camuflaje. Cada sesión tiene un costo. El número de sesiones necesarias dependerá del criterio de la especialista y la respuesta de la piel de cada clienta. Finalizadas las sesiones de Camuflaje, puedes realizar una sesión de Microblading (con cargo adicional) para dar la textura deseada.",
         "biosecurityHeading": "NORMAS DE BIOSEGURIDAD",
@@ -294,7 +294,7 @@
       },
       "procedure": {
         "heading": "PROCEDIMIENTO",
-        "p1": "El primer paso es la etapa de consulta. Esta es gratuita. Aquí te contamos de qué se trata, cómo se hace, cuánto tiempo lleva y los cuidados previos y posteriores a tener en cuenta. Despejamos todas tus dudas para que te asegures de que quieres hacértelo.",
+        "p1": "El primer paso es la etapa de consulta. Aquí te contamos de qué se trata, cómo se hace, cuánto tiempo lleva y los cuidados previos y posteriores a tener en cuenta. Despejamos todas tus dudas para que te asegures de que quieres hacértelo.",
         "p2": "Esta cita es la clave para darte información, para que conozcas los procedimientos, para confirmar que puedes hacértelo y que puedes respetar los cuidados posteriores. También te informaremos cuántas sesiones llevará tu caso (pueden ser varias de 2 a 4 horas).",
         "p3": "Se realiza una sesión al mes. Es un compromiso que debes asumir. De lo contrario, el servicio no se termina y no se puede esperar el potencial de los resultados.",
         "p4": "Una vez que hayas tenido la consulta y te hayas decidido, puedes reservar tu primera cita para Nano Scalp. El costo del servicio dependerá de las horas que lleve y cada sesión tendrá el mismo costo. Para más información contáctanos por WhatsApp al 11 6159-2591"
@@ -309,8 +309,8 @@
       },
       "cta": {
         "heading": "¿Lista para Recuperar tu Confianza?",
-        "text": "El Nano Scalp ofrece una solución definitiva y de aspecto natural. Reserva una consulta gratuita para descubrir cómo podemos ayudarte.",
-        "button": "Reservar Consulta Gratuita"
+        "text": "El Nano Scalp ofrece una solución definitiva y de aspecto natural. Reserva una consulta para descubrir cómo podemos ayudarte.",
+        "button": "Reservar Consulta"
       }
     },
     "eyelashStyling": {

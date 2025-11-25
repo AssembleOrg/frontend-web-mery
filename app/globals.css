@@ -10,19 +10,17 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* Brand Fonts - Now using next/font variables */
+  /* Safari fallback: Always include system fonts directly, not just via var() */
   --font-primary: var(--font-din-light), -apple-system, BlinkMacSystemFont,
     'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; /* DIN Light - Titles */
-  --font-secondary: var(
-    --font-secondary,
-    'Poppins',
-    sans-serif
-  ); /* Poppins - Body text */
+  --font-secondary: 'Poppins', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Roboto', sans-serif; /* Poppins - Body text */
   --font-custom: var(--font-avant-garde-admin), -apple-system,
     BlinkMacSystemFont, 'Segoe UI', sans-serif; /* AvantGarde - Special use */
 
-  --font-sans: var(--font-din-light), var(--font-secondary), -apple-system,
+  --font-sans: var(--font-din-light), 'Poppins', -apple-system,
     BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-geist-mono), 'Courier New', monospace;
 
   /* Default font families for Tailwind */
   --default-font-family: var(--font-din-light), -apple-system,
@@ -190,8 +188,21 @@
 
   body {
     @apply bg-background text-foreground font-primary font-light;
+    /* Safari fallback: explicit font-family as backup */
+    font-family: var(--font-din-light), -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     letter-spacing: normal !important; /* Reset any weird letter spacing */
     line-height: 1.5 !important; /* Normal line height */
+  }
+
+  /* Safari legacy fallback - ensures text is always visible */
+  @supports not (font-variation-settings: normal) {
+    body,
+    h1, h2, h3, h4, h5, h6,
+    p, span, a, button, input, textarea, select {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Helvetica', 'Arial', sans-serif !important;
+    }
   }
 }
 

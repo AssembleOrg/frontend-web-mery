@@ -173,8 +173,8 @@ export function ServicePageLayout({
               ¿Lista para tu transformación?
             </h2>
             <p className='text-muted-foreground mb-6 max-w-2xl mx-auto'>
-              Reservá tu consulta gratuita y descubrí cómo {title.toLowerCase()}{' '}
-              puede realzar tu belleza natural.
+              Reservá tu consulta y descubrí cómo {title.toLowerCase()} puede
+              realzar tu belleza natural.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <Button
@@ -182,7 +182,7 @@ export function ServicePageLayout({
                 className='px-8'
               >
                 <Calendar className='h-5 w-5 mr-2' />
-                Reservar Consulta Gratuita
+                Reservar Consulta
               </Button>
               <Button
                 variant='outline'
