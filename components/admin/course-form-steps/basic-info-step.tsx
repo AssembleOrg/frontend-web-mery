@@ -662,7 +662,7 @@ export function BasicInfoStep({
             htmlFor='isFree'
             className='text-sm font-medium text-gray-700'
           >
-            Curso 'informativo' (establece ambos precios en 0)
+            Curso &apos;informativo&apos; (establece ambos precios en 0)
           </label>
         </div>
 
