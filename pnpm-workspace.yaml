@@ -1,7 +1,8 @@
+packages:
+  - .
+
 onlyBuiltDependencies:
+  - '@swc/core'
   - '@tailwindcss/oxide'
   - sharp
   - unrs-resolver
-
-packages:
-  - .
