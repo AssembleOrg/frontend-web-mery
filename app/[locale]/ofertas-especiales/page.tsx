@@ -6,7 +6,6 @@ import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import CourseCard from '@/components/course-card';
 import { Loader2, Clock, Sparkles } from 'lucide-react';
-import Snowfall from 'react-snowfall';
 import {
   PROMO_CONFIG,
   isPromoDisabled,
@@ -165,21 +164,10 @@ export default function OfertasEspecialesPage() {
       <Navigation />
       {/* Header con banner de promoción */}
       <div
-        className='py-12 px-4 font-admin relative overflow-hidden'
+        className='py-12 px-4 font-admin'
         style={{ backgroundColor: '#5f0001' }}
       >
-        {/* Snowfall effect */}
-        <Snowfall
-          color='#ffffff'
-          snowflakeCount={100}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            zIndex: 1,
-          }}
-        />
-        <div className='max-w-7xl mx-auto relative z-10'>
+        <div className='max-w-7xl mx-auto'>
           <div className='text-center space-y-6'>
             {/* Badge */}
             <div className='inline-flex items-center gap-2 bg-[#fbe8ea]/30 px-6 py-2 rounded-full text-[var(--mg-pink-cta)]'>
@@ -198,7 +186,7 @@ export default function OfertasEspecialesPage() {
               <p className='text-xl md:text-2xl font-semibold text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
                 {PROMO_CONFIG.TEXTS.pageSubtitle}
               </p>
-              <p className='text-base md:text-lg font-semibold text-[var(--mg-pink-cta)]'>
+              <p className='text-sm md:text-base font-semibold text-[var(--mg-pink-cta)]'>
                 {PROMO_CONFIG.TEXTS.pageSubtitleExtra}
               </p>
               <p className='text-base md:text-lg opacity-90 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>

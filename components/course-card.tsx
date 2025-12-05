@@ -271,7 +271,7 @@ export default function CourseCard({
                   disabled={!purchaseButtonsActive}
                   className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
                 >
-                  {!purchaseButtonsActive ? '¡Oferta disponible desde el 6 de Diciembre!' : 'Comprar formación'}
+                  {!purchaseButtonsActive ? '¡Ya falta poco...!' : 'Comprar formación'}
                 </button>
               ) : (
                 <>
@@ -280,14 +280,14 @@ export default function CourseCard({
                     disabled={isLoadingMP || !purchaseButtonsActive}
                     className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
                   >
-                    {isLoadingMP ? 'Procesando...' : !purchaseButtonsActive ? '¡Oferta disponible desde el 6 de Diciembre!' : 'Comprar formación'}
+                    {isLoadingMP ? 'Procesando...' : !purchaseButtonsActive ? '¡Ya falta poco...!' : 'Comprar formación'}
                   </button>
                   <button
                     onClick={handleBuyExterior}
                     disabled={!purchaseButtonsActive}
                     className='w-full bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
                   >
-                    {!purchaseButtonsActive ? '¡Oferta disponible desde el 6 de Diciembre!' : 'Comprar desde el exterior'}
+                    {!purchaseButtonsActive ? '¡Ya falta poco...!' : 'Comprar desde el exterior'}
                   </button>
                 </>
               )}

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 import { DateTime } from 'luxon';
-import Snowfall from 'react-snowfall';
 import {
   PROMO_CONFIG,
   getTimeUntilPromoChange,
@@ -172,17 +171,6 @@ export default function PromoModal() {
           style={{ backgroundColor: '#fbe8ea' }}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Snowfall effect */}
-          <Snowfall
-            color="#ffffff"
-            snowflakeCount={50}
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              zIndex: 1
-            }}
-          />
           {/* Botón cerrar */}
           <button
             onClick={handleClose}

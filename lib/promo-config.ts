@@ -57,7 +57,7 @@ export const PROMO_CONFIG = {
 
     pageTitle: '50% OFF',
     pageSubtitle: 'En todas las formaciones',
-    pageSubtitleExtra: '( incluye nanoblading y camuflaje) ',
+    pageSubtitleExtra: '(Incluye nanoblading y camuflaje)',
     pageDescription:
       'Las últimas técnicas en Cosmetic Tattoo y servicios Premium 50% OFF',
 
