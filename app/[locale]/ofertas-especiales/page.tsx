@@ -6,7 +6,13 @@ import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import CourseCard from '@/components/course-card';
 import { Loader2, Clock, Sparkles } from 'lucide-react';
-import { PROMO_CONFIG, isPromoDisabled, isPromoActive, isPromoUpcoming } from '@/lib/promo-config';
+import Snowfall from 'react-snowfall';
+import {
+  PROMO_CONFIG,
+  isPromoDisabled,
+  isPromoActive,
+  isPromoUpcoming,
+} from '@/lib/promo-config';
 import { DateTime } from 'luxon';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -52,11 +58,11 @@ export default function OfertasEspecialesPage() {
       const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');
       const startDate = PROMO_CONFIG.START_DATE;
       const endDate = PROMO_CONFIG.END_DATE;
-      
+
       // Determinar el target y el texto según la fecha actual
       let target: DateTime;
       let text: string;
-      
+
       if (now < startDate) {
         // Antes del inicio: contar hacia START_DATE
         target = startDate;
@@ -83,9 +89,15 @@ export default function OfertasEspecialesPage() {
       setCountdownText(text);
       setTimeLeft({
         days: Math.floor(diff.days),
-        hours: Math.floor(diff.hours % 24).toString().padStart(2, '0'),
-        minutes: Math.floor(diff.minutes % 60).toString().padStart(2, '0'),
-        seconds: Math.floor(diff.seconds % 60).toString().padStart(2, '0'),
+        hours: Math.floor(diff.hours % 24)
+          .toString()
+          .padStart(2, '0'),
+        minutes: Math.floor(diff.minutes % 60)
+          .toString()
+          .padStart(2, '0'),
+        seconds: Math.floor(diff.seconds % 60)
+          .toString()
+          .padStart(2, '0'),
       });
     };
 
@@ -99,12 +111,12 @@ export default function OfertasEspecialesPage() {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/categories/all`);
-      
+
       if (!response.ok) throw new Error('Error al cargar formaciones');
 
       const result = await response.json();
       const coursesData = result.data || [];
-      
+
       // Filtrar: solo activos y excluir "private sessions"
       setCourses(
         coursesData.filter(
@@ -127,18 +139,18 @@ export default function OfertasEspecialesPage() {
 
   if (promoDisabled) {
     return (
-      <div className="min-h-screen bg-[var(--mg-pink-light)]">
+      <div className='min-h-screen bg-[var(--mg-pink-light)]'>
         <Navigation />
-        <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-          <h1 className="text-4xl font-bold text-[var(--mg-dark)] mb-4">
+        <div className='max-w-4xl mx-auto px-4 py-20 text-center'>
+          <h1 className='text-4xl font-bold text-[var(--mg-dark)] mb-4'>
             Promoción Finalizada
           </h1>
-          <p className="text-lg text-[var(--mg-gray)] mb-8">
+          <p className='text-lg text-[var(--mg-gray)] mb-8'>
             La promoción especial ha finalizado. Gracias por tu interés.
           </p>
           <a
-            href="/formaciones"
-            className="inline-block bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] text-[var(--mg-dark)] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            href='/formaciones'
+            className='inline-block bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] text-[var(--mg-dark)] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200'
           >
             Ver Formaciones
           </a>
@@ -149,59 +161,83 @@ export default function OfertasEspecialesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--mg-pink-light)]">
+    <div className='min-h-screen bg-[var(--mg-pink-light)]'>
       <Navigation />
       {/* Header con banner de promoción */}
-      <div className="text-white py-12 px-4" style={{ backgroundColor: '#67111c' }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-6">
+      <div
+        className='py-12 px-4 font-admin relative overflow-hidden'
+        style={{ backgroundColor: '#5f0001' }}
+      >
+        {/* Snowfall effect */}
+        <Snowfall
+          color='#ffffff'
+          snowflakeCount={100}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            zIndex: 1,
+          }}
+        />
+        <div className='max-w-7xl mx-auto relative z-10'>
+          <div className='text-center space-y-6'>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/20 px-6 py-2 rounded-full">
-              <Sparkles className="w-5 h-5" />
-              <span className="font-bold tracking-wider text-sm">OFERTA LIMITADA</span>
-              <Sparkles className="w-5 h-5" />
+            <div className='inline-flex items-center gap-2 bg-[#fbe8ea]/30 px-6 py-2 rounded-full text-[var(--mg-pink-cta)]'>
+              <Sparkles className='w-5 h-5 text-[var(--mg-pink-cta)]' />
+              <span className='font-bold tracking-wider text-sm uppercase'>
+                por tiempo limitado
+              </span>
+              <Sparkles className='w-5 h-5 text-[var(--mg-pink-cta)]' />
             </div>
 
             {/* Título principal */}
-            <div className="space-y-3 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]">
-              <h1 className="text-5xl md:text-7xl font-bold">
+            <div className='space-y-3 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
+              <h1 className='text-5xl md:text-7xl font-bold'>
                 {PROMO_CONFIG.TEXTS.pageTitle}
               </h1>
-              <p className="text-xl md:text-2xl font-semibold text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]">
+              <p className='text-xl md:text-2xl font-semibold text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
                 {PROMO_CONFIG.TEXTS.pageSubtitle}
               </p>
-              <p className="text-base md:text-lg opacity-90 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]">
+              <p className='text-base md:text-lg font-semibold text-[var(--mg-pink-cta)]'>
+                {PROMO_CONFIG.TEXTS.pageSubtitleExtra}
+              </p>
+              <p className='text-base md:text-lg opacity-90 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
                 {PROMO_CONFIG.TEXTS.modalDateRange}
                 <br />
                 <br />
-                No dejes pasar esta oportunidad para sumar nuevos servicios y/o perfeccionar tus resultados ✨
+                No dejes pasar esta oportunidad para sumar nuevos servicios y/o
+                perfeccionar tus resultados
                 <br />
-                Las últimas técnicas en Cosmetic Tattoo y servicios Premiun 50% OFF
+                Las últimas técnicas en Cosmetic Tattoo y servicios Premiun 50%
+                OFF
               </p>
             </div>
 
             {/* Contador regresivo */}
-            <div className="flex justify-center pt-4">
-              <div className="px-8 py-6">
-                <div className="flex items-center gap-2 mb-3 justify-center">
-                  <Clock className="w-5 h-5" />
-                  <p className="text-sm font-semibold">{countdownText}</p>
+            <div className='flex justify-center pt-4'>
+              <div className='px-8 py-6'>
+                <div className='flex items-center gap-2 mb-3 justify-center'>
+                  <Clock className='w-5 h-5 text-[var(--mg-pink-lighter)]' />
+                  <p className='text-sm font-semibold text-[var(--mg-pink-lighter)]'>{countdownText}</p>
                 </div>
-                <div className="flex gap-4">
+                <div className='flex gap-4'>
                   {[
                     { value: timeLeft.days, label: 'Días' },
                     { value: timeLeft.hours, label: 'Horas' },
                     { value: timeLeft.minutes, label: 'Min' },
                     { value: timeLeft.seconds, label: 'Seg' },
                   ].map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center ">
-                      <div 
+                    <div
+                      key={idx}
+                      className='flex flex-col items-center '
+                    >
+                      <div
                         id={`countdown-number-${idx}`}
-                        className="countdown-number-box rounded-lg px-4 py-3 min-w-[70px] font-mono text-3xl font-bold bg-(--mg-pink-cta)"
+                        className='countdown-number-box rounded-lg px-4 py-3 min-w-[70px] font-mono text-3xl font-bold bg-(--mg-pink-cta)'
                       >
                         {item.value}
                       </div>
-                      <span className="text-xs mt-2 font-medium text-white ">
+                      <span className='text-xs mt-2 font-medium text-[var(--mg-pink-cta)]'>
                         {item.label}
                       </span>
                     </div>
@@ -214,44 +250,48 @@ export default function OfertasEspecialesPage() {
       </div>
 
       {/* Contenido principal */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className='max-w-7xl mx-auto px-4 py-16 font-admin'>
         {/* Sección de explicación */}
-        <div className="text-center mb-12 space-y-4">
-          <h2 className="text-3xl font-bold text-[var(--mg-dark)]">
-            Aprovecha esta oportunidad única
+        <div className='text-center mb-12 space-y-4'>
+          <h2 className='text-3xl font-bold text-[var(--mg-dark)]'>
+            No dejes pasar esta oportunidad para sumar nuevos servicios y/o
+            perfeccionar tus resultados
           </h2>
-          <p className="text-lg text-[var(--mg-gray)] max-w-2xl mx-auto">
+          <p className='text-lg text-[var(--mg-gray)] max-w-2xl mx-auto'>
             {PROMO_CONFIG.TEXTS.pageDescription}
           </p>
         </div>
 
         {/* Grid de cursos */}
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-pink-600 animate-spin" />
+          <div className='flex items-center justify-center py-20'>
+            <Loader2 className='w-12 h-12 text-pink-600 animate-spin' />
           </div>
         ) : courses.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">
+          <div className='text-center py-20'>
+            <p className='text-gray-500 text-lg'>
               No hay formaciones disponibles en este momento
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
             {courses.map((course) => (
-              <div key={course.id} className="relative group flex flex-col">
+              <div
+                key={course.id}
+                className='relative group flex flex-col'
+              >
                 {/* Badge de descuento flotante */}
-                <div className="absolute -top-4 -right-4 z-10">
-                  <div className="bg-[#67111c] text-white px-4 py-2 rounded-full font-bold text-lg shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform duration-300">
+                <div className='absolute -top-4 -right-4 z-10'>
+                  <div className='bg-[#5f0001] text-white px-4 py-2 rounded-full font-bold text-lg shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform duration-300 font-admin'>
                     -{PROMO_CONFIG.DISCOUNT_PERCENTAGE}%
                   </div>
                 </div>
 
                 {/* Card del curso con overlay de descuento */}
-                <div className="relative overflow-hidden rounded-2xl border border-[var(--mg-gray)] hover:border-[var(--mg-gray)] transition-all duration-300 shadow-lg hover:shadow-2xl flex-1 flex flex-col">
+                <div className='relative overflow-hidden rounded-2xl border border-[var(--mg-gray)] hover:border-[var(--mg-gray)] transition-all duration-300 shadow-lg hover:shadow-2xl flex-1 flex flex-col'>
                   {/* Efecto de brillo */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
+                  <div className='absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+
                   <CourseCard
                     id={course.id}
                     name={course.name}
@@ -269,16 +309,17 @@ export default function OfertasEspecialesPage() {
         )}
 
         {/* Footer informativo */}
-        <div className="mt-16 bg-[var(--mg-pink-light)] rounded-2xl p-8 text-center border border-[var(--mg-pink)]">
-          <h3 className="text-2xl font-bold text-[var(--mg-dark)] mb-3">
+        <div className='mt-16 bg-[var(--mg-pink-light)] rounded-2xl p-8 text-center border border-[var(--mg-pink)]'>
+          <h3 className='text-2xl font-bold text-[var(--mg-dark)] mb-3'>
             ¿Tenés dudas?
           </h3>
-          <p className="text-[var(--mg-gray)] mb-4">
-          Contáctanos para ayudarte a elegir junt@s la formación para vos!
+          <p className='text-[var(--mg-gray)] mb-4'>
+            Comunícate con nosotros para ayudarte a elegir junt@s la formación
+            para vos!
           </p>
           <a
-            href="/contact"
-            className="inline-block bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] text-[var(--mg-dark)] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            href='/contact'
+            className='inline-block bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] text-[var(--mg-dark)] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200'
           >
             Contactar
           </a>
@@ -288,4 +329,3 @@ export default function OfertasEspecialesPage() {
     </div>
   );
 }
-

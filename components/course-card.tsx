@@ -191,7 +191,7 @@ export default function CourseCard({
                     Comunicarse por{' '}
                     <button
                       onClick={handleWhatsAppContact}
-                      className="text-[#67111c] hover:text-[#4a0c13] font-bold underline transition-colors"
+                      className="text-[#5f0001] hover:text-[#4a0c13] font-bold underline transition-colors"
                     >
                       WhatsApp
                     </button>
@@ -219,7 +219,7 @@ export default function CourseCard({
             className='w-full h-full object-cover'
           />
           {showDiscount && discountPercentage > 0 && (
-            <div className='absolute top-3 left-3 bg-[#67111c] text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg animate-pulse'>
+            <div className='absolute top-3 left-3 bg-[#5f0001] text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg animate-pulse font-admin'>
               -{discountPercentage}%
             </div>
           )}
@@ -271,7 +271,7 @@ export default function CourseCard({
                   disabled={!purchaseButtonsActive}
                   className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
                 >
-                  {!purchaseButtonsActive ? 'Fuera del período de compra' : 'Comprar formación'}
+                  {!purchaseButtonsActive ? '¡Oferta disponible desde el 6 de Diciembre!' : 'Comprar formación'}
                 </button>
               ) : (
                 <>
@@ -280,14 +280,14 @@ export default function CourseCard({
                     disabled={isLoadingMP || !purchaseButtonsActive}
                     className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
                   >
-                    {isLoadingMP ? 'Procesando...' : !purchaseButtonsActive ? 'Fuera del período de compra' : 'Comprar formación'}
+                    {isLoadingMP ? 'Procesando...' : !purchaseButtonsActive ? '¡Oferta disponible desde el 6 de Diciembre!' : 'Comprar formación'}
                   </button>
                   <button
                     onClick={handleBuyExterior}
                     disabled={!purchaseButtonsActive}
                     className='w-full bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
                   >
-                    {!purchaseButtonsActive ? 'Fuera del período de compra' : 'Comprar desde el exterior'}
+                    {!purchaseButtonsActive ? '¡Oferta disponible desde el 6 de Diciembre!' : 'Comprar desde el exterior'}
                   </button>
                 </>
               )}
