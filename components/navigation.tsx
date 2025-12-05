@@ -23,7 +23,7 @@ export function Navigation() {
         <div className='flex h-16 md:h-20 items-center justify-between'>
           <Link
             href='/'
-            className='flex items-center flex-shrink-0'
+            className='flex items-center shrink-0'
           >
             <SimpleLogo />
           </Link>
@@ -45,6 +45,20 @@ export function Navigation() {
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >
               FORMACIONES
+            </Link>
+            <Link
+              href='/ofertas-especiales'
+              className='relative text-sm font-primary font-medium transition-colors text-gray-600 dark:text-gray-300 whitespace-nowrap group'
+            >
+              <span className='relative inline-flex items-center gap-1.5'>
+                <span className='animate-pulse text-[#67111c] font-bold'>
+                  OFERTAS ESPECIALES
+                </span>
+                <span className='relative flex h-2.5 w-2.5 shrink-0'>
+                  <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-[#67111c] opacity-75'></span>
+                  <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-[#67111c]'></span>
+                </span>
+              </span>
             </Link>
             <Link
               href='/gift-card'

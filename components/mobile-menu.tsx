@@ -26,7 +26,7 @@ export function MobileMenu() {
       <Button
         variant='ghost'
         size='icon'
-        className='xl:hidden flex-shrink-0'
+        className='xl:hidden shrink-0'
         onClick={toggleMenu}
         aria-label='Toggle menu'
       >
@@ -88,6 +88,19 @@ export function MobileMenu() {
               onClick={closeMenu}
             >
               FORMACIONES
+            </Link>
+            <Link
+              href='/ofertas-especiales'
+              className='block text-lg font-primary font-medium transition-colors text-gray-600 dark:text-gray-300 relative'
+              onClick={closeMenu}
+            >
+              <span className='animate-pulse text-[#67111c] font-bold flex items-center gap-1.5'>
+                OFERTAS ESPECIALES
+                <span className='relative flex h-2.5 w-2.5 shrink-0'>
+                  <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-[#67111c] opacity-75'></span>
+                  <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-[#67111c]'></span>
+                </span>
+              </span>
             </Link>
             <Link
               href='/gift-card'

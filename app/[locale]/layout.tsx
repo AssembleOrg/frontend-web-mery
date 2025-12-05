@@ -5,6 +5,7 @@ import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ModalProvider } from '@/contexts/modal-context';
 import { AuthInterceptorProvider } from '@/components/auth/AuthInterceptorProvider';
+import PromoModal from '@/components/promo-modal';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
 
@@ -36,6 +37,7 @@ export default async function LocaleLayout({
       <NextIntlClientProvider messages={messages}>
         <ModalProvider>
           <AuthInterceptorProvider>
+            <PromoModal />
             {children}
             <Script
               src='https://sdk.mercadopago.com/js/v2'
