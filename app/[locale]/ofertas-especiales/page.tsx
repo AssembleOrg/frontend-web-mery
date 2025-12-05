@@ -170,26 +170,24 @@ export default function OfertasEspecialesPage() {
         <div className='max-w-7xl mx-auto'>
           <div className='text-center space-y-6'>
             {/* Badge */}
-            <div className='inline-flex items-center gap-2 bg-[#fbe8ea]/30 px-6 py-2 rounded-full text-[var(--mg-pink-cta)]'>
-              <Sparkles className='w-5 h-5 text-[var(--mg-pink-cta)]' />
+            <div className='inline-flex items-center bg-[#fbe8ea]/30 px-6 py-2 rounded-full text-[#fbe8ea]'>
               <span className='font-bold tracking-wider text-sm uppercase'>
                 por tiempo limitado
               </span>
-              <Sparkles className='w-5 h-5 text-[var(--mg-pink-cta)]' />
             </div>
 
             {/* Título principal */}
-            <div className='space-y-3 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
+            <div className='space-y-3 text-[#fbe8ea]'>
               <h1 className='text-5xl md:text-7xl font-bold'>
                 {PROMO_CONFIG.TEXTS.pageTitle}
               </h1>
-              <p className='text-xl md:text-2xl font-semibold text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
+              <p className='text-xl md:text-2xl font-semibold'>
                 {PROMO_CONFIG.TEXTS.pageSubtitle}
               </p>
-              <p className='text-sm md:text-base font-semibold text-[var(--mg-pink-cta)]'>
+              <p className='text-sm md:text-base font-semibold'>
                 {PROMO_CONFIG.TEXTS.pageSubtitleExtra}
               </p>
-              <p className='text-base md:text-lg opacity-90 text-[var(--mg-pink-cta)] text-[var(--mg-pink-cta)]'>
+              <p className='text-base md:text-lg opacity-90'>
                 {PROMO_CONFIG.TEXTS.modalDateRange}
                 <br />
                 <br />
@@ -205,8 +203,8 @@ export default function OfertasEspecialesPage() {
             <div className='flex justify-center pt-4'>
               <div className='px-8 py-6'>
                 <div className='flex items-center gap-2 mb-3 justify-center'>
-                  <Clock className='w-5 h-5 text-[var(--mg-pink-lighter)]' />
-                  <p className='text-sm font-semibold text-[var(--mg-pink-lighter)]'>{countdownText}</p>
+                  <Clock className='w-5 h-5 text-[#fbe8ea]' />
+                  <p className='text-sm font-semibold text-[#fbe8ea]'>{countdownText}</p>
                 </div>
                 <div className='flex gap-4'>
                   {[
@@ -225,7 +223,7 @@ export default function OfertasEspecialesPage() {
                       >
                         {item.value}
                       </div>
-                      <span className='text-xs mt-2 font-medium text-[var(--mg-pink-cta)]'>
+                      <span className='text-xs mt-2 font-medium text-[#fbe8ea]'>
                         {item.label}
                       </span>
                     </div>
