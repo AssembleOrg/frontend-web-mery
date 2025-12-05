@@ -32,14 +32,15 @@ export default function PromoModal() {
   const [isPromoActive, setIsPromoActive] = useState(false);
 
   useEffect(() => {
-    // Solo mostrar en home (pathname debe ser '/' o '/es' o '/en')
-    const isHome =
+    // Mostrar en home y formaciones
+    const isAllowedRoute =
       pathname === '/' ||
       pathname === '/es' ||
       pathname === '/en' ||
-      pathname?.match(/^\/[a-z]{2}$/);
+      pathname?.match(/^\/[a-z]{2}$/) ||
+      pathname?.includes('/formaciones');
 
-    if (!isHome) {
+    if (!isAllowedRoute) {
       return;
     }
 
