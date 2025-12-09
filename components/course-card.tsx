@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { isPromoDisabled, arePurchaseButtonsActive } from '@/lib/promo-config';
 import { X } from 'lucide-react';
+import OfertasCourseModal from './ofertas-course-modal';
 
 const WHATSAPP_NUMBER = '5491153336627';
 
@@ -46,6 +47,7 @@ export default function CourseCard({
   const { isAuthenticated, user } = useAuth();
   const [isLoadingMP, setIsLoadingMP] = useState(false);
   const [showSpecialModal, setShowSpecialModal] = useState(false);
+  const [showOfertasModal, setShowOfertasModal] = useState(false);
   const promoDisabled = isPromoDisabled();
   const purchaseButtonsActive = arePurchaseButtonsActive();
   
@@ -156,6 +158,21 @@ export default function CourseCard({
 
   return (
     <>
+      {/* Modal de ofertas especiales */}
+      <OfertasCourseModal
+        courseId={courseId?.toString() || ''}
+        courseTitle={cardTitle}
+        courseDescription={cardDescription}
+        courseImage={cardImage}
+        priceARS={typeof cardPrice === 'number' ? cardPrice : parseFloat(cardPrice as string) || 0}
+        priceUSD={priceUSD || 0}
+        originalPrice={originalPrice}
+        discountedPrice={discountedPrice}
+        isSpecialCourse={isSpecialCourse}
+        isOpen={showOfertasModal}
+        onClose={() => setShowOfertasModal(false)}
+      />
+
       {/* Modal especial para Nanoblading y Camuflaje Senior */}
       {showSpecialModal && (
         <>
@@ -261,33 +278,41 @@ export default function CourseCard({
             )}
           </div>
           
-          {/* Botones de compra (solo si showDiscount está activo) */}
+          {/* Botones cuando showDiscount está activo */}
           {showDiscount && (
             <div className='flex flex-col gap-2'>
-              {/* Para cursos especiales, solo mostrar un botón que abre el modal */}
+              {/* Botón "Más información" que abre el modal */}
+              <button
+                onClick={() => setShowOfertasModal(true)}
+                className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-[var(--mg-dark)] px-4 py-2 text-sm font-primary-medium transition-colors duration-200 uppercase tracking-wide rounded border border-[var(--mg-gray)]'
+              >
+                Más información
+              </button>
+              
+              {/* Botones de compra directa (mantener funcionalidad original) */}
               {isSpecialCourse ? (
                 <button
                   onClick={handleBuyFormation}
                   disabled={!purchaseButtonsActive}
-                  className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
+                  className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-[var(--mg-dark)] px-4 py-2 text-sm font-primary-medium transition-colors duration-200 uppercase tracking-wide rounded border border-[var(--mg-gray)] disabled:opacity-50 disabled:cursor-not-allowed'
                 >
-                  {!purchaseButtonsActive ? '¡Ya falta poco...!' : 'Comprar formación'}
+                  {!purchaseButtonsActive ? 'Fuera del período de compra' : 'Comprar formación'}
                 </button>
               ) : (
                 <>
                   <button
                     onClick={handleBuyFormation}
                     disabled={isLoadingMP || !purchaseButtonsActive}
-                    className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
+                    className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-[var(--mg-dark)] px-4 py-2 text-sm font-primary-medium transition-colors duration-200 uppercase tracking-wide rounded border border-[var(--mg-gray)] disabled:opacity-50 disabled:cursor-not-allowed'
                   >
-                    {isLoadingMP ? 'Procesando...' : !purchaseButtonsActive ? '¡Ya falta poco...!' : 'Comprar formación'}
+                    {isLoadingMP ? 'Procesando...' : !purchaseButtonsActive ? 'Fuera del período de compra' : 'Comprar formación'}
                   </button>
                   <button
                     onClick={handleBuyExterior}
                     disabled={!purchaseButtonsActive}
-                    className='w-full bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--mg-dark)] font-bold py-3 px-4 rounded-lg border border-[var(--mg-gray)] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm uppercase tracking-wide'
+                    className='w-full bg-white hover:bg-gray-100 text-[var(--mg-dark)] px-4 py-2 text-sm font-primary-medium transition-colors duration-200 uppercase tracking-wide rounded border border-[var(--mg-gray)] disabled:opacity-50 disabled:cursor-not-allowed'
                   >
-                    {!purchaseButtonsActive ? '¡Ya falta poco...!' : 'Comprar desde el exterior'}
+                    {!purchaseButtonsActive ? 'Fuera del período de compra' : 'Comprar desde el exterior'}
                   </button>
                 </>
               )}
