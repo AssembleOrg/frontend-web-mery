@@ -17,21 +17,21 @@ export const PROMO_CONFIG = {
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   END_DATE: DateTime.fromObject(
-    { year: 2025, month: 12, day: 10, hour: 23, minute: 59, second: 59 },
+    { year: 2025, month: 12, day: 13, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Fecha de desactivación completa (después de esta fecha se bloquea todo)
   DISABLE_DATE: DateTime.fromObject(
-    { year: 2025, month: 12, day: 11, hour: 1, minute: 0, second: 0 },
+    { year: 2025, month: 12, day: 13, hour: 1, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
-  // Período de compra activo: desde 00:00 del 6/12 hasta 00:00 del 11/12
+  // Período de compra activo: desde 00:00 del 6/12 hasta 00:00 del 13/12
   PURCHASE_START: DateTime.fromObject(
     { year: 2025, month: 12, day: 6, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   PURCHASE_END: DateTime.fromObject(
-    { year: 2025, month: 12, day: 11, hour: 0, minute: 0, second: 0 },
+    { year: 2025, month: 12, day: 13, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
 
@@ -50,7 +50,7 @@ export const PROMO_CONFIG = {
   TEXTS: {
     modalTitle: '50% OFF',
     modalSubtitle: 'en todas las formaciones',
-    modalDateRange: 'Del 6 al 10 de Diciembre',
+    modalDateRange: 'Del 6 al 13 de Diciembre',
     modalCTA: 'Ver Ofertas Especiales',
     modalDescription:
       'No dejes pasar esta oportunidad para sumar nuevos servicios y/o perfeccionar tus resultados',
@@ -96,7 +96,7 @@ export function isPromoUpcoming(): boolean {
 }
 
 /**
- * Verifica si la promoción está completamente desactivada (después del 11/12 a la 1 AM)
+ * Verifica si la promoción está completamente desactivada (después del 13/12 a la 1 AM)
  */
 export function isPromoDisabled(): boolean {
   const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');
@@ -105,7 +105,7 @@ export function isPromoDisabled(): boolean {
 
 /**
  * Verifica si los botones de compra están activos
- * Solo activos entre las 00:00 del 6/12 y las 00:00 del 11/12
+ * Solo activos entre las 00:00 del 6/12 y las 00:00 del 13/12
  */
 export function arePurchaseButtonsActive(): boolean {
   const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');

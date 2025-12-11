@@ -166,55 +166,55 @@ export default function PromoModal() {
       />
 
       {/* Modal */}
-      <div className='fixed inset-0 z-[70] flex items-center justify-center p-2 md:p-4 pointer-events-none'>
+      <div className='fixed inset-0 z-[70] flex items-center justify-center p-1 md:p-4 pointer-events-none'>
         <div
-          className='rounded-2xl max-w-md md:max-w-lg w-full p-5 md:p-8 relative pointer-events-auto overflow-hidden'
+          className='rounded-xl md:rounded-2xl max-w-sm md:max-w-lg w-full p-3 md:p-8 relative pointer-events-auto overflow-hidden'
           style={{ backgroundColor: '#fbe8ea' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Botón cerrar */}
           <button
             onClick={handleClose}
-            className='absolute top-2 right-2 md:top-4 md:right-4 text-gray-500 hover:text-gray-700 transition-colors z-10'
+            className='absolute top-1.5 right-1.5 md:top-4 md:right-4 text-gray-500 hover:text-gray-700 transition-colors z-10'
             aria-label='Cerrar'
           >
-            <X className='w-5 h-5 md:w-6 md:h-6' />
+            <X className='w-4 h-4 md:w-6 md:h-6' />
           </button>
 
           {/* Contenido */}
-          <div className='text-center space-y-4 md:space-y-6 font-admin relative z-10'>
+          <div className='text-center space-y-2.5 md:space-y-6 font-admin relative z-10'>
             {/* Badge de descuento */}
             <div className='inline-flex items-center justify-center'>
-              <div className='bg-[#5f0001] text-white px-4 py-1.5 md:px-6 md:py-2 rounded-full text-xs md:text-sm font-bold tracking-wider'>
+              <div className='bg-[#5f0001] text-white px-3 py-1 md:px-6 md:py-2 rounded-full text-[10px] md:text-sm font-bold tracking-wider'>
                 ¡OFERTA ESPECIAL!
               </div>
             </div>
 
             {/* Título */}
-            <div className='space-y-1.5 md:space-y-2'>
-              <h2 className='text-3xl md:text-4xl font-bold text-[#5f0001]'>
+            <div className='space-y-1 md:space-y-2'>
+              <h2 className='text-2xl md:text-4xl font-bold text-[#5f0001]'>
                 {PROMO_CONFIG.TEXTS.modalTitle}
               </h2>
-              <p className='text-lg md:text-xl font-semibold text-[var(--mg-dark)]'>
+              <p className='text-base md:text-xl font-semibold text-[var(--mg-dark)]'>
                 {PROMO_CONFIG.TEXTS.modalSubtitle}
               </p>
-              <p className='text-xs md:text-sm text-[var(--mg-gray)]'>
+              <p className='text-[10px] md:text-sm text-[var(--mg-gray)]'>
                 {PROMO_CONFIG.TEXTS.modalDateRange}
               </p>
             </div>
 
             {/* Mensaje motivacional */}
-            <div className='space-y-1.5 md:space-y-2'>
-              <p className='text-sm md:text-base text-[var(--mg-dark)]'>
+            <div className='space-y-1 md:space-y-2'>
+              <p className='text-xs md:text-base text-[var(--mg-dark)]'>
                 Cerra el año con una oportunidad de llevar tu profesión a otro
                 nivel.
               </p>
-              <p className='text-xs md:text-sm text-[var(--mg-gray)]'>
+              <p className='text-[10px] md:text-sm text-[var(--mg-gray)]'>
                 <strong className='font-bold text-[var(--mg-dark)]'>
                   Accesibles desde cualquier dispositivo
                 </strong>
               </p>
-              <p className='text-base md:text-lg font-black text-[var(--mg-dark)]'>
+              <p className='text-sm md:text-lg font-black text-[var(--mg-dark)]'>
                 <span className='animated-underline-dark'>
                   Incluye Nanoblading & Camuflaje
                 </span>
@@ -222,13 +222,13 @@ export default function PromoModal() {
             </div>
 
             {/* Contador */}
-            <div className='py-4 md:py-6'>
+            <div className='py-2.5 md:py-6'>
               {isCountdownZero ? (
-                <div className='space-y-2 md:space-y-3'>
-                  <p className='text-base md:text-lg font-medium text-gray-400'>
+                <div className='space-y-1.5 md:space-y-3'>
+                  <p className='text-sm md:text-lg font-medium text-gray-400'>
                     {PROMO_CONFIG.TEXTS.countdownEnded}
                   </p>
-                  <div className='flex justify-center gap-1.5 md:gap-2'>
+                  <div className='flex justify-center gap-1 md:gap-2'>
                     {[
                       { value: 0, label: 'Días' },
                       { value: '00', label: 'Horas' },
@@ -239,10 +239,10 @@ export default function PromoModal() {
                         key={idx}
                         className='flex flex-col items-center'
                       >
-                        <div className='bg-gray-200 text-gray-400 rounded-lg px-2 py-1.5 md:px-3 md:py-2 min-w-[45px] md:min-w-[60px] font-mono text-xl md:text-2xl font-bold'>
+                        <div className='bg-gray-200 text-gray-400 rounded-lg px-1.5 py-1 md:px-3 md:py-2 min-w-[35px] md:min-w-[60px] font-mono text-lg md:text-2xl font-bold'>
                           {item.value}
                         </div>
-                        <span className='text-[10px] md:text-xs text-gray-400 mt-0.5 md:mt-1'>
+                        <span className='text-[9px] md:text-xs text-gray-400 mt-0.5 md:mt-1'>
                           {item.label}
                         </span>
                       </div>
@@ -250,13 +250,13 @@ export default function PromoModal() {
                   </div>
                 </div>
               ) : (
-                <div className='space-y-2 md:space-y-3'>
-                  <p className='text-xs md:text-sm font-medium text-[var(--mg-dark)]'>
+                <div className='space-y-1.5 md:space-y-3'>
+                  <p className='text-[10px] md:text-sm font-medium text-[var(--mg-dark)]'>
                     {isPromoActive
                       ? PROMO_CONFIG.TEXTS.countdownActive
                       : PROMO_CONFIG.TEXTS.countdownBeforeStart}
                   </p>
-                  <div className='flex justify-center gap-1.5 md:gap-2'>
+                  <div className='flex justify-center gap-1 md:gap-2'>
                     {[
                       { value: timeLeft.days, label: 'Días' },
                       { value: timeLeft.hours, label: 'Horas' },
@@ -268,7 +268,7 @@ export default function PromoModal() {
                         className='flex flex-col items-center'
                       >
                         <div
-                          className='text-[#5f0001] rounded-lg px-2 py-1.5 md:px-3 md:py-2 min-w-[45px] md:min-w-[60px] font-mono text-xl md:text-2xl font-bold'
+                          className='text-[#5f0001] rounded-lg px-1.5 py-1 md:px-3 md:py-2 min-w-[35px] md:min-w-[60px] font-mono text-lg md:text-2xl font-bold'
                           style={{
                             backgroundColor: '#fbe8ea',
                             boxShadow: 'none',
@@ -276,7 +276,7 @@ export default function PromoModal() {
                         >
                           {item.value}
                         </div>
-                        <span className='text-[10px] md:text-xs text-[var(--mg-gray)] mt-0.5 md:mt-1 font-medium'>
+                        <span className='text-[9px] md:text-xs text-[var(--mg-gray)] mt-0.5 md:mt-1 font-medium'>
                           {item.label}
                         </span>
                       </div>
@@ -289,13 +289,13 @@ export default function PromoModal() {
             {/* CTA */}
             <button
               onClick={handleCTA}
-              className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] text-[var(--mg-dark)] font-bold py-3 px-6 md:py-4 md:px-8 rounded-xl transition-colors duration-200 text-sm md:text-base'
+              className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] text-[var(--mg-dark)] font-bold py-2 px-4 md:py-4 md:px-8 rounded-lg md:rounded-xl transition-colors duration-200 text-xs md:text-base'
             >
               {PROMO_CONFIG.TEXTS.modalCTA}
             </button>
 
             {/* Descripción adicional */}
-            <p className='text-[10px] md:text-xs text-[var(--mg-gray)]'>
+            <p className='text-[9px] md:text-xs text-[var(--mg-gray)]'>
               {PROMO_CONFIG.TEXTS.modalDescription}
             </p>
           </div>
