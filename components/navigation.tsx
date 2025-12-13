@@ -10,12 +10,19 @@ import { UserMenu } from './user-menu';
 import { CartIcon } from './cart-icon';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useParams } from 'next/navigation';
+import { useUserCourses } from '@/hooks/useUserCourses';
 
 export function Navigation() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
+  const { courses } = useUserCourses();
+  const hasPresencialesAccess =
+    isAuthenticated &&
+    courses?.some((uc) =>
+      (uc.course.modalidad || '').toLowerCase().includes('presencial')
+    );
 
   return (
     <nav className='sticky top-0 z-50 w-full bg-white dark:bg-background border-b'>
@@ -72,6 +79,14 @@ export function Navigation() {
             >
               CONTACTO
             </Link>
+            {hasPresencialesAccess && (
+              <Link
+                href='/presenciales'
+                className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+              >
+                PRESENCIALES
+              </Link>
+            )}
           </div>
 
           {/* Right side controls */}
