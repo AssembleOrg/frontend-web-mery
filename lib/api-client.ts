@@ -5,6 +5,7 @@
 
 import { CourseIncludeItem } from '@/types/course';
 import Cookies from 'js-cookie';
+import { PresencialPoll, PresencialPollOption, PresencialVote } from './presenciales';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -675,6 +676,123 @@ export const getCourseDetails = async (courseId: string): Promise<Category> => {
   return response.data;
 };
 
+// ============================================
+// PRESENCIALES API
+// ============================================
+
+export interface CreatePresencialPollRequest {
+  title: string;
+  description?: string | null;
+  deadline_at?: string | null;
+  options: Array<{
+    date: string;
+    start_time: string;
+    duration_minutes: number;
+  }>;
+  eligibility: {
+    courseIds: string[];
+    userOverrides: Array<{
+      userId?: string | null;
+      email?: string | null;
+      allowed: boolean;
+    }>;
+  };
+}
+
+export interface UpdatePresencialPollRequest extends CreatePresencialPollRequest {
+  status?: 'draft' | 'open' | 'closed';
+}
+
+export interface PresencialPollStats {
+  poll_id: string;
+  total_votes: number;
+  votes_by_option: Record<string, number>;
+  unique_voters: number;
+}
+
+/**
+ * Get all presencial polls
+ * GET /presenciales/polls
+ */
+export const getPresencialPolls = async (): Promise<
+  ApiResponse<PresencialPoll[]>
+> => {
+  return apiRequest<PresencialPoll[]>(`/presenciales/polls`);
+};
+
+/**
+ * Create a new presencial poll
+ * POST /presenciales/polls
+ */
+export const createPresencialPoll = async (
+  poll: CreatePresencialPollRequest
+): Promise<ApiResponse<PresencialPoll>> => {
+  return apiRequest<PresencialPoll>(`/presenciales/polls`, {
+    method: 'POST',
+    body: JSON.stringify(poll),
+  });
+};
+
+/**
+ * Update a presencial poll
+ * PUT /presenciales/polls/:id
+ */
+export const updatePresencialPoll = async (
+  id: string,
+  poll: UpdatePresencialPollRequest
+): Promise<ApiResponse<PresencialPoll>> => {
+  return apiRequest<PresencialPoll>(`/presenciales/polls/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(poll),
+  });
+};
+
+/**
+ * Close a presencial poll
+ * PATCH /presenciales/polls/:id/close
+ */
+export const closePresencialPoll = async (
+  id: string
+): Promise<ApiResponse<PresencialPoll>> => {
+  return apiRequest<PresencialPoll>(`/presenciales/polls/${id}/close`, {
+    method: 'PATCH',
+  });
+};
+
+/**
+ * Get votes for a presencial poll
+ * GET /presenciales/polls/:id/votes
+ */
+export const getPresencialPollVotes = async (
+  id: string
+): Promise<ApiResponse<PresencialVote[]>> => {
+  return apiRequest<PresencialVote[]>(`/presenciales/polls/${id}/votes`);
+};
+
+/**
+ * Vote in a presencial poll
+ * POST /presenciales/polls/:pollId/vote
+ */
+export const votePresencialPoll = async (
+  pollId: string,
+  optionId: string
+): Promise<ApiResponse<PresencialVote>> => {
+  return apiRequest<PresencialVote>(`/presenciales/polls/${pollId}/vote`, {
+    method: 'POST',
+    body: JSON.stringify({ option_id: optionId }),
+  });
+};
+
+/**
+ * Get statistics for a presencial poll
+ * GET /presenciales/polls/:id/stats
+ */
+export const getPresencialPollStats = async (
+  id: string
+): Promise<ApiResponse<PresencialPollStats>> => {
+  return apiRequest<PresencialPollStats>(`/presenciales/polls/${id}/stats`);
+};
+
 export const apiClient = {
   // Categories
   getCategories,
@@ -705,4 +823,13 @@ export const apiClient = {
   getUserCourses,
   getCourseVideos,
   getCourseDetails,
+
+  // Presenciales
+  getPresencialPolls,
+  createPresencialPoll,
+  updatePresencialPoll,
+  closePresencialPoll,
+  getPresencialPollVotes,
+  votePresencialPoll,
+  getPresencialPollStats,
 };

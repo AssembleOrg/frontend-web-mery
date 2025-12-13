@@ -10,6 +10,7 @@ import { CartIcon } from './cart-icon';
 import { useAuth } from '@/hooks/useAuth';
 import { UserMenu } from './user-menu';
 import { useRouter, useParams } from 'next/navigation';
+import { useUserCourses } from '@/hooks/useUserCourses';
 
 export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,12 @@ export function MobileMenu() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'es';
+  const { courses } = useUserCourses();
+  const hasPresencialesAccess =
+    isAuthenticated &&
+    courses?.some((uc) =>
+      (uc.course.modalidad || '').toLowerCase().includes('presencial')
+    );
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
@@ -90,19 +97,6 @@ export function MobileMenu() {
               FORMACIONES
             </Link>
             <Link
-              href='/ofertas-especiales'
-              className='block text-lg font-primary font-medium transition-colors text-gray-600 dark:text-gray-300 relative'
-              onClick={closeMenu}
-            >
-              <span className='animate-pulse text-[#5f0001] font-bold flex items-center gap-1.5'>
-                OFERTAS ESPECIALES
-                <span className='relative flex h-2.5 w-2.5 shrink-0'>
-                  <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5f0001] opacity-75'></span>
-                  <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-[#5f0001]'></span>
-                </span>
-              </span>
-            </Link>
-            <Link
               href='/gift-card'
               className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}
@@ -116,6 +110,15 @@ export function MobileMenu() {
             >
               CONTACTO
             </Link>
+            {hasPresencialesAccess && (
+              <Link
+                href='/presenciales'
+                className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
+                onClick={closeMenu}
+              >
+                PRESENCIALES
+              </Link>
+            )}
           </nav>
 
           {/* CTA Buttons */}

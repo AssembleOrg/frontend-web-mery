@@ -66,6 +66,7 @@ export const routing = defineRouting({
       en: '/services/paramedical-tattoo',
     },
     '/formaciones': '/formaciones',
+    '/presenciales': '/presenciales',
     '/ofertas-especiales': {
       es: '/ofertas-especiales',
       en: '/ofertas-especiales',
