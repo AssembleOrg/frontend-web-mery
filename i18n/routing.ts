@@ -106,6 +106,7 @@ export const routing = defineRouting({
       es: '/first-masterclass-nanoblading',
       en: '/first-masterclass-nanoblading',
     },
+    '/reset-password': '/reset-password',
   },
 });
 
