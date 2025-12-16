@@ -74,3 +74,14 @@ export interface UpdateProfileData {
   role?: 'ADMIN' | 'SUBADMIN' | 'USER';
   isActive?: boolean;
 }
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+}

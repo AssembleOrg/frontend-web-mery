@@ -5,6 +5,8 @@ import {
   RegisterCredentials,
   RegisterResponse,
   UpdateProfileData,
+  ChangePasswordData,
+  ChangePasswordResponse,
 } from '@/types/auth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -205,6 +207,42 @@ export const updateProfile = async (
   };
 };
 
+export const changePassword = async (
+  token: string,
+  data: ChangePasswordData
+): Promise<{ message: string }> => {
+  console.log('API_BASE_URL', API_BASE_URL + '/auth/change-password');
+  const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: 'Password change failed' }));
+    throw new AuthServiceError(
+      response.status,
+      errorData.message || errorData.error || 'Password change failed'
+    );
+  }
+
+  const result: ChangePasswordResponse = await response.json();
+
+  if (!result.success) {
+    throw new AuthServiceError(400, result.message || 'Password change failed');
+  }
+
+  return {
+    message: result.message,
+  };
+};
+
 export const logout = async (token?: string): Promise<void> => {
   try {
     const headers: Record<string, string> = {
@@ -234,5 +272,6 @@ export const authService = {
   register,
   me,
   updateProfile,
+  changePassword,
   logout,
 };
