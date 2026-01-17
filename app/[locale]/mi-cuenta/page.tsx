@@ -28,7 +28,7 @@ export default function MiCuentaPage() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState('mis-cursos');
 
-  const { logout, user, updateProfile, isLoading: authLoading } = useAuth();
+  const { logout, user, updateProfile, changePassword, isLoading: authLoading } = useAuth();
   const { courses: userCourses, isLoading: loading } = useUserCourses();
 
   // Estado del formulario de perfil
@@ -44,9 +44,11 @@ export default function MiCuentaPage() {
 
   // Estado del formulario de cambio de contraseña
   const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordSaved, setPasswordSaved] = useState(false);
@@ -119,7 +121,9 @@ export default function MiCuentaPage() {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPasswordForm((prev) => ({ ...prev, [name]: value }));
+    // Prevenir espacios en las contraseñas
+    const valueWithoutSpaces = value.replace(/\s/g, '');
+    setPasswordForm((prev) => ({ ...prev, [name]: valueWithoutSpaces }));
     setPasswordSaved(false);
     setPasswordError('');
   };
@@ -135,47 +139,32 @@ export default function MiCuentaPage() {
       return;
     }
 
-    // Validar longitud mínima
-    if (passwordForm.newPassword.length < 6) {
-      setPasswordError('La contraseña debe tener al menos 6 caracteres');
+    // Validar longitud mínima (8 caracteres)
+    if (passwordForm.newPassword.length < 8) {
+      setPasswordError('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+
+    // Validar que no contenga espacios
+    if (passwordForm.newPassword.includes(' ') || passwordForm.confirmPassword.includes(' ')) {
+      setPasswordError('La contraseña no puede contener espacios');
       return;
     }
 
     setIsChangingPassword(true);
 
     try {
-      // Obtener el token del localStorage
-      const token = localStorage.getItem('token');
+      const result = await changePassword({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
 
-      if (!token) {
-        setPasswordError('No se encontró el token de autenticación');
-        setIsChangingPassword(false);
-        return;
-      }
-
-      // Llamar al endpoint de reset-password
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token: token,
-            newPassword: passwordForm.newPassword,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         setPasswordSaved(true);
-        setPasswordForm({ newPassword: '', confirmPassword: '' });
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
         setTimeout(() => setPasswordSaved(false), 3000);
       } else {
-        setPasswordError(data.message || 'Error al cambiar la contraseña');
+        setPasswordError(result.error || 'Error al cambiar la contraseña');
       }
     } catch (error) {
       setPasswordError('Error al conectar con el servidor');
@@ -549,6 +538,36 @@ export default function MiCuentaPage() {
                 onSubmit={handlePasswordSubmit}
                 className='space-y-4'
               >
+                {/* Contraseña Actual */}
+                <div>
+                  <label className='block text-sm font-medium text-foreground mb-2'>
+                    Contraseña Actual *
+                  </label>
+                  <div className='relative'>
+                    <Key className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      name='currentPassword'
+                      value={passwordForm.currentPassword}
+                      onChange={handlePasswordChange}
+                      className='w-full pl-10 pr-12 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                      placeholder='Ingresa tu contraseña actual'
+                      required
+                    />
+                    <button
+                      type='button'
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      className='absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground'
+                    >
+                      {showCurrentPassword ? (
+                        <EyeOff className='w-5 h-5' />
+                      ) : (
+                        <Eye className='w-5 h-5' />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
                 {/* Nueva Contraseña */}
                 <div>
                   <label className='block text-sm font-medium text-foreground mb-2'>
@@ -562,9 +581,9 @@ export default function MiCuentaPage() {
                       value={passwordForm.newPassword}
                       onChange={handlePasswordChange}
                       className='w-full pl-10 pr-12 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
-                      placeholder='Mínimo 6 caracteres'
+                      placeholder='Mínimo 8 caracteres, sin espacios'
                       required
-                      minLength={6}
+                      minLength={8}
                     />
                     <button
                       type='button'
@@ -595,7 +614,7 @@ export default function MiCuentaPage() {
                       className='w-full pl-10 pr-12 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
                       placeholder='Repite la contraseña'
                       required
-                      minLength={6}
+                      minLength={8}
                     />
                     <button
                       type='button'

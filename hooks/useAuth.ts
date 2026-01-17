@@ -8,12 +8,14 @@ import {
   register as registerService,
   me as meService,
   updateProfile as updateProfileService,
+  changePassword as changePasswordService,
   logout as logoutService,
 } from '@/services/auth.service';
 import {
   LoginCredentials,
   RegisterCredentials,
   UpdateProfileData,
+  ChangePasswordData,
 } from '@/types/auth';
 
 // SINGLETON STATE
@@ -157,6 +159,32 @@ export function useAuth() {
     [updateUser]
   );
 
+  const changePassword = useCallback(
+    async (data: ChangePasswordData) => {
+      setSharedLoading(true);
+      setSharedError(null);
+      const currentToken = useAuthStore.getState().token;
+      if (!currentToken) {
+        const errorMsg = 'No hay sesión activa para cambiar la contraseña.';
+        setSharedError(errorMsg);
+        return { success: false, error: errorMsg };
+      }
+
+      try {
+        const response = await changePasswordService(currentToken, data);
+        return { success: true, message: response.message };
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Error al cambiar la contraseña';
+        setSharedError(errorMessage);
+        return { success: false, error: errorMessage };
+      } finally {
+        setSharedLoading(false);
+      }
+    },
+    []
+  );
+
   const logout = useCallback(async () => {
     try {
       const currentToken = useAuthStore.getState().token;
@@ -198,6 +226,7 @@ export function useAuth() {
     login,
     register,
     updateProfile,
+    changePassword,
     logout,
   };
 }
