@@ -27,7 +27,7 @@ function ServiceCardARS({
   badges: any;
 }) {
   const serviceTranslations = useTranslations(
-    `expressConsultation.services.${servicio.titleKey}`
+    `expressConsultation.services.${servicio.titleKey}`,
   );
   const IconComponent = servicio.icon;
 
@@ -84,7 +84,7 @@ function ServiceCardUSD({
   badges: any;
 }) {
   const serviceTranslations = useTranslations(
-    `expressConsultation.services.${servicio.titleKey}`
+    `expressConsultation.services.${servicio.titleKey}`,
   );
   const IconComponent = servicio.icon;
 
@@ -233,9 +233,9 @@ export default function ExpressConsultationPage() {
       icon: Star,
       titleKey: 'nanoblading',
       prices: {
-        firstSession: { regular: 'U$S 610', cash: 'U$S 420' },
+        firstSession: { regular: 'U$S 610', cash: 'U$S 450' },
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
-        maintenance: { regular: 'U$S 610', cash: 'U$S 420' },
+        maintenance: { regular: 'U$S 610', cash: 'U$S 450' },
       },
     },
     {
@@ -253,7 +253,7 @@ export default function ExpressConsultationPage() {
       icon: Heart,
       titleKey: 'lipBlush',
       prices: {
-        firstSession: { regular: 'U$S 650', cash: 'U$S 450' },
+        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
       },
     },
@@ -282,12 +282,6 @@ export default function ExpressConsultationPage() {
             <p className='text-xl font-secondary text-muted-foreground mb-4'>
               {t('subtitle')}
             </p>
-            <div className='inline-flex items-center bg-primary/10 px-4 py-2 rounded-full'>
-              <Calendar className='h-4 w-4 text-primary mr-2' />
-              <span className='font-secondary text-sm text-primary font-medium'>
-                {t('validFrom')}
-              </span>
-            </div>
           </div>
         </div>
       </section>
@@ -339,12 +333,6 @@ export default function ExpressConsultationPage() {
         <div className='container mx-auto px-4'>
           <div className='max-w-4xl mx-auto text-center'>
             <div className='bg-gradient-to-r from-primary/10 to-primary/5 p-6 rounded-lg'>
-              <div className='flex items-center justify-center mb-4'>
-                <CreditCard className='h-6 w-6 text-primary mr-3' />
-                <h3 className='text-xl font-primary font-bold text-primary'>
-                  {t('paymentTitle')}
-                </h3>
-              </div>
               <p className='font-secondary font-bold text-foreground'>
                 {t('paymentNote')}
               </p>

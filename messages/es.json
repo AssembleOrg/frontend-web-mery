@@ -24,8 +24,8 @@
       "microblading": "Microblading & Camuflaje",
       "scalp": "Scalp",
       "nanoscalp": "Nano Scalp",
-      "lashesLine": "Lash Line",
-      "lipBlush": "Lip Blush",
+      "lashesLine": "Lash Line & Camuflaje",
+      "lipBlush": "Lip Blush & Camuflaje",
       "freckles": "Pecas & Lunares",
       "paramedical": "Paramedical Tattoo",
       "autostyling": "Autostyling"
@@ -43,7 +43,7 @@
     "page": {
       "hero": {
         "title": "Mery García",
-        "subtitle": "Especialista en Tatuaje Cosmético"
+        "subtitle": "Cosmetic Tattoo Artist"
       },
       "content": {
         "paragraph1": "Hace más de <strong>20 años</strong> que creo en el poder de las cejas. Autodidacta por completo hasta hace solo un par de años cuando me perfeccioné en el exterior, comencé a experimentar con las mías desde muy pequeña; dándome cuenta que a lo quería dedicarme era al arte, pero aplicado a la belleza.",
@@ -84,8 +84,8 @@
     "title": "¿Cómo reservar tu cita?",
     "description": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
     "reserve": "Reservar",
-    "express": "Asesoramiento Express",
-    "info": "Si queres conocer los servicios que tenemos disponibles para vos y sus valores ingresa en Asesoramiento Express antes de reservar tu cita. Este asesoramiento es aproximado ya que una vez en nuestro salón vamos a poder recomendarte de manera personalizada los servicios indicados para vos ❤️",
+    "express": "Nuestro servicio",
+    "info": "Si queres conocer los servicios que tenemos disponibles para vos y sus valores ingresa en Nuestro servicio antes de reservar tu cita. Este asesoramiento es aproximado ya que una vez en nuestro salón vamos a poder recomendarte de manera personalizada los servicios indicados para vos ❤️",
     "policyLink": "Política de cancelaciones"
   },
   "giftCard": {
@@ -357,7 +357,7 @@
         "p3": "Más de 10 años de experiencia y perfeccionamientos en Comestic Tattoo dieron por resultado que el último año Mery Garcia utilizara Nanoblading para dar respuesta a todas las personas que buscan mejorar sus cejas a través del tatuaje cosmético.",
         "pricing": {
           "heading": "Precio de Lista (By & Only MERY GARCIA)",
-          "session1": "Primera sesión: U$S 610.- (en efectivo U$S 420)",
+          "session1": "Primera sesión: U$S 610.- (en efectivo U$S 450)",
           "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
           "note": "Se considera retoque al servicio complemento de primera sesión realizado entre 30 a 60 días luego del primer servicio de Nanoblading. Una vez tomada tu consulta, para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio de Nanoblading #ByMeryGarcia"
         }
@@ -405,7 +405,7 @@
     },
     "lashesLine": {
       "hero": {
-        "title": "Lashes Line",
+        "title": "Lashes Line & Camuflaje",
         "subtitle": "Un efecto óptico de mayor volumen y densidad para tu mirada."
       },
       "intro": {
@@ -419,6 +419,16 @@
         "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
         "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 320)"
       },
+      "camouflage": {
+        "heading": "LASHES LINE CAMOUFLAGE",
+        "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de dermopigmentacion como de un tatuaje de otro lugar.",
+        "p2": "En la etapa de consulta podremos indicarte que tipo de servicio necesitas para lograr más realismo y elegancia.",
+        "p3": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio",
+        "pricing": {
+          "camouflageSessionLabel": "Lashes Line Camouflage ",
+          "camouflageSession": "U$S 700.- (en efectivo U$S 500)"
+        }
+      },
       "cta": {
         "heading": "¿Lista para Potenciar tu Mirada?",
         "text": "Descubre el secreto de unas pestañas más densas y definidas con un acabado imperceptible. Reserva tu consulta.",
@@ -429,7 +439,7 @@
     },
     "lipBlush": {
       "hero": {
-        "title": "Lip Blush",
+        "title": "Lip Blush & Camuflaje",
         "subtitle": "Labios definidos y naturales. Color híper realista y duradero."
       },
       "intro": {
@@ -451,7 +461,7 @@
         "depositAmount": "Seña AR$ 100.000.-",
         "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
         "firstSessionLabel": "Primera Sesión",
-        "session1": "U$S 650.- (en efectivo U$S 450)",
+        "session1": "U$S 650.- (en efectivo U$S 475)",
         "touchUpLabel": "Retoque",
         "touchUp": "U$S 317.- (en efectivo U$S 180)",
         "maintenanceLabel": "Mantenimiento",
@@ -463,6 +473,18 @@
         "preparationTitle": "Preparación",
         "preparationText": "Por favor concurrir a la sesión con los labios bien hidratados.",
         "availability": "🚀 Sólo 2 citas por semana"
+      },
+      "camouflage": {
+        "heading": "¿QUÉ ES EL LIP CAMOUFLAGE?",
+        "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de dermopigmentacion como de un tatuaje de labios de otro lugar.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas para lograr definición y color con acabado híper realista.\n\nTu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio",
+        "procedure": {
+          "heading": "PROCEDIMIENTO",
+          "text": "La primera instancia es la consulta donde evaluamos el estado actual de la pigmentación. El número de sesiones necesarias dependerá del criterio de Mery y la respuesta de tu piel."
+        },
+        "pricing": {
+          "camouflageSessionLabel": "Camuflaje",
+          "camouflageSession": "U$S 700.- (en efectivo U$S 500)"
+        }
       },
       "cta": {
         "heading": "¿Lista para tus Labios de Ensueño?",
@@ -485,7 +507,7 @@
       "pricing": {
         "heading": "Precio de Lista del Servicio",
         "deposit": "Seña: AR$ 100.000.-",
-        "session1": "Primera sesión: U$S 520.- (en efectivo U$S 450)",
+        "session1": "Primera sesión: U$S 520.- (en efectivo U$S 475)",
         "session2": "Segunda sesión: U$S 520.- (en efectivo U$S 450)",
         "note": "Se necesita una segunda sesión complemento de la primera realizada entre 30 a 60 días luego del primer servicio. Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
       },
@@ -612,11 +634,10 @@
     "closingText": "Ésta política nos ayuda a organizar mejor nuestros horarios y brindar un servicio de excelencia a todos nuestros clientes. Agradecemos tu compresión y colaboración para que más personas puedan disfrutar de nuestros servicios."
   },
   "expressConsultation": {
-    "title": "Asesoramiento Express",
-    "subtitle": "Servicios profesionales de belleza y tatuaje cosmético",
-    "validFrom": "Vigencia desde 23/11/2024",
-    "beautyServicesTitle": "Servicios de Belleza",
-    "cosmeticTattooTitle": "Tatuaje Cosmético Profesional",
+    "title": "Servicios MG",
+    "subtitle": "Servicios profesionales de Cejas, Pestañas & Tattoo Cosmetic",
+    "beautyServicesTitle": "Servicios Profesionales de Cejas & Pestaña",
+    "cosmeticTattooTitle": "Servicios Profesionales de Cosmetic Tattoo",
     "paymentTitle": "HASTA 6 PAGOS CON TARJETA DE CRÉDITO",
     "paymentNote": "Valores no aplicables a agenda de Special Pass",
     "services": {
@@ -655,7 +676,7 @@
       },
       "camouflage": {
         "title": "Camuflaje",
-        "description": "Indicado para personas que tienen un trabajo previo y quieran mejorar el aspecto de sus cejas.",
+        "description": "Indicado para personas que tienen un trabajo previo y quieran mejorar el aspecto de sus cejas, labios y línea de pestañas.",
         "note": "El número de sesiones no puede predeterminarse. Depende del trabajo previo, calidad de tinta, profundidad y tipo de piel."
       }
     },

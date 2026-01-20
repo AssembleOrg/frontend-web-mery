@@ -13,7 +13,7 @@ export default function LipBlushPage() {
 
   const handleWhatsApp = (message: string) => {
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
-      message
+      message,
     )}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -60,7 +60,7 @@ export default function LipBlushPage() {
                   className='flex-1 px-6 py-3 text-base'
                   onClick={() =>
                     handleWhatsApp(
-                      `Hola! Me gustaría reservar una cita de consulta para Lip Blush.`
+                      `Hola! Me gustaría reservar una cita de consulta para Lip Blush.`,
                     )
                   }
                 >
@@ -72,7 +72,7 @@ export default function LipBlushPage() {
                   className='flex-1 px-6 py-3 text-base'
                   onClick={() =>
                     handleWhatsApp(
-                      `Hola! Me gustaría reservar mi primera sesión de Lip Blush.`
+                      `Hola! Me gustaría reservar mi primera sesión de Lip Blush.`,
                     )
                   }
                 >
@@ -186,6 +186,35 @@ export default function LipBlushPage() {
                 </div>
               </div>
             </div>
+          </section>
+
+          {/* Camouflage Section */}
+          <section className='mt-12 pt-8 border-t'>
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-4'>
+              {t('camouflage.heading')}
+            </h2>
+            <div className='text-muted-foreground font-secondary mb-6 whitespace-pre-line'>
+              <p>{t('camouflage.p1')}</p>
+            </div>
+
+            {/* Procedure */}
+            <div className='bg-card p-6 rounded-lg mb-6 alert-high '>
+              <h3 className='text-xl font-bold font-primary text-foreground mb-3'>
+                {t('camouflage.procedure.heading')}
+              </h3>
+              <p className='text-muted-foreground font-secondary'>
+                {t('camouflage.procedure.text')}
+              </p>
+            </div>
+
+            {/* <div className='bg-muted/20 p-6 rounded-lg'>
+              <h4 className='text-lg font-primary/10 font-bold text-primary mb-2'>
+                {t('camouflage.pricing.camouflageSessionLabel')}
+              </h4>
+              <p className='text-lg font-primary/10 font-bold text-primary'>
+                {t('camouflage.pricing.camouflageSession')}
+              </p>
+            </div> */}
           </section>
 
           {/* CTA Section */}

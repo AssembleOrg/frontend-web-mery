@@ -24,11 +24,11 @@
       "microblading": "Microblading & Camouflage",
       "scalp": "Scalp",
       "nanoscalp": "Nano Scalp",
-      "lashesLine": "Lash Line",
+      "lashesLine": "Lash Line & Camouflage",
       "freckles": "Freckles & Moles",
       "paramedical": "Paramedical Tattoo",
       "autostyling": "Autostyling",
-      "lipBlush": "Lip Blush"
+      "lipBlush": "Lip Blush & Camouflage"
     },
     "learnMore": {
       "title": "Want to know more about",
@@ -84,8 +84,8 @@
     "title": "How to book your appointment?",
     "description": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
     "reserve": "Book Now",
-    "express": "Express Consultation",
-    "info": "If you want to know the services we have available for you and their values, go to Express Advice before booking your appointment. This advice is an approximate since once you are in our salon we will be able to personally recommend the services indicated for you ❤️",
+    "express": "Services",
+    "info": "If you want to know the services we have available for you and their values, go to Services before booking your appointment. This advice is an approximate since once you are in our salon we will be able to personally recommend the services indicated for you ❤️",
     "policyLink": "Cancellation policy"
   },
   "giftCard": {
@@ -370,7 +370,7 @@
         "p3": "Over 10 years of experience and constant improvements in Cosmetic Tattooing led Mery Garcia to use Nanoblading last year to provide solutions to all people seeking to enhance their eyebrows through cosmetic tattooing.",
         "pricing": {
           "heading": "List Price (By & Only MERY GARCIA)",
-          "session1": "First session: US$ 610.- (or US$ 420 in cash)",
+          "session1": "First session: US$ 610.- (or US$ 450 in cash)",
           "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
           "note": "A touch-up is considered the complementary service performed 30 to 60 days after the first Nanoblading service. Once you've had your consultation, to book your appointment with Mery you will need to make a deposit that will count towards your Nanoblading service #ByMeryGarcia"
         }
@@ -433,6 +433,16 @@
         "session1": "First session: US$ 480.- (or US$ 320 in cash)",
         "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
         "maintenance": "Maintenance: US$ 480.- (or US$ 320 in cash)"
+      },
+      "camouflage": {
+        "heading": "LASHES LINE CAMOUFLAGE",
+        "p1": "It is a service that combines depigmentation, color correction, texture and structure to IMPROVE THE APPEARANCE of a badly done or deteriorated work from both dermopigmentation and tattoo from another place.",
+        "p2": "During the consultation phase we can tell you what type of service you need to achieve more realism and elegance.",
+        "p3": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session, it is non-refundable and does not lock in the price of your service",
+        "pricing": {
+          "camouflageSessionLabel": "Lashes Line Camouflage",
+          "camouflageSession": "US$ 700.- (or US$ 500 in cash)"
+        }
       },
       "cta": {
         "heading": "Ready to Enhance Your Look?",
@@ -500,7 +510,7 @@
         "depositAmount": "Deposit AR$ 100,000.-",
         "priceListTitle": "Service List Price with Mery Garcia",
         "firstSessionLabel": "First Session",
-        "session1": "US$ 650.- (or US$ 450 in cash)",
+        "session1": "US$ 650.- (or US$ 475 in cash)",
         "touchUpLabel": "Touch-up",
         "touchUp": "US$ 317.- (or US$ 180 in cash)",
         "maintenanceLabel": "Maintenance",
@@ -511,6 +521,18 @@
         "herpesText": "If you have had herpes, please consult with your dermatologist to perform preventive treatment.",
         "preparationTitle": "Preparation",
         "preparationText": "Please come to the session with well-hydrated lips."
+      },
+      "camouflage": {
+        "heading": "WHAT IS LIP CAMOUFLAGE?",
+        "p1": "It is a service that combines depigmentation, color correction, texture and structure to IMPROVE THE APPEARANCE of a badly done or deteriorated work from both dermopigmentation and lip tattoo from another place.\n\nDuring the consultation phase we can tell you what type of service you need to achieve definition and color with hyper-realistic finish.\n\nYour consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session, it is non-refundable and does not lock in the price of your service",
+        "procedure": {
+          "heading": "PROCEDURE",
+          "text": "The first step is the consultation where we evaluate the current state of the pigmentation. The number of sessions needed will depend on Mery's criteria and your skin's response."
+        },
+        "pricing": {
+          "camouflageSessionLabel": "Camouflage",
+          "camouflageSession": "US$ 700.- (or US$ 500 in cash)"
+        }
       },
       "cta": {
         "heading": "Ready for Your Dream Lips?",
@@ -626,7 +648,7 @@
     "closingText": "This policy helps us better organize our schedules and provide an excellent service to all our clients. We appreciate your understanding and cooperation so that more people can enjoy our services."
   },
   "expressConsultation": {
-    "title": "Express Consultation",
+    "title": "Services MG",
     "subtitle": "Professional beauty and cosmetic tattoo services",
     "validFrom": "Valid from 23/11/2024",
     "beautyServicesTitle": "Beauty Services",

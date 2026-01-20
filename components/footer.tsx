@@ -17,14 +17,13 @@ export function Footer() {
               className='flex items-center'
             >
               <Logo
-                size='xl'
+                size='lg'
                 className='mb-6'
               />
             </Link>
             <p className='font-secondary text-muted-foreground text-sm leading-relaxed'>
-              Especialista en tatuaje cosmético con más de 20 años de
-              experiencia. Formaciones profesionales y servicios de alta
-              calidad.
+              Artista del tatuaje cosmético con más de 20 años de experiencia.
+              Formaciones profesionales y servicios de alta calidad.
             </p>
           </div>
 

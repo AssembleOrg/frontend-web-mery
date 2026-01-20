@@ -11,7 +11,7 @@ export default async function AboutPage() {
   const processStrongTags = (text: string) => {
     return text.replace(
       /<strong>(.*?)<\/strong>/g,
-      '<strong class="text-primary">$1</strong>'
+      '<strong class="text-primary">$1</strong>',
     );
   };
 
@@ -43,7 +43,7 @@ export default async function AboutPage() {
                 <div className='aspect-square bg-muted rounded-lg overflow-hidden shadow-lg relative'>
                   <Image
                     src='/Img-home/about-mery.webp'
-                    alt='Mery García - Especialista en Tatuaje Cosmético'
+                    alt='Mery García - Artista del Tatuaje Cosmético'
                     fill
                     className='object-cover'
                   />

@@ -105,6 +105,26 @@ export default function LashesLinePage() {
             </div>
           </section>
 
+          <section className='mt-12 pt-8 border-t'>
+            <h2 className='text-3xl font-bold font-primary text-foreground mb-4'>
+              {t('camouflage.heading')}
+            </h2>
+            <div className='text-muted-foreground font-secondary space-y-3 mb-6'>
+              <p>{t('camouflage.p1')}</p>
+              <p>{t('camouflage.p2')}</p>
+              <p>{t('camouflage.p3')}</p>
+            </div>
+
+            <div className='bg-muted/20 p-6 rounded-lg'>
+              <h4 className='text-lg font-bold font-primary/10 text-primary mb-2'>
+                {t('camouflage.pricing.camouflageSessionLabel')}
+              </h4>
+              <p className='text-lg font-primary/10 font-bold text-primary'>
+                {t('camouflage.pricing.camouflageSession')}
+              </p>
+            </div>
+          </section>
+
           {/* CTA Section */}
           <BookingCTA
             heading={t('cta.heading')}
