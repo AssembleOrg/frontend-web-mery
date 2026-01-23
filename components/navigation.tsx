@@ -47,20 +47,6 @@ export function Navigation() {
               FORMACIONES
             </Link>
             <Link
-              href='/ofertas-especiales'
-              className='relative text-sm font-primary font-medium transition-colors text-gray-600 dark:text-gray-300 whitespace-nowrap group'
-            >
-              <span className='relative inline-flex items-center gap-1.5'>
-                <span className='animate-pulse text-[#5f0001] font-bold'>
-                  OFERTAS ESPECIALES
-                </span>
-                <span className='relative flex h-2.5 w-2.5 shrink-0'>
-                  <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5f0001] opacity-75'></span>
-                  <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-[#5f0001]'></span>
-                </span>
-              </span>
-            </Link>
-            <Link
               href='/gift-card'
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >

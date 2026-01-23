@@ -114,21 +114,45 @@ export default function FormacionesPage() {
     () =>
       sortedCourses.map((course) => {
         let priceDisplay: string;
+        let originalPriceDisplay: string | undefined;
+        
+        // Verificar si es Nanoblading (por título o slug)
+        const isNanoblading = course.title.toLowerCase().includes('nanoblading') || 
+                             course.slug.toLowerCase().includes('nanoblading');
+        
         if (course.isFree) {
           priceDisplay = '';
+          originalPriceDisplay = undefined;
         } else if (course.priceARS === 99999999) {
-          priceDisplay =
-            course.priceUSD > 0
-              ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+          // Cursos en USD: solo Nanoblading tiene descuento ficticio del 50%
+          const realPrice = course.priceUSD;
+          
+          if (isNanoblading && realPrice > 0) {
+            // Aplicar descuento ficticio solo a Nanoblading
+            const inflatedPrice = realPrice * 2; // Precio duplicado
+            priceDisplay = `USD ${realPrice.toLocaleString('en-US')}`;
+            originalPriceDisplay = `USD ${inflatedPrice.toLocaleString('en-US')}`;
+          } else {
+            // Otros cursos en USD sin descuento
+            priceDisplay = realPrice > 0
+              ? `USD ${realPrice.toLocaleString('en-US')}`
               : 'Consultar';
+            originalPriceDisplay = undefined;
+          }
         } else {
-          priceDisplay =
-            course.priceARS > 0
-              ? `$${course.priceARS.toLocaleString('es-AR')}`
-              : '';
+          // Para cursos en ARS, duplicar el precio para mostrar como "descuento"
+          const realPrice = course.priceARS;
+          const inflatedPrice = realPrice * 2; // Precio duplicado
+          
+          priceDisplay = realPrice > 0
+            ? `$${realPrice.toLocaleString('es-AR')}`
+            : '';
+          originalPriceDisplay = realPrice > 0
+            ? `$${inflatedPrice.toLocaleString('es-AR')}`
+            : undefined;
         }
         const isAutostylism = isAutostylismCourse(course.slug, course.title);
-        return { ...course, priceDisplay, isAutostylism };
+        return { ...course, priceDisplay, originalPriceDisplay, isAutostylism };
       }),
     [sortedCourses]
   );
@@ -207,6 +231,7 @@ export default function FormacionesPage() {
               image={course.image}
               title={course.title}
               price={course.priceDisplay}
+              originalPrice={course.originalPriceDisplay}
               description={course.description}
               slug={course.slug}
               isAutostylism={course.isAutostylism}
@@ -218,7 +243,11 @@ export default function FormacionesPage() {
       <Footer />
       {selectedCourse && (
         <SimpleCourseModal
-          course={selectedCourse}
+          course={{
+            ...selectedCourse,
+            // Asegurar que el precio mostrado en el modal sea el real (no inflado)
+            // El modal ya maneja displayPrice correctamente
+          }}
           isOpen={isModalOpen}
           onClose={closeModal}
         />

@@ -103,18 +103,48 @@ export default function SimpleCourseModal({
     }
   };
 
-  // Si el precio ARS es placeholder (99.999.999) O es un curso gratuito, mostrar solo WhatsApp
-  const isPlaceholderPrice = course.priceARS === 99999999 || course.isFree;
+  // Si es un curso gratuito
+  const isFreeCourse = course.isFree;
+  const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0;
+  
+  // Verificar si es Nanoblading (por título o slug)
+  const isNanoblading = course.title.toLowerCase().includes('nanoblading') || 
+                       course.slug.toLowerCase().includes('nanoblading');
+
+  // Calcular precio original (duplicado) y precio final (real)
+  // Para USD: solo Nanoblading tiene descuento ficticio
+  // Para ARS: todos tienen descuento ficticio
+  const showFakeDiscount = !isFreeCourse && (
+    (isUSDCourse && isNanoblading && course.priceUSD > 0) || 
+    (!isUSDCourse && course.priceARS > 0)
+  );
+  
+  const originalPrice = showFakeDiscount 
+    ? isUSDCourse && isNanoblading
+      ? `USD ${(course.priceUSD * 2).toLocaleString('en-US')}`
+      : !isUSDCourse
+      ? `$${(course.priceARS * 2).toLocaleString('es-AR')}`
+      : null
+    : null;
+  const finalPrice = showFakeDiscount
+    ? isUSDCourse && isNanoblading
+      ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+      : !isUSDCourse
+      ? `$${course.priceARS.toLocaleString('es-AR')}`
+      : null
+    : null;
 
   // Determinar qué precio mostrar
   const displayPrice =
-    isPlaceholderPrice && course.priceUSD > 0
-      ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+    isUSDCourse && course.priceUSD > 0
+      ? finalPrice || `USD ${course.priceUSD.toLocaleString('en-US')}`
+      : showFakeDiscount
+      ? finalPrice
       : course.priceDisplay;
 
-  // Para usuarios internacionales, mostrar opción de WhatsApp con USD (solo si NO es placeholder)
+  // Para usuarios internacionales, mostrar opción de WhatsApp con USD (solo si NO es curso USD)
   const showUSDOption =
-    !isPlaceholderPrice && course.priceUSD && course.priceUSD > 0;
+    !isUSDCourse && course.priceUSD && course.priceUSD > 0;
 
   // Check if course is already in cart
   const courseInCart = isInCart(course.id);
@@ -276,7 +306,7 @@ export default function SimpleCourseModal({
 
             <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-6 rounded-lg shadow-lg'>
               {/* Desktop layout */}
-              {isPlaceholderPrice ? (
+              {isUSDCourse ? (
                 /* Cursos en USD: Solo WhatsApp */
                 <div className='hidden md:flex items-center justify-between'>
                   <div className='flex-1 text-center'>
@@ -314,9 +344,25 @@ export default function SimpleCourseModal({
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
-                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                      {displayPrice}
-                    </p>
+                    {showFakeDiscount && originalPrice ? (
+                      <div className='space-y-2'>
+                        <div className='flex items-center justify-center gap-2'>
+                          <p className='text-lg text-white/70 line-through'>
+                            {originalPrice}
+                          </p>
+                          <span className='bg-white text-[#8b1538] px-3 py-1 rounded-full text-sm font-bold font-primary-medium shadow-md'>
+                            50% OFF
+                          </span>
+                        </div>
+                        <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                          {displayPrice}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                        {displayPrice}
+                      </p>
+                    )}
                     {showUSDOption && (
                       <p className='text-white/90 text-sm mt-1'>
                         También disponible en U$S {course.priceUSD}
@@ -350,7 +396,7 @@ export default function SimpleCourseModal({
               )}
 
               {/* Mobile layout */}
-              {isPlaceholderPrice ? (
+              {isUSDCourse ? (
                 /* Cursos en USD: Solo WhatsApp */
                 <div className='md:hidden space-y-4'>
                   <div className='text-center'>
@@ -381,9 +427,25 @@ export default function SimpleCourseModal({
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
-                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                      {displayPrice}
-                    </p>
+                    {showFakeDiscount && originalPrice ? (
+                      <div className='space-y-2'>
+                        <div className='flex items-center justify-center gap-2'>
+                          <p className='text-lg text-white/70 line-through'>
+                            {originalPrice}
+                          </p>
+                          <span className='bg-white text-[#8b1538] px-3 py-1 rounded-full text-sm font-bold font-primary-medium shadow-md'>
+                            50% OFF
+                          </span>
+                        </div>
+                        <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                          {displayPrice}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                        {displayPrice}
+                      </p>
+                    )}
                     {showUSDOption && (
                       <p className='text-white/90 text-sm mt-1'>
                         También disponible en U$S {course.priceUSD}
