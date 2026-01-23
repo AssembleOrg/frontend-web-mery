@@ -12,26 +12,27 @@ import { DateTime } from 'luxon';
 
 export const PROMO_CONFIG = {
   // Fechas de inicio y fin de la promoción (GMT-3, Buenos Aires)
+  // Promoción hasta el 26 de enero de 2026 a las 23:59
   START_DATE: DateTime.fromObject(
-    { year: 2025, month: 12, day: 6, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 1, day: 1, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   END_DATE: DateTime.fromObject(
-    { year: 2025, month: 12, day: 13, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 1, day: 26, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Fecha de desactivación completa (después de esta fecha se bloquea todo)
   DISABLE_DATE: DateTime.fromObject(
-    { year: 2025, month: 12, day: 13, hour: 1, minute: 0, second: 0 },
+    { year: 2026, month: 1, day: 27, hour: 1, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
-  // Período de compra activo: desde 00:00 del 6/12 hasta 00:00 del 13/12
+  // Período de compra activo
   PURCHASE_START: DateTime.fromObject(
-    { year: 2025, month: 12, day: 6, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 1, day: 1, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   PURCHASE_END: DateTime.fromObject(
-    { year: 2025, month: 12, day: 13, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 1, day: 26, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
 
@@ -39,9 +40,8 @@ export const PROMO_CONFIG = {
   DISCOUNT_PERCENTAGE: 50,
 
   // Intervalo para mostrar el modal nuevamente (en milisegundos)
-  //mostrar cada 15 minutos
-  // MODAL_SHOW_INTERVAL: 15 * 60 * 1000,
-  MODAL_SHOW_INTERVAL: 0 * 60 * 1000,
+  // Mostrar cada 15 minutos
+  MODAL_SHOW_INTERVAL: 15 * 60 * 1000,
 
   // Delay antes de mostrar el modal por primera vez (en milisegundos)
   MODAL_INITIAL_DELAY: 2000, // 2 segundos
@@ -50,8 +50,8 @@ export const PROMO_CONFIG = {
   TEXTS: {
     modalTitle: '50% OFF',
     modalSubtitle: 'en todas las formaciones',
-    modalDateRange: 'Del 6 al 13 de Diciembre',
-    modalCTA: 'Ver Ofertas Especiales',
+    modalDateRange: 'Hasta el 26 de Enero',
+    modalCTA: 'Ver Formaciones',
     modalDescription:
       'No dejes pasar esta oportunidad para sumar nuevos servicios y/o perfeccionar tus resultados',
 
@@ -63,8 +63,8 @@ export const PROMO_CONFIG = {
 
     navbarLink: 'OFERTAS ESPECIALES',
 
-    countdownActive: 'La promoción termina en:',
-    countdownBeforeStart: 'La promoción comienza en:',
+    countdownActive: 'La oferta termina en:',
+    countdownBeforeStart: 'La oferta comienza en:',
     countdownEnded: '¡No te pierdas estos descuentos!',
   },
 } as const;

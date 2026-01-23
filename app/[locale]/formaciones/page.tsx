@@ -116,19 +116,24 @@ export default function FormacionesPage() {
         let priceDisplay: string;
         let originalPriceDisplay: string | undefined;
         
-        // Verificar si es Nanoblading (por título o slug)
-        const isNanoblading = course.title.toLowerCase().includes('nanoblading') || 
-                             course.slug.toLowerCase().includes('nanoblading');
+        // Verificar si es Nanoblading o Camuflaje Senior (por título o slug)
+        const isSpecialUSDCourse = 
+          course.title.toLowerCase().includes('nanoblading') || 
+          course.slug.toLowerCase().includes('nanoblading') ||
+          course.title.toLowerCase().includes('camuflaje senior') ||
+          course.slug.toLowerCase().includes('camuflaje senior') ||
+          course.title.toLowerCase().includes('camuflaje señor') ||
+          course.slug.toLowerCase().includes('camuflaje señor');
         
         if (course.isFree) {
           priceDisplay = '';
           originalPriceDisplay = undefined;
         } else if (course.priceARS === 99999999) {
-          // Cursos en USD: solo Nanoblading tiene descuento ficticio del 50%
+          // Cursos en USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio del 50%
           const realPrice = course.priceUSD;
           
-          if (isNanoblading && realPrice > 0) {
-            // Aplicar descuento ficticio solo a Nanoblading
+          if (isSpecialUSDCourse && realPrice > 0) {
+            // Aplicar descuento ficticio solo a cursos especiales en USD
             const inflatedPrice = realPrice * 2; // Precio duplicado
             priceDisplay = `USD ${realPrice.toLocaleString('en-US')}`;
             originalPriceDisplay = `USD ${inflatedPrice.toLocaleString('en-US')}`;
