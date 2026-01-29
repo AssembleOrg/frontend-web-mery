@@ -107,44 +107,48 @@ export default function SimpleCourseModal({
   const isFreeCourse = course.isFree;
   const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0;
   
-  // Verificar si es Nanoblading o Camuflaje Senior (por título o slug)
-  const isSpecialUSDCourse = 
-    course.title.toLowerCase().includes('nanoblading') || 
-    course.slug.toLowerCase().includes('nanoblading') ||
-    course.title.toLowerCase().includes('camuflaje senior') ||
-    course.slug.toLowerCase().includes('camuflaje senior') ||
-    course.title.toLowerCase().includes('camuflaje señor') ||
-    course.slug.toLowerCase().includes('camuflaje señor');
+  // DESCUENTOS FICTICIOS DESACTIVADOS
+  // // Verificar si es Nanoblading o Camuflaje Senior (por título o slug)
+  // const isSpecialUSDCourse = 
+  //   course.title.toLowerCase().includes('nanoblading') || 
+  //   course.slug.toLowerCase().includes('nanoblading') ||
+  //   course.title.toLowerCase().includes('camuflaje senior') ||
+  //   course.slug.toLowerCase().includes('camuflaje senior') ||
+  //   course.title.toLowerCase().includes('camuflaje señor') ||
+  //   course.slug.toLowerCase().includes('camuflaje señor');
 
-  // Calcular precio original (duplicado) y precio final (real)
-  // Para USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio
-  // Para ARS: todos tienen descuento ficticio
-  const showFakeDiscount = !isFreeCourse && (
-    (isUSDCourse && isSpecialUSDCourse && course.priceUSD > 0) || 
-    (!isUSDCourse && course.priceARS > 0)
-  );
+  // // Calcular precio original (duplicado) y precio final (real)
+  // // Para USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio
+  // // Para ARS: todos tienen descuento ficticio
+  // const showFakeDiscount = !isFreeCourse && (
+  //   (isUSDCourse && isSpecialUSDCourse && course.priceUSD > 0) || 
+  //   (!isUSDCourse && course.priceARS > 0)
+  // );
   
-  const originalPrice = showFakeDiscount 
-    ? isUSDCourse && isSpecialUSDCourse
-      ? `USD ${(course.priceUSD * 2).toLocaleString('en-US')}`
-      : !isUSDCourse
-      ? `$${(course.priceARS * 2).toLocaleString('es-AR')}`
-      : null
-    : null;
-  const finalPrice = showFakeDiscount
-    ? isUSDCourse && isSpecialUSDCourse
-      ? `USD ${course.priceUSD.toLocaleString('en-US')}`
-      : !isUSDCourse
-      ? `$${course.priceARS.toLocaleString('es-AR')}`
-      : null
-    : null;
+  // const originalPrice = showFakeDiscount 
+  //   ? isUSDCourse && isSpecialUSDCourse
+  //     ? `USD ${(course.priceUSD * 2).toLocaleString('en-US')}`
+  //     : !isUSDCourse
+  //     ? `$${(course.priceARS * 2).toLocaleString('es-AR')}`
+  //     : null
+  //   : null;
+  // const finalPrice = showFakeDiscount
+  //   ? isUSDCourse && isSpecialUSDCourse
+  //     ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+  //     : !isUSDCourse
+  //     ? `$${course.priceARS.toLocaleString('es-AR')}`
+  //     : null
+  //   : null;
 
-  // Determinar qué precio mostrar
+  // Mostrar precio real sin descuentos ficticios
+  const showFakeDiscount = false;
+  const originalPrice = null;
+  const finalPrice = null;
+
+  // Determinar qué precio mostrar (precio real)
   const displayPrice =
     isUSDCourse && course.priceUSD > 0
-      ? finalPrice || `USD ${course.priceUSD.toLocaleString('en-US')}`
-      : showFakeDiscount
-      ? finalPrice
+      ? `USD ${course.priceUSD.toLocaleString('en-US')}`
       : course.priceDisplay;
 
   // Para usuarios internacionales, mostrar opción de WhatsApp con USD (solo si NO es curso USD)
