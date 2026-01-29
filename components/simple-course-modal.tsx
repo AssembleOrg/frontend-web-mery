@@ -353,7 +353,8 @@ export default function SimpleCourseModal({
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
-                    {showFakeDiscount && originalPrice ? (
+                    {/* DESCUENTOS FICTICIOS DESACTIVADOS */}
+                    {/* {showFakeDiscount && originalPrice ? (
                       <div className='space-y-2'>
                         <div className='flex items-center justify-center gap-2'>
                           <p className='text-lg text-white/70 line-through'>
@@ -371,7 +372,10 @@ export default function SimpleCourseModal({
                       <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                         {displayPrice}
                       </p>
-                    )}
+                    )} */}
+                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                      {displayPrice}
+                    </p>
                     {showUSDOption && (
                       <p className='text-white/90 text-sm mt-1'>
                         También disponible en U$S {course.priceUSD}
@@ -436,7 +440,8 @@ export default function SimpleCourseModal({
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
-                    {showFakeDiscount && originalPrice ? (
+                    {/* DESCUENTOS FICTICIOS DESACTIVADOS */}
+                    {/* {showFakeDiscount && originalPrice ? (
                       <div className='space-y-2'>
                         <div className='flex items-center justify-center gap-2'>
                           <p className='text-lg text-white/70 line-through'>
@@ -454,7 +459,10 @@ export default function SimpleCourseModal({
                       <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                         {displayPrice}
                       </p>
-                    )}
+                    )} */}
+                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                      {displayPrice}
+                    </p>
                     {showUSDOption && (
                       <p className='text-white/90 text-sm mt-1'>
                         También disponible en U$S {course.priceUSD}
