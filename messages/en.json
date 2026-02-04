@@ -19,16 +19,15 @@
     "quote": "I didn't choose the brow life. The brow life chose me.",
     "services": {
       "title": "Services",
-      "eyebrowStyling": "Eyebrow & Eyelash Styling",
-      "nanoblading": "Nanoblading & Camouflage",
+      "eyebrowStyling": "Brow & Lash Styling",
+      "nanoblading": "Nanoblading & Brow Camouflage",
       "microblading": "Microblading & Camouflage",
       "scalp": "Scalp",
       "nanoscalp": "Nano Scalp",
-      "lashesLine": "Lash Line & Camouflage",
-      "freckles": "Freckles & Moles",
+      "lashesLine": "Lash Line & Lash Camouflage",
+      "freckles": "Freckles & Beauty Mark",
       "paramedical": "Paramedical Tattoo",
-      "autostyling": "Autostyling",
-      "lipBlush": "Lip Blush & Camouflage"
+      "lipBlush": "Lip Blush & Lip Camouflage"
     },
     "learnMore": {
       "title": "Want to know more about",
@@ -48,7 +47,7 @@
       "content": {
         "paragraph1": "I've believed in the power of eyebrows for over <strong>20 years</strong>. I was completely self-taught until just a couple of years ago when I honed my craft internationally. I started experimenting with my own brows from a very young age, realizing that my true calling was art as it applies to beauty.",
         "paragraph2": "Tenacious, meticulous, and passionate about my work, I trained as a fashion makeup artist for top brands and major magazines, all while building a strong reputation in my primary craft: brow styling.",
-        "paragraph3": "Today, I'm 100% focused on cosmetic tattooing—not just for brows with my exclusive Nanoblading technique, but also for lips with LipBlush, lashes with Lashes Line, and corrections using my own signature technique, Camuflaje Mixto.",
+        "paragraph3": "Today, I'm 100% focused on cosmetic tattooing—not just for brows with my exclusive Nanoblading technique, but also for lips with LipBlush, lashes with Lash Line & Lash Camouflage, and corrections using my own signature technique, Camuflaje Mixto.",
         "paragraph4": "I now lead a team of talented cosmetic tattoo artists and brow and lash stylists, all trained with my signature approach, where it's clear that in my studio, 'the details are everything'.",
         "signature": {
           "invitation": "I warmly invite you to come and see what we're all about.",
@@ -85,7 +84,7 @@
     "description": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
     "reserve": "Book Now",
     "express": "Services",
-    "info": "If you want to know the services we have available for you and their values, go to Services before booking your appointment. This advice is an approximate since once you are in our salon we will be able to personally recommend the services indicated for you ❤️",
+    "info": "",
     "policyLink": "Cancellation policy"
   },
   "giftCard": {
@@ -163,7 +162,7 @@
   "servicesPages": {
     "frecklesMoles": {
       "hero": {
-        "title": "Freckles & Moles",
+        "title": "Freckles & Beauty Mark",
         "subtitle": "Hyper-realistic cosmetic tattoo technique"
       },
       "whatIsIt": {
@@ -202,7 +201,7 @@
     },
     "eyebrowStyling": {
       "hero": {
-        "title": "Eyebrow & Eyelash Styling",
+        "title": "Brow & Lash Styling",
         "subtitle": "We are eyebrow specialists"
       },
       "intro": {
@@ -232,7 +231,7 @@
         {
           "title": "Lash Refill by MG Staff",
           "price": "AR$ 32,000.-",
-          "description": "Reactivates and/or enhances the density effect of your Lashes Line service with a hyper-realistic shadow play."
+          "description": "Reactivates and/or enhances the density effect of your Lash Line & Lash Camouflage service with a hyper-realistic shadow play."
         },
         {
           "title": "Lash Tinting by MG Staff",
@@ -356,7 +355,7 @@
     },
     "nanobladingCamouflage": {
       "hero": {
-        "title": "Nanoblading & Camouflage",
+        "title": "Nanoblading & Brow Camouflage",
         "subtitle": "The most advanced cosmetic eyebrow tattoo technique"
       },
       "pricingInfo": {
@@ -419,15 +418,15 @@
     },
     "lashesLine": {
       "hero": {
-        "title": "Lashes Line",
+        "title": "Lash Line & Lash Camouflage",
         "subtitle": "An optical effect of greater volume and density for your look."
       },
       "intro": {
-        "text": "⚡Lashes Line ⚡New Service in #TattoCosmetic #ByMeryGarcia What are we looking for? A super #Natural effect, we don't simulate an outlined eye, but rather an optical illusion of greater volume and density. It coexists perfectly with other services, like lash lifting and tinting, and of course, spectacular eyebrows By Mery Garcia & Staff. ✨Preparate to show off an incredible, but above all, natural look ✨"
+        "text": "⚡Lash Line & Lash Camouflage ⚡New Service in #TattoCosmetic #ByMeryGarcia What are we looking for? A super #Natural effect, we don't simulate an outlined eye, but rather an optical illusion of greater volume and density. It coexists perfectly with other services, like lash lifting and tinting, and of course, spectacular eyebrows By Mery Garcia & Staff. ✨Preparate to show off an incredible, but above all, natural look ✨"
       },
       "pricing": {
         "depositTitle": "Consultation and Deposit",
-        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lashes Line session; it is non-refundable and does not lock in the price of your service:",
+        "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lash Line & Lash Camouflage session; it is non-refundable and does not lock in the price of your service:",
         "depositAmount": "Deposit AR$ 100,000.-",
         "priceListTitle": "Service List Price",
         "session1": "First session: US$ 480.- (or US$ 320 in cash)",
@@ -440,7 +439,7 @@
         "p2": "During the consultation phase we can tell you what type of service you need to achieve more realism and elegance.",
         "p3": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session, it is non-refundable and does not lock in the price of your service",
         "pricing": {
-          "camouflageSessionLabel": "Lashes Line Camouflage",
+          "camouflageSessionLabel": "Lash Line & Lash Camouflage",
           "camouflageSession": "US$ 700.- (or US$ 500 in cash)"
         }
       },
@@ -491,7 +490,7 @@
     },
     "lipBlush": {
       "hero": {
-        "title": "Lip Blush",
+        "title": "Lip Blush & Lip Camouflage",
         "subtitle": "Defined and natural lips. Hyper-realistic, long-lasting color."
       },
       "introduction": {
@@ -651,8 +650,9 @@
     "title": "Services MG",
     "subtitle": "Professional beauty and cosmetic tattoo services",
     "validFrom": "Valid from 23/11/2024",
-    "beautyServicesTitle": "Beauty Services",
-    "cosmeticTattooTitle": "Professional Cosmetic Tattoo",
+    "beautyServicesTitle": "Brow & Lash Styling",
+    "cosmeticTattooTitle": "Cosmetic Tattoo",
+    "paramedicalTattooTitle": "Paramedical Tattoo",
     "paymentTitle": "UP TO 6 CREDIT CARD PAYMENTS",
     "paymentNote": "Prices not applicable to Special Pass schedule",
     "services": {
@@ -673,21 +673,41 @@
         "title": "Eyebrow Tint",
         "description": "For people with gray or very light eyebrow hairs. Hand-dyed hair by hair."
       },
+      "lashRefill": {
+        "title": "Lash Refill by MG Staff",
+        "description": "Reactivates and/or enhances the density effect of your Lash Line & Lash Camouflage service with a hyper-realistic shadow play."
+      },
       "eyelashTint": {
         "title": "Eyelash Tint",
         "description": "Darkens very light eyelashes, adds color and length. Lasts approximately one month."
       },
       "nanoblading": {
-        "title": "NANOBLADING By MERY GARCIA",
+        "title": "Nanoblading & Brow Camouflage",
         "description": "The most advanced eyebrow cosmetic tattoo technique. Ideal for improving brow shape, filling sparse areas or covering scars."
       },
+      "freckles": {
+        "title": "Freckles & Beauty Mark",
+        "description": "In the case of freckles, it is a very innovative technique that consists of creating a very superficial tattoo through small dots where the ink is inserted to achieve a hyper-realistic effect with a freckle or mole-like finish. Durability ranges from 5 to 6 months maximum, depending on skin type and aftercare received."
+      },
       "lashesLines": {
-        "title": "LASHES LINES",
+        "title": "Lash Line & Lash Camouflage",
         "description": "Creates super natural volume and density effect for eyelashes."
       },
       "lipBlush": {
-        "title": "LIP BLUSH",
+        "title": "Lip Blush & Lip Camouflage",
         "description": "Semi-permanent makeup that lasts approximately 8 months. Consists of giving color to the lips while respecting natural colorimetry."
+      },
+      "nanoScalp": {
+        "title": "NanoScalp",
+        "description": "It is a cosmetic tattoo that consists of implanting pigment into the scalp and skin to create hyper-realistic hair lines. From the first session, you will notice an optical effect of greater hair density, in a natural way that will increase progressively with each session."
+      },
+      "nippleAreola": {
+        "title": "Nipple & Areola",
+        "description": "It is a 3D cosmetic tattoo technique that can help correct asymmetries, improve the appearance of scars, or cover imperfections in the areola and nipple area. Recommended for individuals with post-surgical scars, breast reconstruction, or scars caused by injuries."
+      },
+      "scarCamouflage": {
+        "title": "Scar Camouflage",
+        "description": "Technique that uses micropigmentation to conceal the appearance of scars, making them blend with the surrounding skin tone without losing realism and naturalness. This technique involves the implantation of pigments in the scar area to match the color and minimize its visibility."
       },
       "camouflage": {
         "title": "Camouflage",
@@ -704,7 +724,8 @@
       "discount": "10% OFF Cash"
     },
     "badges": {
-      "new": "NEW"
+      "new": "NEW",
+      "comingSoon": "Coming Soon"
     }
   },
   "notFound": {

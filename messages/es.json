@@ -19,16 +19,15 @@
     "quote": "No elegí la vida de cejas. La vida de cejas me eligió a mí.",
     "services": {
       "title": "Servicios",
-      "eyebrowStyling": "Styling de Cejas & Pestañas",
-      "nanoblading": "Nanoblading & Camuflaje",
+      "eyebrowStyling": "Brow & Lash Styling",
+      "nanoblading": "Nanoblading & Brow Camouflage",
       "microblading": "Microblading & Camuflaje",
       "scalp": "Scalp",
       "nanoscalp": "Nano Scalp",
-      "lashesLine": "Lash Line & Camuflaje",
-      "lipBlush": "Lip Blush & Camuflaje",
-      "freckles": "Pecas & Lunares",
-      "paramedical": "Paramedical Tattoo",
-      "autostyling": "Autostyling"
+      "lashesLine": "Lash Line & Lash Camouflage",
+      "lipBlush": "Lip Blush & Lip Camouflage",
+      "freckles": "Freckles & Beauty Mark",
+      "paramedical": "Paramedical Tattoo"
     },
     "learnMore": {
       "title": "¿Querés saber más sobre",
@@ -48,7 +47,7 @@
       "content": {
         "paragraph1": "Hace más de <strong>20 años</strong> que creo en el poder de las cejas. Autodidacta por completo hasta hace solo un par de años cuando me perfeccioné en el exterior, comencé a experimentar con las mías desde muy pequeña; dándome cuenta que a lo quería dedicarme era al arte, pero aplicado a la belleza.",
         "paragraph2": "Tenaz, meticulosa y apasionada por mi trabajo, me formé como Maquilladora de moda, trabajando para reconocidas marcas e importantes revistas, mientras me consolidaba fuertemente en mi oficio principal: el estilismo de cejas.  ",
-        "paragraph3": "Actualmente me dedico 100% al tatuaje cosmético no solo de cejas con la exclusiva técnica de Nanoblading si no también de labios a través de LipBlush, de pestañas con Lashes Line y correcciones a través de la técnica desarrollada por mi, llamada Camuflaje Mixto.",
+        "paragraph3": "Actualmente me dedico 100% al tatuaje cosmético no solo de cejas con la exclusiva técnica de Nanoblading si no también de labios a través de LipBlush, de pestañas con Lash Line & Lash Camouflage y correcciones a través de la técnica desarrollada por mi, llamada Camuflaje Mixto.",
         "paragraph4": "Hoy en día lidero un Staff de artistas del tatuaje cosmético y estilistas de cejas y pestañas, formados con mi impronta, donde queda claro que en mi espacio “los detalles son todo”,",
         "signature": {
           "invitation": "Quedan especialmente invitados a conocer de qué se trata.",
@@ -84,8 +83,8 @@
     "title": "¿Cómo reservar tu cita?",
     "description": "Al ingresar tendrás acceso al calendario de turnos disponibles de cada servicio.",
     "reserve": "Reservar",
-    "express": "Nuestro servicio",
-    "info": "Si queres conocer los servicios que tenemos disponibles para vos y sus valores ingresa en Nuestro servicio antes de reservar tu cita. Este asesoramiento es aproximado ya que una vez en nuestro salón vamos a poder recomendarte de manera personalizada los servicios indicados para vos ❤️",
+    "express": "Lista de Precios",
+    "info": "",
     "policyLink": "Política de cancelaciones"
   },
   "giftCard": {
@@ -157,7 +156,7 @@
   "servicesPages": {
     "frecklesMoles": {
       "hero": {
-        "title": "Pecas y Lunares",
+        "title": "Freckles & Beauty Mark",
         "subtitle": "Técnica de tatuaje cosmético híper realista"
       },
       "whatIsIt": {
@@ -195,7 +194,7 @@
     },
     "eyebrowStyling": {
       "hero": {
-        "title": "Styling de Cejas & Pestañas",
+        "title": "Brow & Lash Styling",
         "subtitle": "Somos especialistas en cejas y pestañas"
       },
       "intro": {
@@ -225,7 +224,7 @@
         {
           "title": "Lash Refill by Staff MG",
           "price": "AR$ 32.000.-",
-          "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lashes Line, con un juego de sombras de acabado hiperealista."
+          "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lash Line & Lash Camouflage, con un juego de sombras de acabado hiperealista."
         },
         {
           "title": "Tinte de pestañas by Staff MG",
@@ -343,7 +342,7 @@
     },
     "nanobladingCamouflage": {
       "hero": {
-        "title": "Nanoblading & Camuflaje",
+        "title": "Nanoblading & Brow Camouflage",
         "subtitle": "La técnica más avanzada de tatuaje cosmético de cejas"
       },
       "pricingInfo": {
@@ -405,11 +404,11 @@
     },
     "lashesLine": {
       "hero": {
-        "title": "Lashes Line & Camuflaje",
+        "title": "Lash Line & Lash Camouflage",
         "subtitle": "Un efecto óptico de mayor volumen y densidad para tu mirada."
       },
       "intro": {
-        "text": "⚡Lashes Line ⚡New Service en #TattoCosmetic #ByMeryGarcia ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares By Mery Garcia & Staff. ✨Preparate para lucir una mirada increíble pero sobre todo natural ✨"
+        "text": "⚡Lash Line & Lash Camouflage ⚡New Service en #TattoCosmetic #ByMeryGarcia ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares By Mery Garcia & Staff. ✨Preparate para lucir una mirada increíble pero sobre todo natural ✨"
       },
       "pricing": {
         "depositTitle": "Seña",
@@ -425,7 +424,7 @@
         "p2": "En la etapa de consulta podremos indicarte que tipo de servicio necesitas para lograr más realismo y elegancia.",
         "p3": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio",
         "pricing": {
-          "camouflageSessionLabel": "Lashes Line Camouflage ",
+          "camouflageSessionLabel": "Lash Line & Lash Camouflage ",
           "camouflageSession": "U$S 700.- (en efectivo U$S 500)"
         }
       },
@@ -439,7 +438,7 @@
     },
     "lipBlush": {
       "hero": {
-        "title": "Lip Blush & Camuflaje",
+        "title": "Lip Blush & Lip Camouflage",
         "subtitle": "Labios definidos y naturales. Color híper realista y duradero."
       },
       "intro": {
@@ -636,8 +635,9 @@
   "expressConsultation": {
     "title": "Servicios MG",
     "subtitle": "Servicios profesionales de Cejas, Pestañas & Tattoo Cosmetic",
-    "beautyServicesTitle": "Servicios Profesionales de Cejas & Pestaña",
-    "cosmeticTattooTitle": "Servicios Profesionales de Cosmetic Tattoo",
+    "beautyServicesTitle": "Brow & Lash Styling",
+    "cosmeticTattooTitle": "Cosmetic Tattoo",
+    "paramedicalTattooTitle": "Paramedical Tattoo",
     "paymentTitle": "HASTA 6 PAGOS CON TARJETA DE CRÉDITO",
     "paymentNote": "Valores no aplicables a agenda de Special Pass",
     "services": {
@@ -658,21 +658,41 @@
         "title": "Tinte de cejas",
         "description": "Para personas con canas o vellos muy claros en las cejas. Teñido pelo a pelo."
       },
+      "lashRefill": {
+        "title": "Lash Refill by Staff MG",
+        "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lash Line & Lash Camouflage, con un juego de sombras de acabado hiperealista."
+      },
       "eyelashTint": {
         "title": "Tinte de pestañas",
         "description": "Oscurece pestañas muy claras, aporta color y longitud. Dura aproximadamente un mes."
       },
       "nanoblading": {
-        "title": "NANOBLADING By MERY GARCIA",
+        "title": "Nanoblading & Brow Camouflage",
         "description": "La técnica más avanzada de tatuaje cosmético en cejas. Ideal para mejorar la forma, rellenar zonas despobladas o cubrir cicatrices."
       },
+      "freckles": {
+        "title": "Freckles & Beauty Mark",
+        "description": "En el caso de las pecas es una técnica muy novedosa, consta en generar un tatuaje muy superficial por medio de pequeños puntos donde se inserta la tinta y así lograr un efecto híper realista con acabado del tipo peca o lunar. La durabilidad oscila entre los 5 meses a 6 meses máximo, según el tipo de piel y el cuidado que haya recibido."
+      },
       "lashesLines": {
-        "title": "LASHES LINES",
+        "title": "Lash Line & Lash Camouflage",
         "description": "Crea un efecto de volumen y densidad súper natural para las pestañas."
       },
       "lipBlush": {
-        "title": "LIP BLUSH",
+        "title": "Lip Blush & Lip Camouflage",
         "description": "Maquillaje semipermanente que dura aproximadamente 8 meses. Consiste en darle color a los labios respetando la colorimetría natural."
+      },
+      "nanoScalp": {
+        "title": "NanoScalp",
+        "description": "Consiste en implantar pigmento en el cuero cabelludo y piel generando líneas de cabello hiperrealista. Desde la primera sesión notarás un efecto óptico de densidad mayor capilar, de forma natural que irá aumentando progresivamente sesión tras sesión."
+      },
+      "nippleAreola": {
+        "title": "Nipple & Areola",
+        "description": "Ayuda a corregir y mejorar la apariencia de cicatrices o cubrir imperfecciones en la zona de la areola y pezón. Recomendado para personas que presentan cicatrices post quirúrgicas, reconstrucción mamaria o cicatrices causadas por lesiones."
+      },
+      "scarCamouflage": {
+        "title": "Scar Camouflage",
+        "description": "Disimula la apariencia de las cicatrices, haciendo que se mezclen con el tono de la piel circundante sin perder realismo y naturalidad. Esta técnica implica la implantación de pigmentos en la zona de la cicatriz para igualar el color y minimizar su visibilidad."
       },
       "camouflage": {
         "title": "Camuflaje",
@@ -689,7 +709,8 @@
       "discount": "10% OFF Efectivo"
     },
     "badges": {
-      "new": "NUEVO"
+      "new": "NUEVO",
+      "comingSoon": "Coming Soon"
     }
   },
   "notFound": {

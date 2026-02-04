@@ -23,7 +23,7 @@ export default function HTML5VideoPlayer({
   const [playing, setPlaying] = useState(autoPlay);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(0.8);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(autoPlay);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
@@ -39,13 +39,21 @@ export default function HTML5VideoPlayer({
     const video = videoRef.current;
     if (!video) return;
 
-    // Reiniciar video al cambiar de lección
     video.currentTime = 0;
-    video.load(); // Forzar recarga del video
+    video.load();
     setProgress(0);
     setCurrentTime(0);
-    setPlaying(false);
-  }, [vimeoVideoId]); // Se ejecuta cuando cambia el ID del video
+    setPlaying(autoPlay);
+
+    if (autoPlay) {
+      video.muted = true;
+      setMuted(true);
+      const playPromise = video.play();
+      if (playPromise) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, [autoPlay, vimeoVideoId]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -89,7 +97,10 @@ export default function HTML5VideoPlayer({
     if (playing) {
       video.pause();
     } else {
-      video.play();
+      const playPromise = video.play();
+      if (playPromise) {
+        playPromise.catch(() => {});
+      }
     }
   };
 
@@ -141,6 +152,7 @@ export default function HTML5VideoPlayer({
           className='w-full h-full object-cover'
           autoPlay={autoPlay}
           muted={muted}
+          playsInline
         />
 
         {/* Indicador de completado COMENTADO BY JULY*/}

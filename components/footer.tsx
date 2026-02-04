@@ -72,7 +72,7 @@ export function Footer() {
             <div className='mt-4'>
               <Link
                 href='/contact'
-                className='inline-flex items-center px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-primary/10 font-medium rounded-full transition-all duration-300'
+                className='inline-flex items-center px-3 py-1.5 bg-primary hover:bg-primary/10 text-white text-sm font-primary font-medium rounded-full transition-all duration-300'
               >
                 Quiero saber más
               </Link>

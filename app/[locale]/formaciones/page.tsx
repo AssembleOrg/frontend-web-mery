@@ -188,10 +188,10 @@ export default function FormacionesPage() {
     >
       <Navigation />
       <section className='w-full'>
-        <div className='container mx-auto px-4 max-w-7xl'>
+        <div className='container mx-auto px-4 max-w-7xl mt-2'>
           <div className='relative w-full aspect-[16/5] rounded-lg overflow-hidden'>
             <Image
-              src='/Formacion-banner.png'
+              src='/FORMACIONES-1.png'
               alt='Formaciones Mery García'
               fill
               className='object-cover'
@@ -201,8 +201,12 @@ export default function FormacionesPage() {
           </div>
         </div>
       </section>
-      <section className='container mx-auto px-4 py-8 max-w-7xl'>
-        <div className='flex gap-6 md:grid md:grid-cols-2 md:gap-6'>
+      <section
+        className={`container mx-auto px-4 max-w-7xl pt-8 ${
+          filter !== 'all' ? 'pb-2' : 'pb-8'
+        }`}
+      >
+        <div className='flex gap-4 md:grid md:grid-cols-2 md:gap-6'>
           <FilterBanner
             title='Formaciones Profesionales'
             description='Técnicas avanzadas para tu negocio'
@@ -224,7 +228,7 @@ export default function FormacionesPage() {
           />
         </div>
         {filter !== 'all' && (
-          <div className='flex justify-center mt-6'>
+          <div className='flex justify-center mt-2 mb-1'>
             <button
               onClick={() => setFilter('all')}
               className='px-6 py-2 rounded-full border-2 border-[#EBA2A8] bg-[#EBA2A8] text-white font-primary font-semibold hover:bg-[#f9bbc4] hover:border-[#f9bbc4] transition-all duration-300 shadow-md'
@@ -235,7 +239,9 @@ export default function FormacionesPage() {
         )}
       </section>
       <section
-        className='container mx-auto px-4 pb-16 py-8 max-w-7xl'
+        className={`container mx-auto px-4 max-w-7xl pb-16 ${
+          filter !== 'all' ? 'pt-2' : 'pt-8'
+        }`}
         suppressHydrationWarning
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>

@@ -11,7 +11,6 @@ interface Service {
   key: string;
   href: string;
   image: string;
-  hoverImage?: string;
 }
 
 interface ExpandableServiceGalleryProps {
@@ -27,11 +26,7 @@ export function ExpandableServiceGallery({
 
   const getServiceDescription = (serviceKey: string): string => {
     const staffMGServices = ['eyebrowStyling'];
-    
-    if (serviceKey === 'autostyling') {
-      return 'Una formación para que aprendas a realizarte los servicios de estilismo de cejas que AMAS de la mano de MG & Staff ✨';
-    }
-    
+
     return staffMGServices.includes(serviceKey)
       ? 'Tratamiento profesional by Staff MG'
       : 'Cosmetic Tattoo by Mery Garcia';
@@ -68,58 +63,38 @@ export function ExpandableServiceGallery({
   if (isMobile) {
     return (
       <div className='w-full max-w-7xl mx-auto'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'>
+        <div className='grid grid-cols-2 gap-1'>
           {services.map((service) => (
             <div
               key={service.key}
-              className='group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30 h-64 sm:h-72'
+              className='group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30 aspect-square'
             >
               {}
               <Link href={service.href as any}>
                 {/* Image Container */}
                 <div className='relative h-full bg-muted overflow-hidden'>
-                  {service.hoverImage ? (
-                    <>
-                      <Image
-                        src={service.image}
-                        alt={t(`services.${service.key}`)}
-                        fill
-                        className='object-cover transition-opacity duration-300 group-hover:opacity-0'
-                      />
-                      <Image
-                        src={service.hoverImage}
-                        alt={t(`services.${service.key}`)}
-                        fill
-                        className='object-cover transition-opacity duration-300 opacity-0 group-hover:opacity-100'
-                      />
-                    </>
-                  ) : (
-                    <Image
-                      src={service.image}
-                      alt={t(`services.${service.key}`)}
-                      fill
-                      className='object-cover transition-transform duration-300 group-hover:scale-105'
-                    />
-                  )}
+                  <Image
+                    src={service.image}
+                    alt={t(`services.${service.key}`)}
+                    fill
+                    className='object-cover transition-transform duration-300 group-hover:scale-105'
+                  />
 
                   {/* Overlay */}
                   <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent' />
 
                   {/* Content */}
-                  <div className='absolute bottom-0 left-0 right-0 p-4 text-white'>
-                    <h3 className='text-lg font-primary font-semibold mb-2 text-white break-words'>
+                  <div className='absolute bottom-0 left-0 right-0 p-3 sm:p-4 text-white'>
+                    <h3 className='font-primary font-semibold text-white break-words text-base mb-1 line-clamp-2'>
                       {t(`services.${service.key}`)}
                     </h3>
-                    <p className='text-sm font-secondary text-white/90 mb-3 break-words'>
-                      {getServiceDescription(service.key)}
-                    </p>
-                    <div className='flex gap-2'>
+                    <div className='flex gap-2 flex-wrap'>
                       <Button
                         variant='secondary'
                         size='sm'
                         className='bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm'
                       >
-                        Ver más
+                        Ver
                       </Button>
                       {beforeAfterUrls[service.key] && (
                         <Button
@@ -141,7 +116,7 @@ export function ExpandableServiceGallery({
                           }}
                         >
                           <FaInstagram className='w-4 h-4' />
-                          Before & After
+                          B&amp;A
                         </Button>
                       )}
                     </div>
@@ -183,41 +158,16 @@ export function ExpandableServiceGallery({
             >
               {/* Background Image */}
               <div className='absolute inset-0'>
-                {service.hoverImage ? (
-                  <>
-                    <Image
-                      src={service.image}
-                      alt={t(`services.${service.key}`)}
-                      fill
-                      className={`
-                        object-cover
-                        transition-opacity duration-500 ease-out
-                        ${isHovered ? 'opacity-0' : 'opacity-100'}
-                      `}
-                    />
-                    <Image
-                      src={service.hoverImage}
-                      alt={t(`services.${service.key}`)}
-                      fill
-                      className={`
-                        object-cover
-                        transition-opacity duration-500 ease-out
-                        ${isHovered ? 'opacity-100' : 'opacity-0'}
-                      `}
-                    />
-                  </>
-                ) : (
-                  <Image
-                    src={service.image}
-                    alt={t(`services.${service.key}`)}
-                    fill
-                    className={`
-                      object-cover
-                      transition-transform duration-500 ease-out
-                      ${isHovered ? 'scale-105' : 'scale-100'}
-                    `}
-                  />
-                )}
+                <Image
+                  src={service.image}
+                  alt={t(`services.${service.key}`)}
+                  fill
+                  className={`
+                    object-cover
+                    transition-transform duration-500 ease-out
+                    ${isHovered ? 'scale-105' : 'scale-100'}
+                  `}
+                />
 
                 {/* Overlay */}
                 <div

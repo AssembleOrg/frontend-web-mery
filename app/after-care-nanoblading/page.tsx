@@ -19,7 +19,8 @@ const Separator = () => (
 export default function NanobladingAftercarePage() {
   return (
     <div
-      style={{ backgroundColor: 'var(--mg-pink-lighter)', minHeight: '100vh' }}
+      className='min-h-screen-dvh'
+      style={{ backgroundColor: 'var(--mg-pink-lighter)' }}
     >
       <style>{`
         @keyframes slideInFromLeft {
@@ -44,8 +45,8 @@ export default function NanobladingAftercarePage() {
 
       {/* Hero Section */}
       <div
+        className='min-h-screen-dvh'
         style={{
-          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

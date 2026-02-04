@@ -3,6 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/theme-provider';
+import IosEnhancements from '@/components/ios-enhancements';
 import { ModalProvider } from '@/contexts/modal-context';
 import { AuthInterceptorProvider } from '@/components/auth/AuthInterceptorProvider';
 import PromoModal from '@/components/promo-modal';
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
       enableSystem
       disableTransitionOnChange
     >
+      <IosEnhancements />
       <NextIntlClientProvider messages={messages}>
         <ModalProvider>
           <AuthInterceptorProvider>

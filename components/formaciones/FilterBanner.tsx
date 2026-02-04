@@ -22,62 +22,35 @@ export function FilterBanner({
   imageClassName,
 }: FilterBannerProps) {
   return (
-    <div className='relative flex-1 md:flex-none'>
+    <div className='relative w-1/2 md:w-auto'>
       <button
         onClick={onClick}
         className={`
-          relative overflow-hidden rounded-lg w-full
+          relative rounded-lg w-full group
           transition-all duration-300 ease-out
-          h-[130px] md:h-[180px] lg:h-[200px]
-          hover:scale-[1.02] hover:shadow-2xl
-          ${isActive ? 'ring-4 ring-[#EBA2A8] shadow-xl' : 'shadow-md'}
+          h-[220px] md:h-[240px] lg:h-[260px]
+          bg-white shadow-sm
+          ${isActive ? 'border-2 border-[#EBA2A8]' : 'border border-gray-300 hover:border-[#EBA2A8]'}
         `}
       >
-        {/* Background Image */}
-        <div className='absolute inset-0'>
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className={`object-cover ${imageClassName || ''}`}
-            sizes='(max-width: 768px) 100vw, 50vw'
-            priority
-          />
-          {/* Overlay  */}
-          <div className='absolute inset-0 bg-black/40 hover:bg-black/30 transition-opacity duration-300' />
-        </div>
-
         {/* Content */}
-        <div className='relative z-10 h-full flex flex-col justify-center md:justify-end px-4 py-3 md:p-6 lg:p-8 text-center md:text-left'>
-          <h3 className='text-2xl md:text-3xl lg:text-4xl font-primary font-bold mb-0 md:mb-2 text-white drop-shadow-md transition-all duration-300'>
+        <div className='h-full flex flex-col justify-start items-start px-6 pt-16 pb-16 md:px-8 md:pt-20 lg:px-10 lg:pt-24 text-left'>
+          {/* Decorative top line */}
+          <div className="absolute top-6 left-6 w-12 h-0.5 bg-[#EBA2A8] rounded-full" />
+
+          <h3 className='text-xl md:text-3xl lg:text-3xl xl:text-4xl leading-tight font-primary-medium font-bold mb-2 text-[#2B2B2B] group-hover:text-[#EBA2A8] transition-all duration-300 text-left'>
             {title}
           </h3>
-          <p className='hidden md:block text-sm md:text-base lg:text-lg font-secondary text-white/90 drop-shadow-md transition-all duration-300'>
+          <p className='text-sm md:text-base lg:text-lg font-primary text-gray-500 group-hover:text-[#EBA2A8] transition-all duration-300 text-left'>
             {description}
           </p>
 
-          {/* Active Indicator */}
           {isActive && (
-            <div className='hidden md:block mt-4'>
-              <span className='inline-block px-4 py-2 rounded-full text-xs font-semibold tracking-wide bg-[#EBA2A8] text-[#660e1b]'>
-                FILTRO ACTIVO
-              </span>
-            </div>
+            <span className='absolute bottom-3 md:bottom-4 left-6 md:left-8 lg:left-10 inline-flex px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-[#EBA2A8] text-white shadow-sm'>
+              FILTRO ACTIVO
+            </span>
           )}
         </div>
-
-        {/* Hover Indicator */}
-        <div
-          className={`
-        absolute top-2 right-2 w-2 h-2 rounded-full bg-[#EBA2A8]
-        transition-all duration-300
-        ${
-          isActive
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-50'
-        }
-      `}
-        />
       </button>
 
       {/* Ribbon */}

@@ -18,7 +18,10 @@ const Separator = () => (
 
 export default function LashesLineAftercarePage() {
   return (
-    <div style={{ backgroundColor: 'var(--mg-pink-lighter)', minHeight: '100vh' }}>
+    <div
+      className='min-h-screen-dvh'
+      style={{ backgroundColor: 'var(--mg-pink-lighter)' }}
+    >
       <style>{`
         @keyframes slideInFromLeft {
           from {
@@ -42,8 +45,8 @@ export default function LashesLineAftercarePage() {
 
       {/* Hero Section */}
       <div
+        className='min-h-screen-dvh'
         style={{
-          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -94,7 +97,7 @@ export default function LashesLineAftercarePage() {
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <Image
             src="/logo_mg_after_care_lashes_line-1.svg"
-            alt="Lashes Line"
+            alt="Lash Line & Lash Camouflage"
             width={300}
             height={150}
             style={{ animation: 'fadeIn 0.8s ease-in forwards' }}

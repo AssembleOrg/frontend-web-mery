@@ -14,6 +14,9 @@ import {
   Heart,
   RefreshCw,
   CreditCard,
+  Activity,
+  Circle,
+  Layers,
 } from 'lucide-react';
 
 // Service card component for ARS services
@@ -102,6 +105,11 @@ function ServiceCardUSD({
             {servicio.isNew && (
               <span className='inline-block bg-primary/20 text-primary text-xs font-medium px-2 py-1 rounded-full mt-1'>
                 {badges('new')}
+              </span>
+            )}
+            {servicio.isComingSoon && (
+              <span className='inline-block bg-muted text-muted-foreground text-xs font-medium px-2 py-1 rounded-full mt-1 ml-2'>
+                {badges('comingSoon')}
               </span>
             )}
           </div>
@@ -201,15 +209,14 @@ export default function AsesoramientoExpressPage() {
     },
     {
       id: 2,
-      icon: RefreshCw,
-      titleKey: 'browRefill',
+      icon: Brush,
+      titleKey: 'eyebrowLamination',
       price: 'AR$ 39,000',
-      isNew: true,
     },
     {
       id: 3,
-      icon: Brush,
-      titleKey: 'eyebrowLamination',
+      icon: RefreshCw,
+      titleKey: 'browRefill',
       price: 'AR$ 39,000',
     },
     {
@@ -220,6 +227,12 @@ export default function AsesoramientoExpressPage() {
     },
     {
       id: 5,
+      icon: RefreshCw,
+      titleKey: 'lashRefill',
+      price: 'AR$ 32,000',
+    },
+    {
+      id: 6,
       icon: Eye,
       titleKey: 'eyelashTint',
       price: 'AR$ 32,000',
@@ -228,7 +241,7 @@ export default function AsesoramientoExpressPage() {
 
   const serviciosUSD = [
     {
-      id: 6,
+      id: 7,
       icon: Star,
       titleKey: 'nanoblading',
       prices: {
@@ -238,8 +251,17 @@ export default function AsesoramientoExpressPage() {
       },
     },
     {
-      id: 7,
+      id: 8,
       icon: Sparkles,
+      titleKey: 'freckles',
+      prices: {
+        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+      },
+    },
+    {
+      id: 9,
+      icon: Eye,
       titleKey: 'lashesLines',
       prices: {
         firstSession: { regular: 'U$S 480', cash: 'U$S 320' },
@@ -248,7 +270,7 @@ export default function AsesoramientoExpressPage() {
       isNew: true,
     },
     {
-      id: 8,
+      id: 10,
       icon: Heart,
       titleKey: 'lipBlush',
       prices: {
@@ -256,14 +278,36 @@ export default function AsesoramientoExpressPage() {
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
       },
     },
+  ];
+
+  const serviciosParamedical = [
     {
-      id: 9,
-      icon: RefreshCw,
-      titleKey: 'camouflage',
+      id: 11,
+      icon: Activity,
+      titleKey: 'nanoScalp',
       prices: {
-        mixed: { regular: 'U$S 710', cash: 'U$S 475' },
+        firstSession: { regular: 'U$S 520', cash: 'U$S 450' },
+        maintenance: { regular: 'U$S 520', cash: 'U$S 450' },
       },
-      hasNote: true,
+    },
+    {
+      id: 12,
+      icon: Circle,
+      titleKey: 'nippleAreola',
+      prices: {
+        firstSession: { regular: 'U$S 520', cash: 'U$S 450' },
+        retouch: { regular: 'U$S 240', cash: 'U$S 180' },
+      },
+    },
+    {
+      id: 13,
+      icon: Layers,
+      titleKey: 'scarCamouflage',
+      prices: {
+        firstSession: { regular: 'U$S 480', cash: 'U$S 420' },
+        retouch: { regular: 'U$S 240', cash: 'U$S 180' },
+      },
+      isComingSoon: true,
     },
   ];
 
@@ -315,6 +359,27 @@ export default function AsesoramientoExpressPage() {
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               {serviciosUSD.map((servicio) => (
+                <ServiceCardUSD
+                  key={servicio.id}
+                  servicio={servicio}
+                  pricing={pricing}
+                  badges={badges}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Paramedical Tattoo Services */}
+      <section className='py-16'>
+        <div className='container mx-auto px-4'>
+          <div className='max-w-7xl mx-auto'>
+            <h2 className='text-3xl font-primary font-bold text-foreground mb-8 text-center'>
+              {t('paramedicalTattooTitle')}
+            </h2>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              {serviciosParamedical.map((servicio) => (
                 <ServiceCardUSD
                   key={servicio.id}
                   servicio={servicio}
