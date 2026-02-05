@@ -44,7 +44,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='min-h-screen-dvh bg-background'>
       <Navigation />
 
       {/* Hero Section with Quote */}
@@ -60,21 +60,21 @@ export default function HomePage() {
       </section>
 
       {/* Expandable Services Gallery */}
-      <section className='py-16'>
+      <section className='py-10 md:py-16'>
         <div className='container mx-auto px-4'>
           <ExpandableServiceGallery services={services} />
         </div>
       </section>
 
       {/* Combined Section: Booking CTA + Learn More */}
-      <section className='py-16'>
+      <section className='py-10 md:py-16'>
         <div className='container mx-auto px-4'>
           <div className='max-w-7xl mx-auto'>
             {/* Mobile: Stack vertically, Desktop: 2 columns */}
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start'>
               {/* Booking CTA Column */}
               <div className='order-1'>
-                <BookingCTA showExpressButton={true} />
+                <BookingCTA embedded showExpressButton={true} />
               </div>
 
               {/* Learn More Column */}

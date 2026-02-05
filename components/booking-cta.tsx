@@ -15,6 +15,7 @@ interface BookingCTAProps {
   firstSessionButtonText?: string;
   consultationWhatsAppMessage?: string;
   firstSessionWhatsAppMessage?: string;
+  embedded?: boolean;
 }
 
 // 2. Aplicamos las props al componente
@@ -28,6 +29,7 @@ export function BookingCTA({
   firstSessionButtonText,
   consultationWhatsAppMessage,
   firstSessionWhatsAppMessage,
+  embedded = false,
 }: BookingCTAProps) {
   const t = useTranslations('booking');
 
@@ -37,10 +39,8 @@ export function BookingCTA({
     window.open(whatsappUrl, '_blank');
   };
 
-  return (
-    <section className='py-20'>
-      <div className='container mx-auto px-4'>
-        <div className='max-w-4xl mx-auto text-center'>
+  const content = (
+    <div className='max-w-4xl mx-auto text-center'>
           {/* Title with icon */}
           <div className='flex items-center justify-center mb-6'>
             <Calendar className='h-8 w-8 text-primary mr-3' />
@@ -122,10 +122,10 @@ export function BookingCTA({
           </div>
 
           {text2 && (
-              <p className='text-xs font-secondary text-muted-foreground mt-3'>
-                {text2}
-              </p>
-            )}
+            <p className='text-xs font-secondary text-muted-foreground mt-3'>
+              {text2}
+            </p>
+          )}
 
           {/* Additional info */}
           {showExpressButton && (
@@ -133,8 +133,16 @@ export function BookingCTA({
               {t('info')}
             </p>
           )}
-        </div>
-      </div>
+    </div>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <section className='py-20'>
+      <div className='container mx-auto px-4'>{content}</div>
     </section>
   );
 }

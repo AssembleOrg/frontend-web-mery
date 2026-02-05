@@ -63,14 +63,14 @@ export function ExpandableServiceGallery({
   if (isMobile) {
     return (
       <div className='w-full max-w-7xl mx-auto'>
-        <div className='grid grid-cols-2 gap-1'>
+        <div className='home-service-grid'>
           {services.map((service) => (
             <div
               key={service.key}
-              className='group relative overflow-hidden rounded-lg bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30 aspect-square'
+              className='home-service-card group relative overflow-hidden rounded-xl bg-card shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border hover:border-primary/30'
             >
               {}
-              <Link href={service.href as any}>
+              <Link href={service.href as any} className='block h-full'>
                 {/* Image Container */}
                 <div className='relative h-full bg-muted overflow-hidden'>
                   <Image
@@ -81,25 +81,21 @@ export function ExpandableServiceGallery({
                   />
 
                   {/* Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent' />
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent' />
 
                   {/* Content */}
-                  <div className='absolute bottom-0 left-0 right-0 p-3 sm:p-4 text-white'>
-                    <h3 className='font-primary font-semibold text-white break-words text-base mb-1 line-clamp-2'>
+                  <div className='home-service-card__content absolute bottom-0 left-0 right-0 text-white'>
+                    <h3 className='home-service-card__title font-primary font-semibold text-white break-words mb-1 line-clamp-2'>
                       {t(`services.${service.key}`)}
                     </h3>
-                    <div className='flex gap-2 flex-wrap'>
-                      <Button
-                        variant='secondary'
-                        size='sm'
-                        className='bg-white/20 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm'
-                      >
-                        Ver
-                      </Button>
+                    <div className='home-service-card__actions'>
+                      <span className='home-service-card__cta font-primary'>
+                        Ver más
+                      </span>
                       {beforeAfterUrls[service.key] && (
                         <Button
                           size='sm'
-                          className={`backdrop-blur-sm flex items-center gap-1 ${
+                          className={`w-full justify-center flex items-center gap-1 ${
                             beforeAfterUrls[service.key]
                               ? 'bg-[#eba2a8] border-[#eba2a8] text-white hover:bg-[#f9bbc4] hover:border-[#f9bbc4]'
                               : 'bg-gray-400 border-gray-400 text-white/50 cursor-not-allowed'
@@ -107,6 +103,7 @@ export function ExpandableServiceGallery({
                           disabled={!beforeAfterUrls[service.key]}
                           onClick={(e) => {
                             e.preventDefault();
+                            e.stopPropagation();
                             if (beforeAfterUrls[service.key]) {
                               window.open(
                                 beforeAfterUrls[service.key],

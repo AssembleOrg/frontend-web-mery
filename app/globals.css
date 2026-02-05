@@ -277,6 +277,117 @@
     height: 100dvh;
   }
 
+  .home-service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem;
+    padding-bottom: calc(
+      var(--scroll-safe-bottom, 24px) + env(safe-area-inset-bottom)
+    );
+    scroll-padding-bottom: calc(
+      var(--scroll-safe-bottom, 24px) + env(safe-area-inset-bottom)
+    );
+  }
+
+  .home-service-card {
+    aspect-ratio: 4 / 5;
+    isolation: isolate;
+    contain: paint;
+    transform: translateZ(0);
+  }
+
+  .home-service-card__content {
+    padding: clamp(0.65rem, 1.4vw, 1rem);
+    min-height: 5.25rem;
+    display: grid;
+    gap: clamp(0.4rem, 1vw, 0.75rem);
+  }
+
+  .home-service-card__title {
+    font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+    line-height: 1.15;
+  }
+
+  .home-service-card__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.4rem, 1vw, 0.75rem);
+  }
+
+  .home-service-card__cta {
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 2rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid rgb(255 255 255 / 0.3);
+    border-radius: 0.5rem;
+    background: rgb(255 255 255 / 0.25);
+    color: rgb(255 255 255 / 1);
+  }
+
+  @media (min-width: 640px) {
+    .home-service-card__actions {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-height: 700px) {
+    .home-service-card {
+      min-height: clamp(220px, 48vw, 300px);
+    }
+
+    .home-service-card__content {
+      padding: clamp(0.55rem, 1.1vw, 0.85rem);
+      gap: clamp(0.35rem, 0.9vw, 0.6rem);
+    }
+
+    .home-service-card__title {
+      font-size: clamp(0.9rem, 2.1vw, 1rem);
+    }
+
+    .home-service-card__actions {
+      gap: clamp(0.35rem, 0.9vw, 0.6rem);
+    }
+  }
+
+  @media (max-width: 409px) {
+    .home-service-card__content {
+      padding: 0.6rem;
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 399px) {
+    .home-service-card__title {
+      font-size: 13px;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .home-service-card__actions {
+      gap: 0.25rem;
+    }
+
+    .home-service-card__cta {
+      height: 1.75rem;
+      font-size: 10px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .home-service-card__actions [data-slot='button'] {
+      height: 1.75rem;
+      font-size: 10px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
   /* DIN Font Weight Utilities */
   .font-primary {
     font-family: var(--font-din-light), -apple-system, BlinkMacSystemFont,

@@ -198,7 +198,7 @@ export default function ParamedicalTattooPage() {
               <div className='mb-8 lg:mb-0 lg:h-full'>
                 <div className='relative h-96 lg:h-full overflow-hidden rounded-lg'>
                   <Image
-                    src='/Img-home/home-6.webp'
+                    src='/cuerocabelludo.jpg'
                     alt={t('nanoscalp.heading')}
                     fill
                     className='object-cover'
