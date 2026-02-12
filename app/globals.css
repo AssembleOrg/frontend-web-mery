@@ -277,6 +277,16 @@
     height: 100dvh;
   }
 
+  .anchor-offset {
+    scroll-margin-top: 80px;
+  }
+
+  @media (min-width: 768px) {
+    .anchor-offset {
+      scroll-margin-top: 96px;
+    }
+  }
+
   .home-service-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -6,9 +6,11 @@ import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
 import { Shield, AlertTriangle, Star, Clock } from 'lucide-react';
 import Image from 'next/image';
+import { useSectionDeepLink } from '@/lib/hooks/useSectionDeepLink';
 
 export default function ParamedicalTattooPage() {
   const t = useTranslations('servicesPages.paramedicalTattoo');
+  useSectionDeepLink();
 
   return (
     <div className='min-h-screen bg-background'>
@@ -39,7 +41,7 @@ export default function ParamedicalTattooPage() {
       <div className='container mx-auto px-4 py-16'>
         <div className='max-w-7xl mx-auto'>
           {/* Areola Harmonization Section */}
-          <section className='mb-16'>
+          <section id='areola-harmonization' className='anchor-offset mb-16'>
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
               {/* Columna Imagen*/}
               <div className='lg:col-span-1 order-2 lg:order-1'>
@@ -124,7 +126,7 @@ export default function ParamedicalTattooPage() {
           </section>
 
           {/* Nipple Reconstruction Section */}
-          <section className='mb-16'>
+          <section id='nipple-reconstruction' className='anchor-offset mb-16'>
             <article>
               <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
                 {t('nipple.heading')}
@@ -192,7 +194,7 @@ export default function ParamedicalTattooPage() {
           </section>
 
           {/* Nano Scalp Section */}
-          <section className='mt-16 pt-12 border-t'>
+          <section id='nano-scalp' className='anchor-offset mt-16 pt-12 border-t'>
             <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-16'>
               {/* Nano Scalp Image Column */}
               <div className='mb-8 lg:mb-0 lg:h-full'>

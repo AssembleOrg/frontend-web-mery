@@ -6,9 +6,11 @@ import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
 import { Shield, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
+import { useSectionDeepLink } from '@/lib/hooks/useSectionDeepLink';
 
 export default function NanobladingCamouflagePage() {
   const t = useTranslations('servicesPages.nanobladingCamouflage');
+  useSectionDeepLink();
 
   const camouflageCases = [{ key: '0' }, { key: '1' }, { key: '2' }];
 
@@ -53,7 +55,7 @@ export default function NanobladingCamouflagePage() {
           {/* Main Content Grid */}
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-16'>
             {/* Nanoblading Column */}
-            <article className='mb-12 lg:mb-0'>
+            <article id='nanoblading' className='anchor-offset mb-12 lg:mb-0'>
               <h2 className='text-3xl font-primary font-bold text-foreground mb-6'>
                 {t('nanoblading.heading')}
               </h2>
@@ -106,7 +108,7 @@ export default function NanobladingCamouflagePage() {
             </article>
 
             {/* Camouflage Column */}
-            <article>
+            <article id='camuflaje' className='anchor-offset'>
               <h2 className='text-3xl font-primary font-bold text-foreground mb-6'>
                 {t('camouflage.heading')}
               </h2>

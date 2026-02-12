@@ -7,9 +7,11 @@ import { BookingCTA } from '@/components/booking-cta';
 import { AlertCircle, Heart, Calendar } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { useSectionDeepLink } from '@/lib/hooks/useSectionDeepLink';
 
 export default function LipBlushPage() {
   const t = useTranslations('servicesPages.lipBlush');
+  useSectionDeepLink();
 
   const handleWhatsApp = (message: string) => {
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
@@ -47,7 +49,7 @@ export default function LipBlushPage() {
       <div className='container mx-auto px-4 py-16'>
         <div className='max-w-4xl mx-auto'>
           {/* Bloque 1: Introducción y Precios (Todo en una tarjeta) */}
-          <section className='mb-12'>
+          <section id='lip-blush' className='anchor-offset mb-12'>
             <div className='bg-card border rounded-xl p-8'>
               <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
                 {t('introduction.heading')}
@@ -189,7 +191,7 @@ export default function LipBlushPage() {
           </section>
 
           {/* Camouflage Section */}
-          <section className='mt-12 pt-8 border-t'>
+          <section id='lip-camouflage' className='anchor-offset mt-12 pt-8 border-t'>
             <h2 className='text-3xl font-bold font-primary text-foreground mb-4'>
               {t('camouflage.heading')}
             </h2>
