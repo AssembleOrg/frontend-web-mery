@@ -7,7 +7,7 @@ import { Play, Loader2, ShoppingCart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
-import { arePurchaseButtonsActive } from '@/lib/promo-config';
+import { arePurchaseButtonsActive, PROMO_CONFIG } from '@/lib/promo-config';
 import { getCourseDetails, getPresentationVideo } from '@/lib/api-client';
 import { Course } from '@/types/course';
 
@@ -149,7 +149,7 @@ export default function OfertasCourseModal({
     const priceInfo = isSpecialCourse
       ? ` (USD ${formatPrice(discountedPrice)})`
       : ` ($${formatPrice(discountedPrice)})`;
-    const message = `Hola! Me interesa ${courseTitle} con la promoción del 50% OFF${priceInfo}.`;
+    const message = `Hola! Me interesa ${courseTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF${priceInfo}.`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -377,7 +377,7 @@ export default function OfertasCourseModal({
                           {displayPrice}
                         </p>
                         <p className='text-white/90 text-sm mt-1 font-semibold'>
-                          50% OFF
+                          {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                         </p>
                         <p className='text-white/90 text-sm mt-2 font-semibold'>
                           💬 Consultar por este curso vía WhatsApp
@@ -414,7 +414,7 @@ export default function OfertasCourseModal({
                           {displayPrice}
                         </p>
                         <p className='text-white/90 text-sm mt-1 font-semibold'>
-                          50% OFF
+                          {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                         </p>
                       </div>
 
@@ -455,7 +455,7 @@ export default function OfertasCourseModal({
                           {displayPrice}
                         </p>
                         <p className='text-white/90 text-sm mt-1 font-semibold'>
-                          50% OFF
+                          {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                         </p>
                         <p className='text-white/90 text-sm mt-2 font-semibold'>
                           💬 Consultar por este curso vía WhatsApp
@@ -484,7 +484,7 @@ export default function OfertasCourseModal({
                           {displayPrice}
                         </p>
                         <p className='text-white/90 text-sm mt-1 font-semibold'>
-                          50% OFF
+                          {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                         </p>
                       </div>
 

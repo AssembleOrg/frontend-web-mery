@@ -11,6 +11,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
 import { getCourseImage, isAutostylismCourse } from '@/lib/utils';
+import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
 
 type CourseFilter = 'all' | 'professional' | 'autostylism';
 
@@ -111,63 +112,54 @@ export default function FormacionesPage() {
   }, [filteredCourses]);
 
   const coursesWithDisplayPrice = useMemo(
-    () =>
-      sortedCourses.map((course) => {
+    () => {
+      const promoActive = isPromoActive();
+      const discountMultiplier = 100 / (100 - PROMO_CONFIG.DISCOUNT_PERCENTAGE);
+
+      return sortedCourses.map((course) => {
         let priceDisplay: string;
         let originalPriceDisplay: string | undefined;
-        
-        // DESCUENTOS FICTICIOS DESACTIVADOS - Mostrar precios reales
-        // // Verificar si es Nanoblading o Camuflaje Senior (por título o slug)
-        // const isSpecialUSDCourse = 
-        //   course.title.toLowerCase().includes('nanoblading') || 
-        //   course.slug.toLowerCase().includes('nanoblading') ||
-        //   course.title.toLowerCase().includes('camuflaje senior') ||
-        //   course.slug.toLowerCase().includes('camuflaje senior') ||
-        //   course.title.toLowerCase().includes('camuflaje señor') ||
-        //   course.slug.toLowerCase().includes('camuflaje señor');
-        
+
+        const isSpecialUSDCourse =
+          course.title.toLowerCase().includes('nanoblading') ||
+          course.slug.toLowerCase().includes('nanoblading') ||
+          course.title.toLowerCase().includes('camuflaje senior') ||
+          course.slug.toLowerCase().includes('camuflaje senior') ||
+          course.title.toLowerCase().includes('camuflaje señor') ||
+          course.slug.toLowerCase().includes('camuflaje señor');
+
         if (course.isFree) {
           priceDisplay = '';
           originalPriceDisplay = undefined;
         } else if (course.priceARS === 99999999) {
-          // Cursos en USD: mostrar precio real sin descuento ficticio
           const realPrice = course.priceUSD;
-          priceDisplay = realPrice > 0
-            ? `USD ${realPrice.toLocaleString('en-US')}`
-            : 'Consultar';
-          originalPriceDisplay = undefined;
-          
-          // DESCUENTOS FICTICIOS DESACTIVADOS
-          // if (isSpecialUSDCourse && realPrice > 0) {
-          //   // Aplicar descuento ficticio solo a cursos especiales en USD
-          //   const inflatedPrice = realPrice * 2; // Precio duplicado
-          //   priceDisplay = `USD ${realPrice.toLocaleString('en-US')}`;
-          //   originalPriceDisplay = `USD ${inflatedPrice.toLocaleString('en-US')}`;
-          // } else {
-          //   // Otros cursos en USD sin descuento
-          //   priceDisplay = realPrice > 0
-          //     ? `USD ${realPrice.toLocaleString('en-US')}`
-          //     : 'Consultar';
-          //   originalPriceDisplay = undefined;
-          // }
+          if (promoActive && isSpecialUSDCourse && realPrice > 0) {
+            const inflatedPrice = Math.round(realPrice * discountMultiplier);
+            priceDisplay = `USD ${realPrice.toLocaleString('en-US')}`;
+            originalPriceDisplay = `USD ${inflatedPrice.toLocaleString('en-US')}`;
+          } else {
+            priceDisplay = realPrice > 0
+              ? `USD ${realPrice.toLocaleString('en-US')}`
+              : 'Consultar';
+            originalPriceDisplay = undefined;
+          }
         } else {
-          // Cursos en ARS: mostrar precio real sin descuento ficticio
           const realPrice = course.priceARS;
-          priceDisplay = realPrice > 0
-            ? `$${realPrice.toLocaleString('es-AR')}`
-            : '';
-          originalPriceDisplay = undefined;
-          
-          // DESCUENTOS FICTICIOS DESACTIVADOS
-          // // Para cursos en ARS, duplicar el precio para mostrar como "descuento"
-          // const inflatedPrice = realPrice * 2; // Precio duplicado
-          // originalPriceDisplay = realPrice > 0
-          //   ? `$${inflatedPrice.toLocaleString('es-AR')}`
-          //   : undefined;
+          if (promoActive && realPrice > 0) {
+            const inflatedPrice = Math.round(realPrice * discountMultiplier);
+            priceDisplay = `$${realPrice.toLocaleString('es-AR')}`;
+            originalPriceDisplay = `$${inflatedPrice.toLocaleString('es-AR')}`;
+          } else {
+            priceDisplay = realPrice > 0
+              ? `$${realPrice.toLocaleString('es-AR')}`
+              : '';
+            originalPriceDisplay = undefined;
+          }
         }
         const isAutostylism = isAutostylismCourse(course.slug, course.title);
         return { ...course, priceDisplay, originalPriceDisplay, isAutostylism };
-      }),
+      });
+    },
     [sortedCourses]
   );
 

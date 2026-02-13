@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { PROMO_CONFIG } from '@/lib/promo-config';
 
 interface SimpleCourseCardProps {
   image: string;
@@ -29,14 +30,13 @@ export default function SimpleCourseCard({
 
   return (
     <div className='relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full'>
-      {/* DESCUENTOS FICTICIOS DESACTIVADOS - Badge de 50% OFF */}
-      {/* {originalPrice && (
+      {originalPrice && (
         <div className='absolute top-3 right-3 z-10'>
           <div className='bg-[#8b1538] text-white px-3 py-1.5 rounded-full font-bold text-xs sm:text-sm shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300 font-primary-medium'>
-            50% OFF
+            {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
           </div>
         </div>
-      )} */}
+      )}
 
       {/* Course Image */}
       <div className='relative h-48 w-full'>
@@ -70,21 +70,19 @@ export default function SimpleCourseCard({
           {description || 'Descripción del curso'}
         </p>
         <div className='mb-3'>
-          {/* DESCUENTOS FICTICIOS DESACTIVADOS - Mostrar precio tachado y badge */}
-          {/* {originalPrice ? (
+          {originalPrice ? (
             <div className='space-y-1'>
               <div className='flex items-center gap-2'>
                 <p className='text-sm text-[#545454] dark:text-[#a0a0a0] line-through'>{originalPrice}</p>
                 <span className='bg-[#fbe8ea] text-[#8b1538] px-2 py-0.5 rounded text-xs font-bold font-primary-medium'>
-                  50% OFF
+                  {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                 </span>
               </div>
               <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
             </div>
           ) : (
             <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
-          )} */}
-          <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
+          )}
         </div>
         <button
           onClick={handleClick}

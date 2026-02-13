@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
+import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -107,43 +108,38 @@ export default function SimpleCourseModal({
   const isFreeCourse = course.isFree;
   const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0;
   
-  // DESCUENTOS FICTICIOS DESACTIVADOS
-  // // Verificar si es Nanoblading o Camuflaje Senior (por título o slug)
-  // const isSpecialUSDCourse = 
-  //   course.title.toLowerCase().includes('nanoblading') || 
-  //   course.slug.toLowerCase().includes('nanoblading') ||
-  //   course.title.toLowerCase().includes('camuflaje senior') ||
-  //   course.slug.toLowerCase().includes('camuflaje senior') ||
-  //   course.title.toLowerCase().includes('camuflaje señor') ||
-  //   course.slug.toLowerCase().includes('camuflaje señor');
+  // Verificar si es Nanoblading o Camuflaje Senior (por título o slug)
+  const isSpecialUSDCourse =
+    course.title.toLowerCase().includes('nanoblading') ||
+    course.slug.toLowerCase().includes('nanoblading') ||
+    course.title.toLowerCase().includes('camuflaje senior') ||
+    course.slug.toLowerCase().includes('camuflaje senior') ||
+    course.title.toLowerCase().includes('camuflaje señor') ||
+    course.slug.toLowerCase().includes('camuflaje señor');
 
-  // // Calcular precio original (duplicado) y precio final (real)
-  // // Para USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio
-  // // Para ARS: todos tienen descuento ficticio
-  // const showFakeDiscount = !isFreeCourse && (
-  //   (isUSDCourse && isSpecialUSDCourse && course.priceUSD > 0) || 
-  //   (!isUSDCourse && course.priceARS > 0)
-  // );
-  
-  // const originalPrice = showFakeDiscount 
-  //   ? isUSDCourse && isSpecialUSDCourse
-  //     ? `USD ${(course.priceUSD * 2).toLocaleString('en-US')}`
-  //     : !isUSDCourse
-  //     ? `$${(course.priceARS * 2).toLocaleString('es-AR')}`
-  //     : null
-  //   : null;
-  // const finalPrice = showFakeDiscount
-  //   ? isUSDCourse && isSpecialUSDCourse
-  //     ? `USD ${course.priceUSD.toLocaleString('en-US')}`
-  //     : !isUSDCourse
-  //     ? `$${course.priceARS.toLocaleString('es-AR')}`
-  //     : null
-  //   : null;
+  // Calcular precio original (ficticio) y precio final (real)
+  // Para USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio
+  // Para ARS: todos tienen descuento ficticio
+  const discountMultiplier = 100 / (100 - PROMO_CONFIG.DISCOUNT_PERCENTAGE);
+  const showFakeDiscount = isPromoActive() && !isFreeCourse && (
+    (isUSDCourse && isSpecialUSDCourse && course.priceUSD > 0) ||
+    (!isUSDCourse && course.priceARS > 0)
+  );
 
-  // Mostrar precio real sin descuentos ficticios
-  const showFakeDiscount = false;
-  const originalPrice = null;
-  const finalPrice = null;
+  const originalPrice = showFakeDiscount
+    ? isUSDCourse && isSpecialUSDCourse
+      ? `USD ${Math.round(course.priceUSD * discountMultiplier).toLocaleString('en-US')}`
+      : !isUSDCourse
+      ? `$${Math.round(course.priceARS * discountMultiplier).toLocaleString('es-AR')}`
+      : null
+    : null;
+  const finalPrice = showFakeDiscount
+    ? isUSDCourse && isSpecialUSDCourse
+      ? `USD ${course.priceUSD.toLocaleString('en-US')}`
+      : !isUSDCourse
+      ? `$${course.priceARS.toLocaleString('es-AR')}`
+      : null
+    : null;
 
   // Determinar qué precio mostrar (precio real)
   const displayPrice =
@@ -353,15 +349,14 @@ export default function SimpleCourseModal({
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
-                    {/* DESCUENTOS FICTICIOS DESACTIVADOS */}
-                    {/* {showFakeDiscount && originalPrice ? (
+                    {showFakeDiscount && originalPrice ? (
                       <div className='space-y-2'>
                         <div className='flex items-center justify-center gap-2'>
                           <p className='text-lg text-white/70 line-through'>
                             {originalPrice}
                           </p>
                           <span className='bg-white text-[#8b1538] px-3 py-1 rounded-full text-sm font-bold font-primary-medium shadow-md'>
-                            50% OFF
+                            {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                           </span>
                         </div>
                         <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
@@ -372,10 +367,7 @@ export default function SimpleCourseModal({
                       <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                         {displayPrice}
                       </p>
-                    )} */}
-                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                      {displayPrice}
-                    </p>
+                    )}
                     {showUSDOption && (
                       <p className='text-white/90 text-sm mt-1'>
                         También disponible en U$S {course.priceUSD}
@@ -440,15 +432,14 @@ export default function SimpleCourseModal({
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
-                    {/* DESCUENTOS FICTICIOS DESACTIVADOS */}
-                    {/* {showFakeDiscount && originalPrice ? (
+                    {showFakeDiscount && originalPrice ? (
                       <div className='space-y-2'>
                         <div className='flex items-center justify-center gap-2'>
                           <p className='text-lg text-white/70 line-through'>
                             {originalPrice}
                           </p>
                           <span className='bg-white text-[#8b1538] px-3 py-1 rounded-full text-sm font-bold font-primary-medium shadow-md'>
-                            50% OFF
+                            {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                           </span>
                         </div>
                         <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
@@ -459,10 +450,7 @@ export default function SimpleCourseModal({
                       <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                         {displayPrice}
                       </p>
-                    )} */}
-                    <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                      {displayPrice}
-                    </p>
+                    )}
                     {showUSDOption && (
                       <p className='text-white/90 text-sm mt-1'>
                         También disponible en U$S {course.priceUSD}

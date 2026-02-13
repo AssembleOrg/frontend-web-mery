@@ -194,7 +194,7 @@ export default function OfertasEspecialesPage() {
                 No dejes pasar esta oportunidad para sumar nuevos servicios y/o
                 perfeccionar tus resultados
                 <br />
-                Las últimas técnicas en Cosmetic Tattoo y servicios Premiun 50%
+                Las últimas técnicas en Cosmetic Tattoo y servicios Premium {PROMO_CONFIG.DISCOUNT_PERCENTAGE}%
                 OFF
               </p>
             </div>

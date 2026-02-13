@@ -3,7 +3,7 @@ import { Course } from './types/course';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { isPromoDisabled, arePurchaseButtonsActive } from '@/lib/promo-config';
+import { isPromoDisabled, arePurchaseButtonsActive, PROMO_CONFIG } from '@/lib/promo-config';
 import { X } from 'lucide-react';
 import OfertasCourseModal from './ofertas-course-modal';
 
@@ -143,7 +143,7 @@ export default function CourseCard({
 
   // Función para abrir WhatsApp desde el modal especial
   const handleWhatsAppContact = () => {
-    const message = `Hola! Me interesa ${cardTitle} con la promoción del 50% OFF.`;
+    const message = `Hola! Me interesa ${cardTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF.`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setShowSpecialModal(false);
