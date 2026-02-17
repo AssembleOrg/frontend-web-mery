@@ -360,7 +360,7 @@
       },
       "pricingInfo": {
         "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Nanoblading session; it is non-refundable and does not lock in the price of your service:",
-        "depositAmount": "Deposit AR$ 100,000.-"
+        "depositAmount": "Deposit AR$ 150,000.-"
       },
       "nanoblading": {
         "heading": "WHAT IS NANOBLADING By & Only MERY GARCIA?",
@@ -427,7 +427,7 @@
       "pricing": {
         "depositTitle": "Consultation and Deposit",
         "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lash Line & Lash Camouflage session; it is non-refundable and does not lock in the price of your service:",
-        "depositAmount": "Deposit AR$ 100,000.-",
+        "depositAmount": "Deposit AR$ 150,000.-",
         "priceListTitle": "Service List Price",
         "session1": "First session: US$ 480.- (or US$ 320 in cash)",
         "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
@@ -464,10 +464,9 @@
       },
       "pricing": {
         "heading": "Service List Price",
-        "deposit": "Deposit: AR$ 100,000.-",
-        "session1": "First session: US$ 520.- (or US$ 450 in cash)",
-        "session2": "Second session: US$ 520.- (or US$ 450 in cash)",
-        "note": "A second, complementary session is required 30 to 60 days after the first Nano Scalp service. To book your appointment with Mery, a deposit that will count towards your service is required."
+        "deposit": "Deposit: AR$ 150,000.-",
+        "session1": "Session: US$ 650.- (or US$ 450 in cash)",
+        "note": "To book your appointment with Mery, a deposit that will count towards your service is required."
       },
       "importantInfo": {
         "heading": "IMPORTANT",
@@ -506,7 +505,7 @@
       },
       "pricing": {
         "depositTitle": "Deposit",
-        "depositAmount": "Deposit AR$ 100,000.-",
+        "depositAmount": "Deposit AR$ 150,000.-",
         "priceListTitle": "Service List Price with Mery Garcia",
         "firstSessionLabel": "First Session",
         "session1": "US$ 650.- (or US$ 475 in cash)",
@@ -551,9 +550,9 @@
         "p1": "Areola Harmonization is a technique that uses micropigmentation or cosmetic tattoo to conceal the appearance of scars, making them blend with the surrounding skin tone without losing realism and naturalness.\n\nThis technique involves the implantation of pigments in the scar area to match the color and minimize its visibility.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nThis procedure is recommended for individuals with post-surgical scars, caused by aesthetic injuries to the areola, or for those wishing to correct asymmetries.\n\nIt is important to note that there must be a 6-week gap between sessions for the skin to heal properly.",
         "pricing": {
           "heading": "Service List Price",
-          "deposit": "Deposit: AR$ 100,000.-",
-          "session1": "First session: US$ 480.- (or US$ 420 in cash)",
-          "touchUp": "Touch-up: US$ 240.- (or US$ 180 in cash)",
+          "deposit": "Deposit: AR$ 150,000.-",
+          "session1": "First session: US$ 560.- (or US$ 420 in cash)",
+          "touchUp": "Touch-up: US$ 317.- (or US$ 220 in cash)",
           "note": "A touch-up is considered the complementary service performed 6 weeks after the first session. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
         },
         "procedure": {
@@ -574,9 +573,9 @@
         "p1": "It is a 3D cosmetic tattoo technique that can help correct asymmetries, improve the appearance of scars, or cover imperfections in the areola and nipple area.\n\nThis procedure is recommended for individuals with post-surgical scars, breast reconstruction, scars caused by injuries.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly.",
         "pricing": {
           "heading": "Service List Price",
-          "deposit": "Deposit: AR$ 100,000.-",
+          "deposit": "Deposit: AR$ 150,000.-",
           "session1": "First session: US$ 520.- (or US$ 450 in cash)",
-          "touchUp": "Touch-up: US$ 240.- (or US$ 180 in cash)",
+          "touchUp": "Touch-up: US$ 317.- (or US$ 220 in cash)",
           "note": "A touch-up is considered the complementary service performed 6 weeks after the first session. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
         },
         "procedure": {
@@ -597,10 +596,9 @@
         "p1": "It is a cosmetic tattoo that consists of implanting pigment into the scalp and skin to create hyper-realistic hair lines.\n\nFrom the first session, you will notice an optical effect of greater hair density, in a natural way that will increase progressively with each session.\n\nThis procedure is recommended for people with post-lift scars, lack of hair growth, cowlicks, up to fibrosing frontal alopecia.\n\nIt is important to note that there must be a one-month gap between sessions for the skin to heal properly.",
         "pricing": {
           "heading": "Service List Price",
-          "deposit": "Deposit: AR$ 100,000.-",
-          "session1": "First session: US$ 520.- (or US$ 450 in cash)",
-          "session2": "Second session: US$ 520.- (or US$ 450 in cash)",
-          "note": "A second complementary session is required 30 to 60 days after the first Nano Scalp service. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
+          "deposit": "Deposit: AR$ 150,000.-",
+          "session1": "Session: US$ 650.- (or US$ 450 in cash)",
+          "note": "To book your appointment with Mery, you will need to make a deposit that will count towards your service."
         },
         "procedure": {
           "heading": "PROCEDURE",

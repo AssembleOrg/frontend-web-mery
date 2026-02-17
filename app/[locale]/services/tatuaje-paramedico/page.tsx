@@ -232,9 +232,6 @@ export default function ParamedicalTattooPage() {
                     <p className='font-secondary'>
                       {t('nanoscalp.pricing.session1')}
                     </p>
-                    <p className='font-secondary'>
-                      {t('nanoscalp.pricing.session2')}
-                    </p>
                   </div>
                   <p className='text-sm italic text-muted-foreground font-secondary mt-4'>
                     {t('nanoscalp.pricing.note')}

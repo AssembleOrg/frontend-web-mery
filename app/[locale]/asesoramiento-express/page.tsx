@@ -287,7 +287,6 @@ export default function AsesoramientoExpressPage() {
       titleKey: 'nanoScalp',
       prices: {
         firstSession: { regular: 'U$S 520', cash: 'U$S 450' },
-        maintenance: { regular: 'U$S 520', cash: 'U$S 450' },
       },
     },
     {
@@ -296,7 +295,7 @@ export default function AsesoramientoExpressPage() {
       titleKey: 'nippleAreola',
       prices: {
         firstSession: { regular: 'U$S 520', cash: 'U$S 450' },
-        retouch: { regular: 'U$S 240', cash: 'U$S 180' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 220' },
       },
     },
     {
@@ -304,8 +303,8 @@ export default function AsesoramientoExpressPage() {
       icon: Layers,
       titleKey: 'scarCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 480', cash: 'U$S 420' },
-        retouch: { regular: 'U$S 240', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 560', cash: 'U$S 420' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 220' },
       },
       isComingSoon: true,
     },
