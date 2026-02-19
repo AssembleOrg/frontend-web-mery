@@ -286,7 +286,7 @@ export default function AsesoramientoExpressPage() {
       icon: Activity,
       titleKey: 'nanoScalp',
       prices: {
-        firstSession: { regular: 'U$S 520', cash: 'U$S 450' },
+        firstSession: { regular: 'U$S 650', cash: 'U$S 450' },
       },
     },
     {
