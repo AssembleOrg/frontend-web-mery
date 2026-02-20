@@ -115,7 +115,7 @@
       "cta": {
         "title": "¿Lista para regalar una experiencia única?",
         "description": "Contactanos para adquirir tu Gift Card y sorprender a alguien especial con el regalo de la belleza.",
-        "contactButton": "💬 Solicitar Gift Card"
+        "contactButton": "Solicitar Gift Card"
       },
       "ctaSection": {
         "title": "Elegí tu Gift Card",
@@ -203,32 +203,32 @@
       "services": [
         {
           "title": "Modelado de cejas by Staff MG",
-          "price": "AR$ 39.000.-",
+          "price": "AR$ 44.000.-",
           "description": "Consiste en darle forma a las cejas, a través del cortado y la depilación artesanal, pelo por pelo, teniendo en cuenta el gusto de la persona y las proporciones del rostro."
         },
         {
           "title": "Laminado de cejas by Staff MG",
-          "price": "AR$ 39.000.-",
+          "price": "AR$ 44.000.-",
           "description": "Disciplinamos a través de un alisado químico, cejas rebeldes."
         },
         {
           "title": "Tinte de cejas by Staff MG",
-          "price": "AR$ 32.000.-",
+          "price": "AR$ 36.000.-",
           "description": "Le damos color a las cejas cuando estas son muy claritas o bien si tenes canas."
         },
         {
           "title": "Brow Refill by Staff MG",
-          "price": "AR$ 39.000.-",
+          "price": "AR$ 44.000.-",
           "description": "Reactiva y/o potencia el efecto de densidad de tu Nanoblading, tiñendo la piel de tus cejas con un juego de sombras de acabado hiperealista. También podés realizarlo si no tenés Nanoblading, pero igualmente querés lucir unas cejas densas, hiper pobladas y realistas por 20 días."
         },
         {
           "title": "Lash Refill by Staff MG",
-          "price": "AR$ 32.000.-",
+          "price": "AR$ 36.000.-",
           "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lash Line & Lash Camouflage, con un juego de sombras de acabado hiperealista."
         },
         {
           "title": "Tinte de pestañas by Staff MG",
-          "price": "AR$ 32.000.-",
+          "price": "AR$ 36.000.-",
           "description": "Damos color cuando son muy claras o en caso de tener canas, desde la base hasta la punta. No da volumen ni arqueado. Oscurece y potencia el color de tu propio pelo."
         }
       ],
@@ -408,15 +408,15 @@
         "subtitle": "Un efecto óptico de mayor volumen y densidad para tu mirada."
       },
       "intro": {
-        "text": "⚡Lash Line & Lash Camouflage ⚡New Service en #TattoCosmetic #ByMeryGarcia ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares By Mery Garcia & Staff. ✨Preparate para lucir una mirada increíble pero sobre todo natural ✨"
+        "text": "Lash Line & Lash Camouflage. New Service en #TattoCosmetic #ByMeryGarcia ¿Qué buscamos? Un efecto súper #Natural, no simulamos un ojo delineado, sino un efecto óptico de mayor volumen y densidad. Convive a la perfección con otros servicios, como el lifting y tinte de pestañas, y por supuesto unas cejas espectaculares By Mery Garcia & Staff. Preparate para lucir una mirada increíble pero sobre todo natural."
       },
       "pricing": {
         "depositTitle": "Seña",
         "depositAmount": "Seña AR$ 150.000.-",
         "priceListTitle": "Precio de Lista del Servicio",
-        "session1": "Primera sesión: U$S 480.- (en efectivo U$S 320)",
+        "session1": "Primera sesión: U$S 450.- (en efectivo U$S 320)",
         "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
-        "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 320)"
+        "maintenance": "Mantenimiento: U$S 450.- (en efectivo U$S 320)"
       },
       "camouflage": {
         "heading": "LASHES LINE CAMOUFLAGE",
@@ -442,22 +442,22 @@
         "subtitle": "Labios definidos y naturales. Color híper realista y duradero."
       },
       "intro": {
-        "text": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
+        "text": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés"
       },
       "introduction": {
-        "heading": "WE ARE BACK 💋",
+        "heading": "WE ARE BACK",
         "text": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de Lip Blush, la misma no es reembolsable y no congela el valor de tu servicio.",
-        "availability": "🚀 Sólo 2 citas por semana",
-        "promoText": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés✨"
+        "availability": "Sólo 2 citas por semana",
+        "promoText": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés"
       },
       "whatIsIt": {
         "heading": "¿QUÉ ES EL LIP BLUSH?",
-        "p1": "Es un servicio de tatuaje cosmético que dura entre 18 y 24 meses. El procedimiento consta de una primera sesión y un retoque para terminar de definir unos labios perfectos a los 30 o 60 días. \n\n Consiste en darle un color a los labios, respetando la colorimetría natural de la persona. No buscamos dar un efecto de maquillaje, sino de boca ruborizada. No da brillo. Sin polvo, sin textura, como si el labio tuviese color 💋🍒.",
-        "p2": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, sú per natural #ByMeryGarcia bebés✨"
+        "p1": "Es un servicio de tatuaje cosmético que dura entre 18 y 24 meses. El procedimiento consta de una primera sesión y un retoque para terminar de definir unos labios perfectos a los 30 o 60 días. \n\n Consiste en darle un color a los labios, respetando la colorimetría natural de la persona. No buscamos dar un efecto de maquillaje, sino de boca ruborizada. No da brillo. Sin polvo, sin textura, como si el labio tuviese color.",
+        "p2": "New service! Are you ready? Lip Blush, semi permanente, labios hiper definidos, súper natural #ByMeryGarcia bebés"
       },
       "pricing": {
         "depositTitle": "Seña",
-        "depositAmount": "Seña AR$ 150.000.-",
+        "depositAmount": "Seña AR$ 200.000.-",
         "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
         "firstSessionLabel": "Primera Sesión",
         "session1": "U$S 650.- (en efectivo U$S 475)",
@@ -471,7 +471,7 @@
         "herpesText": "En caso de haber tenido herpes, por favor consultar con su dermatólogo para realizar tratamiento preventivo.",
         "preparationTitle": "Preparación",
         "preparationText": "Por favor concurrir a la sesión con los labios bien hidratados.",
-        "availability": "🚀 Sólo 2 citas por semana"
+        "availability": "Sólo 2 citas por semana"
       },
       "camouflage": {
         "heading": "¿QUÉ ES EL LIP CAMOUFLAGE?",
@@ -486,7 +486,7 @@
         }
       },
       "cta": {
-        "heading": "¿Lista para tus Labios de Ensueño?",
+        "heading": "¿Lista para el rediseño de tus labios?",
         "text": "Descubre el secreto de unos labios naturalmente perfectos con un acabado hiperrealista. Reserva tu cita con Mery.",
         "button": "Reservar Cita",
         "consultationButton": "Reservar Cita de Consulta",
@@ -628,13 +628,13 @@
     "exceptionalText2": "En casos excepcionales, puedes contactarnos a:",
     "exceptionalNote": "Nuestro equipo evaluará cada caso de manera individual y comprensiva.",
     "closingTitle": "El compromiso de un excelente servicio es mutuo",
-    "closingText": "Ésta política nos ayuda a organizar mejor nuestros horarios y brindar un servicio de excelencia a todos nuestros clientes. Agradecemos tu compresión y colaboración para que más personas puedan disfrutar de nuestros servicios."
+    "closingText": "Ésta política nos ayuda a brindar servicios ciento por ciento customizados a todos nuestros clientes. Agradecemos tu aceptación y colaboración para que más personas puedan disfrutar de nuestro arte"
   },
   "expressConsultation": {
     "title": "Servicios MG",
     "subtitle": "Servicios profesionales de Cejas, Pestañas & Tattoo Cosmetic",
     "beautyServicesTitle": "Brow & Lash Styling",
-    "cosmeticTattooTitle": "Cosmetic Tattoo",
+    "cosmeticTattooTitle": "Cosmetic Tattoo By Mery Garcia",
     "paramedicalTattooTitle": "Paramedical Tattoo",
     "paymentTitle": "HASTA 6 PAGOS CON TARJETA DE CRÉDITO",
     "paymentNote": "Valores no aplicables a agenda de Special Pass",
@@ -658,39 +658,64 @@
       },
       "lashRefill": {
         "title": "Lash Refill by Staff MG",
-        "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lash Line & Lash Camouflage, con un juego de sombras de acabado hiperealista."
+        "description": "Reactiva y/o potencia el efecto de densidad de tu servicio de Lash Line & Lash Camouflage, con un juego de sombras de acabado hiperrealista."
       },
       "eyelashTint": {
         "title": "Tinte de pestañas",
         "description": "Oscurece pestañas muy claras, aporta color y longitud. Dura aproximadamente un mes."
       },
       "nanoblading": {
-        "title": "Nanoblading & Brow Camouflage",
+        "title": "Nanoblading",
         "description": "La técnica más avanzada de tatuaje cosmético en cejas. Ideal para mejorar la forma, rellenar zonas despobladas o cubrir cicatrices."
+      },
+      "browCamouflage": {
+        "title": "Brow Camouflage",
+        "description": "Técnica para cubrir cicatrices, zonas despobladas o mejorar la forma de las cejas con tatuaje cosmético."
+      },
+      "mixedCamouflage": {
+        "title": "Camuflaje Mixto",
+        "description": "Indicado para personas con trabajo previo que desean mejorar el aspecto de sus cejas, labios o línea de pestañas. El número de sesiones no puede predeterminarse."
       },
       "freckles": {
         "title": "Freckles & Beauty Mark",
-        "description": "En el caso de las pecas es una técnica muy novedosa, consta en generar un tatuaje muy superficial por medio de pequeños puntos donde se inserta la tinta y así lograr un efecto híper realista con acabado del tipo peca o lunar. La durabilidad oscila entre los 5 meses a 6 meses máximo, según el tipo de piel y el cuidado que haya recibido."
+        "description": "Técnica superficial que genera puntos de tinta para lograr un efecto híper realista tipo peca o lunar. Durabilidad de 5 a 6 meses según tipo de piel y cuidados."
       },
       "lashesLines": {
-        "title": "Lash Line & Lash Camouflage",
+        "title": "Lash Line",
         "description": "Crea un efecto de volumen y densidad súper natural para las pestañas."
       },
+      "lashCamouflage": {
+        "title": "Lash Camouflage",
+        "description": "Disimula imperfecciones en la zona de las pestañas con efecto de densidad natural."
+      },
+      "lashMixedCamouflage": {
+        "title": "Lash Camouflage Mixto",
+        "description": "Indicado para personas con trabajo previo en la línea de pestañas que desean mejorar el aspecto. Combina despigmentación, corrección de color, textura y estructura."
+      },
       "lipBlush": {
-        "title": "Lip Blush & Lip Camouflage",
+        "title": "Lip Blush",
         "description": "Maquillaje semipermanente que dura aproximadamente 8 meses. Consiste en darle color a los labios respetando la colorimetría natural."
+      },
+      "lipCamouflage": {
+        "title": "Lip Camouflage",
+        "description": "Corrección de asimetrías o imperfecciones en los labios con maquillaje semipermanente."
       },
       "nanoScalp": {
         "title": "NanoScalp",
         "description": "Consiste en implantar pigmento en el cuero cabelludo y piel generando líneas de cabello hiperrealista. Desde la primera sesión notarás un efecto óptico de densidad mayor capilar, de forma natural que irá aumentando progresivamente sesión tras sesión."
       },
-      "nippleAreola": {
-        "title": "Nipple & Areola",
-        "description": "Ayuda a corregir y mejorar la apariencia de cicatrices o cubrir imperfecciones en la zona de la areola y pezón. Recomendado para personas que presentan cicatrices post quirúrgicas, reconstrucción mamaria o cicatrices causadas por lesiones."
+      "areolaHarmonization": {
+        "title": "Areola Harmonization",
+        "description": "Corrige y rediseña la areola sin perder naturalidad. Líneas, texturas y color híper realista en casos de reconstrucción mamaria y post quirúrgicos. Si tuviste mastectomía no realizamos tatuajes cosmético, conocé nuestro servicio de Paramedical, Epitesis Cap."
+      },
+      "nippleReconstruction": {
+        "title": "Nipple Reconstruction",
+        "description": "Reconstrucción del pezón con tatuaje cosmético híper realista. Ideal para personas con cicatrices post quirúrgicas o reconstrucción mamaria."
       },
       "scarCamouflage": {
         "title": "Scar Camouflage",
-        "description": "Disimula la apariencia de las cicatrices, haciendo que se mezclen con el tono de la piel circundante sin perder realismo y naturalidad. Esta técnica implica la implantación de pigmentos en la zona de la cicatriz para igualar el color y minimizar su visibilidad."
+        "description": "Disimula la apariencia de las cicatrices, haciendo que se mezclen con el tono de la piel circundante sin perder realismo y naturalidad. Esta técnica implica la implantación de pigmentos en la zona de la cicatriz para igualar el color y minimizar su visibilidad. En caso de patillas por intervenciones, ideal para recuperar los contornos post intervención quirúrgica.",
+        "note": "Precio variable entre U$S 200 y U$S 400 por sesión según la zona y complejidad."
       },
       "camouflage": {
         "title": "Camuflaje",
@@ -700,7 +725,7 @@
     },
     "pricing": {
       "cash": "Efectivo:",
-      "firstSession": "Primera sesión:",
+      "firstSession": "Sesión:",
       "retouch": "Retoque:",
       "maintenance": "Mantenimiento:",
       "mixedService": "Servicio Mixto:",

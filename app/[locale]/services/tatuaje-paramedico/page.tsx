@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 import { Shield, AlertTriangle, Star, Clock } from 'lucide-react';
 import Image from 'next/image';
 import { useSectionDeepLink } from '@/lib/hooks/useSectionDeepLink';
@@ -286,6 +287,8 @@ export default function ParamedicalTattooPage() {
               showExpressButton={false}
             />
           </section>
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 

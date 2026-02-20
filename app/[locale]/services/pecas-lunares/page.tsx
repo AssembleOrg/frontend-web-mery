@@ -10,6 +10,7 @@ import { Footer } from '@/components/footer';
 import { Shield, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 
 export default function PecasLunaresPage() {
   const t = useTranslations('servicesPages.frecklesMoles');
@@ -24,7 +25,7 @@ export default function PecasLunaresPage() {
           src='/Img-home/home-4.webp'
           alt={t('hero.title')}
           fill
-          className='object-cover'
+          className='object-cover sm:object-[50%_65%]'
         />
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
@@ -138,6 +139,8 @@ export default function PecasLunaresPage() {
             mainButtonText={t('cta.button')}
             showExpressButton={false}
           />
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 

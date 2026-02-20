@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 import { Shield, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
 import { useSectionDeepLink } from '@/lib/hooks/useSectionDeepLink';
@@ -24,7 +25,7 @@ export default function NanobladingCamouflagePage() {
           src='/Img-home/nanoblading.webp'
           alt={t('hero.title')}
           fill
-          className='object-cover'
+          className='object-cover sm:object-[50%_5%]'
         />
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
@@ -210,6 +211,8 @@ export default function NanobladingCamouflagePage() {
               </p>
             </div>
           </section>
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 

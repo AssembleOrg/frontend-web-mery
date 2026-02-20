@@ -126,9 +126,11 @@ function ServiceCardUSD({
               <div className='font-primary font-bold text-foreground'>
                 {servicio.prices.firstSession.regular}
               </div>
-              <div className='font-secondary text-sm text-primary'>
-                {pricing('cash')} {servicio.prices.firstSession.cash}
-              </div>
+              {servicio.prices.firstSession.cash && (
+                <div className='font-secondary text-sm text-primary'>
+                  {pricing('cash')} {servicio.prices.firstSession.cash}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -204,38 +206,38 @@ export default function AsesoramientoExpressPage() {
       id: 1,
       icon: Scissors,
       titleKey: 'eyebrowModeling',
-      price: 'AR$ 39,000',
+      price: 'AR$ 44,000',
       hasRecommendation: true,
     },
     {
       id: 2,
       icon: Brush,
       titleKey: 'eyebrowLamination',
-      price: 'AR$ 39,000',
+      price: 'AR$ 44,000',
     },
     {
       id: 3,
       icon: RefreshCw,
       titleKey: 'browRefill',
-      price: 'AR$ 39,000',
+      price: 'AR$ 44,000',
     },
     {
       id: 4,
       icon: Palette,
       titleKey: 'eyebrowTint',
-      price: 'AR$ 32,000',
+      price: 'AR$ 36,000',
     },
     {
       id: 5,
       icon: RefreshCw,
       titleKey: 'lashRefill',
-      price: 'AR$ 32,000',
+      price: 'AR$ 36,000',
     },
     {
       id: 6,
       icon: Eye,
       titleKey: 'eyelashTint',
-      price: 'AR$ 32,000',
+      price: 'AR$ 36,000',
     },
   ];
 
@@ -251,12 +253,31 @@ export default function AsesoramientoExpressPage() {
       },
     },
     {
+      id: 14,
+      icon: Star,
+      titleKey: 'browCamouflage',
+      prices: {
+        firstSession: { regular: 'U$S 610', cash: 'U$S 450' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        maintenance: { regular: 'U$S 610', cash: 'U$S 450' },
+      },
+    },
+    {
+      id: 17,
+      icon: Sparkles,
+      titleKey: 'mixedCamouflage',
+      prices: {
+        firstSession: { regular: 'U$S 710', cash: 'U$S 475' },
+      },
+    },
+    {
       id: 8,
       icon: Sparkles,
       titleKey: 'freckles',
       prices: {
-        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 350', cash: 'U$S 192' },
+        retouch: { regular: 'U$S 190', cash: 'U$S 128' },
+        maintenance: { regular: 'U$S 350', cash: 'U$S 192' },
       },
     },
     {
@@ -264,15 +285,40 @@ export default function AsesoramientoExpressPage() {
       icon: Eye,
       titleKey: 'lashesLines',
       prices: {
-        firstSession: { regular: 'U$S 480', cash: 'U$S 320' },
+        firstSession: { regular: 'U$S 450', cash: 'U$S 320' },
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
       },
-      isNew: true,
+    },
+    {
+      id: 15,
+      icon: Eye,
+      titleKey: 'lashCamouflage',
+      prices: {
+        firstSession: { regular: 'U$S 450', cash: 'U$S 320' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+      },
+    },
+    {
+      id: 19,
+      icon: Eye,
+      titleKey: 'lashMixedCamouflage',
+      prices: {
+        firstSession: { regular: 'U$S 700', cash: 'U$S 500' },
+      },
     },
     {
       id: 10,
       icon: Heart,
       titleKey: 'lipBlush',
+      prices: {
+        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+      },
+    },
+    {
+      id: 16,
+      icon: Heart,
+      titleKey: 'lipCamouflage',
       prices: {
         firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
@@ -292,7 +338,16 @@ export default function AsesoramientoExpressPage() {
     {
       id: 12,
       icon: Circle,
-      titleKey: 'nippleAreola',
+      titleKey: 'areolaHarmonization',
+      prices: {
+        firstSession: { regular: 'U$S 560', cash: 'U$S 420' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 220' },
+      },
+    },
+    {
+      id: 18,
+      icon: Circle,
+      titleKey: 'nippleReconstruction',
       prices: {
         firstSession: { regular: 'U$S 520', cash: 'U$S 450' },
         retouch: { regular: 'U$S 317', cash: 'U$S 220' },
@@ -303,10 +358,9 @@ export default function AsesoramientoExpressPage() {
       icon: Layers,
       titleKey: 'scarCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 560', cash: 'U$S 420' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 220' },
+        firstSession: { regular: 'U$S 200 – 400', cash: '' },
       },
-      isComingSoon: true,
+      hasNote: true,
     },
   ];
 

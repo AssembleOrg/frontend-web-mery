@@ -6,6 +6,7 @@ import { Footer } from '@/components/footer';
 import { Shield, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 
 export default function MicrobladingCamouflagePage() {
   const t = useTranslations('servicesPages.microbladingCamouflage');
@@ -128,6 +129,8 @@ export default function MicrobladingCamouflagePage() {
             mainButtonText={tShared('ctaButton')}
             showExpressButton={false}
           />
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 

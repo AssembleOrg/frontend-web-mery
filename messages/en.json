@@ -115,7 +115,7 @@
       "cta": {
         "title": "Ready to give a unique experience?",
         "description": "Contact us to purchase your Gift Card and surprise someone special with the gift of beauty.",
-        "contactButton": "💬 Request Gift Card"
+        "contactButton": "Request Gift Card"
       },
       "ctaSection": {
         "title": "Choose Your Gift Card",
@@ -210,32 +210,32 @@
       "services": [
         {
           "title": "Eyebrow Shaping by MG Staff",
-          "price": "AR$ 39,000.-",
+          "price": "AR$ 44,000.-",
           "description": "It consists of shaping the eyebrows through trimming and artisanal, hair-by-hair tweezing, considering the person's taste and facial proportions."
         },
         {
           "title": "Eyebrow Lamination by MG Staff",
-          "price": "AR$ 39,000.-",
+          "price": "AR$ 44,000.-",
           "description": "We tame rebellious eyebrows through a chemical straightening process."
         },
         {
           "title": "Eyebrow Tinting by MG Staff",
-          "price": "AR$ 32,000.-",
+          "price": "AR$ 36,000.-",
           "description": "We add color to the eyebrows when they are very light or if you have gray hairs."
         },
         {
           "title": "Brow Refill by MG Staff",
-          "price": "AR$ 39,000.-",
+          "price": "AR$ 44,000.-",
           "description": "Reactivates and/or enhances the density effect of your Nanoblading by tinting the skin of your eyebrows with a hyper-realistic shadow play. You can also get it if you don't have Nanoblading but still want to show off dense, super-full, and realistic eyebrows for 20 days."
         },
         {
           "title": "Lash Refill by MG Staff",
-          "price": "AR$ 32,000.-",
+          "price": "AR$ 36,000.-",
           "description": "Reactivates and/or enhances the density effect of your Lash Line & Lash Camouflage service with a hyper-realistic shadow play."
         },
         {
           "title": "Lash Tinting by MG Staff",
-          "price": "AR$ 32,000.-",
+          "price": "AR$ 36,000.-",
           "description": "Darkens very light eyelashes, adds color and length. Lasts approximately one month."
         }
       ],
@@ -429,9 +429,9 @@
         "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lash Line & Lash Camouflage session; it is non-refundable and does not lock in the price of your service:",
         "depositAmount": "Deposit AR$ 150,000.-",
         "priceListTitle": "Service List Price",
-        "session1": "First session: US$ 480.- (or US$ 320 in cash)",
+        "session1": "First session: US$ 450.- (or US$ 320 in cash)",
         "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
-        "maintenance": "Maintenance: US$ 480.- (or US$ 320 in cash)"
+        "maintenance": "Maintenance: US$ 450.- (or US$ 320 in cash)"
       },
       "camouflage": {
         "heading": "LASHES LINE CAMOUFLAGE",
@@ -493,19 +493,19 @@
         "subtitle": "Defined and natural lips. Hyper-realistic, long-lasting color."
       },
       "introduction": {
-        "heading": "WE ARE BACK 💋",
+        "heading": "WE ARE BACK",
         "text": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lip Blush session; it is non-refundable and does not lock in the price of your service.",
-        "availability": "🚀 Only 2 appointments per week",
-        "promoText": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes✨"
+        "availability": "Only 2 appointments per week",
+        "promoText": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes"
       },
       "whatIsIt": {
         "heading": "WHAT IS LIP BLUSH?",
-        "p1": "It is a cosmetic tattoo service that lasts between 18 and 24 months. The procedure consists of a first session and a touch-up to finish defining perfect lips at 30 or 60 days.\n\nIt consists of giving color to the lips, respecting the person's natural coloration. We are not looking for a makeup effect, but rather a blushed mouth effect. No shine. Without powder, without texture, as if the lip had color 💋🍒",
-        "p2": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes✨"
+        "p1": "It is a cosmetic tattoo service that lasts between 18 and 24 months. The procedure consists of a first session and a touch-up to finish defining perfect lips at 30 or 60 days.\n\nIt consists of giving color to the lips, respecting the person's natural coloration. We are not looking for a makeup effect, but rather a blushed mouth effect. No shine. Without powder, without texture, as if the lip had color.",
+        "p2": "New service! Are you ready? Lip Blush, semi-permanent, hyper-defined lips, super natural #ByMeryGarcia babes"
       },
       "pricing": {
         "depositTitle": "Deposit",
-        "depositAmount": "Deposit AR$ 150,000.-",
+        "depositAmount": "Deposit AR$ 200,000.-",
         "priceListTitle": "Service List Price with Mery Garcia",
         "firstSessionLabel": "First Session",
         "session1": "US$ 650.- (or US$ 475 in cash)",
@@ -642,7 +642,7 @@
     "exceptionalText2": "In exceptional cases, you can contact us at:",
     "exceptionalNote": "Our team will evaluate each case individually and with understanding.",
     "closingTitle": "A commitment to excellent service is mutual",
-    "closingText": "This policy helps us better organize our schedules and provide an excellent service to all our clients. We appreciate your understanding and cooperation so that more people can enjoy our services."
+    "closingText": "This policy helps us provide 100% customized services to all our clients. We appreciate your agreement and cooperation so that more people can enjoy our art."
   },
   "expressConsultation": {
     "title": "Services MG",
@@ -680,32 +680,57 @@
         "description": "Darkens very light eyelashes, adds color and length. Lasts approximately one month."
       },
       "nanoblading": {
-        "title": "Nanoblading & Brow Camouflage",
+        "title": "Nanoblading",
         "description": "The most advanced eyebrow cosmetic tattoo technique. Ideal for improving brow shape, filling sparse areas or covering scars."
+      },
+      "browCamouflage": {
+        "title": "Brow Camouflage",
+        "description": "Technique to cover scars, sparse areas or improve eyebrow shape with cosmetic tattoo."
+      },
+      "mixedCamouflage": {
+        "title": "Mixed Camouflage",
+        "description": "Indicated for people with previous cosmetic tattoo work who want to improve their eyebrows, lips or lash line. Number of sessions cannot be predetermined."
       },
       "freckles": {
         "title": "Freckles & Beauty Mark",
-        "description": "In the case of freckles, it is a very innovative technique that consists of creating a very superficial tattoo through small dots where the ink is inserted to achieve a hyper-realistic effect with a freckle or mole-like finish. Durability ranges from 5 to 6 months maximum, depending on skin type and aftercare received."
+        "description": "Superficial technique that creates ink dots to achieve a hyper-realistic freckle or mole effect. Durability of 5 to 6 months depending on skin type and aftercare."
       },
       "lashesLines": {
-        "title": "Lash Line & Lash Camouflage",
+        "title": "Lash Line",
         "description": "Creates super natural volume and density effect for eyelashes."
       },
+      "lashCamouflage": {
+        "title": "Lash Camouflage",
+        "description": "Conceals imperfections in the lash area with a natural density effect."
+      },
+      "lashMixedCamouflage": {
+        "title": "Lash Mixed Camouflage",
+        "description": "Indicated for people with previous work on the lash line who want to improve its appearance. Combines depigmentation, color correction, texture and structure. Number of sessions cannot be predetermined."
+      },
       "lipBlush": {
-        "title": "Lip Blush & Lip Camouflage",
+        "title": "Lip Blush",
         "description": "Semi-permanent makeup that lasts approximately 8 months. Consists of giving color to the lips while respecting natural colorimetry."
+      },
+      "lipCamouflage": {
+        "title": "Lip Camouflage",
+        "description": "Correction of asymmetries or lip imperfections with semi-permanent makeup."
       },
       "nanoScalp": {
         "title": "NanoScalp",
         "description": "It is a cosmetic tattoo that consists of implanting pigment into the scalp and skin to create hyper-realistic hair lines. From the first session, you will notice an optical effect of greater hair density, in a natural way that will increase progressively with each session."
       },
-      "nippleAreola": {
-        "title": "Nipple & Areola",
-        "description": "It is a 3D cosmetic tattoo technique that can help correct asymmetries, improve the appearance of scars, or cover imperfections in the areola and nipple area. Recommended for individuals with post-surgical scars, breast reconstruction, or scars caused by injuries."
+      "areolaHarmonization": {
+        "title": "Areola Harmonization",
+        "description": "Corrects and redesigns the areola with hyper-realistic lines, textures and color. Ideal for breast reconstruction and post-surgical cases. If you had a mastectomy, we do not perform cosmetic tattoos — learn about our Paramedical service, Epitesis Cap."
+      },
+      "nippleReconstruction": {
+        "title": "Nipple Reconstruction",
+        "description": "Hyper-realistic cosmetic tattoo for nipple reconstruction. Ideal for post-surgical scars or breast reconstruction."
       },
       "scarCamouflage": {
         "title": "Scar Camouflage",
-        "description": "Technique that uses micropigmentation to conceal the appearance of scars, making them blend with the surrounding skin tone without losing realism and naturalness. This technique involves the implantation of pigments in the scar area to match the color and minimize its visibility."
+        "description": "Technique that uses micropigmentation to conceal the appearance of scars, making them blend with the surrounding skin tone without losing realism and naturalness. This technique involves the implantation of pigments in the scar area to match the color and minimize its visibility. For sideburn areas affected by interventions, ideal for restoring contours after surgical procedures.",
+        "note": "Variable price between US$ 200 and US$ 400 per session depending on area and complexity."
       },
       "camouflage": {
         "title": "Camouflage",

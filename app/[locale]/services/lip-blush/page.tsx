@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 import { AlertCircle, Heart, Calendar } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,7 @@ export default function LipBlushPage() {
           src='/Img-home/Lip-blush-1.webp'
           alt={t('hero.title')}
           fill
-          className='object-cover'
+          className='object-cover sm:object-[50%_15%]'
         />
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
@@ -131,9 +132,7 @@ export default function LipBlushPage() {
                 <p className='font-bold text-primary mb-2'>
                   {t('introduction.availability')}
                 </p>
-                <p className='italic text-muted-foreground text-sm'>
-                  {t('introduction.promoText')}
-                </p>
+
               </div>
             </div>
           </section>
@@ -230,6 +229,8 @@ export default function LipBlushPage() {
             consultationWhatsAppMessage={`Hola! Me gustaría reservar una cita de consulta para Lip Blush.`}
             firstSessionWhatsAppMessage={`Hola! Me gustaría reservar mi primera sesión de Lip Blush.`}
           />
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 import { Shield, AlertTriangle, Clock, Star } from 'lucide-react';
 import Image from 'next/image';
 
@@ -94,6 +95,8 @@ export default function ScalpPage() {
             mainButtonText={t('cta.button')}
             showExpressButton={false}
           />
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 

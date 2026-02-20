@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
+import { ServiceClosingMessage } from '@/components/service-closing-message';
 import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
@@ -20,7 +21,7 @@ export default function LashesLinePage() {
           src='/Img-home/home-8.webp'
           alt={t('hero.title')}
           fill
-          className='object-cover'
+          className='object-cover sm:object-[50%_15%]'
         />
         <div className='absolute inset-0 bg-black/50' />
         <div className='absolute inset-0 flex items-center justify-center'>
@@ -136,6 +137,8 @@ export default function LashesLinePage() {
             consultationWhatsAppMessage={`Hola! Me gustaría reservar una cita de consulta para Lashes Line.`}
             firstSessionWhatsAppMessage={`Hola! Me gustaría reservar mi primera sesión de Lashes Line.`}
           />
+
+          <ServiceClosingMessage className='mt-12' />
         </div>
       </div>
 
