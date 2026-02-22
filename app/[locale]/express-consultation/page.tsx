@@ -157,7 +157,7 @@ function ServiceCardUSD({
           </div>
         )}
 
-        {servicio.prices.mixed && (
+        {/* {servicio.prices.mixed && (
           <div className='flex justify-between items-center'>
             <span className='font-secondary text-sm text-muted-foreground'>
               {pricing('mixedService')}
@@ -171,7 +171,7 @@ function ServiceCardUSD({
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       <p className='font-secondary text-muted-foreground text-sm leading-relaxed mb-3'>
@@ -257,15 +257,15 @@ export default function ExpressConsultationPage() {
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
       },
     },
-    {
-      id: 9,
-      icon: RefreshCw,
-      titleKey: 'camouflage',
-      prices: {
-        mixed: { regular: 'U$S 710', cash: 'U$S 475' },
-      },
-      hasNote: true,
-    },
+    // {
+    //   id: 9,
+    //   icon: RefreshCw,
+    //   titleKey: 'camouflage',
+    //   prices: {
+    //     mixed: { regular: 'U$S 710', cash: 'U$S 475' },
+    //   },
+    //   hasNote: true,
+    // },
   ];
 
   return (

@@ -257,19 +257,19 @@ export default function AsesoramientoExpressPage() {
       icon: Star,
       titleKey: 'browCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 610', cash: 'U$S 450' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
-        maintenance: { regular: 'U$S 610', cash: 'U$S 450' },
-      },
-    },
-    {
-      id: 17,
-      icon: Sparkles,
-      titleKey: 'mixedCamouflage',
-      prices: {
         firstSession: { regular: 'U$S 710', cash: 'U$S 475' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        maintenance: { regular: 'U$S 710', cash: 'U$S 475' },
       },
     },
+    // {
+    //   id: 17,
+    //   icon: Sparkles,
+    //   titleKey: 'mixedCamouflage',
+    //   prices: {
+    //     firstSession: { regular: 'U$S 710', cash: 'U$S 475' },
+    //   },
+    // },
     {
       id: 8,
       icon: Sparkles,
@@ -285,19 +285,19 @@ export default function AsesoramientoExpressPage() {
       icon: Eye,
       titleKey: 'lashesLines',
       prices: {
-        firstSession: { regular: 'U$S 450', cash: 'U$S 320' },
+        firstSession: { regular: 'U$S 480', cash: 'U$S 320' },
         retouch: { regular: 'U$S 317', cash: 'U$S 180' },
       },
     },
-    {
-      id: 15,
-      icon: Eye,
-      titleKey: 'lashCamouflage',
-      prices: {
-        firstSession: { regular: 'U$S 450', cash: 'U$S 320' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
-      },
-    },
+    // {
+    //   id: 15,
+    //   icon: Eye,
+    //   titleKey: 'lashCamouflage',
+    //   prices: {
+    //     firstSession: { regular: 'U$S 450', cash: 'U$S 320' },
+    //     retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+    //   },
+    // },
     {
       id: 19,
       icon: Eye,
@@ -320,8 +320,8 @@ export default function AsesoramientoExpressPage() {
       icon: Heart,
       titleKey: 'lipCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 700', cash: 'U$S 500' },
+        // retouch: { regular: 'U$S 317', cash: 'U$S 180' },
       },
     },
   ];

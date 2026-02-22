@@ -414,9 +414,9 @@
         "depositTitle": "Seña",
         "depositAmount": "Seña AR$ 150.000.-",
         "priceListTitle": "Precio de Lista del Servicio",
-        "session1": "Primera sesión: U$S 450.- (en efectivo U$S 320)",
+        "session1": "Primera sesión: U$S 480.- (en efectivo U$S 320)",
         "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
-        "maintenance": "Mantenimiento: U$S 450.- (en efectivo U$S 320)"
+        "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 320)"
       },
       "camouflage": {
         "heading": "LASHES LINE CAMOUFLAGE",
@@ -689,12 +689,12 @@
         "description": "Disimula imperfecciones en la zona de las pestañas con efecto de densidad natural."
       },
       "lashMixedCamouflage": {
-        "title": "Lash Camouflage Mixto",
+        "title": "Lash Camouflage",
         "description": "Indicado para personas con trabajo previo en la línea de pestañas que desean mejorar el aspecto. Combina despigmentación, corrección de color, textura y estructura."
       },
       "lipBlush": {
         "title": "Lip Blush",
-        "description": "Maquillaje semipermanente que dura aproximadamente 8 meses. Consiste en darle color a los labios respetando la colorimetría natural."
+        "description": "Cosmetic Tattoo en labios para más definición con acabado híper realista. Dura entre 18 y 24 meses. Consiste en darle color a los labios respetando la colorimetria natural"
       },
       "lipCamouflage": {
         "title": "Lip Camouflage",

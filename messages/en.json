@@ -83,7 +83,7 @@
     "title": "How to book your appointment?",
     "description": "Once you enter, you'll have access to the calendar with available appointment slots for each service.",
     "reserve": "Book Now",
-    "express": "Services",
+    "express": "Price List",
     "info": "",
     "policyLink": "Cancellation policy"
   },
@@ -645,11 +645,11 @@
     "closingText": "This policy helps us provide 100% customized services to all our clients. We appreciate your agreement and cooperation so that more people can enjoy our art."
   },
   "expressConsultation": {
-    "title": "Services MG",
+    "title": "Price List",
     "subtitle": "Professional beauty and cosmetic tattoo services",
     "validFrom": "Valid from 23/11/2024",
     "beautyServicesTitle": "Brow & Lash Styling",
-    "cosmeticTattooTitle": "Cosmetic Tattoo",
+    "cosmeticTattooTitle": "Cosmetic Tattoo By Mery Garcia",
     "paramedicalTattooTitle": "Paramedical Tattoo",
     "paymentTitle": "UP TO 6 CREDIT CARD PAYMENTS",
     "paymentNote": "Prices not applicable to Special Pass schedule",
@@ -704,7 +704,7 @@
         "description": "Conceals imperfections in the lash area with a natural density effect."
       },
       "lashMixedCamouflage": {
-        "title": "Lash Mixed Camouflage",
+        "title": "Lash Camouflage",
         "description": "Indicated for people with previous work on the lash line who want to improve its appearance. Combines depigmentation, color correction, texture and structure. Number of sessions cannot be predetermined."
       },
       "lipBlush": {
