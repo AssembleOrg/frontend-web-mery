@@ -5,21 +5,13 @@ import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { BookingCTA } from '@/components/booking-cta';
 import { ServiceClosingMessage } from '@/components/service-closing-message';
-import { AlertCircle, Heart, Calendar } from 'lucide-react';
+import { AlertCircle, Heart } from 'lucide-react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { useSectionDeepLink } from '@/lib/hooks/useSectionDeepLink';
 
 export default function LipBlushPage() {
   const t = useTranslations('servicesPages.lipBlush');
   useSectionDeepLink();
-
-  const handleWhatsApp = (message: string) => {
-    const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
-      message,
-    )}`;
-    window.open(whatsappUrl, '_blank');
-  };
 
   return (
     <div className='min-h-screen bg-background'>
@@ -55,34 +47,6 @@ export default function LipBlushPage() {
               <h2 className='text-3xl font-bold font-primary text-foreground mb-6'>
                 {t('introduction.heading')}
               </h2>
-
-              {/* Botones de Reserva */}
-              <div className='flex flex-col sm:flex-row gap-3 mb-6 pb-6 border-b'>
-                <Button
-                  size='lg'
-                  className='flex-1 px-6 py-3 text-base'
-                  onClick={() =>
-                    handleWhatsApp(
-                      `Hola! Me gustaría reservar una cita de consulta para Lip Blush.`,
-                    )
-                  }
-                >
-                  <Calendar className='h-5 w-5 mr-2' />
-                  {t('cta.consultationButton')}
-                </Button>
-                <Button
-                  size='lg'
-                  className='flex-1 px-6 py-3 text-base'
-                  onClick={() =>
-                    handleWhatsApp(
-                      `Hola! Me gustaría reservar mi primera sesión de Lip Blush.`,
-                    )
-                  }
-                >
-                  <Calendar className='h-5 w-5 mr-2' />
-                  {t('cta.firstSessionButton')}
-                </Button>
-              </div>
 
               {/* Seña */}
               <div className='mb-6 pb-6 border-b'>
@@ -224,10 +188,6 @@ export default function LipBlushPage() {
             text={t('cta.text')}
             mainButtonText={t('cta.button')}
             showExpressButton={false}
-            consultationButtonText={t('cta.consultationButton')}
-            firstSessionButtonText={t('cta.firstSessionButton')}
-            consultationWhatsAppMessage={`Hola! Me gustaría reservar una cita de consulta para Lip Blush.`}
-            firstSessionWhatsAppMessage={`Hola! Me gustaría reservar mi primera sesión de Lip Blush.`}
           />
 
           <ServiceClosingMessage className='mt-12' />

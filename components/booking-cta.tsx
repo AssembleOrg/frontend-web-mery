@@ -11,6 +11,7 @@ interface BookingCTAProps {
   text2?: string;
   mainButtonText?: string;
   showExpressButton?: boolean;
+  bookingUrl?: string;
   consultationButtonText?: string;
   firstSessionButtonText?: string;
   consultationWhatsAppMessage?: string;
@@ -25,6 +26,7 @@ export function BookingCTA({
   text2,
   mainButtonText,
   showExpressButton = true,
+  bookingUrl = 'https://merygarciabooking.com/',
   consultationButtonText,
   firstSessionButtonText,
   consultationWhatsAppMessage,
@@ -95,7 +97,7 @@ export function BookingCTA({
                   asChild
                 >
                   <a
-                    href='https://merygarciabooking.com/'
+                    href={bookingUrl}
                     target='_blank'
                     rel='noopener noreferrer'
                   >

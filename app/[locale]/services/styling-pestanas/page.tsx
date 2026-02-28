@@ -146,10 +146,6 @@ export default function LashesLinePage() {
             text={t('cta.text')}
             mainButtonText={t('cta.button')}
             showExpressButton={false}
-            consultationButtonText={t('cta.consultationButton')}
-            firstSessionButtonText={t('cta.firstSessionButton')}
-            consultationWhatsAppMessage={`Hola! Me gustaría reservar una cita de consulta para Lashes Line.`}
-            firstSessionWhatsAppMessage={`Hola! Me gustaría reservar mi primera sesión de Lashes Line.`}
           />
 
           <ServiceClosingMessage className='mt-12' />
