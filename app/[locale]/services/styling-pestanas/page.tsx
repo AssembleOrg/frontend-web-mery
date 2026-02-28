@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
@@ -10,6 +11,19 @@ import Image from 'next/image';
 
 export default function LashesLinePage() {
   const t = useTranslations('servicesPages.lashesLine');
+
+  // Handle anchor link scrolling
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const element = document.getElementById(hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, []);
 
   return (
     <div className='min-h-screen bg-background'>
@@ -106,7 +120,7 @@ export default function LashesLinePage() {
             </div>
           </section>
 
-          <section className='mt-12 pt-8 border-t'>
+          <section id='lashes-camouflage' className='mt-12 pt-8 border-t scroll-mt-24'>
             <h2 className='text-3xl font-bold font-primary text-foreground mb-4'>
               {t('camouflage.heading')}
             </h2>
