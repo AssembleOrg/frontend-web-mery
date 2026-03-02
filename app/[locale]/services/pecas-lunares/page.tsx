@@ -134,10 +134,12 @@ export default function PecasLunaresPage() {
           </section>
 
           <BookingCTA
+            bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#pecas-lunares'
             heading={t('cta.heading')}
             text={t('cta.text')}
             mainButtonText={t('cta.button')}
             showExpressButton={false}
+            embedded
           />
 
           <ServiceClosingMessage className='mt-12' />

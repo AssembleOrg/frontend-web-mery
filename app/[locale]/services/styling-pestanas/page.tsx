@@ -118,6 +118,15 @@ export default function LashesLinePage() {
                 </div>
               </div>
             </div>
+
+            <BookingCTA
+              bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#lashes-line'
+              heading={t('cta.heading')}
+              text={t('cta.text')}
+              mainButtonText={t('cta.button')}
+              showExpressButton={false}
+              embedded
+            />
           </section>
 
           <section id='lashes-camouflage' className='mt-12 pt-8 border-t scroll-mt-24'>
@@ -138,15 +147,16 @@ export default function LashesLinePage() {
                 {t('camouflage.pricing.camouflageSession')}
               </p>
             </div>
-          </section>
 
-          {/* CTA Section */}
-          <BookingCTA
-            heading={t('cta.heading')}
-            text={t('cta.text')}
-            mainButtonText={t('cta.button')}
-            showExpressButton={false}
-          />
+            <BookingCTA
+              bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#lash-camouflage'
+              heading={t('cta.heading')}
+              text={t('cta.text')}
+              mainButtonText={t('cta.button')}
+              showExpressButton={false}
+              embedded
+            />
+          </section>
 
           <ServiceClosingMessage className='mt-12' />
         </div>

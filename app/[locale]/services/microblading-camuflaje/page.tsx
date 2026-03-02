@@ -124,10 +124,12 @@ export default function MicrobladingCamouflagePage() {
           </section>
 
           <BookingCTA
+            bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#camuflaje'
             heading={tShared('ctaHeading')}
             text={tShared('ctaText')}
             mainButtonText={tShared('ctaButton')}
             showExpressButton={false}
+            embedded
           />
 
           <ServiceClosingMessage className='mt-12' />

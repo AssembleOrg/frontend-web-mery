@@ -99,6 +99,15 @@ export default function LipBlushPage() {
 
               </div>
             </div>
+
+            <BookingCTA
+              bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#lip-blush'
+              heading={t('cta.heading')}
+              text={t('cta.text')}
+              mainButtonText={t('cta.button')}
+              showExpressButton={false}
+              embedded
+            />
           </section>
 
           {/* Bloque 2: Descripción del Servicio con Imagen */}
@@ -180,15 +189,16 @@ export default function LipBlushPage() {
                 {t('camouflage.pricing.camouflageSession')}
               </p>
             </div> */}
-          </section>
 
-          {/* CTA Section */}
-          <BookingCTA
-            heading={t('cta.heading')}
-            text={t('cta.text')}
-            mainButtonText={t('cta.button')}
-            showExpressButton={false}
-          />
+            <BookingCTA
+              bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#lip-camouflage'
+              heading={t('cta.heading')}
+              text={t('cta.text')}
+              mainButtonText={t('cta.button')}
+              showExpressButton={false}
+              embedded
+            />
+          </section>
 
           <ServiceClosingMessage className='mt-12' />
         </div>

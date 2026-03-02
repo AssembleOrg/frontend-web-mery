@@ -106,6 +106,15 @@ export default function NanobladingCamouflagePage() {
                   <p className='text-sm'>{t('shared.pregnantWomenTextNano')}</p>
                 </div>
               </div>
+
+              <BookingCTA
+                bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#nanoblading'
+                heading={t('shared.cta.heading')}
+                text={t('shared.cta.text')}
+                mainButtonText={t('shared.cta.button')}
+                showExpressButton={false}
+                embedded
+              />
             </article>
 
             {/* Camouflage Column */}
@@ -167,6 +176,15 @@ export default function NanobladingCamouflagePage() {
                   <p className='text-sm'>{t('shared.pregnantWomenTextCamu')}</p>
                 </div>
               </div>
+
+              <BookingCTA
+                bookingUrl='https://merygarciabooking.com/tattoo-cosmetico#camuflaje'
+                heading={t('shared.cta.heading')}
+                text={t('shared.cta.text')}
+                mainButtonText={t('shared.cta.button')}
+                showExpressButton={false}
+                embedded
+              />
             </article>
           </div>
 
@@ -184,14 +202,6 @@ export default function NanobladingCamouflagePage() {
               </div>
             </div>
           </section>
-
-          {/* CTA Section */}
-          <BookingCTA
-            heading={t('shared.cta.heading')}
-            text={t('shared.cta.text')}
-            mainButtonText={t('shared.cta.button')}
-            showExpressButton={false}
-          />
 
           {/* Conditions Section */}
           <section className='mt-2 pt-2 border-t'>

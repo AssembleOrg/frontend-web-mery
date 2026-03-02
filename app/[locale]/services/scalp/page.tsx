@@ -90,10 +90,12 @@ export default function ScalpPage() {
 
           {/* CTA Section */}
           <BookingCTA
+            bookingUrl='https://merygarciabooking.com/paramedical-tattoo#nano-scalp'
             heading={t('cta.heading')}
             text={t('cta.text')}
             mainButtonText={t('cta.button')}
             showExpressButton={false}
+            embedded
           />
 
           <ServiceClosingMessage className='mt-12' />

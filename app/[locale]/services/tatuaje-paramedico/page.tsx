@@ -121,6 +121,15 @@ export default function ParamedicalTattooPage() {
                       {t('areola.importantInfo.text')}
                     </p>
                   </div>
+
+                  <BookingCTA
+                    bookingUrl='https://merygarciabooking.com/paramedical-tattoo#areola-harmonization'
+                    heading={t('shared.cta.heading')}
+                    text={t('shared.cta.text')}
+                    mainButtonText={t('shared.cta.button')}
+                    showExpressButton={false}
+                    embedded
+                  />
                 </article>
               </div>
             </div>
@@ -274,18 +283,17 @@ export default function ParamedicalTattooPage() {
                     {t('nanoscalp.importantInfo.text')}
                   </p>
                 </div>
+
+                <BookingCTA
+                  bookingUrl='https://merygarciabooking.com/paramedical-tattoo#nano-scalp'
+                  heading={t('shared.cta.heading')}
+                  text={t('shared.cta.text')}
+                  mainButtonText={t('shared.cta.button')}
+                  showExpressButton={false}
+                  embedded
+                />
               </article>
             </div>
-          </section>
-
-          {/* CTA Section */}
-          <section className='mt-16 pt-12 border-t'>
-            <BookingCTA
-              heading={t('shared.cta.heading')}
-              text={t('shared.cta.text')}
-              mainButtonText={t('shared.cta.button')}
-              showExpressButton={false}
-            />
           </section>
 
           <ServiceClosingMessage className='mt-12' />

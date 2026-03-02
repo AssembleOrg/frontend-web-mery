@@ -90,10 +90,12 @@ export default function EyebrowStylingPage() {
               </section>
 
               <BookingCTA
+                bookingUrl='https://merygarciabooking.com/estilismo-de-cejas'
                 heading={t('cta.heading')}
                 text={t('cta.text')}
                 mainButtonText={t('cta.button')}
                 showExpressButton={false}
+                embedded
               />
 
               <ServiceClosingMessage className='mt-12' />
