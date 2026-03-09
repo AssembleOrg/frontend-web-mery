@@ -104,6 +104,11 @@ export async function POST(req: NextRequest) {
         },
         auto_return: 'approved',
         notification_url: `${webhookBaseUrl}/api/webhook`,
+        // 3 cuotas sin interés para todas las tarjetas
+        payment_methods: {
+          installments: 3,
+          default_installments: 3,
+        },
         // Opcional: Statement descriptor (aparece en resumen de tarjeta)
         statement_descriptor: 'MERY CURSOS',
       },
