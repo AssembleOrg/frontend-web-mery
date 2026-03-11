@@ -233,9 +233,9 @@ export default function ExpressConsultationPage() {
       icon: Star,
       titleKey: 'nanoblading',
       prices: {
-        firstSession: { regular: 'U$S 610', cash: 'U$S 450' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
-        maintenance: { regular: 'U$S 610', cash: 'U$S 450' },
+        firstSession: { regular: 'U$S 610', cash: 'U$S 500' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
+        maintenance: { regular: 'U$S 610', cash: 'U$S 500' },
       },
     },
     {
@@ -243,8 +243,8 @@ export default function ExpressConsultationPage() {
       icon: Sparkles,
       titleKey: 'lashesLines',
       prices: {
-        firstSession: { regular: 'U$S 480', cash: 'U$S 320' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 480', cash: 'U$S 380' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
       },
       isNew: true,
     },
@@ -253,8 +253,8 @@ export default function ExpressConsultationPage() {
       icon: Heart,
       titleKey: 'lipBlush',
       prices: {
-        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 650', cash: 'U$S 500' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
       },
     },
     // {

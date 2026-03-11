@@ -174,9 +174,9 @@
       "pricing": {
         "heading": "Precio de Lista del Servicio",
         "frecklesTitle": "PECAS",
-        "session1": "Primera sesión: U$S 350.- (en efectivo U$S 192)",
-        "touchUp": "Retoque: U$S 190.- (en efectivo U$S 128)",
-        "maintenance": "Mantenimiento: U$S 350.- (en efectivo U$S 192)",
+        "session1": "Primera sesión: U$S 400.- (en efectivo U$S 300)",
+        "touchUp": "Retoque: U$S 220.- (en efectivo U$S 170)",
+        "maintenance": "Mantenimiento: U$S 400.- (en efectivo U$S 300)",
         "molesTitle": "LUNARES",
         "molesText": "El costo de los Lunares varía, a confirmar cuando Mery termine de definir el diseño para vos.",
         "kitText": "El costo incluye el kit de cuidados posteriores, contiene un jabón neutro y un agua esterilizada especialmente creado para el post de nuestros servicios.",
@@ -356,8 +356,8 @@
         "p3": "Más de 10 años de experiencia y perfeccionamientos en Comestic Tattoo dieron por resultado que el último año Mery Garcia utilizara Nanoblading para dar respuesta a todas las personas que buscan mejorar sus cejas a través del tatuaje cosmético.",
         "pricing": {
           "heading": "Precio de Lista (By & Only MERY GARCIA)",
-          "session1": "Primera sesión: U$S 610.- (en efectivo U$S 450)",
-          "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
+          "session1": "Primera sesión: U$S 610.- (en efectivo U$S 500)",
+          "touchUp": "Retoque: U$S 317.- (en efectivo U$S 250)",
           "note": "Se considera retoque al servicio complemento de primera sesión realizado entre 30 a 60 días luego del primer servicio de Nanoblading. Una vez tomada tu consulta, para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio de Nanoblading #ByMeryGarcia"
         }
       },
@@ -366,7 +366,7 @@
         "p1": "Es un servicio que combina despigmentación, corrección de color, textura y estructura para MEJORAR EL ASPECTO de un trabajo mal hecho o deteriorado tanto de Dermopigmentación como de Microblading.\n\nEn la etapa de consulta podremos indicarte que tipo de servicio necesitas.\n\nTu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio:",
         "pricing": {
           "heading": "Precio de Lista (Cada Sesión)",
-          "technique": "Técnica Mixta: U$S 710.- (en efectivo U$S 475)",
+          "technique": "Técnica Mixta: U$S 710.- (en efectivo U$S 550)",
           "kitNote": "El costo del servicio incluye el kit de cuidados (agua destilada y jabón neutro).",
           "additionalCostNote": "El servicio de Nanoblading tiene un valor adicional al de Camuflaje."
         },
@@ -414,9 +414,9 @@
         "depositTitle": "Seña",
         "depositAmount": "Seña AR$ 150.000.-",
         "priceListTitle": "Precio de Lista del Servicio",
-        "session1": "Primera sesión: U$S 480.- (en efectivo U$S 320)",
-        "touchUp": "Retoque: U$S 317.- (en efectivo U$S 180)",
-        "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 320)"
+        "session1": "Primera sesión: U$S 480.- (en efectivo U$S 380)",
+        "touchUp": "Retoque: U$S 317.- (en efectivo U$S 250)",
+        "maintenance": "Mantenimiento: U$S 480.- (en efectivo U$S 380)"
       },
       "camouflage": {
         "heading": "LASHES LINE CAMOUFLAGE",
@@ -425,7 +425,7 @@
         "p3": "Tu consulta con Mery & Staff MG es un tiempo que dedicamos exclusivamente a saldar todas tus dudas. Ese día se te pedirá una seña quedando a cuenta de tu primera sesión de, la misma no es reembolsable y no congela el valor de tu servicio",
         "pricing": {
           "camouflageSessionLabel": "Lash Line & Lash Camouflage ",
-          "camouflageSession": "U$S 700.- (en efectivo U$S 500)"
+          "camouflageSession": "U$S 680.- (en efectivo U$S 250)"
         }
       },
       "cta": {
@@ -460,11 +460,11 @@
         "depositAmount": "Seña AR$ 200.000.-",
         "priceListTitle": "Precio de Lista del Servicio con Mery Garcia",
         "firstSessionLabel": "Primera Sesión",
-        "session1": "U$S 650.- (en efectivo U$S 475)",
+        "session1": "U$S 650.- (en efectivo U$S 500)",
         "touchUpLabel": "Retoque",
-        "touchUp": "U$S 317.- (en efectivo U$S 180)",
+        "touchUp": "U$S 317.- (en efectivo U$S 250)",
         "maintenanceLabel": "Mantenimiento",
-        "maintenance": "U$S 650.- (en efectivo U$S 475)"
+        "maintenance": "U$S 650.- (en efectivo U$S 500)"
       },
       "importantInfo": {
         "herpesTitle": "IMPORTANTE: Herpes",
@@ -482,7 +482,7 @@
         },
         "pricing": {
           "camouflageSessionLabel": "Camuflaje",
-          "camouflageSession": "U$S 700.- (en efectivo U$S 500)"
+          "camouflageSession": "U$S 680.- (en efectivo U$S 550)"
         }
       },
       "cta": {
@@ -506,7 +506,7 @@
       "pricing": {
         "heading": "Precio de Lista del Servicio",
         "deposit": "Seña: AR$ 150.000.-",
-        "session1": "Sesión: U$S 650.- (en efectivo U$S 450)",
+        "session1": "Sesión: U$S 650.- (en efectivo U$S 500)",
         "note": "Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
       },
       "importantInfo": {
@@ -538,8 +538,8 @@
         "pricing": {
           "heading": "Precio de Lista del Servicio",
           "deposit": "Seña: AR$ 150.000.-",
-          "session1": "Primera sesión: U$S 560.- (en efectivo U$S 420)",
-          "touchUp": "Retoque: U$S 317.- (en efectivo U$S 220)",
+          "session1": "Primera sesión: U$S 560.- (en efectivo U$S 440)",
+          "touchUp": "Retoque: U$S 317.- (en efectivo U$S 240)",
           "note": "Se considera retoque al servicio complemento de primera sesión realizado 6 semanas luego del primer servicio. Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
         },
         "procedure": {
@@ -584,7 +584,7 @@
         "pricing": {
           "heading": "Precio de Lista del Servicio",
           "deposit": "Seña: AR$ 150.000.-",
-          "session1": "Sesión: U$S 650.- (en efectivo U$S 450)",
+          "session1": "Sesión: U$S 650.- (en efectivo U$S 500)",
           "note": "Para reservar tu cita con Mery deberás realizar una seña que quedará a cuenta de tu servicio."
         },
         "procedure": {

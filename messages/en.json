@@ -180,9 +180,9 @@
       "pricing": {
         "heading": "Service Price List",
         "frecklesTitle": "FRECKLES",
-        "session1": "First session: US$ 350.- (or US$ 192 in cash)",
-        "touchUp": "Touch-up: US$ 190.- (or US$ 128 in cash)",
-        "maintenance": "Maintenance: US$ 350.- (or US$ 192 in cash)",
+        "session1": "First session: US$ 400.- (or US$ 300 in cash)",
+        "touchUp": "Touch-up: US$ 220.- (or US$ 170 in cash)",
+        "maintenance": "Maintenance: US$ 400.- (or US$ 300 in cash)",
         "molesTitle": "MOLES",
         "molesText": "The cost of Moles varies, to be confirmed when Mery finishes defining the design for you.",
         "kitText": "The cost includes the aftercare kit, contains neutral soap and sterile water specially created for the aftercare of our services.",
@@ -369,8 +369,8 @@
         "p3": "Over 10 years of experience and constant improvements in Cosmetic Tattooing led Mery Garcia to use Nanoblading last year to provide solutions to all people seeking to enhance their eyebrows through cosmetic tattooing.",
         "pricing": {
           "heading": "List Price (By & Only MERY GARCIA)",
-          "session1": "First session: US$ 610.- (or US$ 450 in cash)",
-          "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
+          "session1": "First session: US$ 610.- (or US$ 500 in cash)",
+          "touchUp": "Touch-up: US$ 317.- (or US$ 250 in cash)",
           "note": "A touch-up is considered the complementary service performed 30 to 60 days after the first Nanoblading service. Once you've had your consultation, to book your appointment with Mery you will need to make a deposit that will count towards your Nanoblading service #ByMeryGarcia"
         }
       },
@@ -379,7 +379,7 @@
         "p1": "It is a service that combines depigmentation, color correction, texture, and structure to IMPROVE THE APPEARANCE of a poorly done or deteriorated job from either Dermopigmentation or Microblading.\n\nDuring the consultation phase, we can tell you what type of service you need.\n\nYour consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session; it is non-refundable and does not lock in the price of your service:",
         "pricing": {
           "heading": "List Price (Per Session)",
-          "technique": "Mixed Technique: US$ 710.- (or US$ 475 in cash)",
+          "technique": "Mixed Technique: US$ 710.- (or US$ 550 in cash)",
           "kitNote": "The cost of the service includes the aftercare kit (distilled water and neutral soap).",
           "additionalCostNote": "The Nanoblading service has an additional cost to the Camouflage service."
         },
@@ -429,9 +429,9 @@
         "depositText": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first Lash Line & Lash Camouflage session; it is non-refundable and does not lock in the price of your service:",
         "depositAmount": "Deposit AR$ 150,000.-",
         "priceListTitle": "Service List Price",
-        "session1": "First session: US$ 450.- (or US$ 320 in cash)",
-        "touchUp": "Touch-up: US$ 317.- (or US$ 180 in cash)",
-        "maintenance": "Maintenance: US$ 450.- (or US$ 320 in cash)"
+        "session1": "First session: US$ 480.- (or US$ 380 in cash)",
+        "touchUp": "Touch-up: US$ 317.- (or US$ 250 in cash)",
+        "maintenance": "Maintenance: US$ 480.- (or US$ 380 in cash)"
       },
       "camouflage": {
         "heading": "LASHES LINE CAMOUFLAGE",
@@ -440,7 +440,7 @@
         "p3": "Your consultation with Mery & Staff MG is a time we dedicate exclusively to answering all your questions. On that day, you will be asked for a deposit that will count towards your first session, it is non-refundable and does not lock in the price of your service",
         "pricing": {
           "camouflageSessionLabel": "Lash Line & Lash Camouflage",
-          "camouflageSession": "US$ 700.- (or US$ 500 in cash)"
+          "camouflageSession": "US$ 680.- (or US$ 550 in cash)"
         }
       },
       "cta": {
@@ -465,7 +465,7 @@
       "pricing": {
         "heading": "Service List Price",
         "deposit": "Deposit: AR$ 150,000.-",
-        "session1": "Session: US$ 650.- (or US$ 450 in cash)",
+        "session1": "Session: US$ 650.- (or US$ 500 in cash)",
         "note": "To book your appointment with Mery, a deposit that will count towards your service is required."
       },
       "importantInfo": {
@@ -508,11 +508,11 @@
         "depositAmount": "Deposit AR$ 200,000.-",
         "priceListTitle": "Service List Price with Mery Garcia",
         "firstSessionLabel": "First Session",
-        "session1": "US$ 650.- (or US$ 475 in cash)",
+        "session1": "US$ 650.- (or US$ 500 in cash)",
         "touchUpLabel": "Touch-up",
-        "touchUp": "US$ 317.- (or US$ 180 in cash)",
+        "touchUp": "US$ 317.- (or US$ 250 in cash)",
         "maintenanceLabel": "Maintenance",
-        "maintenance": "US$ 650.- (or US$ 475 in cash)"
+        "maintenance": "US$ 650.- (or US$ 500 in cash)"
       },
       "importantInfo": {
         "herpesTitle": "IMPORTANT: Herpes",
@@ -529,7 +529,7 @@
         },
         "pricing": {
           "camouflageSessionLabel": "Camouflage",
-          "camouflageSession": "US$ 700.- (or US$ 500 in cash)"
+          "camouflageSession": "US$ 680.- (or US$ 550 in cash)"
         }
       },
       "cta": {
@@ -551,8 +551,8 @@
         "pricing": {
           "heading": "Service List Price",
           "deposit": "Deposit: AR$ 150,000.-",
-          "session1": "First session: US$ 560.- (or US$ 420 in cash)",
-          "touchUp": "Touch-up: US$ 317.- (or US$ 220 in cash)",
+          "session1": "First session: US$ 560.- (or US$ 440 in cash)",
+          "touchUp": "Touch-up: US$ 317.- (or US$ 240 in cash)",
           "note": "A touch-up is considered the complementary service performed 6 weeks after the first session. To book your appointment with Mery, you will need to make a deposit that will count towards your service."
         },
         "procedure": {
@@ -597,7 +597,7 @@
         "pricing": {
           "heading": "Service List Price",
           "deposit": "Deposit: AR$ 150,000.-",
-          "session1": "Session: US$ 650.- (or US$ 450 in cash)",
+          "session1": "Session: US$ 650.- (or US$ 500 in cash)",
           "note": "To book your appointment with Mery, you will need to make a deposit that will count towards your service."
         },
         "procedure": {

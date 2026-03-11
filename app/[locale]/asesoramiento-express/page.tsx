@@ -247,9 +247,9 @@ export default function AsesoramientoExpressPage() {
       icon: Star,
       titleKey: 'nanoblading',
       prices: {
-        firstSession: { regular: 'U$S 610', cash: 'U$S 450' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
-        maintenance: { regular: 'U$S 610', cash: 'U$S 450' },
+        firstSession: { regular: 'U$S 610', cash: 'U$S 500' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
+        maintenance: { regular: 'U$S 610', cash: 'U$S 500' },
       },
     },
     {
@@ -257,9 +257,9 @@ export default function AsesoramientoExpressPage() {
       icon: Star,
       titleKey: 'browCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 710', cash: 'U$S 475' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
-        maintenance: { regular: 'U$S 710', cash: 'U$S 475' },
+        firstSession: { regular: 'U$S 710', cash: 'U$S 550' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
+        maintenance: { regular: 'U$S 710', cash: 'U$S 550' },
       },
     },
     // {
@@ -275,9 +275,9 @@ export default function AsesoramientoExpressPage() {
       icon: Sparkles,
       titleKey: 'freckles',
       prices: {
-        firstSession: { regular: 'U$S 350', cash: 'U$S 192' },
-        retouch: { regular: 'U$S 190', cash: 'U$S 128' },
-        maintenance: { regular: 'U$S 350', cash: 'U$S 192' },
+        firstSession: { regular: 'U$S 400', cash: 'U$S 300' },
+        retouch: { regular: 'U$S 220', cash: 'U$S 170' },
+        maintenance: { regular: 'U$S 400', cash: 'U$S 300' },
       },
     },
     {
@@ -285,8 +285,8 @@ export default function AsesoramientoExpressPage() {
       icon: Eye,
       titleKey: 'lashesLines',
       prices: {
-        firstSession: { regular: 'U$S 480', cash: 'U$S 320' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 480', cash: 'U$S 380' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
       },
     },
     // {
@@ -303,7 +303,7 @@ export default function AsesoramientoExpressPage() {
       icon: Eye,
       titleKey: 'lashMixedCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 700', cash: 'U$S 500' },
+        firstSession: { regular: 'U$S 680', cash: 'U$S 250' },
       },
     },
     {
@@ -311,8 +311,8 @@ export default function AsesoramientoExpressPage() {
       icon: Heart,
       titleKey: 'lipBlush',
       prices: {
-        firstSession: { regular: 'U$S 650', cash: 'U$S 475' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 650', cash: 'U$S 500' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 250' },
       },
     },
     {
@@ -320,8 +320,8 @@ export default function AsesoramientoExpressPage() {
       icon: Heart,
       titleKey: 'lipCamouflage',
       prices: {
-        firstSession: { regular: 'U$S 700', cash: 'U$S 500' },
-        // retouch: { regular: 'U$S 317', cash: 'U$S 180' },
+        firstSession: { regular: 'U$S 680', cash: 'U$S 550' },
+        // retouch: { regular: 'U$S 317', cash: 'U$S 250' },
       },
     },
   ];
@@ -332,7 +332,7 @@ export default function AsesoramientoExpressPage() {
       icon: Activity,
       titleKey: 'nanoScalp',
       prices: {
-        firstSession: { regular: 'U$S 650', cash: 'U$S 450' },
+        firstSession: { regular: 'U$S 650', cash: 'U$S 500' },
       },
     },
     {
@@ -340,8 +340,8 @@ export default function AsesoramientoExpressPage() {
       icon: Circle,
       titleKey: 'areolaHarmonization',
       prices: {
-        firstSession: { regular: 'U$S 560', cash: 'U$S 420' },
-        retouch: { regular: 'U$S 317', cash: 'U$S 220' },
+        firstSession: { regular: 'U$S 560', cash: 'U$S 440' },
+        retouch: { regular: 'U$S 317', cash: 'U$S 240' },
       },
     },
     {
