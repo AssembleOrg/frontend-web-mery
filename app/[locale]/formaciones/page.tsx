@@ -2,11 +2,11 @@
 
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import Image from 'next/image';
 import SimpleCourseCard from '@/components/simple-course-card';
 import SimpleCourseModal from '@/components/simple-course-modal';
 import { FormacionesSkeleton } from '@/components/formaciones/FormacionesSkeleton';
 import { FilterBanner } from '@/components/formaciones/FilterBanner';
+import { HeroBanner } from '@/components/formaciones/HeroBanner';
 import { useState, useEffect, useMemo } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
@@ -181,16 +181,7 @@ export default function FormacionesPage() {
       <Navigation />
       <section className='w-full'>
         <div className='container mx-auto px-4 max-w-7xl mt-2'>
-          <div className='relative w-full aspect-[16/5] rounded-lg overflow-hidden'>
-            <Image
-              src='/FORMACIONES-1.png'
-              alt='Formaciones Mery García'
-              fill
-              className='object-cover'
-              priority
-              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1280px'
-            />
-          </div>
+          <HeroBanner />
         </div>
       </section>
       <section
@@ -198,7 +189,7 @@ export default function FormacionesPage() {
           filter !== 'all' ? 'pb-2' : 'pb-8'
         }`}
       >
-        <div className='flex gap-4 md:grid md:grid-cols-2 md:gap-6'>
+        <div className='flex items-stretch gap-4 md:grid md:grid-cols-2 md:gap-6'>
           <FilterBanner
             title='Formaciones Profesionales'
             description='Técnicas avanzadas para tu negocio'
@@ -220,11 +211,12 @@ export default function FormacionesPage() {
           />
         </div>
         {filter !== 'all' && (
-          <div className='flex justify-center mt-2 mb-1'>
+          <div className='flex justify-center mt-4 mb-2'>
             <button
               onClick={() => setFilter('all')}
-              className='px-6 py-2 rounded-full border-2 border-[#EBA2A8] bg-[#EBA2A8] text-white font-primary font-semibold hover:bg-[#f9bbc4] hover:border-[#f9bbc4] transition-all duration-300 shadow-md'
+              className='inline-flex items-center gap-1.5 px-5 py-1.5 rounded-full ring-1 ring-[#EBA2A8]/50 text-[#EBA2A8] text-sm font-primary-medium tracking-wide bg-transparent hover:bg-[#EBA2A8]/[0.08] hover:ring-[#EBA2A8]/70 transition-all duration-200'
             >
+              <span className='text-base leading-none'>×</span>
               Ver Todos
             </button>
           </div>
