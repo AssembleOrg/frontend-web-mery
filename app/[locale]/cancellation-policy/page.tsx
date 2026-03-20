@@ -112,7 +112,7 @@ export default function CancellationPolicyPage() {
                     <p>{t('exceptionalText1')}</p>
                     <p>{t('exceptionalText2')}</p>
                     <a
-                      href='https://wa.me/5491161592591'
+                      href={`https://wa.me/5491161592591?text=${encodeURIComponent('Hola chicas, como están? Quisiera más info sobre la política de cancelaciones')}`}
                       target='_blank'
                       rel='noopener noreferrer'
                       className='inline-flex items-center text-primary hover:text-primary/80 transition-colors font-medium'

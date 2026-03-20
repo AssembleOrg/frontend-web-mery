@@ -149,7 +149,7 @@ export default function OfertasCourseModal({
     const priceInfo = isSpecialCourse
       ? ` (USD ${formatPrice(discountedPrice)})`
       : ` ($${formatPrice(discountedPrice)})`;
-    const message = `Hola! Me interesa ${courseTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF${priceInfo}.`;
+    const message = `Hola chicas, como están? Quisiera más info sobre ${courseTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF${priceInfo}`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

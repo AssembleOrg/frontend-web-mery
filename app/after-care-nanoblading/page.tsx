@@ -369,7 +369,7 @@ export default function NanobladingAftercarePage() {
           <button
             onClick={() =>
               window.open(
-                'https://wa.me/5491161592591?text=Hola! Tengo consultas sobre mis cuidados post-tratamiento.',
+                `https://wa.me/5491161592591?text=${encodeURIComponent('Hola chicas, como están? Tengo consultas sobre mis cuidados post nanoblading')}`,
                 '_blank'
               )
             }

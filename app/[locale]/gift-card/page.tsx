@@ -13,7 +13,7 @@ export default function GiftCardPage() {
 
   const handleWhatsApp = () => {
     const message =
-      'Hola, quiero regalar mi giftcard física y giftcard virtual. Consulta por bases y condiciones.';
+      'Hola chicas, como están? Quisiera más info sobre la Gift Card';
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
       message
     )}`;
@@ -22,7 +22,7 @@ export default function GiftCardPage() {
 
   const handleFisicaWhatsApp = () => {
     const message =
-      'Hola, quiero regalar una Gift Card Física. ¿Pueden darme más información?';
+      'Hola chicas, como están? Quisiera más info sobre la Gift Card Física';
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
       message
     )}`;
@@ -31,7 +31,7 @@ export default function GiftCardPage() {
 
   const handleVirtualWhatsApp = () => {
     const message =
-      'Hola, quiero regalar una Gift Card Virtual. ¿Pueden darme más información?';
+      'Hola chicas, como están? Quisiera más info sobre la Gift Card Virtual';
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
       message
     )}`;

@@ -64,7 +64,7 @@ export default function SimpleCourseModal({
     const priceInfo = isUSDCourse
       ? ` (USD ${course.priceUSD.toLocaleString('en-US')})`
       : '';
-    const message = `Hola! Me interesa el curso de ${course.title}${priceInfo}. Necesito más información.`;
+    const message = `Hola chicas, como están? Quisiera más info sobre el curso de ${course.title}${priceInfo}`;
     const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(
       message
     )}`;

@@ -15,7 +15,7 @@ export function AftercareLayout({ serviceLogoSrc, children }: AftercareLayoutPro
   const router = useRouter();
 
   const handleWhatsApp = () => {
-    const message = encodeURIComponent('Hola! Tengo consultas sobre mis cuidados post-tratamiento.');
+    const message = encodeURIComponent('Hola chicas, como están? Tengo consultas sobre mis cuidados post-tratamiento');
     window.open(`https://wa.me/5491161592591?text=${message}`, '_blank');
   };
 

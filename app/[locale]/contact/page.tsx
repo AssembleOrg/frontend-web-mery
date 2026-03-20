@@ -8,7 +8,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 export default function ContactPage() {
   // const t = useTranslations('contact'); // TODO: Add translations when needed
   const handleWhatsAppGeneral = () => {
-    const message = 'Hola, me interesan sus servicios. ¿Puedo tener más info?';
+    const message = 'Hola chicas, como están? Quisiera más info sobre sus servicios';
     const whatsappUrl = `https://wa.me/5491161592591?text=${encodeURIComponent(
       message
     )}`;
@@ -16,7 +16,7 @@ export default function ContactPage() {
   };
 
   const handleWhatsAppFormaciones = () => {
-    const message = 'Hola, me interesan sus servicios. ¿Puedo tener más info?';
+    const message = 'Hola chicas, como están? Quisiera más info sobre sus formaciones';
     const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(
       message
     )}`;

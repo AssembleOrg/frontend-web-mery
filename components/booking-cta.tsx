@@ -75,7 +75,7 @@ export function BookingCTA({
                 <Button
                   size='lg'
                   className='px-8 py-3 text-lg'
-                  onClick={() => handleWhatsApp(consultationWhatsAppMessage || 'Hola! Me gustaría reservar una cita de consulta.')}
+                  onClick={() => handleWhatsApp(consultationWhatsAppMessage || 'Hola chicas, como están? Quisiera más info sobre una consulta')}
                 >
                   <Calendar className='h-5 w-5 mr-2' />
                   {consultationButtonText}
@@ -83,7 +83,7 @@ export function BookingCTA({
                 <Button
                   size='lg'
                   className='px-8 py-3 text-lg'
-                  onClick={() => handleWhatsApp(firstSessionWhatsAppMessage || 'Hola! Me gustaría reservar mi primera sesión.')}
+                  onClick={() => handleWhatsApp(firstSessionWhatsAppMessage || 'Hola chicas, como están? Quisiera reservar mi primera sesión')}
                 >
                   <Calendar className='h-5 w-5 mr-2' />
                   {firstSessionButtonText}

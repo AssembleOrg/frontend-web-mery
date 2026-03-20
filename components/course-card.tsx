@@ -143,7 +143,7 @@ export default function CourseCard({
 
   // Función para abrir WhatsApp desde el modal especial
   const handleWhatsAppContact = () => {
-    const message = `Hola! Me interesa ${cardTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF.`;
+    const message = `Hola chicas, como están? Quisiera más info sobre ${cardTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setShowSpecialModal(false);
@@ -151,7 +151,7 @@ export default function CourseCard({
 
   // Función para comprar exterior (WhatsApp)
   const handleBuyExterior = () => {
-    const message = `Quiero comprar ${cardTitle} en USD por la promoción!`;
+    const message = `Hola chicas, como están? Quisiera comprar ${cardTitle} en USD`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
