@@ -41,7 +41,7 @@ export default async function LocaleLayout({
         <ModalProvider>
           <AuthInterceptorProvider>
             <PromoModal />
-            <CuotasModal />
+            {/* <CuotasModal /> */}
             {children}
             <Script
               src='https://sdk.mercadopago.com/js/v2'
