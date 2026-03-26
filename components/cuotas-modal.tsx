@@ -1,17 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 
 const SHOW_INTERVAL = 24 * 60 * 60 * 1000; // 24 horas
-const INITIAL_DELAY = 2000; // 2 segundos
 const STORAGE_KEY = 'cuotas-modal-last-shown';
 
 export default function CuotasModal() {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [waitingForPromo, setWaitingForPromo] = useState(false);
+  const safetyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const promoOpenedRef = useRef(false);
+
+  const shouldShow = useCallback(() => {
+    const lastShown = localStorage.getItem(STORAGE_KEY);
+    const now = Date.now();
+    return !lastShown || now - parseInt(lastShown, 10) >= SHOW_INTERVAL;
+  }, []);
+
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+    localStorage.setItem(STORAGE_KEY, Date.now().toString());
+  }, []);
 
   useEffect(() => {
     const isAllowedRoute =
@@ -21,18 +34,52 @@ export default function CuotasModal() {
 
     if (!isAllowedRoute || pathname?.includes('/admin')) return;
 
-    const lastShown = localStorage.getItem(STORAGE_KEY);
-    const now = Date.now();
+    if (!shouldShow()) return;
 
-    if (!lastShown || now - parseInt(lastShown, 10) >= SHOW_INTERVAL) {
-      const timeout = setTimeout(() => {
-        setIsOpen(true);
-        localStorage.setItem(STORAGE_KEY, now.toString());
-      }, INITIAL_DELAY);
+    // Esperar al cierre del PromoModal antes de abrir este modal.
+    setWaitingForPromo(true);
+    promoOpenedRef.current = false;
 
-      return () => clearTimeout(timeout);
-    }
-  }, [pathname]);
+    safetyTimeoutRef.current = setTimeout(() => {
+      setWaitingForPromo(false);
+      // Solo abrir por timeout si el promo nunca llegó a abrirse.
+      if (!promoOpenedRef.current && shouldShow()) openModal();
+    }, 5000);
+
+    return () => {
+      if (safetyTimeoutRef.current) {
+        clearTimeout(safetyTimeoutRef.current);
+        safetyTimeoutRef.current = null;
+      }
+    };
+  }, [pathname, shouldShow, openModal]);
+
+  // Escuchar apertura/cierre del PromoModal para secuenciar correctamente.
+  useEffect(() => {
+    if (!waitingForPromo) return;
+
+    const handlePromoOpened = () => {
+      promoOpenedRef.current = true;
+    };
+
+    const handlePromoClosed = () => {
+      if (safetyTimeoutRef.current) {
+        clearTimeout(safetyTimeoutRef.current);
+        safetyTimeoutRef.current = null;
+      }
+      setWaitingForPromo(false);
+      if (shouldShow()) {
+        setTimeout(openModal, 500);
+      }
+    };
+
+    window.addEventListener('promo-modal-opened', handlePromoOpened);
+    window.addEventListener('promo-modal-closed', handlePromoClosed);
+    return () => {
+      window.removeEventListener('promo-modal-opened', handlePromoOpened);
+      window.removeEventListener('promo-modal-closed', handlePromoClosed);
+    };
+  }, [waitingForPromo, shouldShow, openModal]);
 
   const handleClose = () => setIsOpen(false);
 

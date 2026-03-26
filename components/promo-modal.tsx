@@ -41,16 +41,19 @@ export default function PromoModal() {
       pathname?.includes('/formaciones');
 
     if (!isAllowedRoute) {
+      window.dispatchEvent(new CustomEvent('promo-modal-closed'));
       return;
     }
 
     // No mostrar en rutas de admin
     if (pathname?.includes('/admin')) {
+      window.dispatchEvent(new CustomEvent('promo-modal-closed'));
       return;
     }
 
     // No mostrar si la promoción está desactivada
     if (isPromoDisabled()) {
+      window.dispatchEvent(new CustomEvent('promo-modal-closed'));
       return;
     }
 
@@ -76,6 +79,7 @@ export default function PromoModal() {
       // Esperar antes de mostrar el modal
       const timeout = setTimeout(() => {
         setIsOpen(true);
+        window.dispatchEvent(new CustomEvent('promo-modal-opened'));
         localStorage.setItem(
           'promo-modal-last-shown',
           DateTime.now()
@@ -86,6 +90,9 @@ export default function PromoModal() {
       }, PROMO_CONFIG.MODAL_INITIAL_DELAY);
 
       return () => clearTimeout(timeout);
+    } else {
+      // No se va a mostrar, notificar al CuotasModal
+      window.dispatchEvent(new CustomEvent('promo-modal-closed'));
     }
   }, [pathname]);
 
@@ -142,10 +149,12 @@ export default function PromoModal() {
 
   const handleClose = () => {
     setIsOpen(false);
+    window.dispatchEvent(new CustomEvent('promo-modal-closed'));
   };
 
   const handleCTA = () => {
     setIsOpen(false);
+    window.dispatchEvent(new CustomEvent('promo-modal-closed'));
     router.push('/formaciones');
   };
 
