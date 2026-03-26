@@ -1,22 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, KeyRound, X } from 'lucide-react';
+import { useRouter, useParams } from 'next/navigation';
+import { Mail, KeyRound, X, UserPlus } from 'lucide-react';
 
 interface RecoverPassProps {
   onClose: () => void;
 }
 
 export const RecoverPass = ({ onClose }: RecoverPassProps) => {
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
     setError(null);
+    setNotFound(false);
     setIsLoading(true);
 
     try {
@@ -31,6 +37,12 @@ export const RecoverPass = ({ onClose }: RecoverPassProps) => {
 
       const data = await response.json();
 
+      if (response.status === 404) {
+        setNotFound(true);
+        setError('No existe una cuenta asociada a este correo electrónico.');
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(
           data.message || 'Ocurrió un error al enviar la solicitud.'
@@ -38,13 +50,17 @@ export const RecoverPass = ({ onClose }: RecoverPassProps) => {
       }
 
       setMessage(
-        'Si tu correo está registrado, recibirás un enlace para restablecer tu contraseña.'
+        'Revisa tu correo. Te enviamos instrucciones para restablecer tu contraseña.'
       );
     } catch (err: any) {
-      setError(err.message);
+      if (!error) setError(err.message);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoToRegister = () => {
+    router.push(`/${locale}/register?email=${encodeURIComponent(email)}`);
   };
 
   return (
@@ -102,7 +118,7 @@ export const RecoverPass = ({ onClose }: RecoverPassProps) => {
             </div>
           </div>
 
-          {error && (
+          {error && !notFound && (
             <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4'>
               <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
             </div>
@@ -116,6 +132,37 @@ export const RecoverPass = ({ onClose }: RecoverPassProps) => {
             {isLoading ? 'Enviando...' : 'Enviar Instrucciones'}
           </button>
         </form>
+      )}
+
+      {/* Popup: email no registrado */}
+      {notFound && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30'>
+          <div className='bg-card border border-border rounded-lg shadow-lg max-w-sm w-full p-8 text-center space-y-4'>
+            <UserPlus className='w-12 h-12 mx-auto text-[#f9bbc4]' />
+            <h3 className='text-xl font-primary font-bold text-foreground'>
+              Email no registrado
+            </h3>
+            <p className='text-sm text-muted-foreground'>
+              No existe una cuenta asociada a{' '}
+              <span className='font-medium text-foreground'>{email}</span>.
+              ¿Querés crear una?
+            </p>
+            <div className='flex flex-col gap-3 pt-2'>
+              <button
+                onClick={handleGoToRegister}
+                className='w-full bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-3 rounded-lg font-primary font-medium transition-colors duration-200'
+              >
+                Crear una cuenta nueva
+              </button>
+              <button
+                onClick={() => setNotFound(false)}
+                className='w-full text-[#f9bbc4] hover:text-[#eba2a8] px-6 py-2 rounded-lg font-primary text-sm font-medium transition-colors'
+              >
+                Intentar con otro email
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

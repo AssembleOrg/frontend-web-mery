@@ -4,16 +4,34 @@
 
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { UserPlus, Mail, Lock, User, Phone, MapPin, Globe } from 'lucide-react';
+import { UserPlus, Mail, Lock, User, Phone, MapPin, Globe, ChevronDown } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { RegisterSkeleton } from '@/components/auth/RegisterSkeleton';
+
+const COUNTRY_PHONE_CODES = [
+  { code: '549', country: 'Argentina', flag: '🇦🇷', display: '+54 9' },
+  { code: '55', country: 'Brasil', flag: '🇧🇷', display: '+55' },
+  { code: '56', country: 'Chile', flag: '🇨🇱', display: '+56' },
+  { code: '598', country: 'Uruguay', flag: '🇺🇾', display: '+598' },
+  { code: '595', country: 'Paraguay', flag: '🇵🇾', display: '+595' },
+  { code: '591', country: 'Bolivia', flag: '🇧🇴', display: '+591' },
+  { code: '57', country: 'Colombia', flag: '🇨🇴', display: '+57' },
+  { code: '51', country: 'Perú', flag: '🇵🇪', display: '+51' },
+  { code: '52', country: 'México', flag: '🇲🇽', display: '+52' },
+  { code: '593', country: 'Ecuador', flag: '🇪🇨', display: '+593' },
+  { code: '58', country: 'Venezuela', flag: '🇻🇪', display: '+58' },
+  { code: '34', country: 'España', flag: '🇪🇸', display: '+34' },
+  { code: '1', country: 'Estados Unidos', flag: '🇺🇸', display: '+1' },
+];
 
 export default function RegisterPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = params.locale as string;
   const { register, isLoading, error: apiError } = useAuth();
 
@@ -22,12 +40,21 @@ export default function RegisterPage() {
     lastName: '',
     email: '',
     password: '',
+    phoneCode: '549',
     phone: '',
     country: '',
     city: '',
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const emailFromQuery = searchParams.get('email');
+    if (emailFromQuery) {
+      setFormData((prev) => ({ ...prev, email: emailFromQuery }));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (apiError) {
@@ -59,6 +86,12 @@ export default function RegisterPage() {
       return;
     }
 
+    const trimmedPhone = formData.phone.trim();
+    if (trimmedPhone && !/^\d[\d\s\-]{5,}$/.test(trimmedPhone)) {
+      setFormError('Ingresa un número de teléfono válido (solo números, mínimo 6 dígitos).');
+      return;
+    }
+
     const payload: {
       firstName: string;
       lastName: string;
@@ -74,7 +107,7 @@ export default function RegisterPage() {
       password: formData.password,
     };
 
-    if (formData.phone) payload.phone = formData.phone;
+    if (trimmedPhone) payload.phone = `${formData.phoneCode}${trimmedPhone.replace(/[\s\-]/g, '')}`;
     if (formData.country) payload.country = formData.country;
     if (formData.city) payload.city = formData.city;
 
@@ -180,25 +213,47 @@ export default function RegisterPage() {
               <div className='relative'>
                 <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
                 <input
-                  type='password'
+                  type={showPassword ? 'text' : 'password'}
                   name='password'
                   value={formData.password}
                   onChange={handleInputChange}
-                  className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                  className='w-full pl-10 pr-10 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
                   placeholder='Mínimo 8 caracteres'
                   required
                 />
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </button>
               </div>
             </div>
 
-            {/* Grid para Teléfono y País */}
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              {/* Teléfono */}
-              <div>
-                <label className='block text-sm font-medium text-foreground mb-2'>
-                  Teléfono
-                </label>
-                <div className='relative'>
+            {/* Teléfono con código de país */}
+            <div>
+              <label className='block text-sm font-medium text-foreground mb-2'>
+                Teléfono (opcional)
+              </label>
+              <div className='flex gap-2'>
+                <div className='relative w-[140px] shrink-0'>
+                  <select
+                    name='phoneCode'
+                    value={formData.phoneCode}
+                    onChange={handleInputChange}
+                    className='w-full pl-3 pr-7 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4] appearance-none text-sm'
+                  >
+                    {COUNTRY_PHONE_CODES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.display}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className='absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none' />
+                </div>
+                <div className='relative flex-1'>
                   <Phone className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
                   <input
                     type='tel'
@@ -206,11 +261,14 @@ export default function RegisterPage() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
-                    placeholder='+54 11 1234-5678'
+                    placeholder='11 1234-5678'
                   />
                 </div>
               </div>
+            </div>
 
+            {/* Grid para País y Ciudad */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {/* País */}
               <div>
                 <label className='block text-sm font-medium text-foreground mb-2'>
@@ -235,23 +293,23 @@ export default function RegisterPage() {
                   </select>
                 </div>
               </div>
-            </div>
 
-            {/* Ciudad */}
-            <div>
-              <label className='block text-sm font-medium text-foreground mb-2'>
-                Ciudad
-              </label>
-              <div className='relative'>
-                <MapPin className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
-                <input
-                  type='text'
-                  name='city'
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
-                  placeholder='Buenos Aires'
-                />
+              {/* Ciudad */}
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-2'>
+                  Ciudad
+                </label>
+                <div className='relative'>
+                  <MapPin className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5' />
+                  <input
+                    type='text'
+                    name='city'
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className='w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
+                    placeholder='Buenos Aires'
+                  />
+                </div>
               </div>
             </div>
 
