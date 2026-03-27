@@ -16,7 +16,7 @@ export default function FinalizarCompraPage() {
   const params = useParams();
   const locale = params.locale as string;
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { cart, totalARS, isLoading: isCartLoading } = useCart();
+  const { cart, totalARS, isLoading: isCartLoading, removeItem } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -181,6 +181,7 @@ export default function FinalizarCompraPage() {
         totalARS={totalARS}
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
+        onRemoveItem={removeItem}
       />
       <Footer />
     </div>

@@ -2,9 +2,10 @@
 'use client';
 
 import Image from 'next/image';
-import { CreditCard, User, Mail } from 'lucide-react';
+import { CreditCard, User, Mail, Trash2 } from 'lucide-react';
 import type { Cart } from '@/lib/api-client';
 import type { User as UserType } from '@/types/auth';
+import { toast } from 'react-hot-toast';
 
 interface FormData {
   nombre: string;
@@ -23,6 +24,7 @@ interface CheckoutViewProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
   handleSubmit: (e: React.FormEvent) => void;
+  onRemoveItem: (itemId: string) => Promise<boolean>;
 }
 
 export const CheckoutView = ({
@@ -35,7 +37,14 @@ export const CheckoutView = ({
   totalARS,
   handleInputChange,
   handleSubmit,
+  onRemoveItem,
 }: CheckoutViewProps) => {
+  const handleRemoveItem = async (itemId: string) => {
+    const success = await onRemoveItem(itemId);
+    if (success) {
+      toast.success('Curso eliminado del carrito');
+    }
+  };
   return (
     <div className='container mx-auto px-4 py-16 max-w-6xl'>
       <h1 className='text-3xl font-primary font-bold text-foreground mb-8'>
@@ -175,9 +184,9 @@ export const CheckoutView = ({
               {cart.items.map((item) => (
                 <div
                   key={item.id}
-                  className='flex gap-4'
+                  className='flex gap-4 items-start'
                 >
-                  <div className='flex-shrink-0 w-16 h-16'>
+                  <div className='shrink-0 w-16 h-16'>
                     <Image
                       src={item.category.image || '/placeholder.png'}
                       alt={item.category.name}
@@ -199,6 +208,14 @@ export const CheckoutView = ({
                       </span>
                     </div>
                   </div>
+                  <button
+                    type='button'
+                    onClick={() => handleRemoveItem(item.id)}
+                    className='shrink-0 p-1.5 text-muted-foreground hover:text-red-500 transition-colors'
+                    aria-label={`Eliminar ${item.category.name}`}
+                  >
+                    <Trash2 className='w-4 h-4' />
+                  </button>
                 </div>
               ))}
             </div>
