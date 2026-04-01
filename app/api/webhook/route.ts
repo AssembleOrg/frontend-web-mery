@@ -92,6 +92,21 @@ export async function POST(request: NextRequest) {
         } catch (_backendError: any) {
           // Continue - don't fail webhook if backend is down
         }
+
+        // Confirm coupon consumption if a coupon was used
+        const couponId = payment.metadata?.coupon_id;
+        const userId = payment.metadata?.user_id;
+        if (couponId && userId) {
+          try {
+            await fetch(`${BACKEND_API_URL}/coupons/confirm-consumption`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ couponId, userId }),
+            });
+          } catch (_couponError: any) {
+            // Non-blocking — cron will handle cleanup if this fails
+          }
+        }
       }
     }
 

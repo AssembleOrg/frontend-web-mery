@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import { FaGraduationCap, FaVideo, FaUsers, FaChartLine } from 'react-icons/fa';
+import { FaGraduationCap, FaVideo, FaUsers, FaChartLine, FaGift } from 'react-icons/fa';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -33,6 +33,14 @@ export default function AdminDashboard() {
       color: 'bg-[#FBE8EA] text-[#660e1b] hover:bg-[#F7CBCB]',
       iconBg: 'bg-[#F7CBCB]',
       disabled: false,
+    },
+    {
+      title: 'Cupones',
+      description: 'Crear y gestionar cupones de descuento',
+      icon: FaGift,
+      href: `/${locale}/admin/cupones`,
+      color: 'bg-purple-50 text-purple-600 hover:bg-purple-100',
+      iconBg: 'bg-purple-100',
     },
     {
       title: 'Estadísticas',

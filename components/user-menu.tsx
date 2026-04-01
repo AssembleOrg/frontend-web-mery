@@ -8,6 +8,7 @@ import {
   LogOut,
   ChevronDown,
   Users,
+  Gift,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
@@ -168,6 +169,15 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
                 >
                   <Users className='w-5 h-5' />
                   <span className='font-medium'>Asignar Cursos</span>
+                </Link>
+
+                <Link
+                  href={`/${locale}/admin/cupones`}
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <Gift className='w-5 h-5' />
+                  <span className='font-medium'>Cupones</span>
                 </Link>
               </>
             )}

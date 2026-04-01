@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   const webhookBaseUrl = (backendUrl || frontendUrl)!.replace(/\/$/, '');
 
   try {
-    const { items, locale, userEmail, userId } = await req.json();
+    const { items, locale, userEmail, userId, couponId } = await req.json();
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -83,19 +83,25 @@ export async function POST(req: NextRequest) {
     // Extraer category IDs de los items
     const categoryIds = items.map((item: any) => item.id);
 
+    // Expiración de la preference: 15 minutos
+    const now = new Date();
+    const expirationDate = new Date(now.getTime() + 15 * 60 * 1000);
+
     const preference = await new Preference(client).create({
       body: {
+        expires: true,
+        expiration_date_from: now.toISOString(),
+        expiration_date_to: expirationDate.toISOString(),
         items: preferenceItems,
         payer: {
           email: userEmail,
         },
-        // ⭐ METADATA COMPLETA REQUERIDA POR EL BACKEND
         metadata: {
-          user_id: userId,                          // ⭐ CRÍTICO: ID del usuario
-          user_email: userEmail,                    // ⭐ CRÍTICO: Email del usuario
-          category_ids: JSON.stringify(categoryIds), // ⭐ CRÍTICO: IDs de categorías como JSON string
+          user_id: userId,
+          user_email: userEmail,
+          category_ids: JSON.stringify(categoryIds),
+          coupon_id: couponId || '',
         },
-        // ⭐ EXTERNAL REFERENCE: Fallback para identificar usuario
         external_reference: `${userId}_${Date.now()}`,
         back_urls: {
           success: `${redirectBaseUrl}/${effectiveLocale}/checkout/success`,
@@ -104,12 +110,10 @@ export async function POST(req: NextRequest) {
         },
         auto_return: 'approved',
         notification_url: `${webhookBaseUrl}/api/webhook`,
-        // Solo pago en 1 cuota
         payment_methods: {
           installments: 1,
           default_installments: 1,
         },
-        // Opcional: Statement descriptor (aparece en resumen de tarjeta)
         statement_descriptor: 'MERY CURSOS',
       },
     });

@@ -3,13 +3,19 @@
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { CheckoutView } from '@/components/checkout/CheckoutView';
 import { CheckoutSkeleton } from '@/components/checkout/CheckoutSkeleton';
 import { toast } from 'react-hot-toast';
+import {
+  validateCoupon,
+  consumeCoupon,
+  releaseCoupon,
+  type ValidateCouponResponse,
+} from '@/lib/api-client';
 
 export default function FinalizarCompraPage() {
   const router = useRouter();
@@ -20,36 +26,29 @@ export default function FinalizarCompraPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Coupon state (in-memory, lost on refresh)
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<ValidateCouponResponse | null>(null);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [consumedCouponId, setConsumedCouponId] = useState<string | null>(null);
+
   // Compute initial form data based on user data
   const initialFormData = useMemo(() => {
     if (!user) {
-      return {
-        nombre: '',
-        apellido: '',
-      };
+      return { nombre: '', apellido: '' };
     }
-
-    // Use firstName/lastName if available, otherwise parse name
     let firstName = user.firstName || '';
     let lastName = user.lastName || '';
-
     if (!firstName && !lastName && user.name) {
       const nameParts = user.name.trim().split(' ');
       firstName = nameParts[0] || '';
       lastName = nameParts.slice(1).join(' ') || '';
     }
-
-    const formData = {
-      nombre: firstName,
-      apellido: lastName,
-    };
-
-    return formData;
+    return { nombre: firstName, apellido: lastName };
   }, [user]);
 
   const [formData, setFormData] = useState(initialFormData);
 
-  // Update formData when initialFormData changes (user profile updated)
   useEffect(() => {
     setFormData(initialFormData);
   }, [initialFormData]);
@@ -60,12 +59,69 @@ export default function FinalizarCompraPage() {
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
 
+  // Release coupon on page unload if consumed but not paid
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (consumedCouponId) {
+        // Best-effort release (sendBeacon or sync)
+        navigator.sendBeacon?.(
+          `${process.env.NEXT_PUBLIC_API_URL || '/api'}/coupons/${consumedCouponId}/release`,
+          ''
+        );
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [consumedCouponId]);
+
+  // Calculate discounted total
+  const discountedTotalARS = useMemo(() => {
+    if (!cart || !appliedCoupon?.valid) return totalARS;
+    let total = 0;
+    for (const item of cart.items) {
+      const isEligible = appliedCoupon.applicableCategoryIds.includes(item.category.id);
+      if (isEligible) {
+        total += Math.round(item.priceARS * (1 - appliedCoupon.discountPercent / 100));
+      } else {
+        total += item.priceARS;
+      }
+    }
+    return total;
+  }, [cart, appliedCoupon, totalARS]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleValidateCoupon = useCallback(async () => {
+    if (!couponCode.trim() || !cart) return;
+    setIsValidatingCoupon(true);
+    setAppliedCoupon(null);
+    try {
+      const categoryIds = cart.items.map((item) => item.category.id);
+      const result = await validateCoupon(couponCode.trim(), categoryIds);
+      setAppliedCoupon(result);
+    } catch {
+      setAppliedCoupon({
+        valid: false,
+        discountPercent: 0,
+        couponCode: couponCode,
+        couponId: null,
+        applicableCategoryIds: [],
+        message: 'Error al validar el cupón. Intenta nuevamente.',
+      });
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  }, [couponCode, cart]);
+
+  const handleRemoveCoupon = useCallback(() => {
+    setCouponCode('');
+    setAppliedCoupon(null);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,16 +134,31 @@ export default function FinalizarCompraPage() {
     toast.loading('Procesando tu pago...', { id: 'payment-toast' });
     setError(null);
 
-    // Mapea los items del carrito para la API de MercadoPago
-    const itemsForAPI = cart.items.map((item) => ({
-      id: item.category.id,
-      title: item.category.name,
-      description: item.category.description || `Curso: ${item.category.name}`,
-      price: item.priceARS,
-      quantity: 1,
-    }));
-
     try {
+      // Step 1: Consume coupon if applied
+      if (appliedCoupon?.valid && appliedCoupon.couponId) {
+        await consumeCoupon(appliedCoupon.couponId);
+        setConsumedCouponId(appliedCoupon.couponId);
+      }
+
+      // Step 2: Build items with discounted prices
+      const itemsForAPI = cart.items.map((item) => {
+        const isEligible = appliedCoupon?.valid &&
+          appliedCoupon.applicableCategoryIds.includes(item.category.id);
+        const price = isEligible
+          ? Math.round(item.priceARS * (1 - appliedCoupon!.discountPercent / 100))
+          : item.priceARS;
+
+        return {
+          id: item.category.id,
+          title: item.category.name,
+          description: item.category.description || `Curso: ${item.category.name}`,
+          price,
+          quantity: 1,
+        };
+      });
+
+      // Step 3: Create MercadoPago preference
       const response = await fetch('/api/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,6 +167,7 @@ export default function FinalizarCompraPage() {
           locale,
           userId: user.id,
           userEmail: user.email,
+          couponId: appliedCoupon?.couponId || undefined,
         }),
       });
 
@@ -110,6 +182,8 @@ export default function FinalizarCompraPage() {
       const paymentUrl = data.url || data.init_point || data.sandbox_init_point;
 
       if (paymentUrl) {
+        // Clear consumed tracking since we're redirecting to MP
+        setConsumedCouponId(null);
         toast.success('Redirigiendo a la pasarela de pago...', {
           id: 'payment-toast',
         });
@@ -118,6 +192,17 @@ export default function FinalizarCompraPage() {
         throw new Error('No se recibió una URL de pago válida.');
       }
     } catch (err: any) {
+      // Release coupon if preference creation failed
+      if (consumedCouponId || (appliedCoupon?.valid && appliedCoupon.couponId)) {
+        const idToRelease = consumedCouponId || appliedCoupon!.couponId!;
+        try {
+          await releaseCoupon(idToRelease);
+        } catch {
+          // Silent fail
+        }
+        setConsumedCouponId(null);
+      }
+
       toast.error(
         err.message || 'No se pudo procesar el pago. Intenta de nuevo.',
         { id: 'payment-toast' }
@@ -127,10 +212,7 @@ export default function FinalizarCompraPage() {
     }
   };
 
-  const isFormValid = !!(
-    formData.nombre &&
-    formData.apellido
-  );
+  const isFormValid = !!(formData.nombre && formData.apellido);
 
   if (isAuthLoading || isCartLoading) {
     return (
@@ -182,6 +264,13 @@ export default function FinalizarCompraPage() {
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         onRemoveItem={removeItem}
+        couponCode={couponCode}
+        onCouponCodeChange={setCouponCode}
+        appliedCoupon={appliedCoupon}
+        isValidatingCoupon={isValidatingCoupon}
+        onValidateCoupon={handleValidateCoupon}
+        onRemoveCoupon={handleRemoveCoupon}
+        discountedTotalARS={discountedTotalARS}
       />
       <Footer />
     </div>

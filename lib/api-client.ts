@@ -675,6 +675,91 @@ export const getCourseDetails = async (courseId: string): Promise<Category> => {
   return response.data;
 };
 
+// ==================== Coupons ====================
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountPercent: number;
+  validFrom: string | null;
+  validTo: string | null;
+  maxUses: number | null;
+  currentUses: number;
+  isActive: boolean;
+  appliesToAll: boolean;
+  categories: { id: string; name: string }[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCouponDto {
+  code?: string;
+  discountPercent: number;
+  validFrom?: string;
+  validTo?: string;
+  maxUses?: number;
+  categoryIds?: string[];
+  appliesToAll?: boolean;
+  isActive?: boolean;
+}
+
+export interface UpdateCouponDto extends Partial<CreateCouponDto> {}
+
+export interface ValidateCouponResponse {
+  valid: boolean;
+  discountPercent: number;
+  couponCode: string;
+  couponId: string | null;
+  applicableCategoryIds: string[];
+  message?: string;
+}
+
+export const getCoupons = async (): Promise<Coupon[]> => {
+  const response = await apiRequest<Coupon[]>('/coupons');
+  return response.data;
+};
+
+export const getCouponById = async (id: string): Promise<Coupon> => {
+  const response = await apiRequest<Coupon>(`/coupons/${id}`);
+  return response.data;
+};
+
+export const createCoupon = async (data: CreateCouponDto): Promise<Coupon> => {
+  const response = await apiRequest<Coupon>('/coupons', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return response.data;
+};
+
+export const updateCoupon = async (id: string, data: UpdateCouponDto): Promise<Coupon> => {
+  const response = await apiRequest<Coupon>(`/coupons/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  return response.data;
+};
+
+export const deleteCoupon = async (id: string): Promise<void> => {
+  await apiRequest(`/coupons/${id}`, { method: 'DELETE' });
+};
+
+export const validateCoupon = async (code: string, categoryIds: string[]): Promise<ValidateCouponResponse> => {
+  const response = await apiRequest<ValidateCouponResponse>('/coupons/validate', {
+    method: 'POST',
+    body: JSON.stringify({ code, categoryIds }),
+  });
+  return response.data;
+};
+
+export const consumeCoupon = async (couponId: string): Promise<void> => {
+  await apiRequest(`/coupons/${couponId}/consume`, { method: 'POST', body: '{}' });
+};
+
+export const releaseCoupon = async (couponId: string): Promise<void> => {
+  await apiRequest(`/coupons/${couponId}/release`, { method: 'POST', body: '{}' });
+};
+
 export const apiClient = {
   // Categories
   getCategories,
@@ -705,4 +790,14 @@ export const apiClient = {
   getUserCourses,
   getCourseVideos,
   getCourseDetails,
+
+  // Coupons
+  getCoupons,
+  getCouponById,
+  createCoupon,
+  updateCoupon,
+  deleteCoupon,
+  validateCoupon,
+  consumeCoupon,
+  releaseCoupon,
 };
