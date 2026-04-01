@@ -12,8 +12,7 @@ import { CheckoutSkeleton } from '@/components/checkout/CheckoutSkeleton';
 import { toast } from 'react-hot-toast';
 import {
   validateCoupon,
-  consumeCoupon,
-  releaseCoupon,
+  confirmCouponConsumption,
   type ValidateCouponResponse,
 } from '@/lib/api-client';
 
@@ -30,7 +29,6 @@ export default function FinalizarCompraPage() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<ValidateCouponResponse | null>(null);
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
-  const [consumedCouponId, setConsumedCouponId] = useState<string | null>(null);
 
   // Compute initial form data based on user data
   const initialFormData = useMemo(() => {
@@ -58,21 +56,6 @@ export default function FinalizarCompraPage() {
       router.push(`/${locale}/login?redirect=/es/finalizar-compra`);
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
-
-  // Release coupon on page unload if consumed but not paid
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (consumedCouponId) {
-        // Best-effort release (sendBeacon or sync)
-        navigator.sendBeacon?.(
-          `${process.env.NEXT_PUBLIC_API_URL || '/api'}/coupons/${consumedCouponId}/release`,
-          ''
-        );
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [consumedCouponId]);
 
   // Calculate discounted total
   const discountedTotalARS = useMemo(() => {
@@ -135,13 +118,7 @@ export default function FinalizarCompraPage() {
     setError(null);
 
     try {
-      // Step 1: Consume coupon if applied
-      if (appliedCoupon?.valid && appliedCoupon.couponId) {
-        await consumeCoupon(appliedCoupon.couponId);
-        setConsumedCouponId(appliedCoupon.couponId);
-      }
-
-      // Step 2: Build items with discounted prices
+      // Step 1: Build items with discounted prices
       const itemsForAPI = cart.items.map((item) => {
         const isEligible = appliedCoupon?.valid &&
           appliedCoupon.applicableCategoryIds.includes(item.category.id);
@@ -158,7 +135,7 @@ export default function FinalizarCompraPage() {
         };
       });
 
-      // Step 3: Create MercadoPago preference
+      // Step 2: Create MercadoPago preference
       const response = await fetch('/api/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -181,28 +158,20 @@ export default function FinalizarCompraPage() {
       const data = await response.json();
       const paymentUrl = data.url || data.init_point || data.sandbox_init_point;
 
-      if (paymentUrl) {
-        // Clear consumed tracking since we're redirecting to MP
-        setConsumedCouponId(null);
-        toast.success('Redirigiendo a la pasarela de pago...', {
-          id: 'payment-toast',
-        });
-        window.location.href = paymentUrl;
-      } else {
+      if (!paymentUrl) {
         throw new Error('No se recibió una URL de pago válida.');
       }
-    } catch (err: any) {
-      // Release coupon if preference creation failed
-      if (consumedCouponId || (appliedCoupon?.valid && appliedCoupon.couponId)) {
-        const idToRelease = consumedCouponId || appliedCoupon!.couponId!;
-        try {
-          await releaseCoupon(idToRelease);
-        } catch {
-          // Silent fail
-        }
-        setConsumedCouponId(null);
+
+      // Step 3: Reserve coupon usage on preference creation (pending until payment approval)
+      if (appliedCoupon?.valid && appliedCoupon.couponId) {
+        await confirmCouponConsumption(appliedCoupon.couponId, user.id, data.id);
       }
 
+      toast.success('Redirigiendo a la pasarela de pago...', {
+        id: 'payment-toast',
+      });
+      window.location.href = paymentUrl;
+    } catch (err: any) {
       toast.error(
         err.message || 'No se pudo procesar el pago. Intenta de nuevo.',
         { id: 'payment-toast' }

@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
           // Continue - don't fail webhook if backend is down
         }
 
-        // Confirm coupon consumption if a coupon was used
+        // Confirm coupon consumption if a coupon was used.
         const couponId = payment.metadata?.coupon_id;
         const userId = payment.metadata?.user_id;
         if (couponId && userId) {

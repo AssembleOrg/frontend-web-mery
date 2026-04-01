@@ -760,6 +760,17 @@ export const releaseCoupon = async (couponId: string): Promise<void> => {
   await apiRequest(`/coupons/${couponId}/release`, { method: 'POST', body: '{}' });
 };
 
+export const confirmCouponConsumption = async (
+  couponId: string,
+  userId: string,
+  preferenceId?: string
+): Promise<void> => {
+  await apiRequest('/coupons/confirm-consumption', {
+    method: 'POST',
+    body: JSON.stringify({ couponId, userId, preferenceId }),
+  });
+};
+
 export const apiClient = {
   // Categories
   getCategories,
@@ -800,4 +811,5 @@ export const apiClient = {
   validateCoupon,
   consumeCoupon,
   releaseCoupon,
+  confirmCouponConsumption,
 };
