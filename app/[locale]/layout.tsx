@@ -9,6 +9,7 @@ import { AuthInterceptorProvider } from '@/components/auth/AuthInterceptorProvid
 import PromoModal from '@/components/promo-modal';
 import CuotasModal from '@/components/cuotas-modal';
 import ProblemReportWidget from '@/components/problem-report-widget';
+import RequestTrackerProvider from '@/components/request-tracker-provider';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
 
@@ -41,6 +42,7 @@ export default async function LocaleLayout({
       <NextIntlClientProvider messages={messages}>
         <ModalProvider>
           <AuthInterceptorProvider>
+            <RequestTrackerProvider />
             <PromoModal />
             {/* <CuotasModal /> */}
             {children}

@@ -6,14 +6,14 @@ import toast from 'react-hot-toast';
 import { ProblemReportService } from '@/services/problem-report.service';
 
 const countryCodes = [
-  { value: '+54', label: '+54' },
-  { value: '+1', label: '+1' },
-  { value: '+34', label: '+34' },
-  { value: '+52', label: '+52' },
-  { value: '+55', label: '+55' },
-  { value: '+56', label: '+56' },
-  { value: '+57', label: '+57' },
-  { value: '+598', label: '+598' },
+  { value: '+54', label: '🇦🇷 +54' },
+  { value: '+1', label: '🇺🇸 +1' },
+  { value: '+34', label: '🇪🇸 +34' },
+  { value: '+52', label: '🇲🇽 +52' },
+  { value: '+55', label: '🇧🇷 +55' },
+  { value: '+56', label: '🇨🇱 +56' },
+  { value: '+57', label: '🇨🇴 +57' },
+  { value: '+598', label: '🇺🇾 +598' },
 ];
 
 export default function ProblemReportWidget() {

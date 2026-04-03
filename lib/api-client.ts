@@ -5,7 +5,6 @@
 
 import { CourseIncludeItem } from '@/types/course';
 import Cookies from 'js-cookie';
-import { trackRequestError, trackRequestSuccess } from '@/lib/request-tracker';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -123,8 +122,6 @@ async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const startedAt = Date.now();
-  const method = (options.method || 'GET').toUpperCase();
   const headers = {
     ...getAuthHeaders(),
     ...options.headers,
@@ -138,15 +135,6 @@ async function apiRequest<T>(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-
-    trackRequestError({
-      method,
-      url: endpoint,
-      statusCode: response.status,
-      durationMs: Date.now() - startedAt,
-      body: options.body,
-      response: errorData,
-    });
 
     const error = new ApiError(
       response.status,
@@ -170,13 +158,6 @@ async function apiRequest<T>(
 
     throw error;
   }
-
-  trackRequestSuccess({
-    method,
-    url: endpoint,
-    statusCode: response.status,
-    durationMs: Date.now() - startedAt,
-  });
 
   return response.json();
 }
