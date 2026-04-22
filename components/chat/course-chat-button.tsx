@@ -1,7 +1,7 @@
 'use client';
 
 import { MessageCircle, Lock } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { chatApi, type ChatRoom, type EligibilityInfo } from '@/lib/chat-api';
 import { CourseChatModal } from './course-chat-modal';
 
@@ -10,33 +10,49 @@ interface Props {
   categoryName: string;
 }
 
-export function CourseChatButton({ categoryId, categoryName }: Props) {
+export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) {
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<ChatRoom | null>(null);
   const [info, setInfo] = useState<EligibilityInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const cancelledRef = useRef(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
+  const fetchEligibility = useCallback(
+    async (withSpinner: boolean) => {
+      if (withSpinner) setLoading(true);
       try {
         const { room, computed } = await chatApi.myRoomForCategory(categoryId);
-        if (!cancelled) {
-          setRoom(room);
-          setInfo(computed);
-        }
+        if (cancelledRef.current) return;
+        setRoom(room);
+        setInfo(computed);
+        setError(null);
       } catch (err) {
-        if (!cancelled) setError((err as Error).message);
+        if (!cancelledRef.current) setError((err as Error).message);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelledRef.current && withSpinner) setLoading(false);
       }
-    })();
-    return () => {
-      cancelled = true;
+    },
+    [categoryId],
+  );
+
+  useEffect(() => {
+    cancelledRef.current = false;
+    void fetchEligibility(true);
+
+    const onFocus = () => void fetchEligibility(false);
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') void fetchEligibility(false);
     };
-  }, [categoryId]);
+    globalThis.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      cancelledRef.current = true;
+      globalThis.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [fetchEligibility]);
 
   if (loading) {
     return (
