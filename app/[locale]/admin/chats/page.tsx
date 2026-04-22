@@ -155,9 +155,17 @@ export default function AdminChatsPage() {
           </div>
         </aside>
 
-        {/* Panel de Chat */}
-        {/* FIX 3: h-full y flex-col aseguran que el contenido llene el espacio calculado */}
-        <section className={`col-span-12 md:col-span-8 lg:col-span-9 bg-[#fafafa] dark:bg-background overflow-hidden relative h-full ${!activeRoom ? 'hidden md:flex flex-col' : 'flex flex-col'}`}>
+        {/* Panel de Chat
+            - Mobile con chat: fixed inset-0, inmune al teclado virtual
+            - Mobile sin chat: hidden
+            - Desktop siempre: columna en el grid */}
+        <section className={`
+          bg-[#fafafa] dark:bg-background overflow-hidden flex flex-col
+          ${activeRoom
+            ? 'fixed inset-0 z-50 md:static md:inset-auto md:z-auto col-span-12 md:col-span-8 lg:col-span-9 md:h-full'
+            : 'hidden md:flex md:col-span-8 lg:col-span-9 md:h-full'
+          }
+        `}>
           {activeRoom ? (
             <ChatRoomPanel
               key={activeRoom.id}
