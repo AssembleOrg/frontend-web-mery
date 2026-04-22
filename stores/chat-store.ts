@@ -10,6 +10,7 @@ interface ChatState {
   typing: Record<RoomId, { userId: string; role: string } | null>;
   unreadTotal: number;
   activeRoomId: RoomId | null;
+  mobileFullScreen: boolean;
 }
 
 interface ChatActions {
@@ -36,6 +37,7 @@ interface ChatActions {
   setUnreadTotal: (n: number) => void;
   setActiveRoom: (roomId: RoomId | null) => void;
   bumpUnread: (delta: number) => void;
+  setMobileFullScreen: (v: boolean) => void;
   clear: () => void;
 }
 
@@ -45,6 +47,7 @@ const initialState: ChatState = {
   typing: {},
   unreadTotal: 0,
   activeRoomId: null,
+  mobileFullScreen: false,
 };
 
 export const useChatStore = create<ChatState & ChatActions>()(
@@ -105,6 +108,10 @@ export const useChatStore = create<ChatState & ChatActions>()(
     bumpUnread: (delta) =>
       set((s) => {
         s.unreadTotal = Math.max(0, s.unreadTotal + delta);
+      }),
+    setMobileFullScreen: (v) =>
+      set((s) => {
+        s.mobileFullScreen = v;
       }),
     clear: () => set(() => ({ ...initialState })),
   })),

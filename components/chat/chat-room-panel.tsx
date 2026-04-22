@@ -8,27 +8,23 @@ import type { ChatMessage, ChatRoom } from '@/lib/chat-api';
 import { ChatMessageBubble } from './chat-message-bubble';
 import { ChatInput } from './chat-input';
 import { ChatWarning } from './chat-warning';
-import { Loader2, Lock, Clock } from 'lucide-react';
+import { Loader2, Lock, Clock, ChevronLeft } from 'lucide-react';
 
 interface Props {
   room: ChatRoom;
-  /** Si se muestra encabezado con datos del alumno (vista admin). */
   showCounterpart?: boolean;
+  onMobileBack?: () => void;
 }
 
 const EMPTY_MESSAGES: readonly ChatMessage[] = Object.freeze([]);
 
-export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>) {
-  // Usamos una constante estable para el fallback: si el selector devolviera
-  // un `[]` nuevo cada render, Zustand nos re-renderizaría en cada update del
-  // store aunque no haya mensajes, y podría cascadear con otros efectos.
+export function ChatRoomPanel({ room, showCounterpart = false, onMobileBack }: Readonly<Props>) {
   const messages = useChatStore((s) => s.messages[room.id] ?? EMPTY_MESSAGES);
   const typing = useChatStore((s) => s.typing[room.id] ?? null);
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUBADMIN';
 
-  const { loadInitial, loadOlder, sendText, sendImage, setTyping, markRead } =
-    useChatRoom(room.id);
+  const { loadInitial, loadOlder, sendText, sendImage, setTyping, markRead } = useChatRoom(room.id);
 
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [olderCursor, setOlderCursor] = useState<string | null>(null);
@@ -37,6 +33,7 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const prevMessagesLengthRef = useRef(0);
 
+  // 1. CARGA INICIAL
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -49,18 +46,27 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
       }
       void markRead();
     })();
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, [room.id, loadInitial, markRead]);
 
-  // auto scroll al final SOLO cuando llega un mensaje nuevo (no al cargar antiguos)
+  // 2. FIX: AUTO-SCROLL AL FINAL CUANDO CARGA POR PRIMERA VEZ
+  useEffect(() => {
+    if (!loadingInitial && scrollRef.current) {
+      const el = scrollRef.current;
+      // Pequeño timeout para asegurar que el DOM de los mensajes ya se renderizó
+      const timeout = setTimeout(() => {
+        el.scrollTop = el.scrollHeight;
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [loadingInitial]);
+
+  // 3. AUTO-SCROLL CUANDO LLEGAN MENSAJES NUEVOS
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     const prevLen = prevMessagesLengthRef.current;
     const nextLen = messages.length;
-    // si creció por el final, scrolleamos abajo
     if (nextLen > prevLen) {
       el.scrollTop = el.scrollHeight;
     }
@@ -75,7 +81,6 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
     try {
       const next = await loadOlder(olderCursor);
       setOlderCursor(next);
-      // mantener la posición visual: scrolleamos al delta exacto
       requestAnimationFrame(() => {
         if (!el) return;
         const newHeight = el.scrollHeight;
@@ -86,148 +91,91 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
     }
   };
 
-  const disabled =
-    room.status === 'LOCKED' || room.status === 'CLOSED' ? true : false;
-  const disabledReason =
-    room.status === 'CLOSED'
-      ? 'Esta conversación quedó en solo lectura después de 90 días.'
-      : room.status === 'LOCKED'
-      ? 'Completá los videos del curso (95% o más) para desbloquear el chat.'
-      : null;
-
-  const counterpartName =
-    [room.user.firstName, room.user.lastName].filter(Boolean).join(' ') ||
-    room.user.email;
+  const disabled = room.status === 'LOCKED' || room.status === 'CLOSED';
+  const counterpartName = [room.user.firstName, room.user.lastName].filter(Boolean).join(' ') || room.user.email;
 
   return (
-    <div className='flex flex-col h-full bg-[#fafafa] dark:bg-background'>
+    // Estructura Rígida: h-full y overflow-hidden para que el footer no se escape
+    <div className='flex flex-col h-full w-full overflow-hidden bg-[#fafafa] dark:bg-background m-0 p-0'>
+      
+      {/* Header: shrink-0 garantiza que NO se mueva */}
       {showCounterpart && (
-        <div className='border-b border-border bg-white dark:bg-card px-4 py-3 flex items-center gap-3'>
-          <div className='w-10 h-10 rounded-full bg-[#f9bbc4] text-white flex items-center justify-center text-sm font-semibold'>
-            {counterpartName
-              .split(' ')
-              .map((p) => p[0])
-              .slice(0, 2)
-              .join('')
-              .toUpperCase()}
+        <div className='shrink-0 border-b border-border bg-white/80 backdrop-blur-md dark:bg-card px-3 py-3 flex items-center gap-3 z-20 w-full'>
+          {onMobileBack && (
+            <button onClick={onMobileBack} className='md:hidden p-1.5 -ml-1 text-muted-foreground hover:bg-muted/50 rounded-full shrink-0'>
+              <ChevronLeft className='w-6 h-6' />
+            </button>
+          )}
+          <div className='w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#f9bbc4] text-white flex items-center justify-center text-xs md:text-sm font-semibold shrink-0'>
+            {counterpartName.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
           </div>
           <div className='flex-1 min-w-0'>
-            <div className='font-medium text-foreground truncate'>
-              {counterpartName}
-            </div>
-            <div className='text-xs text-muted-foreground truncate'>
-              {room.category.name} · {room.user.email}
-            </div>
+            <div className='font-medium text-foreground truncate text-sm md:text-base'>{counterpartName}</div>
+            <div className='text-[10px] md:text-xs text-muted-foreground truncate'>{room.category.name}</div>
           </div>
           <RoomStatusBadge status={room.status} />
         </div>
       )}
 
-      {!showCounterpart && <ChatWarning roomId={room.id} />}
-
-      <div
-        ref={scrollRef}
-        className='flex-1 overflow-y-auto px-3 py-4 space-y-2'
-      >
+      {/* Zona de Mensajes: Es el ÚNICO que tiene permitido scrollear */}
+<div ref={scrollRef} className='flex-1 overflow-y-auto min-h-0 w-full px-3 py-4 space-y-3'>
         {loadingInitial ? (
-          <div className='h-full flex items-center justify-center text-muted-foreground'>
-            <Loader2 className='w-5 h-5 animate-spin' />
+          <div className='h-full flex items-center justify-center'>
+            <Loader2 className='w-6 h-6 animate-spin text-muted-foreground' />
           </div>
         ) : (
           <>
             {olderCursor && messages.length > 0 && (
-              <div className='flex justify-center pb-2'>
-                <button
-                  type='button'
-                  onClick={handleLoadOlder}
-                  disabled={loadingOlder}
-                  className='text-xs px-3 py-1.5 rounded-full border border-border bg-white dark:bg-card text-muted-foreground hover:text-foreground hover:border-[#f9bbc4] transition-colors disabled:opacity-50'
-                >
-                  {loadingOlder ? (
-                    <span className='inline-flex items-center gap-1.5'>
-                      <Loader2 className='w-3 h-3 animate-spin' />
-                      Cargando…
-                    </span>
-                  ) : (
-                    'Cargar mensajes anteriores'
-                  )}
+              <div className='flex justify-center pb-4'>
+                <button type='button' onClick={handleLoadOlder} disabled={loadingOlder} className='text-[11px] px-4 py-1.5 rounded-full border border-border bg-white text-muted-foreground hover:border-[#f9bbc4] transition-colors'>
+                  {loadingOlder ? 'Cargando...' : 'Ver mensajes anteriores'}
                 </button>
               </div>
             )}
             {messages.length === 0 ? (
-              <div className='h-full flex items-center justify-center text-muted-foreground text-sm text-center px-8'>
-                {isAdmin
-                  ? 'Sin mensajes todavía.'
-                  : 'Saludá a tu profesora y empezá la conversación cuando quieras.'}
+              <div className='h-full flex items-center justify-center text-muted-foreground text-sm text-center px-10'>
+                {isAdmin ? 'Sin mensajes todavía.' : '¡Hola! Escribe tu primera duda aquí.'}
               </div>
             ) : (
               messages.map((m) => (
-                <ChatMessageBubble
-                  key={m.id}
-                  message={m}
-                  mine={m.senderId === user?.id}
-                />
+                <ChatMessageBubble key={m.id} message={m} mine={m.senderId === user?.id} />
               ))
             )}
             {typing && (
-              <div className='text-xs text-muted-foreground px-2'>
-                {typing.role === 'ADMIN' ? 'Mery' : counterpartName} está escribiendo…
+              <div className='text-[11px] text-muted-foreground italic px-2'>
+                {typing.role === 'ADMIN' ? 'Mery' : counterpartName} está escribiendo...
               </div>
             )}
           </>
         )}
       </div>
 
-      {disabled ? (
-        <div className='border-t border-border bg-muted/30 px-4 py-3 text-xs text-muted-foreground flex items-center gap-2'>
-          {room.status === 'CLOSED' ? (
-            <Clock className='w-4 h-4' />
-          ) : (
-            <Lock className='w-4 h-4' />
-          )}
-          <span>{disabledReason}</span>
-        </div>
-      ) : (
-        <ChatInput
-          onSendText={sendText}
-          onSendImage={sendImage}
-          onTyping={setTyping}
-        />
-      )}
+      {/* Footer / Input: shrink-0 y fuera del div de scroll asegura que sea STICKY */}
+<div className="shrink-0 w-full bg-white dark:bg-card border-t border-border/50 z-20">
+        {disabled ? (
+          <div className='px-4 py-4 text-[11px] text-muted-foreground flex items-center gap-2 italic'>
+             <Lock className='w-3.5 h-3.5' /> Chat deshabilitado.
+          </div>
+        ) : (
+          <ChatInput onSendText={sendText} onSendImage={sendImage} onTyping={setTyping} />
+        )}
+      </div>
     </div>
   );
 }
 
 function RoomStatusBadge({ status }: { status: ChatRoom['status'] }) {
-  const map: Record<ChatRoom['status'], { label: string; className: string }> =
-    {
-      ACTIVE: {
-        label: 'Activo',
-        className:
-          'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-      },
-      GRACE: {
-        label: 'En gracia',
-        className:
-          'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-      },
-      LOCKED: {
-        label: 'Bloqueado',
-        className:
-          'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300',
-      },
-      CLOSED: {
-        label: 'Cerrado',
-        className:
-          'bg-gray-200 text-gray-500 dark:bg-gray-900/50 dark:text-gray-400',
-      },
-    };
+  const map: Record<ChatRoom['status'], { bg: string; dot: string }> = {
+    ACTIVE: { bg: 'bg-green-50 text-green-600', dot: 'bg-green-500' },
+    GRACE: { bg: 'bg-amber-50 text-amber-600', dot: 'bg-amber-500' },
+    LOCKED: { bg: 'bg-gray-50 text-gray-500', dot: 'bg-gray-400' },
+    CLOSED: { bg: 'bg-gray-100 text-gray-400', dot: 'bg-gray-300' },
+  };
   const meta = map[status];
   return (
-    <span
-      className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full ${meta.className}`}
-    >
-      {meta.label}
-    </span>
+    <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full shrink-0 ${meta.bg}`}>
+      <span className={`w-2 h-2 rounded-full ${meta.dot} animate-pulse`}></span>
+      <span className="hidden md:block text-[9px] font-bold uppercase tracking-tighter">Activo</span>
+    </div>
   );
 }
