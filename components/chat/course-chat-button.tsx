@@ -17,15 +17,43 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const cancelledRef = useRef(false);
+  const openRef = useRef(open);
+  openRef.current = open;
 
   const fetchEligibility = useCallback(
     async (withSpinner: boolean) => {
       if (withSpinner) setLoading(true);
       try {
-        const { room, computed } = await chatApi.myRoomForCategory(categoryId);
+        const { room: nextRoom, computed } = await chatApi.myRoomForCategory(
+          categoryId,
+        );
         if (cancelledRef.current) return;
-        setRoom(room);
-        setInfo(computed);
+        // Solo updatear si algo cambió realmente — evita re-renders innecesarios
+        // que podrían cascadear a la modal.
+        setRoom((prev) => {
+          if (
+            prev &&
+            prev.id === nextRoom.id &&
+            prev.status === nextRoom.status &&
+            prev.unlockedAt === nextRoom.unlockedAt &&
+            prev.gracePeriodEnd === nextRoom.gracePeriodEnd
+          ) {
+            return prev;
+          }
+          return nextRoom;
+        });
+        setInfo((prev) => {
+          if (
+            prev &&
+            prev.status === computed.status &&
+            prev.videosCompleted === computed.videosCompleted &&
+            prev.videosTotal === computed.videosTotal &&
+            prev.progressPercent === computed.progressPercent
+          ) {
+            return prev;
+          }
+          return computed;
+        });
         setError(null);
       } catch (err) {
         if (!cancelledRef.current) setError((err as Error).message);
@@ -40,9 +68,16 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
     cancelledRef.current = false;
     void fetchEligibility(true);
 
-    const onFocus = () => void fetchEligibility(false);
+    // No refetch mientras la modal está abierta: el usuario ya está chateando,
+    // no tiene sentido volver a chequear elegibilidad y dispara re-renders
+    // de la modal que pueden cascadear.
+    const onFocus = () => {
+      if (!openRef.current) void fetchEligibility(false);
+    };
     const onVisibility = () => {
-      if (document.visibilityState === 'visible') void fetchEligibility(false);
+      if (!openRef.current && document.visibilityState === 'visible') {
+        void fetchEligibility(false);
+      }
     };
     globalThis.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisibility);
@@ -53,6 +88,8 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [fetchEligibility]);
+
+  const handleClose = useCallback(() => setOpen(false), []);
 
   if (loading) {
     return (
@@ -114,7 +151,7 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
         <CourseChatModal
           room={room}
           title={categoryName}
-          onClose={() => setOpen(false)}
+          onClose={handleClose}
         />
       )}
     </>

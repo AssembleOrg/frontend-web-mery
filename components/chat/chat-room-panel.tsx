@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useChatStore } from '@/stores/chat-store';
 import { useChatRoom } from '@/hooks/useChat';
 import { useAuthStore } from '@/stores/auth-store';
-import type { ChatRoom } from '@/lib/chat-api';
+import type { ChatMessage, ChatRoom } from '@/lib/chat-api';
 import { ChatMessageBubble } from './chat-message-bubble';
 import { ChatInput } from './chat-input';
 import { ChatWarning } from './chat-warning';
@@ -16,8 +16,13 @@ interface Props {
   showCounterpart?: boolean;
 }
 
-export function ChatRoomPanel({ room, showCounterpart = false }: Props) {
-  const messages = useChatStore((s) => s.messages[room.id] ?? []);
+const EMPTY_MESSAGES: readonly ChatMessage[] = Object.freeze([]);
+
+export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>) {
+  // Usamos una constante estable para el fallback: si el selector devolviera
+  // un `[]` nuevo cada render, Zustand nos re-renderizaría en cada update del
+  // store aunque no haya mensajes, y podría cascadear con otros efectos.
+  const messages = useChatStore((s) => s.messages[room.id] ?? EMPTY_MESSAGES);
   const typing = useChatStore((s) => s.typing[room.id] ?? null);
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUBADMIN';
