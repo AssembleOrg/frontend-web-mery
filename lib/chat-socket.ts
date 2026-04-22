@@ -2,6 +2,7 @@
 
 import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
+import { useAuthStore } from '@/stores/auth-store';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 // URL directa al backend (sin pasar por los rewrites del front).
@@ -48,15 +49,35 @@ export function getChatSocket(): Socket {
   if (socket?.connected) return socket;
   if (socket) return socket;
 
-  const token = Cookies.get('auth_token');
+  // Prioridad: cookie → auth store. La cookie puede ser HttpOnly y no verse
+  // desde JS, en cuyo caso caemos al token que tiene el auth-store en memoria.
+  const token =
+    Cookies.get('auth_token') || useAuthStore.getState().token || undefined;
   const origin = deriveSocketOrigin();
-  socket = io(`${origin}/chat`, {
+  const url = `${origin}/chat`;
+  console.info('[ChatSocket] conectando a', url, 'con token=', token ? 'SÍ' : 'NO');
+  socket = io(url, {
     path: '/socket.io',
     transports: ['websocket', 'polling'],
     auth: { token },
+    extraHeaders: token ? { Authorization: `Bearer ${token}` } : undefined,
     withCredentials: true,
     autoConnect: true,
   });
+
+  socket.on('connect', () => {
+    console.info('[ChatSocket] ✅ connect id=', socket?.id);
+  });
+  socket.on('connect_error', (err) => {
+    console.error('[ChatSocket] ❌ connect_error:', err.message, err);
+  });
+  socket.on('disconnect', (reason) => {
+    console.warn('[ChatSocket] 🔌 disconnect:', reason);
+  });
+  socket.io.on('error', (err) => {
+    console.error('[ChatSocket] ❌ transport error:', err);
+  });
+
   return socket;
 }
 

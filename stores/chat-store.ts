@@ -18,6 +18,16 @@ interface ChatActions {
   setMessages: (roomId: RoomId, messages: ChatMessage[]) => void;
   prependMessages: (roomId: RoomId, messages: ChatMessage[]) => void;
   appendMessage: (roomId: RoomId, message: ChatMessage) => void;
+  /**
+   * Marca como leídos (setea `readAt`) todos los mensajes de una sala
+   * que vienen de `fromRole`. Se invoca cuando llega el `read_receipt`
+   * del otro lado.
+   */
+  markMessagesReadFrom: (
+    roomId: RoomId,
+    fromRole: 'STUDENT' | 'ADMIN',
+    readAt: string,
+  ) => void;
   markRoomRead: (roomId: RoomId) => void;
   setTyping: (
     roomId: RoomId,
@@ -67,6 +77,14 @@ export const useChatStore = create<ChatState & ChatActions>()(
         if (s.rooms[roomId]) {
           s.rooms[roomId].lastMessageAt = message.createdAt;
         }
+      }),
+    markMessagesReadFrom: (roomId, fromRole, readAt) =>
+      set((s) => {
+        const list = s.messages[roomId];
+        if (!list) return;
+        s.messages[roomId] = list.map((m) =>
+          m.senderRole === fromRole && !m.readAt ? { ...m, readAt } : m,
+        );
       }),
     markRoomRead: (roomId) =>
       set((s) => {

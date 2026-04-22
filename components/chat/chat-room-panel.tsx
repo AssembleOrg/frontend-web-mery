@@ -35,13 +35,15 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
   const [loadingOlder, setLoadingOlder] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const prevMessagesLengthRef = useRef(0);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       setLoadingInitial(true);
       try {
-        await loadInitial();
+        const nextCursor = await loadInitial();
+        if (mounted) setOlderCursor(nextCursor ?? null);
       } finally {
         if (mounted) setLoadingInitial(false);
       }
@@ -52,12 +54,37 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
     };
   }, [room.id, loadInitial, markRead]);
 
-  // auto scroll
+  // auto scroll al final SOLO cuando llega un mensaje nuevo (no al cargar antiguos)
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollTop = el.scrollHeight;
+    const prevLen = prevMessagesLengthRef.current;
+    const nextLen = messages.length;
+    // si creció por el final, scrolleamos abajo
+    if (nextLen > prevLen) {
+      el.scrollTop = el.scrollHeight;
+    }
+    prevMessagesLengthRef.current = nextLen;
   }, [messages.length, typing]);
+
+  const handleLoadOlder = async () => {
+    if (loadingOlder || !olderCursor) return;
+    setLoadingOlder(true);
+    const el = scrollRef.current;
+    const prevHeight = el?.scrollHeight ?? 0;
+    try {
+      const next = await loadOlder(olderCursor);
+      setOlderCursor(next);
+      // mantener la posición visual: scrolleamos al delta exacto
+      requestAnimationFrame(() => {
+        if (!el) return;
+        const newHeight = el.scrollHeight;
+        el.scrollTop = newHeight - prevHeight;
+      });
+    } finally {
+      setLoadingOlder(false);
+    }
+  };
 
   const disabled =
     room.status === 'LOCKED' || room.status === 'CLOSED' ? true : false;
@@ -71,24 +98,6 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
   const counterpartName =
     [room.user.firstName, room.user.lastName].filter(Boolean).join(' ') ||
     room.user.email;
-
-  const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    if (
-      target.scrollTop < 40 &&
-      !loadingOlder &&
-      messages.length > 0 &&
-      olderCursor !== null
-    ) {
-      setLoadingOlder(true);
-      try {
-        const next = await loadOlder(olderCursor ?? messages[0].id);
-        setOlderCursor(next);
-      } finally {
-        setLoadingOlder(false);
-      }
-    }
-  };
 
   return (
     <div className='flex flex-col h-full bg-[#fafafa] dark:bg-background'>
@@ -118,32 +127,54 @@ export function ChatRoomPanel({ room, showCounterpart = false }: Readonly<Props>
 
       <div
         ref={scrollRef}
-        onScroll={handleScroll}
         className='flex-1 overflow-y-auto px-3 py-4 space-y-2'
       >
         {loadingInitial ? (
           <div className='h-full flex items-center justify-center text-muted-foreground'>
             <Loader2 className='w-5 h-5 animate-spin' />
           </div>
-        ) : messages.length === 0 ? (
-          <div className='h-full flex items-center justify-center text-muted-foreground text-sm text-center px-8'>
-            {isAdmin
-              ? 'Sin mensajes todavía.'
-              : 'Saludá a tu profesora y empezá la conversación cuando quieras.'}
-          </div>
         ) : (
-          messages.map((m) => (
-            <ChatMessageBubble
-              key={m.id}
-              message={m}
-              mine={m.senderId === user?.id}
-            />
-          ))
-        )}
-        {typing && (
-          <div className='text-xs text-muted-foreground px-2'>
-            {typing.role === 'ADMIN' ? 'Mery' : counterpartName} está escribiendo…
-          </div>
+          <>
+            {olderCursor && messages.length > 0 && (
+              <div className='flex justify-center pb-2'>
+                <button
+                  type='button'
+                  onClick={handleLoadOlder}
+                  disabled={loadingOlder}
+                  className='text-xs px-3 py-1.5 rounded-full border border-border bg-white dark:bg-card text-muted-foreground hover:text-foreground hover:border-[#f9bbc4] transition-colors disabled:opacity-50'
+                >
+                  {loadingOlder ? (
+                    <span className='inline-flex items-center gap-1.5'>
+                      <Loader2 className='w-3 h-3 animate-spin' />
+                      Cargando…
+                    </span>
+                  ) : (
+                    'Cargar mensajes anteriores'
+                  )}
+                </button>
+              </div>
+            )}
+            {messages.length === 0 ? (
+              <div className='h-full flex items-center justify-center text-muted-foreground text-sm text-center px-8'>
+                {isAdmin
+                  ? 'Sin mensajes todavía.'
+                  : 'Saludá a tu profesora y empezá la conversación cuando quieras.'}
+              </div>
+            ) : (
+              messages.map((m) => (
+                <ChatMessageBubble
+                  key={m.id}
+                  message={m}
+                  mine={m.senderId === user?.id}
+                />
+              ))
+            )}
+            {typing && (
+              <div className='text-xs text-muted-foreground px-2'>
+                {typing.role === 'ADMIN' ? 'Mery' : counterpartName} está escribiendo…
+              </div>
+            )}
+          </>
         )}
       </div>
 
