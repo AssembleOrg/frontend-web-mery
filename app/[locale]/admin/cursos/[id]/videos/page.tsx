@@ -283,22 +283,28 @@ export default function CursoVideosPage() {
   };
 
   const handleTogglePublish = async (video: any) => {
+    const newStatus = !video.isPublished;
+
+    const confirmed = await showConfirm({
+      title: newStatus ? 'Publicar video' : 'Despublicar video',
+      message: newStatus
+        ? `¿Publicar "${video.title}"? Los alumnos con acceso al curso podrán verlo.`
+        : `¿Despublicar "${video.title}"? Los alumnos dejarán de verlo hasta que lo vuelvas a publicar.`,
+      type: 'warning',
+      confirmText: newStatus ? 'Publicar' : 'Despublicar',
+      cancelText: 'Cancelar',
+    });
+
+    if (!confirmed) return;
+
     try {
-      // Solo enviar isPublished, el backend maneja publishedAt automáticamente
-      const newStatus = !video.isPublished;
-      await updateVideo(video.id, {
-        isPublished: newStatus,
-      });
+      await updateVideo(video.id, { isPublished: newStatus });
       await loadData();
       toast.success(
-        newStatus
-          ? 'Video publicado exitosamente'
-          : 'Video despublicado exitosamente'
+        newStatus ? 'Video publicado exitosamente' : 'Video despublicado exitosamente'
       );
     } catch (_error) {
-      toast.error(
-        'Error al cambiar el estado de publicación. Por favor intenta nuevamente.'
-      );
+      toast.error('Error al cambiar el estado de publicación. Por favor intenta nuevamente.');
     }
   };
 
@@ -311,9 +317,9 @@ export default function CursoVideosPage() {
       <div className='space-y-6'>
         <button
           onClick={handleBack}
-          className='inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors'
+          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
         >
-          <ArrowLeft className='w-4 h-4' />
+          <ArrowLeft className='w-3.5 h-3.5' />
           Volver a cursos
         </button>
         <div className='bg-white rounded-lg shadow-lg p-12 text-center'>
@@ -326,32 +332,33 @@ export default function CursoVideosPage() {
   return (
     <div className='space-y-6 font-admin'>
       {/* Header */}
-      <div className='flex items-center justify-between'>
-        <div>
-          <button
-            onClick={handleBack}
-            className='inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-4'
-          >
-            <ArrowLeft className='w-4 h-4' />
-            Volver a cursos
-          </button>
-          <h1 className='text-3xl font-bold text-gray-900'>
-            Videos de: {course.name}
-          </h1>
-          <p className='text-gray-600 mt-1'>
-            Gestiona los videos de este curso usando IDs de Vimeo
-          </p>
+      <div className='space-y-3'>
+        <button
+          onClick={handleBack}
+          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
+        >
+          <ArrowLeft className='w-3.5 h-3.5' />
+          Volver a cursos
+        </button>
+        <div className='flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3'>
+          <div>
+            <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>
+              {course.name}
+            </h1>
+            <p className='text-sm text-gray-500 mt-1'>
+              Gestiona los videos de este curso usando IDs de Vimeo
+            </p>
+          </div>
+          {!isEditing && (
+            <button
+              onClick={handleStartAdd}
+              className='inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow-md w-full sm:w-auto flex-shrink-0'
+            >
+              <PlusCircle className='w-4 h-4' />
+              Agregar Video
+            </button>
+          )}
         </div>
-
-        {!isEditing && (
-          <button
-            onClick={handleStartAdd}
-            className='inline-flex items-center gap-2 px-4 py-3 bg-[#660e1b] hover:bg-[#4a0a14] text-white rounded-lg transition-colors'
-          >
-            <PlusCircle className='w-5 h-5' />
-            Agregar Video
-          </button>
-        )}
       </div>
 
       {/* Edit Form */}
@@ -597,11 +604,11 @@ export default function CursoVideosPage() {
             </div>
 
             {/* Actions */}
-            <div className='flex gap-3 pt-4'>
+            <div className='flex flex-col sm:flex-row gap-2 pt-4'>
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className='inline-flex items-center gap-2 px-6 py-3 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors'
+                className='inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors shadow-sm w-full sm:w-auto'
               >
                 {isSaving ? (
                   <>
@@ -618,7 +625,7 @@ export default function CursoVideosPage() {
               <button
                 onClick={handleCancelEdit}
                 disabled={isSaving}
-                className='inline-flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700 rounded-lg transition-colors'
+                className='inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed text-gray-600 text-sm font-medium rounded-lg transition-colors w-full sm:w-auto'
               >
                 <X className='w-4 h-4' />
                 Cancelar
@@ -650,22 +657,24 @@ export default function CursoVideosPage() {
                 .map((video) => (
                   <div
                     key={video.id}
-                    className='flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors'
+                    className='flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors'
                   >
                     {/* Thumbnail */}
                     {video.thumbnail && (
-                      <Image
-                        src={video.thumbnail}
-                        alt={video.title}
-                        width={128}
-                        height={72}
-                        className='w-32 h-18 object-cover rounded'
-                      />
+                      <div className='w-full sm:w-32 flex-shrink-0'>
+                        <Image
+                          src={video.thumbnail}
+                          alt={video.title}
+                          width={128}
+                          height={72}
+                          className='w-full sm:w-32 h-36 sm:h-[72px] object-cover rounded-lg'
+                        />
+                      </div>
                     )}
 
                     {/* Info */}
-                    <div className='flex-1'>
-                      <h3 className='font-semibold text-gray-900'>
+                    <div className='flex-1 min-w-0'>
+                      <h3 className='font-semibold text-gray-900 truncate'>
                         {video.title}
                       </h3>
                       {video.description && (
@@ -673,7 +682,7 @@ export default function CursoVideosPage() {
                           {video.description}
                         </p>
                       )}
-                      <div className='flex gap-4 mt-2 text-xs text-gray-500'>
+                      <div className='flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-gray-500'>
                         <span>Orden: {video.order}</span>
                         {video.duration && (
                           <span>
@@ -689,13 +698,13 @@ export default function CursoVideosPage() {
                               : 'text-yellow-600'
                           }`}
                         >
-                          {video.isPublished ? '● Publicado' : '○ No publicado'}
+                          {video.isPublished ? '● Publicado' : '○ Borrador'}
                         </span>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className='flex gap-2'>
+                    <div className='flex gap-2 sm:flex-shrink-0'>
                       <button
                         onClick={() => handleTogglePublish(video)}
                         className={`p-2.5 rounded-lg transition-all border-2 ${
@@ -706,9 +715,9 @@ export default function CursoVideosPage() {
                         title={video.isPublished ? 'Despublicar' : 'Publicar'}
                       >
                         {video.isPublished ? (
-                          <EyeOff className='w-5 h-5' />
+                          <EyeOff className='w-4 h-4' />
                         ) : (
-                          <Eye className='w-5 h-5' />
+                          <Eye className='w-4 h-4' />
                         )}
                       </button>
                       <button
@@ -716,14 +725,14 @@ export default function CursoVideosPage() {
                         disabled={isEditing}
                         className='p-2.5 rounded-lg bg-[#FBE8EA] border-2 border-[#EBA2A8] text-[#660e1b] hover:bg-[#EBA2A8] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                       >
-                        <Edit className='w-5 h-5' />
+                        <Edit className='w-4 h-4' />
                       </button>
                       <button
                         onClick={() => handleDelete(video.id)}
                         disabled={isEditing}
                         className='p-2.5 rounded-lg bg-red-50 border-2 border-red-300 text-red-600 hover:bg-red-500 hover:border-red-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                       >
-                        <Trash2 className='w-5 h-5' />
+                        <Trash2 className='w-4 h-4' />
                       </button>
                     </div>
                   </div>

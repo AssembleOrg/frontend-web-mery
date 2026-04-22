@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Headset, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { ProblemReportService } from '@/services/problem-report.service';
@@ -23,12 +23,52 @@ export default function ProblemReportWidget() {
   const [countryCode, setCountryCode] = useState('+54');
   const [phone, setPhone] = useState('');
   const [description, setDescription] = useState('');
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
+  const didDragRef = useRef(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const resetForm = () => {
     setEmail('');
     setCountryCode('+54');
     setPhone('');
     setDescription('');
+  };
+
+  const isTouch = (e: React.PointerEvent) => e.pointerType === 'touch';
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (isTouch(e)) return;
+    didDragRef.current = false;
+    const rect = e.currentTarget.getBoundingClientRect();
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: rect.left,
+      originY: rect.top,
+    };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (isTouch(e) || !dragRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+    didDragRef.current = true;
+    const btn = btnRef.current;
+    if (!btn) return;
+    const { width, height } = btn.getBoundingClientRect();
+    const x = Math.max(0, Math.min(window.innerWidth - width, dragRef.current.originX + dx));
+    const y = Math.max(0, Math.min(window.innerHeight - height, dragRef.current.originY + dy));
+    setPos({ x, y });
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (isTouch(e)) return;
+    dragRef.current = null;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -66,12 +106,19 @@ export default function ProblemReportWidget() {
   return (
     <>
       <button
+        ref={btnRef}
         type='button'
-        onClick={() => setIsOpen(true)}
-        className='fixed bottom-5 right-5 z-[120] inline-flex items-center gap-2 rounded-full bg-[#2B2B2B] px-4 py-3 text-sm font-semibold text-[#FBE8EA] shadow-lg transition hover:bg-[#1f1f1f]'
+        aria-label='Reportar un problema'
+        title='Reportar un problema'
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onClick={() => { if (!didDragRef.current) setIsOpen(true); didDragRef.current = false; }}
+        style={pos ? { top: pos.y, left: pos.x } : undefined}
+        className={`fixed z-[120] inline-flex items-center gap-2 rounded-full bg-[#2B2B2B] px-2.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-[#FBE8EA] shadow-lg transition hover:bg-[#1f1f1f] sm:cursor-grab sm:active:cursor-grabbing select-none${pos ? '' : ' bottom-[64px] right-3 sm:bottom-5 sm:right-5'}`}
       >
-        <Headset className='h-4 w-4' />
-        ¿Problemas?
+        <Headset className='h-4 w-4 pointer-events-none' />
+        <span className='hidden sm:inline pointer-events-none'>¿Problemas?</span>
       </button>
 
       {isOpen && (

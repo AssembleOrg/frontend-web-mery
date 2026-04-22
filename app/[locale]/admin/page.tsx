@@ -1,178 +1,97 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
-import { FaGraduationCap, FaVideo, FaUsers, FaChartLine, FaGift } from 'react-icons/fa';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import {
+  GraduationCap,
+  Users,
+  Gift,
+  MessageCircle,
+  ChevronRight,
+  PlusCircle,
+} from 'lucide-react';
+
+const sections = [
+  {
+    href: 'admin/cursos',
+    label: 'Cursos',
+    description: 'Crear, editar y publicar formaciones',
+    icon: GraduationCap,
+    cta: 'Ver cursos',
+  },
+  {
+    href: 'admin/usuarios',
+    label: 'Usuarios',
+    description: 'Asignar acceso manual a cursos',
+    icon: Users,
+    cta: 'Ver usuarios',
+  },
+  {
+    href: 'admin/cupones',
+    label: 'Cupones',
+    description: 'Crear y gestionar descuentos',
+    icon: Gift,
+    cta: 'Ver cupones',
+  },
+  {
+    href: 'admin/chats',
+    label: 'Chats',
+    description: 'Mensajes de alumnos activos',
+    icon: MessageCircle,
+    cta: 'Ver chats',
+  },
+];
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'es';
-
-  const dashboardCards = [
-    {
-      title: 'Gestión de Cursos',
-      description: 'Crear, editar y administrar cursos y formaciones',
-      icon: FaGraduationCap,
-      href: `/${locale}/admin/cursos`,
-      color: 'bg-pink-50 text-pink-600 hover:bg-pink-100',
-      iconBg: 'bg-pink-100',
-    },
-    {
-      title: 'Videos',
-      description: 'Administrar contenido de video de los cursos',
-      icon: FaVideo,
-      href: `/${locale}/admin/cursos`,
-      color: 'bg-purple-50 text-purple-600 hover:bg-purple-100',
-      iconBg: 'bg-purple-100',
-    },
-    {
-      title: 'Usuarios',
-      description: 'Asignar cursos manualmente a usuarios',
-      icon: FaUsers,
-      href: `/${locale}/admin/usuarios`,
-      color: 'bg-[#FBE8EA] text-[#660e1b] hover:bg-[#F7CBCB]',
-      iconBg: 'bg-[#F7CBCB]',
-      disabled: false,
-    },
-    {
-      title: 'Cupones',
-      description: 'Crear y gestionar cupones de descuento',
-      icon: FaGift,
-      href: `/${locale}/admin/cupones`,
-      color: 'bg-purple-50 text-purple-600 hover:bg-purple-100',
-      iconBg: 'bg-purple-100',
-    },
-    {
-      title: 'Estadísticas',
-      description: 'Próximamente: Ver métricas y análisis',
-      icon: FaChartLine,
-      href: '#',
-      color: 'bg-green-50 text-green-600 hover:bg-green-100',
-      iconBg: 'bg-green-100',
-      disabled: true,
-    },
-  ];
-
-  const handleCardClick = (href: string, disabled?: boolean) => {
-    if (!disabled && href !== '#') {
-      router.push(href);
-    }
-  };
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   return (
-    <div className="space-y-8 font-admin">
+    <div className='space-y-6'>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
-          Panel de Administración
+        <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>
+          Bienvenida, Mery
         </h1>
-        <p className="mt-2 text-gray-600">
-          Gestiona el contenido y configuración de la plataforma Mery García
+        <p className='text-sm text-gray-500 mt-1'>
+          Panel de administración · Mery García Formaciones
         </p>
       </div>
 
-      {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {dashboardCards.map((card) => {
-          const IconComponent = card.icon;
-          return (
-            <button
-              key={card.title}
-              onClick={() => handleCardClick(card.href, card.disabled)}
-              disabled={card.disabled}
-              className={`
-                ${card.color}
-                rounded-xl p-6 text-left transition-all duration-200
-                ${
-                  card.disabled
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:shadow-lg cursor-pointer transform hover:-translate-y-1'
-                }
-              `}
-            >
-              <div className="flex items-start space-x-4">
-                <div
-                  className={`${card.iconBg} rounded-lg p-3 flex-shrink-0`}
-                >
-                  <IconComponent className="h-6 w-6" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
-                  <p className="text-sm opacity-80">{card.description}</p>
-                  {card.disabled && (
-                    <span className="inline-block mt-3 text-xs font-medium bg-white bg-opacity-50 px-3 py-1 rounded-full">
-                      En desarrollo
-                    </span>
-                  )}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Quick Stats */}
-      <div className="bg-white rounded-xl shadow-sm border p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Acceso Rápido
-        </h2>
-        <div className="space-y-3">
-          <button
-            onClick={() => router.push(`/${locale}/admin/cursos/nuevo`)}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between group"
-          >
-            <span className="text-gray-700 group-hover:text-pink-600 transition-colors">
-              ➕ Crear nuevo curso
-            </span>
-            <span className="text-gray-400 group-hover:text-pink-600 transition-colors">
-              →
-            </span>
-          </button>
-          <button
-            onClick={() => router.push(`/${locale}/admin/cursos`)}
-            className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between group"
-          >
-            <span className="text-gray-700 group-hover:text-pink-600 transition-colors">
-              📚 Ver todos los cursos
-            </span>
-            <span className="text-gray-400 group-hover:text-pink-600 transition-colors">
-              →
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {/* Info Box */}
-      <div className="bg-[#FBE8EA] border border-[#F7CBCB] rounded-xl p-6">
-        <div className="flex items-start space-x-3">
-          <div className="flex-shrink-0">
-            <svg
-              className="h-6 w-6 text-[#EBA2A8]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
+      {/* Quick action */}
+      <Link
+        href={`/${locale}/admin/cursos/nuevo`}
+        className='flex items-center justify-between gap-4 bg-[#660e1b] hover:bg-[#4a0a14] text-white px-5 py-4 rounded-xl transition-all shadow-sm hover:shadow-md group'
+      >
+        <div className='flex items-center gap-3'>
+          <PlusCircle className='w-5 h-5 flex-shrink-0' />
           <div>
-            <h3 className="text-sm font-medium text-[#660e1b] mb-1">
-              Información importante
-            </h3>
-            <p className="text-sm text-[#2B2B2B]">
-              Actualmente solo está disponible la gestión de cursos. Las
-              funciones de usuarios y estadísticas estarán disponibles
-              próximamente.
-            </p>
+            <p className='text-sm font-semibold'>Crear nuevo curso</p>
+            <p className='text-xs text-white/70 mt-0.5'>Publicar una nueva formación</p>
           </div>
         </div>
+        <ChevronRight className='w-4 h-4 opacity-60 group-hover:translate-x-0.5 transition-transform' />
+      </Link>
+
+      {/* Nav cards */}
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+        {sections.map(({ href, label, description, icon: Icon, cta }) => (
+          <Link
+            key={href}
+            href={`/${locale}/${href}`}
+            className='group flex items-center gap-4 bg-white border border-gray-100 hover:border-[#F7CBCB] rounded-xl px-5 py-4 transition-all shadow-sm hover:shadow-md'
+          >
+            <div className='w-10 h-10 rounded-lg bg-[#FBE8EA] flex items-center justify-center flex-shrink-0 group-hover:bg-[#F7CBCB] transition-colors'>
+              <Icon className='w-5 h-5 text-[#660e1b]' />
+            </div>
+            <div className='flex-1 min-w-0'>
+              <p className='text-sm font-semibold text-gray-900'>{label}</p>
+              <p className='text-xs text-gray-500 mt-0.5 truncate'>{description}</p>
+            </div>
+            <ChevronRight className='w-4 h-4 text-gray-300 group-hover:text-[#660e1b] group-hover:translate-x-0.5 transition-all flex-shrink-0' />
+          </Link>
+        ))}
       </div>
     </div>
   );
 }
-

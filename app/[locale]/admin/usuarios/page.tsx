@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, usePathname, redirect } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -48,8 +49,8 @@ interface CategoryPurchase {
 
 export default function AdminUsuariosPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'es';
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   const [users, setUsers] = useState<User[]>([]);
   const [categories, setCategories] = useState<VideoCategory[]>([]);
@@ -320,21 +321,22 @@ export default function AdminUsuariosPage() {
   return (
     <div className='space-y-6 font-admin'>
       {/* Header */}
-      <div className='flex justify-between items-center'>
+      <div className='space-y-3'>
+        <button
+          onClick={() => router.push(`/${locale}/admin`)}
+          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
+        >
+          <ArrowLeft className='w-3.5 h-3.5' />
+          Volver al Dashboard
+        </button>
         <div>
-          <h1 className='text-3xl font-bold text-gray-900'>
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>
             Gestión de Usuarios
           </h1>
-          <p className='mt-2 text-gray-600'>
+          <p className='mt-1 text-sm text-gray-500'>
             Asigna cursos manualmente a usuarios (para pagos externos)
           </p>
         </div>
-        <button
-          onClick={() => redirect('/mi-cuenta')}
-          className='text-gray-600 hover:text-gray-900'
-        >
-          ← Volver al Dashboard
-        </button>
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
@@ -420,25 +422,25 @@ export default function AdminUsuariosPage() {
 
           {/* Paginación */}
           {!isLoadingUsers && users.length > 0 && (
-            <div className='mt-4 flex items-center justify-between border-t pt-4'>
-              <div className='text-sm text-gray-600'>
-                Mostrando {users.length} de {totalUsers} usuarios
+            <div className='mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t pt-4'>
+              <div className='text-xs text-gray-500'>
+                {users.length} de {totalUsers} usuarios
               </div>
               <div className='flex items-center gap-2'>
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                  className='px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm'
+                  className='px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-colors'
                 >
                   Anterior
                 </button>
-                <span className='text-sm text-gray-600'>
-                  Página {currentPage} de {totalPages}
+                <span className='text-xs text-gray-500 tabular-nums'>
+                  {currentPage} / {totalPages}
                 </span>
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage >= totalPages}
-                  className='px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm'
+                  className='px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-colors'
                 >
                   Siguiente
                 </button>

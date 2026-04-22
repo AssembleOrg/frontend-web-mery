@@ -300,17 +300,15 @@ export const CheckoutView = ({
                 <span>${discountedTotalARS.toLocaleString('es-AR')}</span>
               </div>
             </div>
-            <div className='mt-6 alert-high border rounded-lg p-4'>
-              <p className='text-sm text-primary'>
-                <strong className='text-primary'>¡Importante!</strong> Después
-                de completar tu compra...
+            <div className='mt-6 alert-high border border-[#f7cbcb] rounded-lg p-4'>
+              <p className='text-sm'>
+                <strong>¡Importante!</strong> Después de completar tu compra
+                recibirás:
               </p>
-              <ul className='text-sm text-primary mt-2 space-y-1'>
-                <li className='text-primary'>• Email de confirmación</li>
-                <li className='text-primary'>• Credenciales de acceso</li>
-                <li className='text-primary'>
-                  • Acceso inmediato a tus cursos
-                </li>
+              <ul className='text-sm mt-2 space-y-1'>
+                <li>• Email de confirmación</li>
+                <li>• Credenciales de acceso</li>
+                <li>• Acceso inmediato a tus cursos</li>
               </ul>
             </div>
           </div>

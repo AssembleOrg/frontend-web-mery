@@ -1,11 +1,26 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname, useParams } from 'next/navigation';
+import Link from 'next/link';
+import {
+  LayoutDashboard,
+  GraduationCap,
+  Users,
+  Gift,
+  MessageCircle,
+} from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
 import { AuthGate } from '@/components/auth/AuthGate';
+
+const navItems = [
+  { href: 'admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: 'admin/cursos', label: 'Cursos', icon: GraduationCap },
+  { href: 'admin/usuarios', label: 'Usuarios', icon: Users },
+  { href: 'admin/cupones', label: 'Cupones', icon: Gift },
+  { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
+];
 
 export default function AdminLayout({
   children,
@@ -14,79 +29,113 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
   const { user, isAuthenticated, isLoading } = useAuth();
+  const locale = (params.locale as string) || 'es';
 
   useEffect(() => {
-    // Extract locale from pathname
-    const locale = pathname.split('/')[1] || 'es';
-
-    // Wait for auth to load
     if (isLoading) return;
-
-    // Redirect to login if not authenticated
     if (!isAuthenticated) {
       router.push(`/${locale}/login`);
       return;
     }
-
-    // Redirect to home if not admin (defensive: only if user exists AND is not admin/subadmin)
     if (user && user.role !== 'ADMIN' && user.role !== 'SUBADMIN') {
       router.push(`/${locale}`);
-      return;
     }
-  }, [isLoading, isAuthenticated, user, router, pathname]);
+  }, [isLoading, isAuthenticated, user, router, locale]);
 
-  // Show loading state while checking auth
   if (isLoading) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
-          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]'></div>
-          <p className='mt-4 text-gray-600'>Verificando acceso...</p>
+          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f9bbc4]' />
+          <p className='mt-4 text-gray-500 text-sm'>Verificando acceso…</p>
         </div>
       </div>
     );
   }
 
-  // Don't render if not authenticated or not admin/subadmin
   if (!isAuthenticated || !user || (user.role !== 'ADMIN' && user.role !== 'SUBADMIN')) {
     return null;
   }
 
+  const isActive = (href: string) => {
+    const full = `/${locale}/${href}`;
+    if (href === 'admin') return pathname === full;
+    return pathname.startsWith(full);
+  };
+
   return (
     <AuthGate>
-      <div className='min-h-screen bg-gray-50'>
-        {/* Navbar Normal */}
+      <div className='min-h-screen bg-gray-50 font-admin'>
         <Navigation />
 
-        {/* Admin Header */}
-        <header className='bg-white shadow-sm border-b'>
-          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-            <div className='flex justify-between items-center py-4'>
-              <div className='flex items-center space-x-2'>
-                <span className='text-lg font-medium text-gray-900'>
-                  Hola, {user?.name || 'Admin'}
-                </span>
-              </div>
-              <div>
-                {/* <button
-                  onClick={() => {
-                    const locale = pathname.split('/')[1] || 'es';
-                    router.push(`/${locale}`);
-                  }}
-                  className='bg-[#f9bbc4] hover:bg-[#eba2a8] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md'
-                >
-                  Volver al Sitio
-                </button> */}
-              </div>
-            </div>
-          </div>
-        </header>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex gap-6 py-6 pb-24 md:pb-6'>
 
-        {/* Admin Content */}
-        <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-          {children}
-        </main>
+            {/* Sidebar — desktop only */}
+            <aside className='hidden md:flex flex-col w-52 flex-shrink-0'>
+              <div className='bg-white rounded-xl border border-[#F7CBCB]/60 shadow-sm overflow-hidden sticky top-6'>
+                <div className='px-4 py-4 border-b border-[#F7CBCB]/60 bg-gradient-to-br from-[#FBE8EA] to-[#fff]'>
+                  <p className='text-[11px] font-semibold text-[#EBA2A8] uppercase tracking-widest'>
+                    Panel Admin
+                  </p>
+                  <p className='text-sm font-semibold text-[#660e1b] mt-0.5 truncate'>
+                    {user.name || user.email}
+                  </p>
+                </div>
+                <nav className='p-2'>
+                  {navItems.map(({ href, label, icon: Icon }) => {
+                    const active = isActive(href);
+                    return (
+                      <Link
+                        key={href}
+                        href={`/${locale}/${href}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-0.5 ${
+                          active
+                            ? 'bg-[#FBE8EA] text-[#660e1b]'
+                            : 'text-gray-500 hover:bg-[#FBE8EA]/50 hover:text-[#660e1b]'
+                        }`}
+                      >
+                        <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${active ? 'text-[#EBA2A8]' : 'text-gray-300 group-hover:text-[#EBA2A8]'}`} />
+                        {label}
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            </aside>
+
+            {/* Main content */}
+            <main className='flex-1 min-w-0'>
+              {children}
+            </main>
+          </div>
+        </div>
+
+        {/* Bottom tab bar — mobile only */}
+        <nav className='md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg'>
+          <div className='flex items-stretch'>
+            {navItems.map(({ href, label, icon: Icon }) => {
+              const active = isActive(href);
+              return (
+                <Link
+                  key={href}
+                  href={`/${locale}/${href}`}
+                  className={`relative flex-1 flex flex-col items-center justify-center py-2.5 gap-1 text-[10px] font-medium transition-colors ${
+                    active ? 'text-[#660e1b]' : 'text-gray-400'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${active ? 'text-[#660e1b]' : 'text-gray-400'}`} />
+                  {label}
+                  {active && (
+                    <span className='absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-[#660e1b] rounded-full' />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
       </div>
     </AuthGate>
   );

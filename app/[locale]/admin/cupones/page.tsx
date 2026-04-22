@@ -212,14 +212,14 @@ export default function AdminCuponesPage() {
   return (
     <div className='space-y-6 font-admin'>
       {/* Header */}
-      <div className='flex justify-between items-center'>
+      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
         <div>
-          <h1 className='text-2xl font-bold text-gray-900'>Cupones de Descuento</h1>
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>Cupones de Descuento</h1>
           <p className='text-gray-500 text-sm mt-1'>{coupons.length} cupones</p>
         </div>
         <button
           onClick={openCreate}
-          className='flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors'
+          className='inline-flex items-center justify-center gap-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm hover:shadow-md w-full sm:w-auto'
         >
           <PlusCircle className='w-4 h-4' />
           Nuevo Cupón
@@ -251,7 +251,7 @@ export default function AdminCuponesPage() {
                 <tr key={coupon.id} className='hover:bg-gray-50'>
                   <td className='px-4 py-3 font-semibold'>{coupon.code}</td>
                   <td className='px-4 py-3'>
-                    <span className='bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-xs font-medium'>
+                    <span className='bg-[#FBE8EA] text-[#660e1b] px-2 py-0.5 rounded-full text-xs font-medium'>
                       {coupon.discountPercent}%
                     </span>
                   </td>
@@ -283,10 +283,10 @@ export default function AdminCuponesPage() {
                   </td>
                   <td className='px-4 py-3'>
                     <div className='flex justify-end gap-2'>
-                      <button onClick={() => openEdit(coupon)} className='p-1.5 text-gray-400 hover:text-blue-600 transition-colors' title='Editar'>
+                      <button onClick={() => openEdit(coupon)} className='p-1.5 text-gray-400 hover:text-[#660e1b] transition-colors' title='Editar'>
                         <Edit className='w-4 h-4' />
                       </button>
-                      <button onClick={() => handleToggleActive(coupon)} className='p-1.5 text-gray-400 hover:text-purple-600 transition-colors' title={coupon.isActive ? 'Desactivar' : 'Activar'}>
+                      <button onClick={() => handleToggleActive(coupon)} className='p-1.5 text-gray-400 hover:text-[#660e1b] transition-colors' title={coupon.isActive ? 'Desactivar' : 'Activar'}>
                         {coupon.isActive ? <ToggleRight className='w-4 h-4' /> : <ToggleLeft className='w-4 h-4' />}
                       </button>
                       {coupon.currentUses === 0 && (
@@ -321,7 +321,7 @@ export default function AdminCuponesPage() {
                     max={100}
                     value={form.discountPercent}
                     onChange={(e) => updateDiscount(Number(e.target.value))}
-                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-purple-300'
+                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#f9bbc4]'
                     required
                   />
                 </div>
@@ -331,7 +331,7 @@ export default function AdminCuponesPage() {
                     type='text'
                     value={form.code}
                     onChange={(e) => { setForm((prev) => ({ ...prev, code: e.target.value })); setCodeManuallyEdited(true); }}
-                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-purple-300'
+                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#f9bbc4]'
                     placeholder='mery-20'
                     required
                   />
@@ -346,7 +346,7 @@ export default function AdminCuponesPage() {
                     type='date'
                     value={form.validFrom}
                     onChange={(e) => setForm((prev) => ({ ...prev, validFrom: e.target.value }))}
-                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-purple-300'
+                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#f9bbc4]'
                   />
                 </div>
                 <div>
@@ -355,7 +355,7 @@ export default function AdminCuponesPage() {
                     type='date'
                     value={form.validTo}
                     onChange={(e) => setForm((prev) => ({ ...prev, validTo: e.target.value }))}
-                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-purple-300'
+                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#f9bbc4]'
                   />
                 </div>
               </div>
@@ -369,7 +369,7 @@ export default function AdminCuponesPage() {
                     value={form.maxUses}
                     onChange={(e) => setForm((prev) => ({ ...prev, maxUses: e.target.value }))}
                     placeholder='Vacío = ilimitado'
-                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-purple-300'
+                    className='w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#f9bbc4]'
                   />
                 </div>
                 <div className='flex items-end pb-2'>
@@ -378,7 +378,7 @@ export default function AdminCuponesPage() {
                       type='checkbox'
                       checked={form.isActive}
                       onChange={(e) => setForm((prev) => ({ ...prev, isActive: e.target.checked }))}
-                      className='w-4 h-4 text-purple-600 rounded'
+                      className='w-4 h-4 text-[#660e1b] rounded'
                     />
                     <span className='text-sm text-gray-700'>Cupón activo</span>
                   </label>
@@ -397,7 +397,7 @@ export default function AdminCuponesPage() {
                       type='checkbox'
                       checked={form.appliesToAll}
                       onChange={(e) => setForm((prev) => ({ ...prev, appliesToAll: e.target.checked }))}
-                      className='w-4 h-4 text-purple-600 rounded'
+                      className='w-4 h-4 text-[#660e1b] rounded'
                     />
                     <span className='text-sm text-gray-600'>Aplica a todos</span>
                   </label>
@@ -410,7 +410,7 @@ export default function AdminCuponesPage() {
                       placeholder='Buscar categoría...'
                       value={categorySearch}
                       onChange={(e) => setCategorySearch(e.target.value)}
-                      className='w-full px-3 py-2 border rounded-lg text-sm mb-3 focus:ring-2 focus:ring-purple-300'
+                      className='w-full px-3 py-2 border rounded-lg text-sm mb-3 focus:ring-2 focus:ring-[#f9bbc4]'
                     />
                     <div className='max-h-48 overflow-y-auto space-y-1.5 border rounded-lg p-2'>
                       {filteredCategories.length === 0 ? (
@@ -420,14 +420,14 @@ export default function AdminCuponesPage() {
                           <label
                             key={cat.id}
                             className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
-                              form.categoryIds.includes(cat.id) ? 'bg-purple-50 border border-purple-200' : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
+                              form.categoryIds.includes(cat.id) ? 'bg-[#FBE8EA] border border-[#F7CBCB]' : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
                             }`}
                           >
                             <input
                               type='checkbox'
                               checked={form.categoryIds.includes(cat.id)}
                               onChange={() => toggleCategory(cat.id)}
-                              className='w-4 h-4 text-purple-600 rounded'
+                              className='w-4 h-4 text-[#660e1b] rounded'
                             />
                             <div>
                               <span className='text-sm font-medium'>{cat.name}</span>
@@ -459,7 +459,7 @@ export default function AdminCuponesPage() {
                 <button
                   type='submit'
                   disabled={isSubmitting}
-                  className='px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-lg text-sm font-medium transition-colors'
+                  className='px-4 py-2 bg-[#660e1b] hover:bg-[#4a0a14] disabled:bg-gray-300 text-white rounded-lg text-sm font-medium transition-colors'
                 >
                   {isSubmitting ? 'Guardando...' : editingCoupon ? 'Guardar Cambios' : 'Crear Cupón'}
                 </button>

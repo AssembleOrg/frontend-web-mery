@@ -194,9 +194,9 @@ export default function EditarCursoPage() {
       <div className='space-y-6'>
         <button
           onClick={handleCancel}
-          className='inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors'
+          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
         >
-          <ArrowLeft className='w-4 h-4' />
+          <ArrowLeft className='w-3.5 h-3.5' />
           Volver a lista de cursos
         </button>
 
@@ -226,9 +226,9 @@ export default function EditarCursoPage() {
       {/* Back Button */}
       <button
         onClick={handleCancel}
-        className='inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors'
+        className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
       >
-        <ArrowLeft className='w-4 h-4' />
+        <ArrowLeft className='w-3.5 h-3.5' />
         Volver a lista de cursos
       </button>
 

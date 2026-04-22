@@ -80,16 +80,16 @@ export default function AdminCursosPage() {
       suppressHydrationWarning
     >
       {/* Page Header */}
-      <div className='flex justify-between items-center'>
+      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
         <div>
-          <h2 className='text-3xl font-bold text-gray-900'>
+          <h2 className='text-2xl sm:text-3xl font-bold text-gray-900'>
             Gestión de Cursos
           </h2>
           <p className='mt-1 text-sm text-gray-600'>
             Administra todos los cursos y formaciones
           </p>
         </div>
-        <div className='flex gap-3'>
+        <div className='flex flex-col sm:flex-row gap-2'>
           <button
             onClick={() => {
               if (
@@ -103,17 +103,17 @@ export default function AdminCursosPage() {
                 window.location.reload();
               }
             }}
-            className='inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl'
+            className='inline-flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-sm'
             title='Limpiar caché de cursos del navegador'
           >
-            <RefreshCw className='w-5 h-5' />
+            <RefreshCw className='w-4 h-4' />
             Limpiar Caché
           </button>
           <Link
             href={`/${locale}/admin/cursos/nuevo`}
-            className='inline-flex items-center gap-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl'
+            className='inline-flex items-center justify-center gap-2 bg-[#660e1b] hover:bg-[#4a0a14] text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-sm'
           >
-            <PlusCircle className='w-5 h-5' />
+            <PlusCircle className='w-4 h-4' />
             Crear Nuevo Curso
           </Link>
         </div>

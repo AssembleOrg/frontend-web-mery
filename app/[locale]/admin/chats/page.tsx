@@ -101,7 +101,7 @@ export default function AdminChatsPage() {
                 onChange={(e) => setCategoryFilter(e.target.value)}
                 className='flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#f9bbc4]'
               >
-                <option value=''>Todos los curso</option>
+                <option value=''>Todos los cursos</option>
                 {categories.map((c) => (
                   <option
                     key={c.id}
