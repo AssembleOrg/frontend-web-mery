@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { ArrowLeft } from 'lucide-react';
@@ -66,6 +66,8 @@ export default function AdminUsuariosPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
+  const rightPanelRef = useRef<HTMLDivElement>(null);
+
   // Resetear página cuando cambia el término de búsqueda
   useEffect(() => {
     if (currentPage !== 1) {
@@ -100,6 +102,14 @@ export default function AdminUsuariosPage() {
   useEffect(() => {
     if (selectedUser) {
       loadUserCourses(selectedUser.id);
+    }
+  }, [selectedUser]);
+
+  // Scroll automático al panel de asignación en mobile al seleccionar usuario
+  useEffect(() => {
+    if (!selectedUser || !rightPanelRef.current) return;
+    if (window.innerWidth < 1024) {
+      rightPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [selectedUser]);
 
@@ -355,7 +365,7 @@ export default function AdminUsuariosPage() {
                 placeholder='Buscar por email o nombre (mín. 3 caracteres)...'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent'
+                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
               />
             </div>
             {searchTerm &&
@@ -371,7 +381,7 @@ export default function AdminUsuariosPage() {
           <div className='space-y-2 max-h-[500px] overflow-y-auto'>
             {isLoadingUsers ? (
               <div className='text-center py-8'>
-                <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-500'></div>
+                <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[var(--mg-pink)]'></div>
                 <p className='mt-2 text-gray-600'>Cargando usuarios...</p>
               </div>
             ) : users.length === 0 ? (
@@ -385,8 +395,8 @@ export default function AdminUsuariosPage() {
                   onClick={() => setSelectedUser(user)}
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     selectedUser?.id === user.id
-                      ? 'border-pink-500 bg-pink-50'
-                      : 'border-gray-200 hover:border-pink-300 hover:bg-gray-50'
+                      ? 'border-[var(--mg-pink)] bg-[var(--mg-pink-light)]'
+                      : 'border-gray-200 hover:border-[var(--mg-pink-lighter)] hover:bg-gray-50'
                   }`}
                 >
                   <div className='flex items-center justify-between'>
@@ -450,7 +460,7 @@ export default function AdminUsuariosPage() {
         </div>
 
         {/* Panel derecho: Asignar cursos */}
-        <div className='bg-white rounded-xl shadow-sm border p-6'>
+        <div ref={rightPanelRef} className='bg-white rounded-xl shadow-sm border p-6'>
           {selectedUser ? (
             <>
               <div className='mb-6'>
@@ -463,9 +473,9 @@ export default function AdminUsuariosPage() {
               </div>
 
               {/* Asignar nuevo curso */}
-              <div className='mb-6 p-4 bg-pink-50 rounded-lg border border-pink-200'>
+              <div className='mb-6 p-4 bg-[var(--mg-pink-light)] rounded-lg border border-[var(--mg-pink-lighter)]'>
                 <h3 className='font-semibold text-gray-900 mb-3 flex items-center gap-2'>
-                  <FaGift className='text-pink-600' />
+                  <FaGift className='text-[var(--mg-pink)]' />
                   Asignar Nuevo Curso
                 </h3>
 
@@ -473,7 +483,7 @@ export default function AdminUsuariosPage() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent'
+                    className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
                     disabled={isLoading || isLoadingCategories}
                   >
                     <option value=''>Seleccionar curso...</option>
@@ -490,7 +500,7 @@ export default function AdminUsuariosPage() {
                   <button
                     onClick={handleAssignCourse}
                     disabled={!selectedCategory || isLoading}
-                    className='w-full bg-pink-600 hover:bg-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium transition-colors'
+                    className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium transition-colors'
                   >
                     {isLoading ? 'Asignando...' : 'Asignar Curso'}
                   </button>
@@ -506,7 +516,7 @@ export default function AdminUsuariosPage() {
                 <div className='space-y-2 max-h-[400px] overflow-y-auto'>
                   {isLoadingUserCourses ? (
                     <div className='text-center py-4'>
-                      <div className='inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-pink-500'></div>
+                      <div className='inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-[var(--mg-pink)]'></div>
                     </div>
                   ) : userCourses.length === 0 ? (
                     <div className='text-center py-8 text-gray-500'>

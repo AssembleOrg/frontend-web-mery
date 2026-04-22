@@ -75,7 +75,7 @@ export function ChatInput({
   };
 
   return (
-    <div className='border-t border-border bg-white dark:bg-card px-3 py-3 flex items-end gap-2 w-full relative'>
+    <div className='border-t border-border bg-white dark:bg-card px-3 py-3 flex items-end gap-2 w-full relative' style={{ touchAction: 'none' }}>
       {/* ESTILO PARA QUITAR FLECHAS (SCROLLBAR) */}
       <style jsx>{`
         textarea::-webkit-scrollbar {
