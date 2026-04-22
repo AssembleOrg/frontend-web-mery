@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useCourseStore } from '@/stores';
+import { updateVideoProgress } from '@/lib/api-client';
 
 interface VimeoPlayerProps {
   vimeoSrcUrl?: string;
@@ -11,13 +12,16 @@ interface VimeoPlayerProps {
   autoPlay?: boolean;
 }
 
+const PROGRESS_SYNC_INTERVAL_MS = 10_000;
+const COMPLETION_THRESHOLD_PERCENT = 95;
+
 export default function VimeoPlayer({
   vimeoSrcUrl,
   courseId,
   lessonId,
   className = '',
   autoPlay = false,
-}: VimeoPlayerProps) {
+}: Readonly<VimeoPlayerProps>) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isCompleted, setIsCompleted] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
@@ -25,10 +29,18 @@ export default function VimeoPlayer({
   const { markLessonCompleted, isLessonCompleted } = useCourseStore();
   const completed = isLessonCompleted(courseId, lessonId);
 
+  // Refs para sincronizar progreso con el backend
+  const latestSecondsRef = useRef(0);
+  const lastSentSecondsRef = useRef(-1);
+  const completedSentRef = useRef(false);
+
   // Reset completion state when lesson changes
   useEffect(() => {
     setIsCompleted(completed);
-  }, [completed]);
+    latestSecondsRef.current = 0;
+    lastSentSecondsRef.current = -1;
+    completedSentRef.current = false;
+  }, [completed, lessonId]);
 
   // Force iframe reload when vimeoSrcUrl changes
   useEffect(() => {
@@ -49,40 +61,101 @@ export default function VimeoPlayer({
   }
 
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (!event.origin.includes('vimeo.com')) return;
+    const registerListeners = () => {
+      const win = iframeRef.current?.contentWindow;
+      if (!win) return;
+      ['timeupdate', 'ended', 'play', 'pause'].forEach((name) => {
+        // Vimeo oficialmente recomienda '*' como targetOrigin porque su player
+        // se sirve desde múltiples dominios (player.vimeo.com, f.vimeocdn.com, etc.).
+        // Solo enviamos comandos de control, sin datos sensibles. NOSONAR
+        win.postMessage(
+          JSON.stringify({ method: 'addEventListener', value: name }),
+          '*' // NOSONAR
+        );
+      });
+    };
+
+    const syncProgress = async (seconds: number, markCompleted: boolean) => {
+      const rounded = Math.floor(seconds);
+      if (!markCompleted && rounded === lastSentSecondsRef.current) return;
+      lastSentSecondsRef.current = rounded;
       try {
-        const data = JSON.parse(event.data);
-        if (data.event === 'timeupdate' && data.data) {
-          const { seconds, duration } = data.data;
-          const progress = (seconds / duration) * 100;
-          if (progress > 90 && !isCompleted) {
-            markLessonCompleted(courseId, lessonId);
-            setIsCompleted(true);
-          }
-        }
-        if (data.event === 'ended' && !isCompleted) {
-          markLessonCompleted(courseId, lessonId);
-          setIsCompleted(true);
-        }
-      } catch {
-        // Ignore message parsing errors
+        await updateVideoProgress(lessonId, rounded, markCompleted);
+      } catch (err) {
+        console.warn('[VimeoPlayer] fallo al sincronizar progreso', err);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({ method: 'addEventListener', value: 'timeupdate' }),
-        '*'
-      );
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({ method: 'addEventListener', value: 'ended' }),
-        '*'
-      );
-    }
+    const finalizeIfNeeded = (seconds: number) => {
+      if (completedSentRef.current) return;
+      completedSentRef.current = true;
+      if (!isCompleted) {
+        markLessonCompleted(courseId, lessonId);
+        setIsCompleted(true);
+      }
+      void syncProgress(seconds, true);
+    };
 
-    return () => window.removeEventListener('message', handleMessage);
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.origin.includes('vimeo.com')) return;
+      let data: {
+        event?: string;
+        method?: string;
+        data?: { seconds?: number; duration?: number };
+      };
+      try {
+        data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      } catch {
+        return;
+      }
+      // 1) Respuesta al "ping" inicial o evento ready → registramos listeners
+      if (data.event === 'ready' || data.method === 'ping') {
+        registerListeners();
+        return;
+      }
+      if (data.event === 'timeupdate' && data.data) {
+        const { seconds = 0, duration = 0 } = data.data;
+        latestSecondsRef.current = seconds;
+        const progress = duration ? (seconds / duration) * 100 : 0;
+        if (progress >= COMPLETION_THRESHOLD_PERCENT) finalizeIfNeeded(seconds);
+      } else if (data.event === 'ended') {
+        finalizeIfNeeded(latestSecondsRef.current);
+      }
+    };
+
+    globalThis.addEventListener('message', handleMessage);
+
+    // Intento inmediato + un ping por las dudas para forzar a Vimeo a respondernos
+    registerListeners();
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ method: 'ping' }),
+      '*' // NOSONAR
+    );
+
+    // Además, cuando el iframe termina de cargar, reintentamos (evita race)
+    const iframeEl = iframeRef.current;
+    const onIframeLoad = () => registerListeners();
+    iframeEl?.addEventListener('load', onIframeLoad);
+
+    // Throttle: cada 10s mandamos el watchedSeconds actual al backend
+    const intervalId = globalThis.setInterval(() => {
+      if (completedSentRef.current) return;
+      if (latestSecondsRef.current <= 0) return;
+      void syncProgress(latestSecondsRef.current, false);
+    }, PROGRESS_SYNC_INTERVAL_MS);
+
+    return () => {
+      globalThis.removeEventListener('message', handleMessage);
+      globalThis.clearInterval(intervalId);
+      iframeEl?.removeEventListener('load', onIframeLoad);
+      if (
+        !completedSentRef.current &&
+        latestSecondsRef.current > 0 &&
+        Math.floor(latestSecondsRef.current) !== lastSentSecondsRef.current
+      ) {
+        void syncProgress(latestSecondsRef.current, false);
+      }
+    };
   }, [courseId, lessonId, isCompleted, markLessonCompleted]);
 
   if (!finalIframeSrc) {
@@ -114,6 +187,7 @@ export default function VimeoPlayer({
           key={iframeKey}
           ref={iframeRef}
           src={finalIframeSrc}
+          title={`Video lección ${lessonId}`}
           className='absolute top-0 left-0 w-full h-full rounded-lg'
           frameBorder='0'
           allow='autoplay; fullscreen; picture-in-picture'

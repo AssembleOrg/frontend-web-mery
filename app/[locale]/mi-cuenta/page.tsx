@@ -23,6 +23,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCourses } from '@/hooks/useUserCourses';
 import { MiCuentaSkeleton } from '@/components/mi-cuenta/MiCuentaSkeleton';
+import { CourseChatButton } from '@/components/chat/course-chat-button';
 
 export default function MiCuentaPage() {
   const router = useRouter();
@@ -270,6 +271,11 @@ export default function MiCuentaPage() {
                             ? 'Comenzar Curso'
                             : 'Continuar Curso'}
                         </Link>
+
+                        <CourseChatButton
+                          categoryId={course.id}
+                          categoryName={course.title}
+                        />
 
                         {/* Información adicional */}
                         <div className='mt-4 pt-4 border-t border-border'>

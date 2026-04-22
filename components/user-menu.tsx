@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Users,
   Gift,
+  MessageCircle,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
@@ -55,7 +56,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
 
   const displayName = user.name || user.email;
   const initials = getInitials(displayName);
-  const isAdmin = user.role === 'ADMIN';
+  const isAdmin = user.role === 'ADMIN' || user.role === 'SUBADMIN';
 
   const handleLogout = async () => {
     try {
@@ -178,6 +179,15 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
                 >
                   <Gift className='w-5 h-5' />
                   <span className='font-medium'>Cupones</span>
+                </Link>
+
+                <Link
+                  href={`/${locale}/admin/chats`}
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <MessageCircle className='w-5 h-5' />
+                  <span className='font-medium'>Chats</span>
                 </Link>
               </>
             )}

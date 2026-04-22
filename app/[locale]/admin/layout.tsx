@@ -29,8 +29,8 @@ export default function AdminLayout({
       return;
     }
 
-    // Redirect to home if not admin (defensive: only if user exists AND is not admin)
-    if (user && user.role !== 'ADMIN') {
+    // Redirect to home if not admin (defensive: only if user exists AND is not admin/subadmin)
+    if (user && user.role !== 'ADMIN' && user.role !== 'SUBADMIN') {
       router.push(`/${locale}`);
       return;
     }
@@ -48,8 +48,8 @@ export default function AdminLayout({
     );
   }
 
-  // Don't render if not authenticated or not admin (defensive: check user exists)
-  if (!isAuthenticated || !user || user.role !== 'ADMIN') {
+  // Don't render if not authenticated or not admin/subadmin
+  if (!isAuthenticated || !user || (user.role !== 'ADMIN' && user.role !== 'SUBADMIN')) {
     return null;
   }
 
