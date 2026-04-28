@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
+import { MarkdownText } from './ui/markdown-text';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -155,46 +156,6 @@ export default function SimpleCourseModal({
   const courseInCart = isInCart(course.id);
   const buttonDisabled = addingToCart || cartLoading;
 
-  // Function to render text with paragraph breaks and bold support
-  const renderTextWithParagraphs = (text: string) => {
-    const paragraphs = text
-      .split('\n\n')
-      .filter((paragraph) => paragraph.trim() !== '');
-
-    return (
-      <div className='space-y-4 font-primary'>
-        {paragraphs.map((paragraph, index) => {
-          // Split by ** to find bold sections
-          const parts = paragraph.split(/(\*\*[^*]+\*\*)/g);
-
-          return (
-            <p
-              key={index}
-              className='text-[#2b2b2b] leading-relaxed text-left'
-              style={{ whiteSpace: 'pre-line', fontWeight: 300 }}
-            >
-              {parts.map((part, partIndex) => {
-                // Check if this part is bold (wrapped in **)
-                if (part.startsWith('**') && part.endsWith('**')) {
-                  const boldText = part.slice(2, -2);
-                  return (
-                    <span
-                      key={partIndex}
-                      className='font-primary-medium'
-                    >
-                      {boldText}
-                    </span>
-                  );
-                }
-                return <span key={partIndex}>{part}</span>;
-              })}
-            </p>
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -296,11 +257,9 @@ export default function SimpleCourseModal({
           <div className='px-6 pb-6 bg-white space-y-6'>
             <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
               {course.long_description ? (
-                renderTextWithParagraphs(course.long_description)
+                <MarkdownText className='text-[#2b2b2b]'>{course.long_description}</MarkdownText>
               ) : course.modalContent?.detailedDescription ? (
-                renderTextWithParagraphs(
-                  course.modalContent.detailedDescription
-                )
+                <MarkdownText className='text-[#2b2b2b]'>{course.modalContent.detailedDescription}</MarkdownText>
               ) : (
                 <p className='text-[#2b2b2b] leading-relaxed text-left'>
                   {course.description ||
@@ -500,7 +459,7 @@ export default function SimpleCourseModal({
                 <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-3 text-center'>
                   Modalidad
                 </h3>
-                {renderTextWithParagraphs(course.modalidad)}
+                <MarkdownText className='text-[#2b2b2b] text-center'>{course.modalidad}</MarkdownText>
               </div>
             )}
 
@@ -510,7 +469,7 @@ export default function SimpleCourseModal({
                 <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-4'>
                   ¿Qué vas a aprender?
                 </h3>
-                {renderTextWithParagraphs(course.learn)}
+                <MarkdownText className='text-[#2b2b2b]'>{course.learn}</MarkdownText>
               </div>
             )}
 

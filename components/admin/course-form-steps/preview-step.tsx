@@ -3,35 +3,13 @@
 import { CourseCreateInput } from '@/types/course';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
+import { MarkdownText } from '@/components/ui/markdown-text';
 
 interface PreviewStepProps {
   formData: Partial<CourseCreateInput>;
 }
 
 export function PreviewStep({ formData }: PreviewStepProps) {
-  // Helper to render text with bold markdown
-  const renderPreviewText = (text: string) => {
-    const parts = text.split(/(\*\*[^*]+\*\*)/g);
-
-    return (
-      <>
-        {parts.map((part, index) => {
-          if (part.startsWith('**') && part.endsWith('**')) {
-            const boldText = part.slice(2, -2);
-            return (
-              <strong
-                key={index}
-                className='font-semibold'
-              >
-                {boldText}
-              </strong>
-            );
-          }
-          return <span key={index}>{part}</span>;
-        })}
-      </>
-    );
-  };
   return (
     <div className='space-y-6'>
       <div>
@@ -158,9 +136,9 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <span className='text-sm text-gray-600'>
               Descripción Detallada (ES):
             </span>
-            <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {renderPreviewText(formData.long_description)}
-            </p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.long_description}</MarkdownText>
+            </div>
           </div>
         )}
 
@@ -169,9 +147,9 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <span className='text-sm text-gray-600'>
               Detailed Description (EN):
             </span>
-            <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {renderPreviewText(formData.long_description_en)}
-            </p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.long_description_en}</MarkdownText>
+            </div>
           </div>
         )}
 
@@ -180,32 +158,36 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <span className='text-sm text-gray-600'>
               Público Objetivo (ES):
             </span>
-            <p className='mt-1 text-gray-900'>{formData.target}</p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.target}</MarkdownText>
+            </div>
           </div>
         )}
 
         {formData.target_en && (
           <div>
             <span className='text-sm text-gray-600'>Target Audience (EN):</span>
-            <p className='mt-1 text-gray-900'>{formData.target_en}</p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.target_en}</MarkdownText>
+            </div>
           </div>
         )}
 
         {formData.modalidad && (
           <div>
             <span className='text-sm text-gray-600'>Modalidad (ES):</span>
-            <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {renderPreviewText(formData.modalidad)}
-            </p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.modalidad}</MarkdownText>
+            </div>
           </div>
         )}
 
         {formData.modalidad_en && (
           <div>
             <span className='text-sm text-gray-600'>Modality (EN):</span>
-            <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {renderPreviewText(formData.modalidad_en)}
-            </p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.modalidad_en}</MarkdownText>
+            </div>
           </div>
         )}
 
@@ -214,9 +196,9 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <span className='text-sm text-gray-600'>
               ¿Qué aprenderás? (ES):
             </span>
-            <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {renderPreviewText(formData.learn)}
-            </p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.learn}</MarkdownText>
+            </div>
           </div>
         )}
 
@@ -225,9 +207,9 @@ export function PreviewStep({ formData }: PreviewStepProps) {
             <span className='text-sm text-gray-600'>
               What will you learn? (EN):
             </span>
-            <p className='mt-1 text-gray-900 whitespace-pre-line'>
-              {renderPreviewText(formData.learn_en)}
-            </p>
+            <div className='mt-1 text-gray-900'>
+              <MarkdownText>{formData.learn_en}</MarkdownText>
+            </div>
           </div>
         )}
 
@@ -244,9 +226,9 @@ export function PreviewStep({ formData }: PreviewStepProps) {
                     {item.url_icon && (
                       <span className='text-xs text-gray-500'>🖼️</span>
                     )}
-                    <p className='text-sm text-gray-900'>
-                      {renderPreviewText(item.texto || item.text || '')}
-                    </p>
+                    <div className='text-sm text-gray-900'>
+                      <MarkdownText>{item.texto || item.text || ''}</MarkdownText>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -268,9 +250,9 @@ export function PreviewStep({ formData }: PreviewStepProps) {
                     {item.url_icon && (
                       <span className='text-xs text-gray-500'>🖼️</span>
                     )}
-                    <p className='text-sm text-gray-900'>
-                      {renderPreviewText(item.texto || item.text || '')}
-                    </p>
+                    <div className='text-sm text-gray-900'>
+                      <MarkdownText>{item.texto || item.text || ''}</MarkdownText>
+                    </div>
                   </div>
                 ))}
               </div>
