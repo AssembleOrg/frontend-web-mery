@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Course, CourseCreateInput, Lesson } from '@/types/course';
+import { Course, CourseCreateInput } from '@/types/course';
 import { ChevronLeft, ChevronRight, Save, Loader2 } from 'lucide-react';
 import { BasicInfoStep } from './course-form-steps/basic-info-step';
-import { LessonsStep } from './course-form-steps/lessons-step';
 import { PreviewStep } from './course-form-steps/preview-step';
 
 interface CourseFormProps {
@@ -98,8 +97,7 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
 
   const steps = [
     { number: 1, title: 'Información Básica', component: BasicInfoStep },
-    { number: 2, title: 'Lecciones', component: LessonsStep },
-    { number: 3, title: 'Vista Previa', component: PreviewStep },
+    { number: 2, title: 'Vista Previa', component: PreviewStep },
   ];
 
   const CurrentStepComponent = steps[currentStep - 1].component;
@@ -125,12 +123,6 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
       if (!formData.image?.trim()) newErrors.image = 'La imagen es requerida';
     }
 
-    if (step === 2) {
-      // if (!formData.lessons || formData.lessons.length === 0) {
-      //   newErrors.lessons = 'Debes agregar al menos una lección';
-      // }
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -146,20 +138,10 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
   };
 
   const handleSubmit = () => {
-    if (validateStep(currentStep)) {
-      // Validate all steps before submitting
-      let isValid = true;
-      for (let i = 1; i <= 2; i++) {
-        if (!validateStep(i)) {
-          isValid = false;
-          setCurrentStep(i);
-          break;
-        }
-      }
-
-      if (isValid) {
-        onSubmit(formData as CourseCreateInput);
-      }
+    if (validateStep(1)) {
+      onSubmit(formData as CourseCreateInput);
+    } else {
+      setCurrentStep(1);
     }
   };
 
@@ -167,13 +149,6 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
     setFormData((prev) => ({
       ...prev,
       ...updates,
-    }));
-  };
-
-  const updateLessons = (lessons: Lesson[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      lessons,
     }));
   };
 
@@ -221,7 +196,6 @@ export default function CourseForm({ course, onSubmit, onCancel, isSubmitting = 
         <CurrentStepComponent
           formData={formData}
           updateFormData={updateFormData}
-          updateLessons={updateLessons}
           errors={errors}
         />
       </div>

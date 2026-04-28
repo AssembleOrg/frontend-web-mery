@@ -16,12 +16,11 @@ export default function NuevoCursoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showError } = useModal();
 
-  const { createCategory, createVideo } = useAdminStore();
+  const { createCategory } = useAdminStore();
 
   const handleSubmit = async (courseData: CourseCreateInput) => {
     setIsSubmitting(true);
     try {
-      // STEP 1: Create Category (basic course info)
       const categoryData = {
         name: courseData.title,
         slug: courseData.slug,
@@ -50,38 +49,6 @@ export default function NuevoCursoPage() {
         throw new Error('Failed to create course');
       }
 
-      // STEP 2: Create Lessons (Videos) if any
-      const lessons = courseData.lessons || [];
-
-      if (lessons.length > 0) {
-        for (let index = 0; index < lessons.length; index++) {
-          const lesson = lessons[index];
-
-          // Validar que el vimeoId esté presente
-          if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
-            throw new Error(
-              `La lección "${lesson.title}" no tiene un ID de Vimeo válido`
-            );
-          }
-
-          const videoData = {
-            title: lesson.title,
-            description: lesson.description || '',
-            vimeoId: lesson.vimeoVideoId.trim(),
-            categoryId: newCourse.id,
-            order: lesson.order !== undefined ? lesson.order : index,
-            isPublished: lesson.isPublished ?? false,
-          };
-
-          const createdVideo = await createVideo(videoData);
-
-          if (!createdVideo) {
-            throw new Error(`No se pudo crear el video "${lesson.title}"`);
-          }
-        }
-      }
-
-      // Show success toast
       toast.success(`Curso "${courseData.title}" creado exitosamente`);
 
       // Redirect back to courses list

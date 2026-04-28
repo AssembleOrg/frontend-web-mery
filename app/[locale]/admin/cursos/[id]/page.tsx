@@ -16,9 +16,8 @@ export default function EditarCursoPage() {
   const courseId = params.id as string;
   const { showError } = useModal();
 
-  const { categories, fetchCategoryById, updateCategory, fetchVideos, createVideo, updateVideo, deleteVideo } = useAdminStore();
+  const { categories, fetchCategoryById, updateCategory, fetchVideos } = useAdminStore();
   const [course, setCourse] = useState<any>(null);
-  const [originalLessons, setOriginalLessons] = useState<any[]>([]);
   const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,7 +69,6 @@ export default function EditarCursoPage() {
         };
 
         setCourse(courseWithLessons);
-        setOriginalLessons(lessons); // Save original lessons to compare on save
       } catch (_error) {
         setNotFound(true);
       } finally {
@@ -84,7 +82,6 @@ export default function EditarCursoPage() {
   const handleSubmit = async (courseData: CourseCreateInput) => {
     setIsSubmitting(true);
     try {
-      // STEP 1: Update Category (basic course info)
       const categoryUpdates = {
         name: courseData.title,
         slug: courseData.slug,
@@ -113,66 +110,6 @@ export default function EditarCursoPage() {
         throw new Error('Failed to update course');
       }
 
-      // STEP 2: Manage Lessons (Videos)
-      const newLessons = courseData.lessons || [];
-
-      // Identify lessons to delete (were in original but not in new)
-      const lessonsToDelete = originalLessons.filter(
-        (original) => !newLessons.find((newLesson) => newLesson.id === original.id)
-      );
-
-      // Identify lessons to create (start with "lesson-" = generated ID)
-      const lessonsToCreate = newLessons.filter(
-        (lesson) => lesson.id.startsWith('lesson-')
-      );
-
-      // Identify lessons to update (existing IDs, not starting with "lesson-")
-      const lessonsToUpdate = newLessons.filter(
-        (lesson) => !lesson.id.startsWith('lesson-') && originalLessons.find((orig) => orig.id === lesson.id)
-      );
-
-      // Delete videos
-      for (const lesson of lessonsToDelete) {
-        await deleteVideo(lesson.id);
-      }
-
-      // Create new videos
-      for (let index = 0; index < lessonsToCreate.length; index++) {
-        const lesson = lessonsToCreate[index];
-
-        // Validar que el vimeoId esté presente
-        if (!lesson.vimeoVideoId || lesson.vimeoVideoId.trim() === '') {
-          throw new Error(`La lección "${lesson.title}" no tiene un ID de Vimeo válido`);
-        }
-
-        const videoData = {
-          title: lesson.title,
-          description: lesson.description || '',
-          vimeoId: lesson.vimeoVideoId.trim(),
-          categoryId: courseId,
-          order: lesson.order !== undefined ? lesson.order : index,
-          isPublished: lesson.isPublished ?? false,
-        };
-
-        const createdVideo = await createVideo(videoData);
-
-        if (!createdVideo) {
-          throw new Error(`No se pudo crear el video "${lesson.title}"`);
-        }
-      }
-
-      // Update existing videos
-      for (const lesson of lessonsToUpdate) {
-        const updates = {
-          title: lesson.title,
-          description: lesson.description || '',
-          order: lesson.order || 0,
-          isPublished: lesson.isPublished || false,
-        };
-        await updateVideo(lesson.id, updates);
-      }
-
-      // Redirect back to courses list
       router.push(`/${locale}/admin/cursos`);
     } catch (_error) {
       showError('Error al actualizar el curso. Por favor intenta nuevamente.');
