@@ -53,7 +53,7 @@ export default function EyebrowStylingPage() {
               <div className='sticky top-24 h-[800px] rounded-lg overflow-hidden'>
                 <Image
                   src='/Img-home/home-1.webp'
-                  alt='Eyebrow Styling Services'
+                  alt='Eyebrow Styling Profesional Services'
                   fill
                   className='object-cover'
                 />
