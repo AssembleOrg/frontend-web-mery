@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { PROMO_CONFIG } from '@/lib/promo-config';
+import { INSTALLMENTS_CONFIG } from '@/lib/installments-config';
 
 interface SimpleCourseCardProps {
   image: string;
@@ -20,8 +21,10 @@ export default function SimpleCourseCard({
   price,
   originalPrice,
   description,
+  slug,
   onCourseClick,
 }: SimpleCourseCardProps) {
+  const installmentsText = slug ? INSTALLMENTS_CONFIG[slug] : undefined;
   const handleClick = () => {
     if (onCourseClick) {
       onCourseClick();
@@ -78,10 +81,20 @@ export default function SimpleCourseCard({
                   {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                 </span>
               </div>
-              <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
+              <div className='flex items-baseline gap-2'>
+                <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
+                {installmentsText && (
+                  <p className='text-xs text-gray-500'>({installmentsText})</p>
+                )}
+              </div>
             </div>
           ) : (
-            <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
+            <div className='flex items-baseline gap-2'>
+              <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
+              {installmentsText && (
+                <p className='text-xs text-gray-500'>({installmentsText})</p>
+              )}
+            </div>
           )}
         </div>
         <button

@@ -25,7 +25,7 @@ export default function FormacionesPage() {
   const fetchCategories = useAdminStore((state) => state.fetchCategories);
 
   const courses = useMemo(() => {
-    return categories.map((cat): Course => {
+    return categories.filter((cat) => cat.isActive).map((cat): Course => {
       return {
         id: cat.id,
         title: cat.name,

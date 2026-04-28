@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
+import { INSTALLMENTS_CONFIG } from '@/lib/installments-config';
 import { MarkdownText } from './ui/markdown-text';
 
 interface SimpleCourseModalProps {
@@ -151,6 +152,8 @@ export default function SimpleCourseModal({
   // Para usuarios internacionales, mostrar opción de WhatsApp con USD (solo si NO es curso USD)
   const showUSDOption =
     !isUSDCourse && course.priceUSD && course.priceUSD > 0;
+
+  const installmentsText = INSTALLMENTS_CONFIG[course.slug] ?? null;
 
   // Check if course is already in cart
   const courseInCart = isInCart(course.id);
@@ -294,17 +297,9 @@ export default function SimpleCourseModal({
                   </button>
                 </div>
               ) : (
-                /* Cursos en ARS: Carrito + WhatsApp */
+                /* Cursos en ARS: solo Carrito (WhatsApp se movió al final) */
                 <div className='hidden md:flex items-center justify-between'>
-                  <button
-                    onClick={handleWhatsApp}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
-                  >
-                    <FaWhatsapp className='w-4 h-4' />
-                    WhatsApp
-                  </button>
-
-                  <div className='text-center'>
+                  <div className='text-center flex-1'>
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
@@ -318,19 +313,34 @@ export default function SimpleCourseModal({
                             {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                           </span>
                         </div>
+                        <div className='flex items-baseline justify-center gap-2'>
+                          <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                            {displayPrice}
+                          </p>
+                          {installmentsText && (
+                            <p className='text-white/80 text-sm'>({installmentsText})</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='flex items-baseline justify-center gap-2'>
                         <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                           {displayPrice}
                         </p>
+                        {installmentsText && (
+                          <p className='text-white/80 text-sm'>({installmentsText})</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                        {displayPrice}
-                      </p>
                     )}
                     {showUSDOption && (
-                      <p className='text-white/90 text-sm mt-1'>
-                        También disponible en U$S {course.priceUSD}
-                      </p>
+                      <div className='mt-1'>
+                        <p className='text-white/90 text-sm'>
+                          También disponible en U$S {course.priceUSD}
+                        </p>
+                        <p className='text-white/80 text-xs mt-0.5'>
+                          Si residís en el exterior podés abonar por transferencia o PayPal
+                        </p>
+                      </div>
                     )}
                   </div>
 
@@ -385,7 +395,7 @@ export default function SimpleCourseModal({
                   </button>
                 </div>
               ) : (
-                /* Cursos en ARS: Carrito + WhatsApp */
+                /* Cursos en ARS: solo Carrito (WhatsApp se movió al final) */
                 <div className='md:hidden space-y-4'>
                   <div className='text-center'>
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
@@ -401,54 +411,59 @@ export default function SimpleCourseModal({
                             {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                           </span>
                         </div>
+                        <div className='flex items-baseline justify-center gap-2'>
+                          <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                            {displayPrice}
+                          </p>
+                          {installmentsText && (
+                            <p className='text-white/80 text-sm'>({installmentsText})</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='flex items-baseline justify-center gap-2'>
                         <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                           {displayPrice}
                         </p>
+                        {installmentsText && (
+                          <p className='text-white/80 text-sm'>({installmentsText})</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                        {displayPrice}
-                      </p>
                     )}
                     {showUSDOption && (
-                      <p className='text-white/90 text-sm mt-1'>
-                        También disponible en U$S {course.priceUSD}
-                      </p>
+                      <div className='mt-1'>
+                        <p className='text-white/90 text-sm'>
+                          También disponible en U$S {course.priceUSD}
+                        </p>
+                        <p className='text-white/80 text-xs mt-0.5'>
+                          Si residís en el exterior podés abonar por transferencia o PayPal
+                        </p>
+                      </div>
                     )}
                   </div>
 
-                  <div className='flex flex-col space-y-3'>
-                    <button
-                      onClick={handleBuyCourse}
-                      className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
-                      disabled={buttonDisabled}
-                    >
-                      {addingToCart ? (
-                        <>
-                          <Loader2 className='w-5 h-5 animate-spin' />
-                          Agregando...
-                        </>
-                      ) : courseInCart ? (
-                        <>
-                          <CheckCircle className='w-5 h-5' />
-                          Ver Carrito
-                        </>
-                      ) : (
-                        <>
-                          <ShoppingCart className='w-5 h-5' />
-                          Agregar al Carrito
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      onClick={handleWhatsApp}
-                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
-                    >
-                      <FaWhatsapp className='w-4 h-4' />
-                      WhatsApp
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleBuyCourse}
+                    className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
+                    disabled={buttonDisabled}
+                  >
+                    {addingToCart ? (
+                      <>
+                        <Loader2 className='w-5 h-5 animate-spin' />
+                        Agregando...
+                      </>
+                    ) : courseInCart ? (
+                      <>
+                        <CheckCircle className='w-5 h-5' />
+                        Ver Carrito
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className='w-5 h-5' />
+                        Agregar al Carrito
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
             </div>
@@ -530,6 +545,17 @@ export default function SimpleCourseModal({
                 </p>
               </div>
             )}
+
+            {/* Botón WhatsApp */}
+            <div className='flex justify-center'>
+              <button
+                onClick={handleWhatsApp}
+                className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
+              >
+                <FaWhatsapp className='w-5 h-5' />
+                Consultar por WhatsApp
+              </button>
+            </div>
 
             {course.modalContent?.additionalInfo && (
               <div className='bg-white p-4 rounded-lg border border-[#e9ecef] text-center'>
