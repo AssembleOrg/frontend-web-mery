@@ -364,7 +364,7 @@ export function BasicInfoStep({
           htmlFor='learn'
           className='block text-sm font-medium text-gray-700 mb-2'
         >
-          ¿Qué vas a aprender? (ES)
+          INFORMACIÓN SOBRE LA CURSADA (ES)
           <span className='ml-2 text-xs font-normal text-gray-500'>
             (Opcional)
           </span>
@@ -423,46 +423,59 @@ export function BasicInfoStep({
 
         {formData.includes_category && formData.includes_category.length > 0 ? (
           <div className='space-y-2'>
-            {formData.includes_category.map((item, index) => (
-              <div
-                key={index}
-                className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'
-              >
-                <div className='flex-1 space-y-2'>
-                  <input
-                    type='text'
-                    value={item.texto || item.text || ''}
-                    onChange={(e) =>
-                      updateIncludeItem('es', index, {
-                        texto: e.target.value,
-                        text: e.target.value,
-                      })
-                    }
-                    placeholder='Texto del ítem (ej: Videos HD de alta calidad)'
-                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-                  />
-                  <input
-                    type='text'
-                    value={item.url_icon || ''}
-                    onChange={(e) =>
-                      updateIncludeItem('es', index, {
-                        url_icon: e.target.value,
-                      })
-                    }
-                    placeholder='URL del icono (opcional, ej: /icons/video.svg)'
-                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-                  />
-                </div>
-                <button
-                  type='button'
-                  onClick={() => removeIncludeItem('es', index)}
-                  className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
-                  title='Eliminar ítem'
+            {formData.includes_category.map((item, index) => {
+              const rawText = item.texto || item.text || '';
+              const isOptional = rawText.startsWith('OPCIONAL:');
+              const displayText = isOptional ? rawText.slice('OPCIONAL:'.length).trimStart() : rawText;
+              return (
+                <div
+                  key={index}
+                  className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'
                 >
-                  <Trash2 className='w-4 h-4' />
-                </button>
-              </div>
-            ))}
+                  <div className='flex-1 space-y-2'>
+                    <input
+                      type='text'
+                      value={displayText}
+                      onChange={(e) => {
+                        const newText = isOptional ? `OPCIONAL: ${e.target.value}` : e.target.value;
+                        updateIncludeItem('es', index, { texto: newText, text: newText });
+                      }}
+                      placeholder='Texto del ítem (ej: Videos HD de alta calidad)'
+                      className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                    />
+                    <input
+                      type='text'
+                      value={item.url_icon || ''}
+                      onChange={(e) =>
+                        updateIncludeItem('es', index, { url_icon: e.target.value })
+                      }
+                      placeholder='URL del icono (opcional, ej: /icons/video.svg)'
+                      className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                    />
+                    <label className='flex items-center gap-2 cursor-pointer select-none'>
+                      <input
+                        type='checkbox'
+                        checked={isOptional}
+                        onChange={(e) => {
+                          const newText = e.target.checked ? `OPCIONAL: ${displayText}` : displayText;
+                          updateIncludeItem('es', index, { texto: newText, text: newText });
+                        }}
+                        className='w-4 h-4 accent-[#660e1b]'
+                      />
+                      <span className='text-xs text-gray-600'>Es opcional (aparece en sección "Opcionales de la cursada")</span>
+                    </label>
+                  </div>
+                  <button
+                    type='button'
+                    onClick={() => removeIncludeItem('es', index)}
+                    className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
+                    title='Eliminar ítem'
+                  >
+                    <Trash2 className='w-4 h-4' />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className='text-sm text-gray-500 italic'>

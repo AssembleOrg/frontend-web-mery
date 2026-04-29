@@ -14,7 +14,7 @@ export default function CourseInclude({ icon: Icon, iconImage, text, className =
     const parts = inputText.split(/(\*\*[^*]+\*\*)/g);
     
     return (
-      <span className='text-sm font-primary text-[#2b2b2b] leading-relaxed' style={{ fontWeight: 300 }}>
+      <span className='text-sm font-primary text-[#2b2b2b] leading-relaxed break-words' style={{ fontWeight: 300 }}>
         {parts.map((part, index) => {
           if (part.startsWith('**') && part.endsWith('**')) {
             const boldText = part.slice(2, -2);
@@ -45,7 +45,9 @@ export default function CourseInclude({ icon: Icon, iconImage, text, className =
           <Icon className='w-6 h-6 text-[#660e1b]' />
         ) : null}
       </div>
-      {renderTextWithBold(text)}
+      <div className='min-w-0'>
+        {renderTextWithBold(text)}
+      </div>
     </div>
   );
 }

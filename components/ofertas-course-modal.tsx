@@ -497,7 +497,7 @@ export default function OfertasCourseModal({
                 {course.learn && course.learn.trim() !== '' && (
                   <div className='bg-white p-6 rounded-lg border border-[#f0e6e8]'>
                     <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-4'>
-                      ¿Qué vas a aprender?
+                      INFORMACIÓN SOBRE LA CURSADA
                     </h3>
                     <MarkdownText className='text-[#2b2b2b]'>{course.learn}</MarkdownText>
                   </div>

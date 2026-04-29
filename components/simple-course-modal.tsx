@@ -482,7 +482,7 @@ export default function SimpleCourseModal({
             {course.learn && course.learn.trim() !== '' && (
               <div className='bg-white p-6 rounded-lg border border-[#f0e6e8]'>
                 <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-4'>
-                  ¿Qué vas a aprender?
+                  INFORMACIÓN SOBRE LA CURSADA
                 </h3>
                 <MarkdownText className='text-[#2b2b2b]'>{course.learn}</MarkdownText>
               </div>
@@ -494,15 +494,42 @@ export default function SimpleCourseModal({
                 <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
                   ¿Qué incluye este curso?
                 </h3>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  {course.includes_category.map((item, index) => (
-                    <CourseInclude
-                      key={index}
-                      iconImage={item.url_icon}
-                      text={item.texto || item.text || ''}
-                    />
-                  ))}
-                </div>
+                {(() => {
+                  const required = course.includes_category!.filter(i => !(i.texto || i.text || '').startsWith('OPCIONAL:'));
+                  const optional = course.includes_category!.filter(i => (i.texto || i.text || '').startsWith('OPCIONAL:'));
+                  return (
+                    <>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {required.map((item, index) => (
+                          <CourseInclude
+                            key={index}
+                            iconImage={item.url_icon}
+                            text={item.texto || item.text || ''}
+                          />
+                        ))}
+                      </div>
+                      {optional.length > 0 && (
+                        <div className='mt-8'>
+                          <h4 className='text-lg font-primary font-bold text-[#660e1b] mb-4 text-center tracking-wide'>
+                            OPCIONALES DE LA CURSADA:
+                          </h4>
+                          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            {optional.map((item, index) => (
+                              <CourseInclude
+                                key={index}
+                                iconImage={item.url_icon}
+                                text={(item.texto || item.text || '').slice('OPCIONAL:'.length).trimStart()}
+                              />
+                            ))}
+                          </div>
+                          <p className='text-center text-sm text-gray-500 mt-4 italic'>
+                            (Consultar valor adicional, horarios y fechas disponibles)
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             ) : (
               course.modalContent?.includes &&
