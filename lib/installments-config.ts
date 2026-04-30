@@ -8,6 +8,11 @@ export const INSTALLMENTS_CONFIG: Record<string, string> = {
   'auto-styling-estilismo-de-cejas': '3 cuotas sin interés',
 };
 
+export const PDF_CONFIG: Record<string, string> = {
+  'estilismo-de-cejas': 'Programa Estilismo.pdf',
+  'lipblush': 'Programa Lipblush.pdf',
+};
+
 // Slugs que NO admiten cuotas en MercadoPago (pago único).
 // Coordinado en /api/create-preference para forzar installments=1.
 export const NON_INSTALLMENT_SLUGS = new Set<string>([

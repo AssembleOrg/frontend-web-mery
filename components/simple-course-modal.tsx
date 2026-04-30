@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
-import { INSTALLMENTS_CONFIG } from '@/lib/installments-config';
+import { INSTALLMENTS_CONFIG, PDF_CONFIG } from '@/lib/installments-config';
 import { MarkdownText } from './ui/markdown-text';
 
 interface SimpleCourseModalProps {
@@ -274,6 +274,27 @@ export default function SimpleCourseModal({
                 </p>
               )}
             </div>
+
+            {PDF_CONFIG[course.slug] && (
+              <a
+                href={`/downloable/formaciones/${encodeURIComponent(PDF_CONFIG[course.slug])}`}
+                download
+                className='group flex items-center justify-between gap-3 w-full bg-[#fdf4f5] border border-[#f0e0e2] rounded-lg px-4 py-3 hover:border-[#eba2a8] hover:bg-[#fef8f8] transition-all duration-200'
+              >
+                <div className='flex items-center gap-3 min-w-0'>
+                  <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 flex-shrink-0 text-[#eba2a8]' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
+                  </svg>
+                  <div className='min-w-0'>
+                    <p className='text-xs text-[#eba2a8] font-semibold uppercase tracking-wider leading-none mb-0.5'>Introducción al programa</p>
+                    <p className='text-sm font-semibold text-[#2b2b2b] truncate'>Descargar el programa de {course.title}</p>
+                  </div>
+                </div>
+                <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 flex-shrink-0 text-[#660e1b] group-hover:translate-y-0.5 transition-transform duration-200' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
+                </svg>
+              </a>
+            )}
 
             <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-4 sm:p-6 rounded-lg shadow-lg'>
               {/* Desktop layout */}

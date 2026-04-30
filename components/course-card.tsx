@@ -81,13 +81,13 @@ export default function CourseCard({
                           cardTitle.toLowerCase().includes('camuflaje senior') ||
                           cardTitle.toLowerCase().includes('camuflaje señor');
 
-  // Calcular precio con descuento
-  // Para cursos especiales, usar precio USD; para otros, usar ARS
+  // El precio del DB ya viene con el 40% de descuento real aplicado.
+  // Reconstruimos el precio "previo a la promo" para mostrarlo tachado.
   const basePrice = isSpecialCourse ? (priceUSD || 0) : (typeof cardPrice === 'number' ? cardPrice : parseFloat(cardPrice as string) || 0);
-  const originalPrice = basePrice;
-  const discountedPrice = showDiscount && discountPercentage > 0 
-    ? originalPrice * (1 - discountPercentage / 100) 
-    : originalPrice;
+  const discountedPrice = basePrice;
+  const originalPrice = showDiscount && discountPercentage > 0 && discountPercentage < 100
+    ? Math.round(basePrice * (100 / (100 - discountPercentage)))
+    : basePrice;
 
   // Función para comprar con MercadoPago
   const handleBuyFormation = async () => {
