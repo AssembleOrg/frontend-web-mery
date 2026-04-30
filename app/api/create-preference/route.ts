@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const preferenceItems = items.map((item: any) => {
       const quantity = Number(item.quantity);
       const price = Number(item.price);
-      
+
       if (isNaN(quantity) || quantity <= 0) {
         throw new Error(`Cantidad inválida para el item: ${item.title}`);
       }
@@ -79,6 +79,18 @@ export async function POST(req: NextRequest) {
         currency_id: 'ARS',
       };
     });
+
+    // Cuotas: 3 sin interés excepto cursos cobrados en USD por fuera de la
+    // plataforma (Nanoblading, Camuflaje Senior), que sólo aceptan pago único.
+    const hasNonInstallmentItem = items.some((item: any) => {
+      const title = String(item.title || '').toLowerCase();
+      return (
+        title.includes('nanoblading') ||
+        title.includes('camuflaje senior') ||
+        title.includes('camuflaje señor')
+      );
+    });
+    const installments = hasNonInstallmentItem ? 1 : 3;
 
     // Extraer category IDs de los items
     const categoryIds = items.map((item: any) => item.id);
@@ -111,7 +123,7 @@ export async function POST(req: NextRequest) {
         auto_return: 'approved',
         notification_url: `${webhookBaseUrl}/api/webhook`,
         payment_methods: {
-          installments: 1,
+          installments,
           default_installments: 1,
         },
         statement_descriptor: 'MERY CURSOS',
