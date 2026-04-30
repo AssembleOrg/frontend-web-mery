@@ -5,11 +5,14 @@ import { Footer } from '@/components/footer';
 import { useCart } from '@/hooks/useCart';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Trash2, ShoppingBag, Loader2 } from 'lucide-react';
+import { Trash2, ShoppingBag, Loader2, Landmark } from 'lucide-react';
+import { useState } from 'react';
+import { BankTransferModal } from '@/components/bank-transfer-modal';
 
 export default function CompraPage() {
   const router = useRouter();
-  const { cart, removeItem, clear, isLoading, itemCount, totalARS } = useCart();
+  const { cart, removeItem, clear, isLoading, itemCount, totalARS, totalUSD } = useCart();
+  const [bankModal, setBankModal] = useState<'ARS' | 'USD' | null>(null);
 
   const handleContinueShopping = () => {
     router.push('/es/formaciones');
@@ -87,7 +90,6 @@ export default function CompraPage() {
                 className='bg-card p-6 rounded-lg border shadow-sm'
               >
                 <div className='flex gap-4'>
-                  {/* Course Image */}
                   <div className='flex-shrink-0 w-24 h-24'>
                     <Image
                       src={
@@ -101,7 +103,6 @@ export default function CompraPage() {
                     />
                   </div>
 
-                  {/* Course Details */}
                   <div className='flex-1'>
                     <h3 className='text-lg font-primary font-bold text-foreground mb-2'>
                       {item.category.name}
@@ -113,7 +114,6 @@ export default function CompraPage() {
                       ${item.priceARS.toLocaleString('es-AR')} ARS
                     </p>
 
-                    {/* Remove Button */}
                     <div className='flex items-center justify-end'>
                       <button
                         onClick={() => handleRemoveItem(item.id)}
@@ -177,10 +177,44 @@ export default function CompraPage() {
               </div>
             </div>
           </div>
+
+          {/* Transferencia bancaria — sección separada, sin fondo */}
+          <div className='lg:col-span-3 border-t border-border pt-6'>
+            <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
+              <p className='text-muted-foreground text-sm flex-1'>
+                ¿Preferís pagar por transferencia bancaria o PayPal? Copiá los datos y envianos el comprobante — activamos tu acceso en hasta 48hs hábiles.
+              </p>
+              <div className='flex gap-2 shrink-0'>
+                <button
+                  onClick={() => setBankModal('ARS')}
+                  className='inline-flex items-center gap-1.5 bg-[#1a1a1a] hover:bg-[#2d2d2d] text-white text-xs font-primary-medium px-4 py-2.5 rounded-full transition-all'
+                >
+                  <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                  Pesos · ${totalARS.toLocaleString('es-AR')}
+                </button>
+                {totalUSD > 0 && (
+                  <button
+                    onClick={() => setBankModal('USD')}
+                    className='inline-flex items-center gap-1.5 bg-[#1a1a1a] hover:bg-[#2d2d2d] text-white text-xs font-primary-medium px-4 py-2.5 rounded-full transition-all'
+                  >
+                    <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                    USD · ${totalUSD.toLocaleString('en-US')}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <Footer />
+
+      <BankTransferModal
+        isOpen={bankModal !== null}
+        onClose={() => setBankModal(null)}
+        currency={bankModal ?? 'ARS'}
+        amount={bankModal === 'USD' ? `USD ${totalUSD.toLocaleString('en-US')}` : `$${totalARS.toLocaleString('es-AR')}`}
+      />
     </div>
   );
 }

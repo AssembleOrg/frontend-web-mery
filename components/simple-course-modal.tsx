@@ -5,7 +5,8 @@ import CourseInclude from './course-include';
 import { Course } from '@/types/course';
 import { useCart } from '@/hooks/useCart';
 import { useRouter } from 'next/navigation';
-import { Play, Loader2, ShoppingCart, CheckCircle } from 'lucide-react';
+import { Play, Loader2, ShoppingCart, CheckCircle, Landmark } from 'lucide-react';
+import { BankTransferModal } from './bank-transfer-modal';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
@@ -34,6 +35,8 @@ export default function SimpleCourseModal({
   const [streamUrl, setStreamUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [bankModalCurrency, setBankModalCurrency] = useState<'ARS' | 'USD' | null>(null);
+  const [bankModalAmount, setBankModalAmount] = useState<string>('');
 
   // Load presentation video (order 0) when modal opens
   useEffect(() => {
@@ -160,6 +163,7 @@ export default function SimpleCourseModal({
   const buttonDisabled = addingToCart || cartLoading;
 
   return (
+    <>
     <Modal
       isOpen={isOpen}
       onClose={onClose}
@@ -283,8 +287,9 @@ export default function SimpleCourseModal({
                     <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                       {displayPrice}
                     </p>
-                    <p className='text-white/90 text-sm mt-2 font-semibold'>
-                      💬 Consultar por este curso vía WhatsApp
+                    <p className='text-white/90 text-sm mt-2 font-semibold flex items-center justify-center gap-1.5'>
+                      <FaWhatsapp className='w-4 h-4' />
+                      Consultar por este curso vía WhatsApp
                     </p>
                   </div>
 
@@ -332,14 +337,27 @@ export default function SimpleCourseModal({
                         )}
                       </div>
                     )}
+                    <button
+                      type='button'
+                      onClick={() => { setBankModalCurrency('ARS'); setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? '')); }}
+                      className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                    >
+                      <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                      Pagar por transferencia bancaria
+                    </button>
                     {showUSDOption && (
-                      <div className='mt-1'>
-                        <p className='text-white/90 text-sm'>
-                          También disponible en U$S {course.priceUSD}
+                      <div className='mt-1.5 flex flex-col items-center gap-1'>
+                        <p className='text-white text-sm font-primary-medium'>
+                          Si residís en el exterior de Argentina
                         </p>
-                        <p className='text-white/80 text-xs mt-0.5'>
-                          Si residís en el exterior podés abonar por transferencia o PayPal
-                        </p>
+                        <button
+                          type='button'
+                          onClick={() => { setBankModalCurrency('USD'); setBankModalAmount(`USD ${course.priceUSD}`); }}
+                          className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                        >
+                          <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                          Pagar U$S {course.priceUSD} por transferencia o PayPal
+                        </button>
                       </div>
                     )}
                   </div>
@@ -381,8 +399,9 @@ export default function SimpleCourseModal({
                       {displayPrice}
                     </p>
 
-                    <p className='text-white/90 text-sm mt-2 font-semibold'>
-                      💬 Consultar por este curso vía WhatsApp
+                    <p className='text-white/90 text-sm mt-2 font-semibold flex items-center justify-center gap-1.5'>
+                      <FaWhatsapp className='w-4 h-4' />
+                      Consultar por este curso vía WhatsApp
                     </p>
                   </div>
 
@@ -430,14 +449,27 @@ export default function SimpleCourseModal({
                         )}
                       </div>
                     )}
+                    <button
+                      type='button'
+                      onClick={() => { setBankModalCurrency('ARS'); setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? '')); }}
+                      className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                    >
+                      <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                      Pagar por transferencia bancaria
+                    </button>
                     {showUSDOption && (
-                      <div className='mt-1'>
-                        <p className='text-white/90 text-sm'>
-                          También disponible en U$S {course.priceUSD}
+                      <div className='mt-1.5 flex flex-col items-center gap-1'>
+                        <p className='text-white text-sm font-primary-medium'>
+                          Si residís en el exterior de Argentina
                         </p>
-                        <p className='text-white/80 text-xs mt-0.5'>
-                          Si residís en el exterior podés abonar por transferencia o PayPal
-                        </p>
+                        <button
+                          type='button'
+                          onClick={() => { setBankModalCurrency('USD'); setBankModalAmount(`USD ${course.priceUSD}`); }}
+                          className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                        >
+                          <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                          Pagar U$S {course.priceUSD} por transferencia o PayPal
+                        </button>
                       </div>
                     )}
                   </div>
@@ -595,5 +627,13 @@ export default function SimpleCourseModal({
         </div>
       </div>
     </Modal>
+
+    <BankTransferModal
+      isOpen={bankModalCurrency !== null}
+      onClose={() => setBankModalCurrency(null)}
+      currency={bankModalCurrency ?? 'ARS'}
+      amount={bankModalAmount}
+    />
+    </>
   );
 }

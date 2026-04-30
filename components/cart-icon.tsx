@@ -14,10 +14,10 @@ export function CartIcon() {
 
   const handleClick = () => {
     if (!isAuthenticated) {
-      router.push(`/${locale}/login?redirect=/${locale}/finalizar-compra`);
+      router.push(`/${locale}/login?redirect=/${locale}/compra-de-cursos`);
       return;
     }
-    router.push(`/${locale}/finalizar-compra`);
+    router.push(`/${locale}/compra-de-cursos`);
   };
 
   if (itemCount === 0) {
