@@ -168,7 +168,7 @@ export default function SimpleCourseModal({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className='w-full max-w-4xl h-[90vh] mx-auto bg-white rounded-lg flex flex-col'>
+      <div className='w-full max-w-4xl h-[90vh] mx-auto flex flex-col'>
         <div className='flex-1 overflow-y-auto'>
           <div className='relative'>
             {loadingVideo ? (
@@ -275,7 +275,7 @@ export default function SimpleCourseModal({
               )}
             </div>
 
-            <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-6 rounded-lg shadow-lg'>
+            <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-4 sm:p-6 rounded-lg shadow-lg'>
               {/* Desktop layout */}
               {isUSDCourse ? (
                 /* Cursos en USD: Solo WhatsApp */
@@ -356,7 +356,7 @@ export default function SimpleCourseModal({
                           className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
                         >
                           <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
-                          Pagar U$S {course.priceUSD} por transferencia o PayPal
+                          U$S {course.priceUSD} · Transferencia / PayPal
                         </button>
                       </div>
                     )}
@@ -468,7 +468,7 @@ export default function SimpleCourseModal({
                           className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
                         >
                           <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
-                          Pagar U$S {course.priceUSD} por transferencia o PayPal
+                          U$S {course.priceUSD} · Transferencia / PayPal
                         </button>
                       </div>
                     )}
