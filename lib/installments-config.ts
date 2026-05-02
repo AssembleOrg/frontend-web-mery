@@ -11,6 +11,7 @@ export const INSTALLMENTS_CONFIG: Record<string, string> = {
 export const PDF_CONFIG: Record<string, string> = {
   'estilismo-de-cejas': 'Programa Estilismo.pdf',
   'lipblush': 'Programa Lipblush.pdf',
+  'modulo-ii-microblading-mg': 'Programa Microblading.pdf'
 };
 
 // Slugs que NO admiten cuotas en MercadoPago (pago único).
