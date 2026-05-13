@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
-import { INSTALLMENTS_CONFIG, PDF_CONFIG, PROPUESTA_PEDAGOGICA_PDF } from '@/lib/installments-config';
+import { INSTALLMENTS_CONFIG, INSTALLMENTS_DISCOUNT_HINT, PDF_CONFIG, PROPUESTA_PEDAGOGICA_PDF } from '@/lib/installments-config';
 import { MarkdownText } from './ui/markdown-text';
 
 interface SimpleCourseModalProps {
@@ -379,6 +379,11 @@ export default function SimpleCourseModal({
                         )}
                       </div>
                     )}
+                    {installmentsText && (
+                      <p className='text-[#f9bbc4] text-xs font-primary-medium mt-1 text-center'>
+                        {INSTALLMENTS_DISCOUNT_HINT}
+                      </p>
+                    )}
                     <button
                       type='button'
                       onClick={() => { setBankModalCurrency('ARS'); setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? '')); }}
@@ -490,6 +495,11 @@ export default function SimpleCourseModal({
                           <p className='text-white/80 text-sm'>({installmentsText})</p>
                         )}
                       </div>
+                    )}
+                    {installmentsText && (
+                      <p className='text-[#f9bbc4] text-xs font-primary-medium mt-1 text-center'>
+                        {INSTALLMENTS_DISCOUNT_HINT}
+                      </p>
                     )}
                     <button
                       type='button'

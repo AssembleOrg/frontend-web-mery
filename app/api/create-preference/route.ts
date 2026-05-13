@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   const webhookBaseUrl = (backendUrl || frontendUrl)!.replace(/\/$/, '');
 
   try {
-    const { items, locale, userEmail, userId, couponId } = await req.json();
+    const { items, locale, userEmail, userId, couponId, installments: requestedInstallments } = await req.json();
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -80,8 +80,9 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    // Cuotas: 3 sin interés excepto cursos cobrados en USD por fuera de la
-    // plataforma (Nanoblading, Camuflaje Senior), que sólo aceptan pago único.
+    // Cuotas: el frontend envía el plan elegido (3 o 6). Excepción: cursos
+    // cobrados en USD por fuera de la plataforma (Nanoblading, Camuflaje
+    // Senior) sólo aceptan pago único.
     const hasNonInstallmentItem = items.some((item: any) => {
       const title = String(item.title || '').toLowerCase();
       return (
@@ -90,7 +91,10 @@ export async function POST(req: NextRequest) {
         title.includes('camuflaje señor')
       );
     });
-    const installments = hasNonInstallmentItem ? 1 : 3;
+    const allowedInstallments = [3, 6];
+    const planFromClient = Number(requestedInstallments);
+    const safePlan = allowedInstallments.includes(planFromClient) ? planFromClient : 6;
+    const installments = hasNonInstallmentItem ? 1 : safePlan;
 
     // Extraer category IDs de los items
     const categoryIds = items.map((item: any) => item.id);
@@ -124,7 +128,7 @@ export async function POST(req: NextRequest) {
         notification_url: `${webhookBaseUrl}/api/webhook`,
         payment_methods: {
           installments,
-          default_installments: 1,
+          default_installments: installments,
         },
         statement_descriptor: 'MERY CURSOS',
       },

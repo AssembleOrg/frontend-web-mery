@@ -28,9 +28,18 @@ interface BankTransferModalProps {
   onClose: () => void;
   currency: 'ARS' | 'USD';
   amount?: string;
+  listAmount?: string;
+  discountPercent?: number;
 }
 
-export const BankTransferModal = ({ isOpen, onClose, currency, amount }: BankTransferModalProps) => {
+export const BankTransferModal = ({
+  isOpen,
+  onClose,
+  currency,
+  amount,
+  listAmount,
+  discountPercent,
+}: BankTransferModalProps) => {
   const [copied, setCopied] = useState(false);
   const [copiedAmount, setCopiedAmount] = useState(false);
   const data = BANK_DATA[currency];
@@ -82,6 +91,14 @@ export const BankTransferModal = ({ isOpen, onClose, currency, amount }: BankTra
         {/* Amount */}
         {amount && (
           <div className='px-5 pb-4'>
+            {discountPercent && listAmount && (
+              <div className='flex items-center gap-2 mb-1'>
+                <span className='text-white/40 text-sm line-through'>{listAmount}</span>
+                <span className='text-[10px] font-primary-medium tracking-wide bg-[#f9bbc4] text-[#660e1b] px-1.5 py-0.5 rounded-full'>
+                  -{discountPercent}%
+                </span>
+              </div>
+            )}
             <div className='inline-flex items-center gap-2'>
               <p className='text-white text-4xl font-primary font-bold tracking-tight'>
                 {amount}
@@ -97,6 +114,11 @@ export const BankTransferModal = ({ isOpen, onClose, currency, amount }: BankTra
                 }
               </button>
             </div>
+            {discountPercent && (
+              <p className='text-[#f9bbc4] text-xs mt-1'>
+                Incluye {discountPercent}% off por pago en transferencia
+              </p>
+            )}
           </div>
         )}
 

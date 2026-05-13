@@ -9,10 +9,24 @@ import { Trash2, ShoppingBag, Loader2, Landmark } from 'lucide-react';
 import { useState } from 'react';
 import { BankTransferModal } from '@/components/bank-transfer-modal';
 
+const TRANSFER_DISCOUNT_PERCENT = 20;
+// Convención del sistema (ver components/simple-course-modal.tsx,
+// app/[locale]/formaciones/page.tsx): priceARS === 99999999 marca un curso
+// USD-only (Nanoblading, Camuflaje Senior). El backend del cart suma estos
+// sentinels en totalARS, así que recalculamos localmente para que el chip
+// y los totales reflejen solo lo realmente pagable en pesos.
+const USD_ONLY_SENTINEL = 99999999;
+
 export default function CompraPage() {
   const router = useRouter();
-  const { cart, removeItem, clear, isLoading, itemCount, totalARS, totalUSD } = useCart();
+  const { cart, removeItem, clear, isLoading, itemCount, totalUSD } = useCart();
   const [bankModal, setBankModal] = useState<'ARS' | 'USD' | null>(null);
+
+  const arsPayableTotal = (cart?.items ?? []).reduce(
+    (sum, item) => (item.priceARS === USD_ONLY_SENTINEL ? sum : sum + item.priceARS),
+    0
+  );
+  const transferARS = Math.round(arsPayableTotal * (1 - TRANSFER_DISCOUNT_PERCENT / 100));
 
   const handleContinueShopping = () => {
     router.push('/es/formaciones');
@@ -111,7 +125,9 @@ export default function CompraPage() {
                       {item.category.description}
                     </p>
                     <p className='text-2xl font-primary font-bold text-[#f9bbc4] mb-4'>
-                      ${item.priceARS.toLocaleString('es-AR')} ARS
+                      {item.priceARS === USD_ONLY_SENTINEL
+                        ? `USD ${item.priceUSD.toLocaleString('en-US')}`
+                        : `$${item.priceARS.toLocaleString('es-AR')} ARS`}
                     </p>
 
                     <div className='flex items-center justify-end'>
@@ -142,12 +158,12 @@ export default function CompraPage() {
                   <span>
                     Subtotal ({itemCount} curso{itemCount > 1 ? 's' : ''})
                   </span>
-                  <span>${totalARS.toLocaleString('es-AR')} ARS</span>
+                  <span>${arsPayableTotal.toLocaleString('es-AR')} ARS</span>
                 </div>
                 <div className='border-t pt-4'>
                   <div className='flex justify-between text-lg font-primary font-bold text-foreground'>
                     <span>Total</span>
-                    <span>${totalARS.toLocaleString('es-AR')} ARS</span>
+                    <span>${arsPayableTotal.toLocaleString('es-AR')} ARS</span>
                   </div>
                 </div>
               </div>
@@ -182,16 +198,23 @@ export default function CompraPage() {
           <div className='lg:col-span-3 border-t border-border pt-6'>
             <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
               <p className='text-muted-foreground text-sm flex-1'>
-                ¿Preferís pagar por transferencia bancaria o PayPal? Copiá los datos y envianos el comprobante — activamos tu acceso en hasta 48hs hábiles.
+                ¿Preferís pagar por transferencia bancaria o PayPal? Obtené un{' '}
+                <span className='text-[#660e1b] font-primary-medium'>{TRANSFER_DISCOUNT_PERCENT}% de descuento</span>{' '}
+                pagando en pesos por transferencia. Copiá los datos y envianos el comprobante — activamos tu acceso en hasta 48hs hábiles.
               </p>
-              <div className='flex gap-2 shrink-0'>
-                <button
-                  onClick={() => setBankModal('ARS')}
-                  className='inline-flex items-center gap-1.5 bg-[#1a1a1a] hover:bg-[#2d2d2d] text-white text-xs font-primary-medium px-4 py-2.5 rounded-full transition-all'
-                >
-                  <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
-                  Pesos · ${totalARS.toLocaleString('es-AR')}
-                </button>
+              <div className='flex flex-wrap gap-2 shrink-0'>
+                {arsPayableTotal > 0 && (
+                  <button
+                    onClick={() => setBankModal('ARS')}
+                    className='inline-flex items-center gap-1.5 bg-[#1a1a1a] hover:bg-[#2d2d2d] text-white text-xs font-primary-medium pl-4 pr-2 py-2 rounded-full transition-all'
+                  >
+                    <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                    <span>Pesos · ${transferARS.toLocaleString('es-AR')}</span>
+                    <span className='ml-1.5 text-[10px] font-primary-medium tracking-wide bg-[#f9bbc4] text-[#660e1b] px-1.5 py-0.5 rounded-full'>
+                      -{TRANSFER_DISCOUNT_PERCENT}%
+                    </span>
+                  </button>
+                )}
                 {totalUSD > 0 && (
                   <button
                     onClick={() => setBankModal('USD')}
@@ -213,7 +236,17 @@ export default function CompraPage() {
         isOpen={bankModal !== null}
         onClose={() => setBankModal(null)}
         currency={bankModal ?? 'ARS'}
-        amount={bankModal === 'USD' ? `USD ${totalUSD.toLocaleString('en-US')}` : `$${totalARS.toLocaleString('es-AR')}`}
+        amount={
+          bankModal === 'USD'
+            ? `USD ${totalUSD.toLocaleString('en-US')}`
+            : `$${transferARS.toLocaleString('es-AR')}`
+        }
+        listAmount={
+          bankModal === 'ARS'
+            ? `$${arsPayableTotal.toLocaleString('es-AR')}`
+            : undefined
+        }
+        discountPercent={bankModal === 'ARS' ? TRANSFER_DISCOUNT_PERCENT : undefined}
       />
     </div>
   );
