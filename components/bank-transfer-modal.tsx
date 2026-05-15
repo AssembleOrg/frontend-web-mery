@@ -30,6 +30,7 @@ interface BankTransferModalProps {
   amount?: string;
   listAmount?: string;
   discountPercent?: number;
+  whatsappMessage?: string;
 }
 
 export const BankTransferModal = ({
@@ -39,6 +40,7 @@ export const BankTransferModal = ({
   amount,
   listAmount,
   discountPercent,
+  whatsappMessage,
 }: BankTransferModalProps) => {
   const [copied, setCopied] = useState(false);
   const [copiedAmount, setCopiedAmount] = useState(false);
@@ -182,7 +184,7 @@ export const BankTransferModal = ({
             <span className='text-white/70'>48 horas hábiles</span>, por lo que la habilitación del curso está sujeta a ese tiempo.
           </p>
           <a
-            href={WA_URL}
+            href={whatsappMessage ? `${WA_URL}?text=${encodeURIComponent(whatsappMessage)}` : WA_URL}
             target='_blank'
             rel='noopener noreferrer'
             className='w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#2b2b2b] hover:bg-[#3a3a3a] text-white font-primary-medium text-sm transition-all duration-200 border border-white/8'

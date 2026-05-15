@@ -14,7 +14,10 @@ import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
 import { INSTALLMENTS_CONFIG, INSTALLMENTS_DISCOUNT_HINT, PDF_CONFIG, PROPUESTA_PEDAGOGICA_PDF } from '@/lib/installments-config';
+import { isAutostylismCourse } from '@/lib/utils';
 import { MarkdownText } from './ui/markdown-text';
+
+const AUTOSTYLING_BOOKING_URL = 'https://merygarciabooking.com/autostyling';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -37,6 +40,9 @@ export default function SimpleCourseModal({
   const [addingToCart, setAddingToCart] = useState(false);
   const [bankModalCurrency, setBankModalCurrency] = useState<'ARS' | 'USD' | null>(null);
   const [bankModalAmount, setBankModalAmount] = useState<string>('');
+  const [bankModalListAmount, setBankModalListAmount] = useState<string | undefined>(undefined);
+  const [bankModalDiscountPercent, setBankModalDiscountPercent] = useState<number | undefined>(undefined);
+  const [bankModalWhatsappMessage, setBankModalWhatsappMessage] = useState<string | undefined>(undefined);
 
   // Load presentation video (order 0) when modal opens
   useEffect(() => {
@@ -157,6 +163,46 @@ export default function SimpleCourseModal({
     !isUSDCourse && course.priceUSD && course.priceUSD > 0;
 
   const installmentsText = INSTALLMENTS_CONFIG[course.slug] ?? null;
+  const isAutostylism = isAutostylismCourse(course.slug, course.title);
+  // Cursos ARS regulares (no autostyling, no USD-only, no gratis) tienen
+  // 20% OFF al pagar por transferencia. Autostyling tiene su propio 10%.
+  const isRegularArsCourse =
+    !isUSDCourse && !isAutostylism && !isFreeCourse && course.priceARS > 0;
+  const handleAutostylingReserva = () => {
+    window.open(AUTOSTYLING_BOOKING_URL, '_blank', 'noopener,noreferrer');
+  };
+
+  const openBankTransferModalARS = () => {
+    setBankModalCurrency('ARS');
+    if (isAutostylism && course.priceARS > 0) {
+      const discounted = Math.round(course.priceARS * 0.9);
+      setBankModalAmount(`$${discounted.toLocaleString('es-AR')}`);
+      setBankModalListAmount(displayPrice ?? undefined);
+      setBankModalDiscountPercent(10);
+      setBankModalWhatsappMessage(
+        'Hola, ya transferí para esta formación, quiero un turno para mi clase presencial también. Adjunto transferencia realizada.'
+      );
+    } else if (isRegularArsCourse) {
+      const discounted = Math.round(course.priceARS * 0.8);
+      setBankModalAmount(`$${discounted.toLocaleString('es-AR')}`);
+      setBankModalListAmount(displayPrice ?? undefined);
+      setBankModalDiscountPercent(20);
+      setBankModalWhatsappMessage(undefined);
+    } else {
+      setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? ''));
+      setBankModalListAmount(undefined);
+      setBankModalDiscountPercent(undefined);
+      setBankModalWhatsappMessage(undefined);
+    }
+  };
+
+  const openBankTransferModalUSD = () => {
+    setBankModalCurrency('USD');
+    setBankModalAmount(`USD ${course.priceUSD}`);
+    setBankModalListAmount(undefined);
+    setBankModalDiscountPercent(undefined);
+    setBankModalWhatsappMessage(undefined);
+  };
 
   // Check if course is already in cart
   const courseInCart = isInCart(course.id);
@@ -380,26 +426,36 @@ export default function SimpleCourseModal({
                       </div>
                     )}
                     {installmentsText && (
-                      <p className='text-[#f9bbc4] text-xs font-primary-medium mt-1 text-center'>
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
                         {INSTALLMENTS_DISCOUNT_HINT}
+                      </p>
+                    )}
+                    {isAutostylism && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        10% OFF pagando por transferencia
+                      </p>
+                    )}
+                    {isRegularArsCourse && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        20% OFF pagando por transferencia
                       </p>
                     )}
                     <button
                       type='button'
-                      onClick={() => { setBankModalCurrency('ARS'); setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? '')); }}
+                      onClick={openBankTransferModalARS}
                       className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
                     >
                       <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
                       Pagar por transferencia bancaria
                     </button>
-                    {showUSDOption && (
+                    {showUSDOption && !isAutostylism && (
                       <div className='mt-1.5 flex flex-col items-center gap-1'>
                         <p className='text-white text-sm font-primary-medium'>
                           Si residís en el exterior de Argentina
                         </p>
                         <button
                           type='button'
-                          onClick={() => { setBankModalCurrency('USD'); setBankModalAmount(`USD ${course.priceUSD}`); }}
+                          onClick={openBankTransferModalUSD}
                           className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
                         >
                           <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
@@ -409,28 +465,37 @@ export default function SimpleCourseModal({
                     )}
                   </div>
 
-                  <button
-                    onClick={handleBuyCourse}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
-                    disabled={buttonDisabled}
-                  >
-                    {addingToCart ? (
-                      <>
-                        <Loader2 className='w-4 h-4 animate-spin' />
-                        Agregando...
-                      </>
-                    ) : courseInCart ? (
-                      <>
-                        <CheckCircle className='w-4 h-4' />
-                        Ver Carrito
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className='w-4 h-4' />
-                        Agregar al Carrito
-                      </>
-                    )}
-                  </button>
+                  {isAutostylism ? (
+                    <button
+                      onClick={handleAutostylingReserva}
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2'
+                    >
+                      Realizar Reserva
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleBuyCourse}
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                      disabled={buttonDisabled}
+                    >
+                      {addingToCart ? (
+                        <>
+                          <Loader2 className='w-4 h-4 animate-spin' />
+                          Agregando...
+                        </>
+                      ) : courseInCart ? (
+                        <>
+                          <CheckCircle className='w-4 h-4' />
+                          Ver Carrito
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className='w-4 h-4' />
+                          Agregar al Carrito
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -497,26 +562,36 @@ export default function SimpleCourseModal({
                       </div>
                     )}
                     {installmentsText && (
-                      <p className='text-[#f9bbc4] text-xs font-primary-medium mt-1 text-center'>
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
                         {INSTALLMENTS_DISCOUNT_HINT}
+                      </p>
+                    )}
+                    {isAutostylism && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        10% OFF pagando por transferencia
+                      </p>
+                    )}
+                    {isRegularArsCourse && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        20% OFF pagando por transferencia
                       </p>
                     )}
                     <button
                       type='button'
-                      onClick={() => { setBankModalCurrency('ARS'); setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? '')); }}
+                      onClick={openBankTransferModalARS}
                       className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
                     >
                       <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
                       Pagar por transferencia bancaria
                     </button>
-                    {showUSDOption && (
+                    {showUSDOption && !isAutostylism && (
                       <div className='mt-1.5 flex flex-col items-center gap-1'>
                         <p className='text-white text-sm font-primary-medium'>
                           Si residís en el exterior de Argentina
                         </p>
                         <button
                           type='button'
-                          onClick={() => { setBankModalCurrency('USD'); setBankModalAmount(`USD ${course.priceUSD}`); }}
+                          onClick={openBankTransferModalUSD}
                           className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
                         >
                           <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
@@ -526,28 +601,37 @@ export default function SimpleCourseModal({
                     )}
                   </div>
 
-                  <button
-                    onClick={handleBuyCourse}
-                    className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
-                    disabled={buttonDisabled}
-                  >
-                    {addingToCart ? (
-                      <>
-                        <Loader2 className='w-5 h-5 animate-spin' />
-                        Agregando...
-                      </>
-                    ) : courseInCart ? (
-                      <>
-                        <CheckCircle className='w-5 h-5' />
-                        Ver Carrito
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className='w-5 h-5' />
-                        Agregar al Carrito
-                      </>
-                    )}
-                  </button>
+                  {isAutostylism ? (
+                    <button
+                      onClick={handleAutostylingReserva}
+                      className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center w-full'
+                    >
+                      Realizar Reserva
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleBuyCourse}
+                      className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
+                      disabled={buttonDisabled}
+                    >
+                      {addingToCart ? (
+                        <>
+                          <Loader2 className='w-5 h-5 animate-spin' />
+                          Agregando...
+                        </>
+                      ) : courseInCart ? (
+                        <>
+                          <CheckCircle className='w-5 h-5' />
+                          Ver Carrito
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className='w-5 h-5' />
+                          Agregar al Carrito
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -685,6 +769,9 @@ export default function SimpleCourseModal({
       onClose={() => setBankModalCurrency(null)}
       currency={bankModalCurrency ?? 'ARS'}
       amount={bankModalAmount}
+      listAmount={bankModalListAmount}
+      discountPercent={bankModalDiscountPercent}
+      whatsappMessage={bankModalWhatsappMessage}
     />
     </>
   );

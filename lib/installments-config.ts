@@ -5,7 +5,6 @@ export const INSTALLMENTS_CONFIG: Record<string, string> = {
   'modulo-ii-microblading-mg': '6 cuotas sin interés',
   'camuflaje-simple': '6 cuotas sin interés',
   'lipblush': '6 cuotas sin interés',
-  'auto-styling-estilismo-de-cejas': '6 cuotas sin interés',
 };
 
 // Texto auxiliar para destacar el descuento por pagar en 3 cuotas.
