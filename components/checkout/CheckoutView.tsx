@@ -383,8 +383,7 @@ export const CheckoutView = ({
               </p>
               <ul className='text-sm text-[#660e1b] mt-2 space-y-1'>
                 <li>• Email de confirmación</li>
-                <li>• Credenciales de acceso</li>
-                <li>• Acceso inmediato a tus cursos</li>
+                <li>• El acceso al curso puede demorar hasta 48 hs</li>
               </ul>
             </div>
           </div>
