@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
-import { INSTALLMENTS_CONFIG, INSTALLMENTS_DISCOUNT_HINT, PDF_CONFIG, PROPUESTA_PEDAGOGICA_PDF } from '@/lib/installments-config';
+import { INSTALLMENTS_CONFIG, INSTALLMENTS_DISCOUNT_HINT, PDF_CONFIG, PROPUESTA_PEDAGOGICA_PDF, PROPUESTA_PEDAGOGICA_PDF_BY_SLUG } from '@/lib/installments-config';
 import { isAutostylismCourse } from '@/lib/utils';
 import { MarkdownText } from './ui/markdown-text';
 
@@ -127,6 +127,8 @@ export default function SimpleCourseModal({
     course.slug.toLowerCase().includes('camuflaje senior') ||
     course.title.toLowerCase().includes('camuflaje señor') ||
     course.slug.toLowerCase().includes('camuflaje señor');
+
+  const pedagogicPdf = PROPUESTA_PEDAGOGICA_PDF_BY_SLUG[course.slug] ?? PROPUESTA_PEDAGOGICA_PDF;
 
   // Calcular precio original (ficticio) y precio final (real)
   // Para USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio
@@ -344,7 +346,7 @@ export default function SimpleCourseModal({
               )}
 
               <a
-                href={`/downloable/formaciones/${encodeURIComponent(PROPUESTA_PEDAGOGICA_PDF)}`}
+                href={`/downloable/formaciones/${encodeURIComponent(pedagogicPdf)}`}
                 download
                 className='group flex items-center justify-between gap-3 w-full bg-[#fdf4f5] border border-[#f0e0e2] rounded-lg px-4 py-3 hover:border-[#eba2a8] hover:bg-[#fef8f8] transition-all duration-200'
               >
@@ -430,24 +432,21 @@ export default function SimpleCourseModal({
                         {INSTALLMENTS_DISCOUNT_HINT}
                       </p>
                     )}
-                    {isAutostylism && (
-                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
-                        10% OFF pagando por transferencia
-                      </p>
-                    )}
                     {isRegularArsCourse && (
                       <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
                         20% OFF pagando por transferencia
                       </p>
                     )}
-                    <button
-                      type='button'
-                      onClick={openBankTransferModalARS}
-                      className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
-                    >
-                      <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
-                      Pagar por transferencia bancaria
-                    </button>
+                    {!isAutostylism && (
+                      <button
+                        type='button'
+                        onClick={openBankTransferModalARS}
+                        className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                      >
+                        <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                        Pagar por transferencia bancaria
+                      </button>
+                    )}
                     {showUSDOption && !isAutostylism && (
                       <div className='mt-1.5 flex flex-col items-center gap-1'>
                         <p className='text-white text-sm font-primary-medium'>
@@ -566,24 +565,21 @@ export default function SimpleCourseModal({
                         {INSTALLMENTS_DISCOUNT_HINT}
                       </p>
                     )}
-                    {isAutostylism && (
-                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
-                        10% OFF pagando por transferencia
-                      </p>
-                    )}
                     {isRegularArsCourse && (
                       <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
                         20% OFF pagando por transferencia
                       </p>
                     )}
-                    <button
-                      type='button'
-                      onClick={openBankTransferModalARS}
-                      className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
-                    >
-                      <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
-                      Pagar por transferencia bancaria
-                    </button>
+                    {!isAutostylism && (
+                      <button
+                        type='button'
+                        onClick={openBankTransferModalARS}
+                        className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                      >
+                        <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                        Pagar por transferencia bancaria
+                      </button>
+                    )}
                     {showUSDOption && !isAutostylism && (
                       <div className='mt-1.5 flex flex-col items-center gap-1'>
                         <p className='text-white text-sm font-primary-medium'>

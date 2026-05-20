@@ -19,6 +19,10 @@ export const PDF_CONFIG: Record<string, string> = {
 
 export const PROPUESTA_PEDAGOGICA_PDF = 'Información de cursada sin valores (Mayo 2026).pdf';
 
+export const PROPUESTA_PEDAGOGICA_PDF_BY_SLUG: Record<string, string> = {
+  'auto-styling-estilismo-de-cejas': 'Información de cursada Autostyling sin valores (Mayo 2026) autostyling.pdf',
+};
+
 // Slugs que NO admiten cuotas en MercadoPago (pago único).
 // Coordinado en /api/create-preference para forzar installments=1.
 export const NON_INSTALLMENT_SLUGS = new Set<string>([
