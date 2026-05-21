@@ -79,7 +79,7 @@ export default function AdminChatsPage() {
   const activeRoom = rooms.find((r) => r.id === activeId) ?? null;
 
   return ( 
-    <div className='-mx-4 sm:-mx-6 lg:-mx-8 sm:-my-8 h-full'>
+    <div className='-mx-4 sm:-mx-6 md:mx-0 sm:-my-8 md:my-0 h-full'>
       <div className='h-[calc(100dvh-85px)] md:h-[calc(100vh-10rem)] grid grid-cols-12 overflow-hidden bg-white dark:bg-background border-y sm:border sm:border-border rounded-none sm:rounded-xl'>
         
         {/* Sidebar */}

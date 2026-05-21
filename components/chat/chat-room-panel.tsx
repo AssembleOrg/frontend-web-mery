@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { DateTime } from 'luxon';
 import { useChatStore } from '@/stores/chat-store';
 import { useChatRoom } from '@/hooks/useChat';
 import { useAuthStore } from '@/stores/auth-store';
 import type { ChatMessage, ChatRoom } from '@/lib/chat-api';
 import { ChatMessageBubble } from './chat-message-bubble';
+import { ChatDateSeparator } from './chat-date-separator';
 import { ChatInput } from './chat-input';
 import { ChatWarning } from './chat-warning';
 import { Loader2, Lock, Clock, ChevronLeft } from 'lucide-react';
@@ -137,9 +139,21 @@ export function ChatRoomPanel({ room, showCounterpart = false, onMobileBack }: R
                 {isAdmin ? 'Sin mensajes todavía.' : '¡Hola! Escribe tu primera duda aquí.'}
               </div>
             ) : (
-              messages.map((m) => (
-                <ChatMessageBubble key={m.id} message={m} mine={m.senderId === user?.id} />
-              ))
+              messages.map((m, i) => {
+                const prev = messages[i - 1];
+                const showSeparator =
+                  !prev ||
+                  !DateTime.fromISO(prev.createdAt).hasSame(
+                    DateTime.fromISO(m.createdAt),
+                    'day'
+                  );
+                return (
+                  <Fragment key={m.id}>
+                    {showSeparator && <ChatDateSeparator createdAt={m.createdAt} />}
+                    <ChatMessageBubble message={m} mine={m.senderId === user?.id} />
+                  </Fragment>
+                );
+              })
             )}
             {typing && (
               <div className='text-[11px] text-muted-foreground italic px-2'>
