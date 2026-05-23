@@ -69,6 +69,8 @@ export default function SimpleCourseModal({
 
   if (!course) return null;
 
+  const isAutoStyling = course.title.toLowerCase().includes('auto styling') || course.title.toLowerCase().includes('autostyling');
+
   const handleWhatsApp = () => {
     // Si es un curso en USD (placeholder price) y NO es gratuito, incluir el precio en el mensaje
     const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0 && !course.isFree;
@@ -76,7 +78,8 @@ export default function SimpleCourseModal({
       ? ` (USD ${course.priceUSD.toLocaleString('en-US')})`
       : '';
     const message = `Hola chicas, como están? Quisiera más info sobre el curso de ${course.title}${priceInfo}`;
-    const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(
+    const wpNumber = isAutoStyling ? '5491161592591' : '5491153336627';
+    const whatsappUrl = `https://wa.me/${wpNumber}?text=${encodeURIComponent(
       message
     )}`;
     window.open(whatsappUrl, '_blank');

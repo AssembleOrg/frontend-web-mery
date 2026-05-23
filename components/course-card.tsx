@@ -8,6 +8,7 @@ import { X } from 'lucide-react';
 import OfertasCourseModal from './ofertas-course-modal';
 
 const WHATSAPP_NUMBER = '5491153336627';
+const AUTOSTYLING_WHATSAPP_NUMBER = '5491161592591';
 
 interface CourseCardProps {
   course?: Course;
@@ -143,16 +144,18 @@ export default function CourseCard({
 
   // Función para abrir WhatsApp desde el modal especial
   const handleWhatsAppContact = () => {
+    const wpNumber = isAutoStyling ? AUTOSTYLING_WHATSAPP_NUMBER : WHATSAPP_NUMBER;
     const message = `Hola chicas, como están? Quisiera más info sobre ${cardTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${wpNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setShowSpecialModal(false);
   };
 
   // Función para comprar exterior (WhatsApp)
   const handleBuyExterior = () => {
+    const wpNumber = isAutoStyling ? AUTOSTYLING_WHATSAPP_NUMBER : WHATSAPP_NUMBER;
     const message = `Hola chicas, como están? Quisiera comprar ${cardTitle} en USD`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${wpNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
