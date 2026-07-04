@@ -305,6 +305,67 @@ export const getVideoProgress = async (
 };
 
 // ============================================
+// QUIZ (examen final por curso)
+// ============================================
+
+export interface QuizQuestion {
+  id: string;
+  text: string;
+}
+
+export interface QuizStatus {
+  required: boolean;
+  passed: boolean;
+  canAttempt: boolean;
+  nextAttemptAt: string | null;
+  lastAttempt: {
+    passed: boolean;
+    correctCount: number;
+    totalQuestions: number;
+    wrongQuestionIds: string[];
+    createdAt: string;
+  } | null;
+}
+
+export interface QuizInfo {
+  required: boolean;
+  questions: QuizQuestion[];
+  status: QuizStatus;
+}
+
+export interface QuizAttemptResult {
+  passed: boolean;
+  correctCount: number;
+  totalQuestions: number;
+  wrongQuestionIds: string[];
+  nextAttemptAt: string | null;
+}
+
+/**
+ * Get final quiz questions + status for a course/category
+ * GET /quiz/category/:categoryId
+ */
+export const getCourseQuiz = async (
+  categoryId: string
+): Promise<ApiResponse<QuizInfo>> => {
+  return apiRequest<QuizInfo>(`/quiz/category/${categoryId}`);
+};
+
+/**
+ * Submit a quiz attempt
+ * POST /quiz/category/:categoryId/attempt
+ */
+export const submitCourseQuiz = async (
+  categoryId: string,
+  answers: Record<string, boolean>
+): Promise<ApiResponse<QuizAttemptResult>> => {
+  return apiRequest<QuizAttemptResult>(`/quiz/category/${categoryId}/attempt`, {
+    method: 'POST',
+    body: JSON.stringify({ answers }),
+  });
+};
+
+// ============================================
 // ADMIN VIDEO MANAGEMENT
 // ============================================
 

@@ -11,7 +11,11 @@ import {
   getCourseDetails,
   getCourseVideos,
   getVideoStreamUrl,
+  getCourseQuiz,
+  type QuizInfo,
 } from '@/lib/api-client';
+import { CourseQuizModal } from '@/components/quiz/course-quiz-modal';
+import { GraduationCap } from 'lucide-react';
 import { useCourseStore } from '@/stores';
 import { useAuth } from '@/hooks/useAuth';
 import { getUserCourses as getUserCoursesService } from '@/services/user-courses.service';
@@ -35,6 +39,11 @@ export default function CursoDetallePage() {
 
   const [streamUrl, setStreamUrl] = useState<string | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
+
+  // Examen final (cursos de cejas): popup al completar todas las lecciones
+  const [quizInfo, setQuizInfo] = useState<QuizInfo | null>(null);
+  const [quizOpen, setQuizOpen] = useState(false);
+  const quizAutoOpenedRef = useRef(false);
 
   // Race condition prevention: AbortController para cancelar requests
   const loadCourseAbortController = useRef<AbortController | null>(null);
@@ -220,6 +229,40 @@ export default function CursoDetallePage() {
     }
   }, [loadCourse, courseId]);
 
+  // Al completar todas las lecciones, chequeamos si el curso tiene examen final
+  // pendiente y lo abrimos automáticamente (una sola vez por visita).
+  const lessonsTotal = course?.lessons?.length || 0;
+  const lessonsDone = courseProgress?.lessonsCompleted.length || 0;
+  const courseCompleted = lessonsTotal > 0 && lessonsDone >= lessonsTotal;
+
+  useEffect(() => {
+    if (!token || !courseCompleted) return;
+    let cancelled = false;
+    getCourseQuiz(courseId)
+      .then((res) => {
+        if (cancelled) return;
+        setQuizInfo(res.data);
+        if (
+          res.data.required &&
+          !res.data.status.passed &&
+          res.data.status.canAttempt &&
+          !quizAutoOpenedRef.current
+        ) {
+          quizAutoOpenedRef.current = true;
+          setQuizOpen(true);
+        }
+      })
+      .catch(() => {
+        // Sin examen o error de red: no bloqueamos la página del curso.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [token, courseCompleted, courseId]);
+
+  const quizPending =
+    !!quizInfo?.required && !quizInfo.status.passed;
+
   // --- Renderizado ---
 
   if (loading) {
@@ -302,6 +345,24 @@ export default function CursoDetallePage() {
           {/* Contenido principal - Layout centrado */}
           <div className='relative px-4 sm:px-6 lg:px-8 py-8'>
             <div className='w-full max-w-7xl mx-auto'>
+              {/* Banner de examen final pendiente */}
+              {courseCompleted && quizPending && (
+                <div className='mb-6 p-4 rounded-xl border border-[#f9bbc4]/60 bg-[#f9bbc4]/10 flex flex-col sm:flex-row items-center justify-between gap-3'>
+                  <div className='flex items-center gap-3 text-center sm:text-left'>
+                    <GraduationCap className='w-6 h-6 text-[#f9bbc4] flex-shrink-0' />
+                    <p className='text-sm text-gray-200'>
+                      ¡Completaste todas las lecciones! Rendí el examen final
+                      para desbloquear el chat del curso.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setQuizOpen(true)}
+                    className='px-5 py-2 rounded-lg bg-[#f9bbc4] text-[#660e1b] hover:brightness-95 text-sm font-bold transition-all whitespace-nowrap'
+                  >
+                    Realizar examen
+                  </button>
+                </div>
+              )}
               <div className='flex flex-col xl:flex-row gap-6 xl:gap-8 items-start'>
                 {/* Área principal centrada */}
                 <div className='flex-1 w-full xl:flex xl:justify-center'>
@@ -391,6 +452,21 @@ export default function CursoDetallePage() {
 
         {/* Footer */}
         <Footer />
+
+        {/* Modal de examen final */}
+        {quizOpen && course && (
+          <CourseQuizModal
+            categoryId={courseId}
+            categoryName={course.title}
+            onClose={() => {
+              setQuizOpen(false);
+              // Refrescamos estado por si aprobó (o quedó en cooldown)
+              getCourseQuiz(courseId)
+                .then((res) => setQuizInfo(res.data))
+                .catch(() => {});
+            }}
+          />
+        )}
       </div>
     </ProtectedRoute>
   );

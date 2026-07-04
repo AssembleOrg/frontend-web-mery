@@ -62,6 +62,8 @@ export interface EligibilityInfo {
   videosTotal: number;
   videosCompleted: number;
   purchaseActive: boolean;
+  quizRequired: boolean;
+  quizPassed: boolean;
 }
 
 function authHeaders(): HeadersInit {

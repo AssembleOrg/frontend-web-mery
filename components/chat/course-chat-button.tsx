@@ -1,9 +1,10 @@
 'use client';
 
-import { MessageCircle, Lock } from 'lucide-react';
+import { MessageCircle, Lock, GraduationCap } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { chatApi, type ChatRoom, type EligibilityInfo } from '@/lib/chat-api';
 import { CourseChatModal } from './course-chat-modal';
+import { CourseQuizModal } from '@/components/quiz/course-quiz-modal';
 
 interface Props {
   categoryId: string;
@@ -16,6 +17,7 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
   const [info, setInfo] = useState<EligibilityInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const cancelledRef = useRef(false);
   const openRef = useRef(open);
   openRef.current = open;
@@ -123,16 +125,46 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
       0,
       info.videosTotal - info.videosCompleted,
     );
+    const videosDone = info.videosTotal > 0 && remaining === 0;
+    const quizPending = info.quizRequired && !info.quizPassed;
+
+    // Videos completos pero examen final pendiente → CTA para rendirlo
+    if (videosDone && quizPending) {
+      return (
+        <>
+          <button
+            onClick={() => setQuizOpen(true)}
+            className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white dark:hover:text-[#3a1f26] text-sm font-primary font-medium transition-colors'
+          >
+            <GraduationCap className='w-4 h-4' />
+            Realizar examen final
+          </button>
+          {quizOpen && (
+            <CourseQuizModal
+              categoryId={categoryId}
+              categoryName={categoryName}
+              onClose={() => {
+                setQuizOpen(false);
+                void fetchEligibility(false);
+              }}
+              onPassed={() => void fetchEligibility(false)}
+            />
+          )}
+        </>
+      );
+    }
+
     return (
       <button
         disabled
-        title='Completá todos los videos del curso (95% o más) para desbloquear el chat'
+        title={`Completá todos los videos del curso (95% o más)${quizPending ? ' y aprobá el examen final' : ''} para desbloquear el chat`}
         className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-border text-muted-foreground text-sm cursor-not-allowed'
       >
         <Lock className='w-4 h-4' />
         <span>
           Chat bloqueado · faltan {remaining} video
           {remaining === 1 ? '' : 's'}
+          {quizPending ? ' + examen final' : ''}
         </span>
       </button>
     );

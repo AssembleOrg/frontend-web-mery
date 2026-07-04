@@ -45,7 +45,10 @@ interface CategoryPurchase {
   categoryId: string;
   category: VideoCategory;
   createdAt: string;
+  expiresAt?: string | null;
 }
+
+const ACCESS_DURATIONS = [3, 6, 12] as const;
 
 export default function AdminUsuariosPage() {
   const router = useRouter();
@@ -58,6 +61,8 @@ export default function AdminUsuariosPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userCourses, setUserCourses] = useState<CategoryPurchase[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [assignMonths, setAssignMonths] = useState<number>(12);
+  const [renewMonths, setRenewMonths] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
@@ -248,6 +253,7 @@ export default function AdminUsuariosPage() {
             amount: 0,
             currency: 'ARS',
             notes: 'Asignación manual por administrador',
+            durationMonths: assignMonths,
           }),
         }
       );
@@ -262,6 +268,54 @@ export default function AdminUsuariosPage() {
       loadUserCourses(selectedUser.id);
     } catch (error: any) {
       toast.error(error.message || 'Error al asignar curso');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRenewCourse = async (categoryId: string) => {
+    if (!selectedUser) return;
+
+    const purchase = userCourses.find((uc) => uc.categoryId === categoryId);
+    if (!purchase) return;
+    const months = renewMonths[categoryId] ?? 12;
+
+    try {
+      setIsLoading(true);
+      const token = getAuthToken();
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${selectedUser.id}/categories/${categoryId}/renew`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+          body: JSON.stringify({
+            durationMonths: months,
+            paymentMethod: 'manual_renewal',
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Error al renovar curso');
+      }
+
+      const responseData = await response.json();
+      const newExpiry = responseData.data?.expiresAt;
+      toast.success(
+        `"${purchase.category.name}" renovado por ${months} meses${
+          newExpiry
+            ? ` (vence ${new Date(newExpiry).toLocaleDateString('es-ES')})`
+            : ''
+        }`
+      );
+      loadUserCourses(selectedUser.id);
+    } catch (error: any) {
+      toast.error(error.message || 'Error al renovar curso');
     } finally {
       setIsLoading(false);
     }
@@ -497,6 +551,28 @@ export default function AdminUsuariosPage() {
                     ))}
                   </select>
 
+                  <div className='flex items-center gap-2'>
+                    <label className='text-sm text-gray-700 whitespace-nowrap'>
+                      Duración:
+                    </label>
+                    <div className='flex gap-2 flex-1'>
+                      {ACCESS_DURATIONS.map((m) => (
+                        <button
+                          key={m}
+                          type='button'
+                          onClick={() => setAssignMonths(m)}
+                          className={`flex-1 py-1.5 px-2 rounded-lg border text-sm font-medium transition-colors ${
+                            assignMonths === m
+                              ? 'border-[var(--mg-pink)] bg-[var(--mg-pink)] text-white'
+                              : 'border-gray-300 bg-white text-gray-700 hover:border-[var(--mg-pink-lighter)]'
+                          }`}
+                        >
+                          {m} meses
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <button
                     onClick={handleAssignCourse}
                     disabled={!selectedCategory || isLoading}
@@ -523,36 +599,82 @@ export default function AdminUsuariosPage() {
                       Este usuario no tiene cursos asignados
                     </div>
                   ) : (
-                    userCourses.map((purchase) => (
-                      <div
-                        key={purchase.id}
-                        className='p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'
-                      >
-                        <div className='flex items-center justify-between'>
-                          <div className='flex-1'>
-                            <p className='font-medium text-gray-900'>
-                              {purchase.category.name}
-                            </p>
-                            <p className='text-sm text-gray-600'>
-                              Asignado:{' '}
-                              {new Date(purchase.createdAt).toLocaleDateString(
-                                'es-ES'
-                              )}
-                            </p>
+                    userCourses.map((purchase) => {
+                      const expired =
+                        purchase.expiresAt &&
+                        new Date(purchase.expiresAt) < new Date();
+                      return (
+                        <div
+                          key={purchase.id}
+                          className='p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'
+                        >
+                          <div className='flex items-center justify-between'>
+                            <div className='flex-1'>
+                              <p className='font-medium text-gray-900'>
+                                {purchase.category.name}
+                              </p>
+                              <p className='text-sm text-gray-600'>
+                                Asignado:{' '}
+                                {new Date(
+                                  purchase.createdAt
+                                ).toLocaleDateString('es-ES')}
+                              </p>
+                              <p
+                                className={`text-sm ${
+                                  expired
+                                    ? 'text-red-600 font-medium'
+                                    : 'text-gray-600'
+                                }`}
+                              >
+                                {purchase.expiresAt
+                                  ? `${expired ? 'Venció' : 'Vence'}: ${new Date(purchase.expiresAt).toLocaleDateString('es-ES')}`
+                                  : 'Acceso permanente'}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() =>
+                                handleRemoveCourse(purchase.categoryId)
+                              }
+                              disabled={isLoading}
+                              className='text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed p-2'
+                              title='Quitar acceso'
+                            >
+                              <FaTimesCircle className='text-xl' />
+                            </button>
                           </div>
-                          <button
-                            onClick={() =>
-                              handleRemoveCourse(purchase.categoryId)
-                            }
-                            disabled={isLoading}
-                            className='text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed p-2'
-                            title='Quitar acceso'
-                          >
-                            <FaTimesCircle className='text-xl' />
-                          </button>
+
+                          {/* Renovación: extiende desde el vencimiento vigente o desde hoy si ya venció */}
+                          <div className='mt-2 pt-2 border-t border-gray-100 flex items-center gap-2'>
+                            <select
+                              value={renewMonths[purchase.categoryId] ?? 12}
+                              onChange={(e) =>
+                                setRenewMonths((prev) => ({
+                                  ...prev,
+                                  [purchase.categoryId]: Number(e.target.value),
+                                }))
+                              }
+                              disabled={isLoading}
+                              className='px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
+                            >
+                              {ACCESS_DURATIONS.map((m) => (
+                                <option key={m} value={m}>
+                                  {m} meses
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              onClick={() =>
+                                handleRenewCourse(purchase.categoryId)
+                              }
+                              disabled={isLoading}
+                              className='px-3 py-1 rounded-lg border border-[var(--mg-pink)] text-[var(--mg-pink)] hover:bg-[var(--mg-pink)] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors'
+                            >
+                              Renovar
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>
