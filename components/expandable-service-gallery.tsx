@@ -43,7 +43,7 @@ export function ExpandableServiceGallery({
       'https://www.instagram.com/stories/highlights/17879544007940692/',
     lashesLine:
       'https://www.instagram.com/stories/highlights/18019224445291012/',
-    lipBlush: 'https://www.instagram.com/reel/CwX7F8nAOlJ/',
+    lipBlush: 'https://www.instagram.com/s/aGlnaGxpZ2h0OjE3ODkxMTAzODIwNDE4NDgx?story_media_id=3167992384029746734',
     paramedical: 'https://www.instagram.com/p/DLGOqHnype1/?img_index=1',
   };
 

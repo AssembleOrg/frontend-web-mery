@@ -4,6 +4,7 @@ import { CourseCreateInput, CourseIncludeItem } from '@/types/course';
 import Image from 'next/image';
 import { Upload, Plus, Trash2 } from 'lucide-react';
 import { useModal } from '@/contexts/modal-context';
+import { MarkdownEditor } from '@/components/ui/markdown-editor';
 
 interface BasicInfoStepProps {
   formData: Partial<CourseCreateInput>;
@@ -234,17 +235,15 @@ export function BasicInfoStep({
             (Opcional - Se mostrará en el modal del curso)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='long_description'
           value={formData.long_description || ''}
-          onChange={(e) => updateFormData({ long_description: e.target.value })}
-          rows={6}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Descripción completa que aparecerá cuando se abra el modal del curso. Puedes usar dobles saltos de línea para separar párrafos.'
+          onChange={(v) => updateFormData({ long_description: v })}
+          height={260}
+          placeholder='Descripción completa que aparecerá en el modal. Negrita, listas, links, etc.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.long_description?.length || 0} caracteres • Tip: Usa dobles
-          saltos de línea para crear párrafos
+          {formData.long_description?.length || 0} caracteres
         </p>
       </div>
 
@@ -259,13 +258,11 @@ export function BasicInfoStep({
             (Opcional - ¿A quién está dirigido?)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='target'
           value={formData.target || ''}
-          onChange={(e) => updateFormData({ target: e.target.value })}
-          rows={4}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Ej: Este curso está diseñado para profesionales de la belleza que desean perfeccionar sus técnicas, desde principiantes con conocimientos básicos hasta expertos que buscan actualizar sus métodos...'
+          onChange={(v) => updateFormData({ target: v })}
+          placeholder='Ej: Profesionales de la belleza que desean perfeccionar sus técnicas...'
         />
         <p className='mt-1 text-xs text-gray-500'>
           {formData.target?.length || 0} caracteres
@@ -283,13 +280,11 @@ export function BasicInfoStep({
             (Optional - Who is it for?)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='target_en'
           value={formData.target_en || ''}
-          onChange={(e) => updateFormData({ target_en: e.target.value })}
-          rows={4}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Ex: This course is designed for beauty professionals who want to perfect their techniques, from beginners with basic knowledge to experts looking to update their methods...'
+          onChange={(v) => updateFormData({ target_en: v })}
+          placeholder='Ex: Beauty professionals who want to perfect their techniques...'
         />
         <p className='mt-1 text-xs text-gray-500'>
           {formData.target_en?.length || 0} caracteres
@@ -307,19 +302,15 @@ export function BasicInfoStep({
             (Optional - Will be shown in course modal)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='long_description_en'
           value={formData.long_description_en || ''}
-          onChange={(e) =>
-            updateFormData({ long_description_en: e.target.value })
-          }
-          rows={6}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Complete description that will appear when opening the course modal. You can use double line breaks to separate paragraphs. Use **text** for bold.'
+          onChange={(v) => updateFormData({ long_description_en: v })}
+          height={260}
+          placeholder='Complete description shown in the course modal. Bold, lists, links, etc.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.long_description_en?.length || 0} characters • Tip: Use
-          double line breaks for paragraphs, **text** for bold
+          {formData.long_description_en?.length || 0} characters
         </p>
       </div>
 
@@ -334,17 +325,14 @@ export function BasicInfoStep({
             (Opcional)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='modalidad'
           value={formData.modalidad || ''}
-          onChange={(e) => updateFormData({ modalidad: e.target.value })}
-          rows={3}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Ej: Formación **100% online** con acceso inmediato. Puedes usar dobles saltos de línea para párrafos y **texto** para negritas.'
+          onChange={(v) => updateFormData({ modalidad: v })}
+          placeholder='Ej: Formación **100% online** con acceso inmediato.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.modalidad?.length || 0} caracteres • Tip: Usa dobles saltos
-          de línea para párrafos, **texto** para negritas
+          {formData.modalidad?.length || 0} caracteres
         </p>
       </div>
 
@@ -359,17 +347,14 @@ export function BasicInfoStep({
             (Optional)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='modalidad_en'
           value={formData.modalidad_en || ''}
-          onChange={(e) => updateFormData({ modalidad_en: e.target.value })}
-          rows={3}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Ex: **100% online** training with immediate access. Use double line breaks for paragraphs and **text** for bold.'
+          onChange={(v) => updateFormData({ modalidad_en: v })}
+          placeholder='Ex: **100% online** training with immediate access.'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.modalidad_en?.length || 0} characters • Tip: Use double line
-          breaks for paragraphs, **text** for bold
+          {formData.modalidad_en?.length || 0} characters
         </p>
       </div>
 
@@ -379,22 +364,19 @@ export function BasicInfoStep({
           htmlFor='learn'
           className='block text-sm font-medium text-gray-700 mb-2'
         >
-          ¿Qué vas a aprender? (ES)
+          INFORMACIÓN SOBRE LA CURSADA (ES)
           <span className='ml-2 text-xs font-normal text-gray-500'>
             (Opcional)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='learn'
           value={formData.learn || ''}
-          onChange={(e) => updateFormData({ learn: e.target.value })}
-          rows={5}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='Técnicas **avanzadas** de aplicación de pigmento. Cada línea será un punto separado. Usa **texto** para negritas y dobles saltos de línea para párrafos.'
+          onChange={(v) => updateFormData({ learn: v })}
+          placeholder='- Técnica **avanzada** de aplicación de pigmento&#10;- Otra cosa que se aprende'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.learn?.length || 0} caracteres • Tip: Usa saltos de línea
-          simples para listas, **texto** para negritas
+          {formData.learn?.length || 0} caracteres
         </p>
       </div>
 
@@ -409,17 +391,14 @@ export function BasicInfoStep({
             (Optional)
           </span>
         </label>
-        <textarea
+        <MarkdownEditor
           id='learn_en'
           value={formData.learn_en || ''}
-          onChange={(e) => updateFormData({ learn_en: e.target.value })}
-          rows={5}
-          className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-          placeholder='**Advanced** pigment application techniques. Each line will be a separate point. Use **text** for bold and double line breaks for paragraphs.'
+          onChange={(v) => updateFormData({ learn_en: v })}
+          placeholder='- **Advanced** pigment application techniques&#10;- Another learning point'
         />
         <p className='mt-1 text-xs text-gray-500'>
-          {formData.learn_en?.length || 0} characters • Tip: Use single line
-          breaks for lists, **text** for bold
+          {formData.learn_en?.length || 0} characters
         </p>
       </div>
 
@@ -444,46 +423,59 @@ export function BasicInfoStep({
 
         {formData.includes_category && formData.includes_category.length > 0 ? (
           <div className='space-y-2'>
-            {formData.includes_category.map((item, index) => (
-              <div
-                key={index}
-                className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'
-              >
-                <div className='flex-1 space-y-2'>
-                  <input
-                    type='text'
-                    value={item.texto || item.text || ''}
-                    onChange={(e) =>
-                      updateIncludeItem('es', index, {
-                        texto: e.target.value,
-                        text: e.target.value,
-                      })
-                    }
-                    placeholder='Texto del ítem (ej: Videos HD de alta calidad)'
-                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-                  />
-                  <input
-                    type='text'
-                    value={item.url_icon || ''}
-                    onChange={(e) =>
-                      updateIncludeItem('es', index, {
-                        url_icon: e.target.value,
-                      })
-                    }
-                    placeholder='URL del icono (opcional, ej: /icons/video.svg)'
-                    className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
-                  />
-                </div>
-                <button
-                  type='button'
-                  onClick={() => removeIncludeItem('es', index)}
-                  className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
-                  title='Eliminar ítem'
+            {formData.includes_category.map((item, index) => {
+              const rawText = item.texto || item.text || '';
+              const isOptional = rawText.startsWith('OPCIONAL:');
+              const displayText = isOptional ? rawText.slice('OPCIONAL:'.length).trimStart() : rawText;
+              return (
+                <div
+                  key={index}
+                  className='flex gap-2 items-start p-3 bg-gray-50 rounded-lg'
                 >
-                  <Trash2 className='w-4 h-4' />
-                </button>
-              </div>
-            ))}
+                  <div className='flex-1 space-y-2'>
+                    <input
+                      type='text'
+                      value={displayText}
+                      onChange={(e) => {
+                        const newText = isOptional ? `OPCIONAL: ${e.target.value}` : e.target.value;
+                        updateIncludeItem('es', index, { texto: newText, text: newText });
+                      }}
+                      placeholder='Texto del ítem (ej: Videos HD de alta calidad)'
+                      className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                    />
+                    <input
+                      type='text'
+                      value={item.url_icon || ''}
+                      onChange={(e) =>
+                        updateIncludeItem('es', index, { url_icon: e.target.value })
+                      }
+                      placeholder='URL del icono (opcional, ej: /icons/video.svg)'
+                      className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#660e1b] focus:border-transparent'
+                    />
+                    <label className='flex items-center gap-2 cursor-pointer select-none'>
+                      <input
+                        type='checkbox'
+                        checked={isOptional}
+                        onChange={(e) => {
+                          const newText = e.target.checked ? `OPCIONAL: ${displayText}` : displayText;
+                          updateIncludeItem('es', index, { texto: newText, text: newText });
+                        }}
+                        className='w-4 h-4 accent-[#660e1b]'
+                      />
+                      <span className='text-xs text-gray-600'>Es opcional (aparece en sección "Opcionales de la cursada")</span>
+                    </label>
+                  </div>
+                  <button
+                    type='button'
+                    onClick={() => removeIncludeItem('es', index)}
+                    className='p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'
+                    title='Eliminar ítem'
+                  >
+                    <Trash2 className='w-4 h-4' />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className='text-sm text-gray-500 italic'>

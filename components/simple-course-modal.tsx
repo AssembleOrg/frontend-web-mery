@@ -5,13 +5,19 @@ import CourseInclude from './course-include';
 import { Course } from '@/types/course';
 import { useCart } from '@/hooks/useCart';
 import { useRouter } from 'next/navigation';
-import { Play, Loader2, ShoppingCart, CheckCircle } from 'lucide-react';
+import { Play, Loader2, ShoppingCart, CheckCircle, Landmark } from 'lucide-react';
+import { BankTransferModal } from './bank-transfer-modal';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { getPresentationVideo } from '@/lib/api-client';
 import { useModal } from '@/contexts/modal-context';
 import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
+import { INSTALLMENTS_CONFIG, INSTALLMENTS_DISCOUNT_HINT, PDF_CONFIG, PROPUESTA_PEDAGOGICA_PDF, PROPUESTA_PEDAGOGICA_PDF_BY_SLUG } from '@/lib/installments-config';
+import { isAutostylismCourse } from '@/lib/utils';
+import { MarkdownText } from './ui/markdown-text';
+
+const AUTOSTYLING_BOOKING_URL = 'https://merygarciabooking.com/autostyling';
 
 interface SimpleCourseModalProps {
   course: Course | null;
@@ -32,6 +38,11 @@ export default function SimpleCourseModal({
   const [streamUrl, setStreamUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [bankModalCurrency, setBankModalCurrency] = useState<'ARS' | 'USD' | null>(null);
+  const [bankModalAmount, setBankModalAmount] = useState<string>('');
+  const [bankModalListAmount, setBankModalListAmount] = useState<string | undefined>(undefined);
+  const [bankModalDiscountPercent, setBankModalDiscountPercent] = useState<number | undefined>(undefined);
+  const [bankModalWhatsappMessage, setBankModalWhatsappMessage] = useState<string | undefined>(undefined);
 
   // Load presentation video (order 0) when modal opens
   useEffect(() => {
@@ -58,6 +69,8 @@ export default function SimpleCourseModal({
 
   if (!course) return null;
 
+  const isAutoStyling = course.title.toLowerCase().includes('auto styling') || course.title.toLowerCase().includes('autostyling');
+
   const handleWhatsApp = () => {
     // Si es un curso en USD (placeholder price) y NO es gratuito, incluir el precio en el mensaje
     const isUSDCourse = course.priceARS === 99999999 && course.priceUSD > 0 && !course.isFree;
@@ -65,7 +78,8 @@ export default function SimpleCourseModal({
       ? ` (USD ${course.priceUSD.toLocaleString('en-US')})`
       : '';
     const message = `Hola chicas, como están? Quisiera más info sobre el curso de ${course.title}${priceInfo}`;
-    const whatsappUrl = `https://wa.me/5491153336627?text=${encodeURIComponent(
+    const wpNumber = isAutoStyling ? '5491161592591' : '5491153336627';
+    const whatsappUrl = `https://wa.me/${wpNumber}?text=${encodeURIComponent(
       message
     )}`;
     window.open(whatsappUrl, '_blank');
@@ -117,6 +131,8 @@ export default function SimpleCourseModal({
     course.title.toLowerCase().includes('camuflaje señor') ||
     course.slug.toLowerCase().includes('camuflaje señor');
 
+  const pedagogicPdf = PROPUESTA_PEDAGOGICA_PDF_BY_SLUG[course.slug] ?? PROPUESTA_PEDAGOGICA_PDF;
+
   // Calcular precio original (ficticio) y precio final (real)
   // Para USD: solo Nanoblading y Camuflaje Senior tienen descuento ficticio
   // Para ARS: todos tienen descuento ficticio
@@ -151,56 +167,59 @@ export default function SimpleCourseModal({
   const showUSDOption =
     !isUSDCourse && course.priceUSD && course.priceUSD > 0;
 
+  const installmentsText = INSTALLMENTS_CONFIG[course.slug] ?? null;
+  const isAutostylism = isAutostylismCourse(course.slug, course.title);
+  // Cursos ARS regulares (no autostyling, no USD-only, no gratis) tienen
+  // 20% OFF al pagar por transferencia. Autostyling tiene su propio 10%.
+  const isRegularArsCourse =
+    !isUSDCourse && !isAutostylism && !isFreeCourse && course.priceARS > 0;
+  const handleAutostylingReserva = () => {
+    window.open(AUTOSTYLING_BOOKING_URL, '_blank', 'noopener,noreferrer');
+  };
+
+  const openBankTransferModalARS = () => {
+    setBankModalCurrency('ARS');
+    if (isAutostylism && course.priceARS > 0) {
+      const discounted = Math.round(course.priceARS * 0.9);
+      setBankModalAmount(`$${discounted.toLocaleString('es-AR')}`);
+      setBankModalListAmount(displayPrice ?? undefined);
+      setBankModalDiscountPercent(10);
+      setBankModalWhatsappMessage(
+        'Hola, ya transferí para esta formación, quiero un turno para mi clase presencial también. Adjunto transferencia realizada.'
+      );
+    } else if (isRegularArsCourse) {
+      const discounted = Math.round(course.priceARS * 0.8);
+      setBankModalAmount(`$${discounted.toLocaleString('es-AR')}`);
+      setBankModalListAmount(displayPrice ?? undefined);
+      setBankModalDiscountPercent(20);
+      setBankModalWhatsappMessage(undefined);
+    } else {
+      setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? ''));
+      setBankModalListAmount(undefined);
+      setBankModalDiscountPercent(undefined);
+      setBankModalWhatsappMessage(undefined);
+    }
+  };
+
+  const openBankTransferModalUSD = () => {
+    setBankModalCurrency('USD');
+    setBankModalAmount(`USD ${course.priceUSD}`);
+    setBankModalListAmount(undefined);
+    setBankModalDiscountPercent(undefined);
+    setBankModalWhatsappMessage(undefined);
+  };
+
   // Check if course is already in cart
   const courseInCart = isInCart(course.id);
   const buttonDisabled = addingToCart || cartLoading;
 
-  // Function to render text with paragraph breaks and bold support
-  const renderTextWithParagraphs = (text: string) => {
-    const paragraphs = text
-      .split('\n\n')
-      .filter((paragraph) => paragraph.trim() !== '');
-
-    return (
-      <div className='space-y-4 font-primary'>
-        {paragraphs.map((paragraph, index) => {
-          // Split by ** to find bold sections
-          const parts = paragraph.split(/(\*\*[^*]+\*\*)/g);
-
-          return (
-            <p
-              key={index}
-              className='text-[#2b2b2b] leading-relaxed text-left'
-              style={{ whiteSpace: 'pre-line', fontWeight: 300 }}
-            >
-              {parts.map((part, partIndex) => {
-                // Check if this part is bold (wrapped in **)
-                if (part.startsWith('**') && part.endsWith('**')) {
-                  const boldText = part.slice(2, -2);
-                  return (
-                    <span
-                      key={partIndex}
-                      className='font-primary-medium'
-                    >
-                      {boldText}
-                    </span>
-                  );
-                }
-                return <span key={partIndex}>{part}</span>;
-              })}
-            </p>
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
+    <>
     <Modal
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className='w-full max-w-4xl h-[90vh] mx-auto bg-white rounded-lg flex flex-col'>
+      <div className='w-full max-w-4xl h-[90vh] mx-auto flex flex-col'>
         <div className='flex-1 overflow-y-auto'>
           <div className='relative'>
             {loadingVideo ? (
@@ -296,11 +315,9 @@ export default function SimpleCourseModal({
           <div className='px-6 pb-6 bg-white space-y-6'>
             <div className='bg-[#faf6f7] p-6 rounded-lg border border-[#f0e6e8]'>
               {course.long_description ? (
-                renderTextWithParagraphs(course.long_description)
+                <MarkdownText className='text-[#2b2b2b]'>{course.long_description}</MarkdownText>
               ) : course.modalContent?.detailedDescription ? (
-                renderTextWithParagraphs(
-                  course.modalContent.detailedDescription
-                )
+                <MarkdownText className='text-[#2b2b2b]'>{course.modalContent.detailedDescription}</MarkdownText>
               ) : (
                 <p className='text-[#2b2b2b] leading-relaxed text-left'>
                   {course.description ||
@@ -309,7 +326,49 @@ export default function SimpleCourseModal({
               )}
             </div>
 
-            <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-6 rounded-lg shadow-lg'>
+            <div className='space-y-2'>
+              {PDF_CONFIG[course.slug] && (
+                <a
+                  href={`/downloable/formaciones/${encodeURIComponent(PDF_CONFIG[course.slug])}`}
+                  download
+                  className='group flex items-center justify-between gap-3 w-full bg-[#fdf4f5] border border-[#f0e0e2] rounded-lg px-4 py-3 hover:border-[#eba2a8] hover:bg-[#fef8f8] transition-all duration-200'
+                >
+                  <div className='flex items-center gap-3 min-w-0'>
+                    <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 flex-shrink-0 text-[#eba2a8]' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                      <path strokeLinecap='round' strokeLinejoin='round' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
+                    </svg>
+                    <div className='min-w-0'>
+                      <p className='text-xs text-[#eba2a8] font-semibold uppercase tracking-wider leading-none mb-0.5'>Introducción al programa</p>
+                      <p className='text-sm font-semibold text-[#2b2b2b] truncate'>Descargar el programa de {course.title}</p>
+                    </div>
+                  </div>
+                  <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 flex-shrink-0 text-[#660e1b] group-hover:translate-y-0.5 transition-transform duration-200' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
+                  </svg>
+                </a>
+              )}
+
+              <a
+                href={`/downloable/formaciones/${encodeURIComponent(pedagogicPdf)}`}
+                download
+                className='group flex items-center justify-between gap-3 w-full bg-[#fdf4f5] border border-[#f0e0e2] rounded-lg px-4 py-3 hover:border-[#eba2a8] hover:bg-[#fef8f8] transition-all duration-200'
+              >
+                <div className='flex items-center gap-3 min-w-0'>
+                  <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 flex-shrink-0 text-[#eba2a8]' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' />
+                  </svg>
+                  <div className='min-w-0'>
+                    <p className='text-xs text-[#eba2a8] font-semibold uppercase tracking-wider leading-none mb-0.5'>Propuesta pedagógica</p>
+                    <p className='text-sm font-semibold text-[#2b2b2b] truncate'>Accedé a la propuesta pedagógica e información sobre la cursada</p>
+                  </div>
+                </div>
+                <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 flex-shrink-0 text-[#660e1b] group-hover:translate-y-0.5 transition-transform duration-200' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
+                </svg>
+              </a>
+            </div>
+
+            <div className='bg-gradient-to-r from-[#f9bbc4] to-[#eba2a8] p-4 sm:p-6 rounded-lg shadow-lg'>
               {/* Desktop layout */}
               {isUSDCourse ? (
                 /* Cursos en USD: Solo WhatsApp */
@@ -321,8 +380,9 @@ export default function SimpleCourseModal({
                     <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                       {displayPrice}
                     </p>
-                    <p className='text-white/90 text-sm mt-2 font-semibold'>
-                      💬 Consultar por este curso vía WhatsApp
+                    <p className='text-white/90 text-sm mt-2 font-semibold flex items-center justify-center gap-1.5'>
+                      <FaWhatsapp className='w-4 h-4' />
+                      Consultar por este curso vía WhatsApp
                     </p>
                   </div>
 
@@ -335,17 +395,9 @@ export default function SimpleCourseModal({
                   </button>
                 </div>
               ) : (
-                /* Cursos en ARS: Carrito + WhatsApp */
+                /* Cursos en ARS: solo Carrito (WhatsApp se movió al final) */
                 <div className='hidden md:flex items-center justify-between'>
-                  <button
-                    onClick={handleWhatsApp}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
-                  >
-                    <FaWhatsapp className='w-4 h-4' />
-                    WhatsApp
-                  </button>
-
-                  <div className='text-center'>
+                  <div className='text-center flex-1'>
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
                       Inversión del Curso
                     </h3>
@@ -359,44 +411,93 @@ export default function SimpleCourseModal({
                             {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                           </span>
                         </div>
+                        <div className='flex items-baseline justify-center gap-2'>
+                          <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                            {displayPrice}
+                          </p>
+                          {installmentsText && (
+                            <p className='text-white/80 text-sm'>({installmentsText})</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='flex items-baseline justify-center gap-2'>
                         <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                           {displayPrice}
                         </p>
+                        {installmentsText && (
+                          <p className='text-white/80 text-sm'>({installmentsText})</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                        {displayPrice}
+                    )}
+                    {installmentsText && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        {INSTALLMENTS_DISCOUNT_HINT}
                       </p>
                     )}
-                    {showUSDOption && (
-                      <p className='text-white/90 text-sm mt-1'>
-                        También disponible en U$S {course.priceUSD}
+                    {isRegularArsCourse && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        20% OFF pagando por transferencia
                       </p>
+                    )}
+                    {!isAutostylism && (
+                      <button
+                        type='button'
+                        onClick={openBankTransferModalARS}
+                        className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                      >
+                        <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                        Pagar por transferencia bancaria
+                      </button>
+                    )}
+                    {showUSDOption && !isAutostylism && (
+                      <div className='mt-1.5 flex flex-col items-center gap-1'>
+                        <p className='text-white text-sm font-primary-medium'>
+                          Si residís en el exterior de Argentina
+                        </p>
+                        <button
+                          type='button'
+                          onClick={openBankTransferModalUSD}
+                          className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                        >
+                          <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                          U$S {course.priceUSD} · Transferencia / PayPal
+                        </button>
+                      </div>
                     )}
                   </div>
 
-                  <button
-                    onClick={handleBuyCourse}
-                    className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
-                    disabled={buttonDisabled}
-                  >
-                    {addingToCart ? (
-                      <>
-                        <Loader2 className='w-4 h-4 animate-spin' />
-                        Agregando...
-                      </>
-                    ) : courseInCart ? (
-                      <>
-                        <CheckCircle className='w-4 h-4' />
-                        Ver Carrito
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className='w-4 h-4' />
-                        Agregar al Carrito
-                      </>
-                    )}
-                  </button>
+                  {isAutostylism ? (
+                    <button
+                      onClick={handleAutostylingReserva}
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2'
+                    >
+                      Realizar Reserva
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleBuyCourse}
+                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                      disabled={buttonDisabled}
+                    >
+                      {addingToCart ? (
+                        <>
+                          <Loader2 className='w-4 h-4 animate-spin' />
+                          Agregando...
+                        </>
+                      ) : courseInCart ? (
+                        <>
+                          <CheckCircle className='w-4 h-4' />
+                          Ver Carrito
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className='w-4 h-4' />
+                          Agregar al Carrito
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -412,8 +513,9 @@ export default function SimpleCourseModal({
                       {displayPrice}
                     </p>
 
-                    <p className='text-white/90 text-sm mt-2 font-semibold'>
-                      💬 Consultar por este curso vía WhatsApp
+                    <p className='text-white/90 text-sm mt-2 font-semibold flex items-center justify-center gap-1.5'>
+                      <FaWhatsapp className='w-4 h-4' />
+                      Consultar por este curso vía WhatsApp
                     </p>
                   </div>
 
@@ -426,7 +528,7 @@ export default function SimpleCourseModal({
                   </button>
                 </div>
               ) : (
-                /* Cursos en ARS: Carrito + WhatsApp */
+                /* Cursos en ARS: solo Carrito (WhatsApp se movió al final) */
                 <div className='md:hidden space-y-4'>
                   <div className='text-center'>
                     <h3 className='text-lg font-primary font-bold text-white mb-1'>
@@ -442,23 +544,70 @@ export default function SimpleCourseModal({
                             {PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF
                           </span>
                         </div>
+                        <div className='flex items-baseline justify-center gap-2'>
+                          <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
+                            {displayPrice}
+                          </p>
+                          {installmentsText && (
+                            <p className='text-white/80 text-sm'>({installmentsText})</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='flex items-baseline justify-center gap-2'>
                         <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
                           {displayPrice}
                         </p>
+                        {installmentsText && (
+                          <p className='text-white/80 text-sm'>({installmentsText})</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className='text-3xl font-primary font-bold text-white drop-shadow-lg'>
-                        {displayPrice}
+                    )}
+                    {installmentsText && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        {INSTALLMENTS_DISCOUNT_HINT}
                       </p>
                     )}
-                    {showUSDOption && (
-                      <p className='text-white/90 text-sm mt-1'>
-                        También disponible en U$S {course.priceUSD}
+                    {isRegularArsCourse && (
+                      <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
+                        20% OFF pagando por transferencia
                       </p>
+                    )}
+                    {!isAutostylism && (
+                      <button
+                        type='button'
+                        onClick={openBankTransferModalARS}
+                        className='mt-2 inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                      >
+                        <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                        Pagar por transferencia bancaria
+                      </button>
+                    )}
+                    {showUSDOption && !isAutostylism && (
+                      <div className='mt-1.5 flex flex-col items-center gap-1'>
+                        <p className='text-white text-sm font-primary-medium'>
+                          Si residís en el exterior de Argentina
+                        </p>
+                        <button
+                          type='button'
+                          onClick={openBankTransferModalUSD}
+                          className='inline-flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#111111] text-white text-xs font-primary-medium px-3.5 py-2 rounded-full transition-all'
+                        >
+                          <Landmark className='w-3.5 h-3.5 text-[#f9bbc4]' />
+                          U$S {course.priceUSD} · Transferencia / PayPal
+                        </button>
+                      </div>
                     )}
                   </div>
 
-                  <div className='flex flex-col space-y-3'>
+                  {isAutostylism ? (
+                    <button
+                      onClick={handleAutostylingReserva}
+                      className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center w-full'
+                    >
+                      Realizar Reserva
+                    </button>
+                  ) : (
                     <button
                       onClick={handleBuyCourse}
                       className='py-4 px-8 rounded-full font-primary font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl bg-[#660e1b] hover:bg-[#4a0a14] text-white flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed w-full'
@@ -481,15 +630,7 @@ export default function SimpleCourseModal({
                         </>
                       )}
                     </button>
-
-                    <button
-                      onClick={handleWhatsApp}
-                      className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center hover:scale-105 transform'
-                    >
-                      <FaWhatsapp className='w-4 h-4' />
-                      WhatsApp
-                    </button>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
@@ -500,7 +641,7 @@ export default function SimpleCourseModal({
                 <h3 className='text-xl font-primary font-bold text-[#660e1b] mb-3 text-center'>
                   Modalidad
                 </h3>
-                {renderTextWithParagraphs(course.modalidad)}
+                <MarkdownText className='text-[#2b2b2b] text-center'>{course.modalidad}</MarkdownText>
               </div>
             )}
 
@@ -508,9 +649,9 @@ export default function SimpleCourseModal({
             {course.learn && course.learn.trim() !== '' && (
               <div className='bg-white p-6 rounded-lg border border-[#f0e6e8]'>
                 <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-4'>
-                  ¿Qué vas a aprender?
+                  INFORMACIÓN SOBRE LA CURSADA
                 </h3>
-                {renderTextWithParagraphs(course.learn)}
+                <MarkdownText className='text-[#2b2b2b]'>{course.learn}</MarkdownText>
               </div>
             )}
 
@@ -520,15 +661,42 @@ export default function SimpleCourseModal({
                 <h3 className='text-2xl font-primary font-bold text-[#660e1b] mb-6 text-center'>
                   ¿Qué incluye este curso?
                 </h3>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  {course.includes_category.map((item, index) => (
-                    <CourseInclude
-                      key={index}
-                      iconImage={item.url_icon}
-                      text={item.texto || item.text || ''}
-                    />
-                  ))}
-                </div>
+                {(() => {
+                  const required = course.includes_category!.filter(i => !(i.texto || i.text || '').startsWith('OPCIONAL:'));
+                  const optional = course.includes_category!.filter(i => (i.texto || i.text || '').startsWith('OPCIONAL:'));
+                  return (
+                    <>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {required.map((item, index) => (
+                          <CourseInclude
+                            key={index}
+                            iconImage={item.url_icon}
+                            text={item.texto || item.text || ''}
+                          />
+                        ))}
+                      </div>
+                      {optional.length > 0 && (
+                        <div className='mt-8'>
+                          <h4 className='text-lg font-primary font-bold text-[#660e1b] mb-4 text-center tracking-wide'>
+                            OPCIONALES DE LA CURSADA:
+                          </h4>
+                          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            {optional.map((item, index) => (
+                              <CourseInclude
+                                key={index}
+                                iconImage={item.url_icon}
+                                text={(item.texto || item.text || '').slice('OPCIONAL:'.length).trimStart()}
+                              />
+                            ))}
+                          </div>
+                          <p className='text-center text-sm text-gray-500 mt-4 italic'>
+                            (Consultar valor adicional, horarios y fechas disponibles)
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             ) : (
               course.modalContent?.includes &&
@@ -572,6 +740,17 @@ export default function SimpleCourseModal({
               </div>
             )}
 
+            {/* Botón WhatsApp */}
+            <div className='flex justify-center'>
+              <button
+                onClick={handleWhatsApp}
+                className='bg-[#660e1b] hover:bg-[#4a0a14] text-white py-3 px-8 rounded-full font-primary font-bold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 hover:scale-105 transform'
+              >
+                <FaWhatsapp className='w-5 h-5' />
+                Consultar por WhatsApp
+              </button>
+            </div>
+
             {course.modalContent?.additionalInfo && (
               <div className='bg-white p-4 rounded-lg border border-[#e9ecef] text-center'>
                 <p className='text-[#2b2b2b] text-sm'>
@@ -583,5 +762,16 @@ export default function SimpleCourseModal({
         </div>
       </div>
     </Modal>
+
+    <BankTransferModal
+      isOpen={bankModalCurrency !== null}
+      onClose={() => setBankModalCurrency(null)}
+      currency={bankModalCurrency ?? 'ARS'}
+      amount={bankModalAmount}
+      listAmount={bankModalListAmount}
+      discountPercent={bankModalDiscountPercent}
+      whatsappMessage={bankModalWhatsappMessage}
+    />
+    </>
   );
 }

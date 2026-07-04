@@ -50,7 +50,7 @@ export function Modal({ isOpen, onClose, children, className }: ModalProps) {
       {/* Modal content */}
       <div
         className={cn(
-          "relative z-10 max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg bg-background shadow-2xl animate-in zoom-in-95 duration-300",
+          "relative z-10 max-h-[90vh] w-[95vw] sm:w-auto sm:max-w-[90vw] overflow-hidden rounded-lg bg-background shadow-2xl animate-in zoom-in-95 duration-300",
           className
         )}
         onClick={(e) => e.stopPropagation()}

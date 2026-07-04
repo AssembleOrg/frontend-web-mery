@@ -8,6 +8,7 @@ import { X } from 'lucide-react';
 import OfertasCourseModal from './ofertas-course-modal';
 
 const WHATSAPP_NUMBER = '5491153336627';
+const AUTOSTYLING_WHATSAPP_NUMBER = '5491161592591';
 
 interface CourseCardProps {
   course?: Course;
@@ -81,13 +82,13 @@ export default function CourseCard({
                           cardTitle.toLowerCase().includes('camuflaje senior') ||
                           cardTitle.toLowerCase().includes('camuflaje señor');
 
-  // Calcular precio con descuento
-  // Para cursos especiales, usar precio USD; para otros, usar ARS
+  // El precio del DB ya viene con el 40% de descuento real aplicado.
+  // Reconstruimos el precio "previo a la promo" para mostrarlo tachado.
   const basePrice = isSpecialCourse ? (priceUSD || 0) : (typeof cardPrice === 'number' ? cardPrice : parseFloat(cardPrice as string) || 0);
-  const originalPrice = basePrice;
-  const discountedPrice = showDiscount && discountPercentage > 0 
-    ? originalPrice * (1 - discountPercentage / 100) 
-    : originalPrice;
+  const discountedPrice = basePrice;
+  const originalPrice = showDiscount && discountPercentage > 0 && discountPercentage < 100
+    ? Math.round(basePrice * (100 / (100 - discountPercentage)))
+    : basePrice;
 
   // Función para comprar con MercadoPago
   const handleBuyFormation = async () => {
@@ -143,16 +144,18 @@ export default function CourseCard({
 
   // Función para abrir WhatsApp desde el modal especial
   const handleWhatsAppContact = () => {
+    const wpNumber = isAutoStyling ? AUTOSTYLING_WHATSAPP_NUMBER : WHATSAPP_NUMBER;
     const message = `Hola chicas, como están? Quisiera más info sobre ${cardTitle} con la promoción del ${PROMO_CONFIG.DISCOUNT_PERCENTAGE}% OFF`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${wpNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setShowSpecialModal(false);
   };
 
   // Función para comprar exterior (WhatsApp)
   const handleBuyExterior = () => {
+    const wpNumber = isAutoStyling ? AUTOSTYLING_WHATSAPP_NUMBER : WHATSAPP_NUMBER;
     const message = `Hola chicas, como están? Quisiera comprar ${cardTitle} en USD`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${wpNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

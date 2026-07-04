@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { CreditCard, User, Mail, Trash2, Gift, X, Loader2 } from 'lucide-react';
+import { CreditCard, User, Mail, Trash2, Gift, X, Loader2, Info } from 'lucide-react';
 import type { Cart, ValidateCouponResponse } from '@/lib/api-client';
 import type { User as UserType } from '@/types/auth';
 import { toast } from 'react-hot-toast';
@@ -12,6 +12,8 @@ interface FormData {
   apellido: string;
 }
 
+export type InstallmentPlan = 3 | 6;
+
 interface CheckoutViewProps {
   cart: Cart;
   user: UserType | null;
@@ -19,7 +21,6 @@ interface CheckoutViewProps {
   isProcessing: boolean;
   isFormValid: boolean;
   error: string | null;
-  totalARS: number;
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
@@ -32,7 +33,19 @@ interface CheckoutViewProps {
   isValidatingCoupon: boolean;
   onValidateCoupon: () => void;
   onRemoveCoupon: () => void;
-  discountedTotalARS: number;
+  // Installment plan
+  installmentPlan: InstallmentPlan;
+  onInstallmentPlanChange: (plan: InstallmentPlan) => void;
+  showInstallmentSelector: boolean;
+  // IDs de items USD-only (se gestionan por fuera de MP)
+  usdOnlyItemIds: string[];
+  // Totales pre-calculados (solo items ARS)
+  subtotalARS: number;
+  couponDiscountARS: number;
+  cuotasDiscountARS: number;
+  finalTotalARS: number;
+  totalAt6Cuotas: number;
+  totalAt3Cuotas: number;
 }
 
 export const CheckoutView = ({
@@ -42,7 +55,6 @@ export const CheckoutView = ({
   isProcessing,
   isFormValid,
   error,
-  totalARS,
   handleInputChange,
   handleSubmit,
   onRemoveItem,
@@ -52,7 +64,16 @@ export const CheckoutView = ({
   isValidatingCoupon,
   onValidateCoupon,
   onRemoveCoupon,
-  discountedTotalARS,
+  installmentPlan,
+  onInstallmentPlanChange,
+  showInstallmentSelector,
+  usdOnlyItemIds,
+  subtotalARS,
+  couponDiscountARS,
+  cuotasDiscountARS,
+  finalTotalARS,
+  totalAt6Cuotas,
+  totalAt3Cuotas,
 }: CheckoutViewProps) => {
   const handleRemoveItem = async (itemId: string) => {
     const success = await onRemoveItem(itemId);
@@ -61,8 +82,11 @@ export const CheckoutView = ({
     }
   };
 
-  const discountAmount = totalARS - discountedTotalARS;
-  const hasDiscount = appliedCoupon?.valid && discountAmount > 0;
+  const hasCouponDiscount = appliedCoupon?.valid && couponDiscountARS > 0;
+  const hasCuotasDiscount = cuotasDiscountARS > 0;
+  const usdOnlySet = new Set(usdOnlyItemIds);
+  const hasUsdOnly = usdOnlySet.size > 0;
+  const formatARS = (n: number) => `$${n.toLocaleString('es-AR')}`;
 
   return (
     <div className='container mx-auto px-4 py-16 max-w-6xl'>
@@ -130,6 +154,38 @@ export const CheckoutView = ({
               <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
                 <CreditCard className='w-5 h-5 text-[#f9bbc4]' /> Método de Pago
               </h2>
+
+              {showInstallmentSelector && (
+                <div className='mb-5'>
+                  <p className='text-sm font-primary-medium text-foreground mb-3'>
+                    Plan de cuotas sin interés
+                  </p>
+                  <div className='space-y-2'>
+                    <InstallmentOption
+                      selected={installmentPlan === 6}
+                      onClick={() => onInstallmentPlanChange(6)}
+                      title='6 cuotas sin interés'
+                      subtitle='Precio de lista'
+                      price={formatARS(totalAt6Cuotas)}
+                    />
+                    <InstallmentOption
+                      selected={installmentPlan === 3}
+                      onClick={() => onInstallmentPlanChange(3)}
+                      title='3 cuotas sin interés'
+                      subtitle='10% de descuento'
+                      price={formatARS(totalAt3Cuotas)}
+                      badge='-10%'
+                    />
+                  </div>
+                  <div className='flex items-start gap-1.5 mt-2.5'>
+                    <Info className='w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5' />
+                    <p className='text-xs text-muted-foreground'>
+                      El precio final varía según el plan elegido.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className='bg-muted/50 p-4 rounded-lg'>
                 <p className='text-muted-foreground text-sm'>
                   Completa tus datos y haz clic en Confirmar y Pagar para ser
@@ -143,7 +199,7 @@ export const CheckoutView = ({
               >
                 {isProcessing
                   ? 'Procesando...'
-                  : `Confirmar y Pagar - $${discountedTotalARS.toLocaleString('es-AR')}`}
+                  : `Confirmar y Pagar - ${formatARS(finalTotalARS)}`}
               </button>
               {error && (
                 <p className='text-red-500 mt-2 text-center'>{error}</p>
@@ -160,7 +216,8 @@ export const CheckoutView = ({
             </h2>
             <div className='space-y-4 mb-6'>
               {cart.items.map((item) => {
-                const isEligible = appliedCoupon?.valid &&
+                const isUsdOnly = usdOnlySet.has(item.id);
+                const isEligible = !isUsdOnly && appliedCoupon?.valid &&
                   appliedCoupon.applicableCategoryIds.includes(item.category.id);
                 const itemDiscount = isEligible
                   ? Math.round(item.priceARS * appliedCoupon.discountPercent / 100)
@@ -177,7 +234,7 @@ export const CheckoutView = ({
                         alt={item.category.name}
                         width={64}
                         height={64}
-                        className='w-full h-full object-cover rounded-lg'
+                        className={`w-full h-full object-cover rounded-lg ${isUsdOnly ? 'opacity-60' : ''}`}
                       />
                     </div>
                     <div className='flex-1'>
@@ -188,7 +245,11 @@ export const CheckoutView = ({
                         <span className='text-sm text-muted-foreground'>
                           Cantidad: 1
                         </span>
-                        {isEligible ? (
+                        {isUsdOnly ? (
+                          <span className='font-bold text-[#f9bbc4]'>
+                            USD {item.priceUSD.toLocaleString('en-US')}
+                          </span>
+                        ) : isEligible ? (
                           <div className='flex items-center gap-2'>
                             <span className='text-sm text-muted-foreground line-through'>
                               ${item.priceARS.toLocaleString('es-AR')}
@@ -203,11 +264,15 @@ export const CheckoutView = ({
                           </span>
                         )}
                       </div>
-                      {isEligible && (
+                      {isUsdOnly ? (
+                        <span className='text-xs text-muted-foreground italic'>
+                          Se coordina aparte por WhatsApp
+                        </span>
+                      ) : isEligible ? (
                         <span className='text-xs text-purple-600 font-medium'>
                           -{appliedCoupon.discountPercent}% aplicado
                         </span>
-                      )}
+                      ) : null}
                     </div>
                     <button
                       type='button'
@@ -220,6 +285,11 @@ export const CheckoutView = ({
                   </div>
                 );
               })}
+              {hasUsdOnly && (
+                <div className='text-xs text-muted-foreground bg-muted/40 rounded-md p-3 border border-border'>
+                  Los cursos en USD no se cobran por Mercado Pago — se gestionan por transferencia/WhatsApp y no participan del total de abajo.
+                </div>
+              )}
             </div>
 
             {/* Coupon Section */}
@@ -285,19 +355,25 @@ export const CheckoutView = ({
 
             {/* Totals */}
             <div className='border-t pt-4 space-y-2'>
-              <div className='flex justify-between text-muted-foreground'>
+              <div className='flex justify-between text-[#660e1b]'>
                 <span>Subtotal</span>
-                <span>${totalARS.toLocaleString('es-AR')}</span>
+                <span>{formatARS(subtotalARS)}</span>
               </div>
-              {hasDiscount && (
-                <div className='flex justify-between text-purple-600'>
-                  <span>Descuento ({appliedCoupon!.discountPercent}%)</span>
-                  <span>-${discountAmount.toLocaleString('es-AR')}</span>
+              {hasCouponDiscount && (
+                <div className='flex justify-between text-[#660e1b]'>
+                  <span>Cupón ({appliedCoupon!.discountPercent}%)</span>
+                  <span>-{formatARS(couponDiscountARS)}</span>
                 </div>
               )}
-              <div className='flex justify-between text-lg font-primary font-bold text-foreground'>
+              {hasCuotasDiscount && (
+                <div className='flex justify-between text-[#660e1b]'>
+                  <span>Plan 3 cuotas (-10%)</span>
+                  <span>-{formatARS(cuotasDiscountARS)}</span>
+                </div>
+              )}
+              <div className='flex justify-between text-lg font-primary font-bold text-[#660e1b]'>
                 <span>Total</span>
-                <span>${discountedTotalARS.toLocaleString('es-AR')}</span>
+                <span>{formatARS(finalTotalARS)}</span>
               </div>
             </div>
             <div className='mt-6 alert-high border border-[#f7cbcb] rounded-lg p-4'>
@@ -317,3 +393,54 @@ export const CheckoutView = ({
     </div>
   );
 };
+
+interface InstallmentOptionProps {
+  selected: boolean;
+  onClick: () => void;
+  title: string;
+  subtitle: string;
+  price: string;
+  badge?: string;
+}
+
+const InstallmentOption = ({
+  selected,
+  onClick,
+  title,
+  subtitle,
+  price,
+  badge,
+}: InstallmentOptionProps) => (
+  <button
+    type='button'
+    onClick={onClick}
+    aria-pressed={selected}
+    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+      selected
+        ? 'border-[#660e1b] bg-[#660e1b]/5'
+        : 'border-border hover:border-[#f9bbc4] bg-background'
+    }`}
+  >
+    <div className='flex items-center gap-3'>
+      <span
+        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+          selected ? 'border-[#660e1b]' : 'border-muted-foreground/40'
+        }`}
+      >
+        {selected && <span className='w-2.5 h-2.5 rounded-full bg-[#660e1b]' />}
+      </span>
+      <div className='flex-1 min-w-0'>
+        <div className='flex items-center gap-2 flex-wrap'>
+          <p className='font-primary-medium text-foreground'>{title}</p>
+          {badge && (
+            <span className='text-[10px] font-primary-medium tracking-wide bg-[#f9bbc4]/20 text-[#660e1b] px-1.5 py-0.5 rounded-full'>
+              {badge}
+            </span>
+          )}
+        </div>
+        <p className='text-xs text-muted-foreground mt-0.5'>{subtitle}</p>
+      </div>
+      <p className='font-primary font-bold text-foreground shrink-0'>{price}</p>
+    </div>
+  </button>
+);

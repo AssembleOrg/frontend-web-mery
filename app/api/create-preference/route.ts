@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   const webhookBaseUrl = (backendUrl || frontendUrl)!.replace(/\/$/, '');
 
   try {
-    const { items, locale, userEmail, userId, couponId } = await req.json();
+    const { items, locale, userEmail, userId, couponId, installments: requestedInstallments } = await req.json();
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const preferenceItems = items.map((item: any) => {
       const quantity = Number(item.quantity);
       const price = Number(item.price);
-      
+
       if (isNaN(quantity) || quantity <= 0) {
         throw new Error(`Cantidad inválida para el item: ${item.title}`);
       }
@@ -79,6 +79,22 @@ export async function POST(req: NextRequest) {
         currency_id: 'ARS',
       };
     });
+
+    // Cuotas: el frontend envía el plan elegido (3 o 6). Excepción: cursos
+    // cobrados en USD por fuera de la plataforma (Nanoblading, Camuflaje
+    // Senior) sólo aceptan pago único.
+    const hasNonInstallmentItem = items.some((item: any) => {
+      const title = String(item.title || '').toLowerCase();
+      return (
+        title.includes('nanoblading') ||
+        title.includes('camuflaje senior') ||
+        title.includes('camuflaje señor')
+      );
+    });
+    const allowedInstallments = [3, 6];
+    const planFromClient = Number(requestedInstallments);
+    const safePlan = allowedInstallments.includes(planFromClient) ? planFromClient : 6;
+    const installments = hasNonInstallmentItem ? 1 : safePlan;
 
     // Extraer category IDs de los items
     const categoryIds = items.map((item: any) => item.id);
@@ -111,8 +127,8 @@ export async function POST(req: NextRequest) {
         auto_return: 'approved',
         notification_url: `${webhookBaseUrl}/api/webhook`,
         payment_methods: {
-          installments: 1,
-          default_installments: 1,
+          installments,
+          default_installments: installments,
         },
         statement_descriptor: 'MERY CURSOS',
       },

@@ -12,32 +12,32 @@ import { DateTime } from 'luxon';
 
 export const PROMO_CONFIG = {
   // Fechas de inicio y fin de la promoción (GMT-3, Buenos Aires)
-  // Promoción hasta el 7 de abril de 2026 a las 00:00
+  // Promoción del 1 al 8 de mayo de 2026 inclusive (termina el 9/5 a las 00:00)
   START_DATE: DateTime.fromObject(
-    { year: 2026, month: 3, day: 26, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 5, day: 1, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   END_DATE: DateTime.fromObject(
-    { year: 2026, month: 4, day: 7, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 5, day: 9, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Fecha de desactivación completa (después de esta fecha se bloquea todo)
   DISABLE_DATE: DateTime.fromObject(
-    { year: 2026, month: 4, day: 7, hour: 1, minute: 0, second: 0 },
+    { year: 2026, month: 5, day: 9, hour: 1, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Período de compra activo
   PURCHASE_START: DateTime.fromObject(
-    { year: 2026, month: 3, day: 26, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 5, day: 1, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   PURCHASE_END: DateTime.fromObject(
-    { year: 2026, month: 4, day: 7, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 5, day: 9, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
 
   // Porcentaje de descuento
-  DISCOUNT_PERCENTAGE: 50,
+  DISCOUNT_PERCENTAGE: 40,
 
   // Intervalo para mostrar el modal nuevamente (en milisegundos)
   // Mostrar cada 15 minutos
@@ -48,18 +48,18 @@ export const PROMO_CONFIG = {
 
   // Textos configurables
   TEXTS: {
-    modalTitle: '50% OFF',
+    modalTitle: '40% OFF',
     modalSubtitle: 'en todas las formaciones',
-    modalDateRange: 'Hasta el 6 de Abril inclusive',
+    modalDateRange: 'Hasta el 8 de Mayo inclusive',
     modalCTA: 'Ver Formaciones',
     modalDescription:
       'No dejes pasar esta oportunidad para sumar nuevos servicios y/o perfeccionar tus resultados',
 
-    pageTitle: '50% OFF',
+    pageTitle: '40% OFF',
     pageSubtitle: 'En todas las formaciones',
     pageSubtitleExtra: '( Incluye Nanoblading & Camuflaje )',
     pageDescription:
-      'Las últimas técnicas en Cosmetic Tattoo y servicios Premium 50% OFF',
+      'Las últimas técnicas en Cosmetic Tattoo y servicios Premium 40% OFF',
 
     navbarLink: 'OFERTAS ESPECIALES',
 
@@ -96,7 +96,7 @@ export function isPromoUpcoming(): boolean {
 }
 
 /**
- * Verifica si la promoción está completamente desactivada (después del 13/12 a la 1 AM)
+ * Verifica si la promoción está completamente desactivada (después del 9/5 a la 1 AM)
  */
 export function isPromoDisabled(): boolean {
   const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');
@@ -105,7 +105,7 @@ export function isPromoDisabled(): boolean {
 
 /**
  * Verifica si los botones de compra están activos
- * Solo activos entre las 00:00 del 6/12 y las 00:00 del 13/12
+ * Solo activos entre las 00:00 del 1/5 y las 00:00 del 9/5
  */
 export function arePurchaseButtonsActive(): boolean {
   const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');

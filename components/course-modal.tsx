@@ -2,6 +2,7 @@
 
 import { Course } from './types/course';
 import { Modal } from './ui/modal';
+import { MarkdownText } from './ui/markdown-text';
 
 interface CourseModalProps {
   course: Course | null;
@@ -76,11 +77,13 @@ export default function CourseModal({
             <h3 className='text-lg font-semibold text-gray-900 mb-4'>
               Descripción del Curso
             </h3>
-            <p className='text-gray-600 leading-relaxed mb-6'>
-              {course.long_description ||
-                course.modalContent?.detailedDescription ||
-                course.description}
-            </p>
+            <div className='text-gray-600 mb-6'>
+              <MarkdownText>
+                {course.long_description ||
+                  course.modalContent?.detailedDescription ||
+                  course.description}
+              </MarkdownText>
+            </div>
 
             {/* Course Includes */}
             {course.modalContent?.includes &&

@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
-import { CheckoutView } from '@/components/checkout/CheckoutView';
+import { CheckoutView, type InstallmentPlan } from '@/components/checkout/CheckoutView';
 import { CheckoutSkeleton } from '@/components/checkout/CheckoutSkeleton';
 import { toast } from 'react-hot-toast';
 import {
@@ -16,12 +16,21 @@ import {
   type ValidateCouponResponse,
 } from '@/lib/api-client';
 
+// Convención del sistema: priceARS === USD_ONLY_SENTINEL && priceUSD > 0
+// marca un curso USD-only (Nanoblading, Camuflaje Senior). Esos no se
+// cobran por Mercado Pago — se gestionan aparte por WhatsApp.
+// Misma señal usada en components/simple-course-modal.tsx y
+// app/[locale]/formaciones/page.tsx.
+const USD_ONLY_SENTINEL = 99999999;
+const isUsdOnlyItem = (item: { priceARS: number; priceUSD: number }) =>
+  item.priceARS === USD_ONLY_SENTINEL && item.priceUSD > 0;
+
 export default function FinalizarCompraPage() {
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { cart, totalARS, isLoading: isCartLoading, removeItem } = useCart();
+  const { cart, isLoading: isCartLoading, removeItem } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +38,9 @@ export default function FinalizarCompraPage() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<ValidateCouponResponse | null>(null);
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+
+  // Plan de cuotas: 6 (precio de lista) o 3 (10% off). Default: 6.
+  const [installmentPlan, setInstallmentPlan] = useState<InstallmentPlan>(6);
 
   // Compute initial form data based on user data
   const initialFormData = useMemo(() => {
@@ -57,20 +69,60 @@ export default function FinalizarCompraPage() {
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
 
-  // Calculate discounted total
-  const discountedTotalARS = useMemo(() => {
-    if (!cart || !appliedCoupon?.valid) return totalARS;
-    let total = 0;
-    for (const item of cart.items) {
-      const isEligible = appliedCoupon.applicableCategoryIds.includes(item.category.id);
-      if (isEligible) {
-        total += Math.round(item.priceARS * (1 - appliedCoupon.discountPercent / 100));
-      } else {
-        total += item.priceARS;
+  // Items que efectivamente van a Mercado Pago (ARS). Los USD-only se
+  // gestionan por fuera y no participan del flujo de checkout/cuotas.
+  const arsItems = useMemo(
+    () => (cart ? cart.items.filter((item) => !isUsdOnlyItem(item)) : []),
+    [cart]
+  );
+  const usdOnlyItems = useMemo(
+    () => (cart ? cart.items.filter((item) => isUsdOnlyItem(item)) : []),
+    [cart]
+  );
+  const hasArsItems = arsItems.length > 0;
+
+  const computeBreakdown = useCallback(
+    (plan: InstallmentPlan) => {
+      const cuotasFactor = plan === 3 ? 0.9 : 1;
+      let subtotal = 0;
+      let couponDiscount = 0;
+      let cuotasDiscount = 0;
+      const perItemPrice = new Map<string, number>();
+
+      for (const item of arsItems) {
+        const list = item.priceARS;
+        subtotal += list;
+
+        const isEligible =
+          appliedCoupon?.valid &&
+          appliedCoupon.applicableCategoryIds.includes(item.category.id);
+        const couponFactor = isEligible
+          ? 1 - appliedCoupon.discountPercent / 100
+          : 1;
+        const afterCoupon = Math.round(list * couponFactor);
+        couponDiscount += list - afterCoupon;
+
+        const afterCuotas = Math.round(afterCoupon * cuotasFactor);
+        cuotasDiscount += afterCoupon - afterCuotas;
+
+        perItemPrice.set(item.id, afterCuotas);
       }
-    }
-    return total;
-  }, [cart, appliedCoupon, totalARS]);
+
+      const finalTotal = Array.from(perItemPrice.values()).reduce((a, b) => a + b, 0);
+      return {
+        subtotal,
+        couponDiscount,
+        cuotasDiscount: Math.max(0, cuotasDiscount),
+        finalTotal,
+        perItemPrice,
+      };
+    },
+    [arsItems, appliedCoupon]
+  );
+
+  const breakdown = useMemo(() => computeBreakdown(installmentPlan), [computeBreakdown, installmentPlan]);
+  const totalAt6Cuotas = useMemo(() => computeBreakdown(6).finalTotal, [computeBreakdown]);
+  const totalAt3Cuotas = useMemo(() => computeBreakdown(3).finalTotal, [computeBreakdown]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -113,27 +165,25 @@ export default function FinalizarCompraPage() {
       return;
     }
 
+    if (!hasArsItems) {
+      toast.error('No hay cursos en pesos para procesar. Los cursos en USD se coordinan por WhatsApp.');
+      return;
+    }
+
     setIsProcessing(true);
     toast.loading('Procesando tu pago...', { id: 'payment-toast' });
     setError(null);
 
     try {
-      // Step 1: Build items with discounted prices
-      const itemsForAPI = cart.items.map((item) => {
-        const isEligible = appliedCoupon?.valid &&
-          appliedCoupon.applicableCategoryIds.includes(item.category.id);
-        const price = isEligible
-          ? Math.round(item.priceARS * (1 - appliedCoupon!.discountPercent / 100))
-          : item.priceARS;
-
-        return {
-          id: item.category.id,
-          title: item.category.name,
-          description: item.category.description || `Curso: ${item.category.name}`,
-          price,
-          quantity: 1,
-        };
-      });
+      // Step 1: Build items with cuotas + coupon discounts already applied.
+      // Solo items ARS — los USD-only se gestionan por fuera de MP.
+      const itemsForAPI = arsItems.map((item) => ({
+        id: item.category.id,
+        title: item.category.name,
+        description: item.category.description || `Curso: ${item.category.name}`,
+        price: breakdown.perItemPrice.get(item.id) ?? item.priceARS,
+        quantity: 1,
+      }));
 
       // Step 2: Create MercadoPago preference
       const response = await fetch('/api/create-preference', {
@@ -145,6 +195,7 @@ export default function FinalizarCompraPage() {
           userId: user.id,
           userEmail: user.email,
           couponId: appliedCoupon?.couponId || undefined,
+          installments: installmentPlan,
         }),
       });
 
@@ -181,7 +232,7 @@ export default function FinalizarCompraPage() {
     }
   };
 
-  const isFormValid = !!(formData.nombre && formData.apellido);
+  const isFormValid = !!(formData.nombre && formData.apellido) && hasArsItems;
 
   if (isAuthLoading || isCartLoading) {
     return (
@@ -229,7 +280,6 @@ export default function FinalizarCompraPage() {
         isProcessing={isProcessing}
         isFormValid={isFormValid}
         error={error}
-        totalARS={totalARS}
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         onRemoveItem={removeItem}
@@ -239,7 +289,16 @@ export default function FinalizarCompraPage() {
         isValidatingCoupon={isValidatingCoupon}
         onValidateCoupon={handleValidateCoupon}
         onRemoveCoupon={handleRemoveCoupon}
-        discountedTotalARS={discountedTotalARS}
+        installmentPlan={installmentPlan}
+        onInstallmentPlanChange={setInstallmentPlan}
+        showInstallmentSelector={hasArsItems}
+        usdOnlyItemIds={usdOnlyItems.map((i) => i.id)}
+        subtotalARS={breakdown.subtotal}
+        couponDiscountARS={breakdown.couponDiscount}
+        cuotasDiscountARS={breakdown.cuotasDiscount}
+        finalTotalARS={breakdown.finalTotal}
+        totalAt6Cuotas={totalAt6Cuotas}
+        totalAt3Cuotas={totalAt3Cuotas}
       />
       <Footer />
     </div>
