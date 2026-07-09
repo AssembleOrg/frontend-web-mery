@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import { FaGraduationCap, FaVideo, FaUsers, FaChartLine, FaGift } from 'react-icons/fa';
+import { FaGraduationCap, FaVideo, FaUsers, FaChartLine, FaGift, FaClipboardList } from 'react-icons/fa';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -41,6 +41,14 @@ export default function AdminDashboard() {
       href: `/${locale}/admin/cupones`,
       color: 'bg-purple-50 text-purple-600 hover:bg-purple-100',
       iconBg: 'bg-purple-100',
+    },
+    {
+      title: 'Formularios',
+      description: 'Crear formularios públicos y ver sus respuestas y analítica',
+      icon: FaClipboardList,
+      href: `/${locale}/admin/formularios`,
+      color: 'bg-[#FBE8EA] text-[#660e1b] hover:bg-[#F7CBCB]',
+      iconBg: 'bg-[#F7CBCB]',
     },
     {
       title: 'Estadísticas',
