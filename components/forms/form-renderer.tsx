@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Loader2, Calendar, MapPin, Clock, ExternalLink } from 'lucide-react';
 import { PhoneInput } from '@/components/ui/phone-input';
 import type { FormAnswers, FormField, YesNoAnswer } from '@/lib/forms-api';
 
@@ -17,7 +17,7 @@ interface FormRendererProps {
 }
 
 const inputClasses =
-  'w-full px-3.5 py-2.5 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f9bbc4] focus:border-transparent transition-shadow';
+  'w-full px-4 py-3 rounded-xl border border-[#f7cbcb]/70 bg-white text-sm text-[#2b2b2b] placeholder:text-[#545454]/50 focus:outline-none focus:ring-2 focus:ring-[#eba2a8] focus:border-transparent transition-shadow';
 
 export function FormRenderer({
   fields,
@@ -107,10 +107,10 @@ export function FormRenderer({
       <button
         type='submit'
         disabled={submitting}
-        className='w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#660e1b] text-white text-sm font-semibold tracking-wide hover:bg-[#7a1220] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed'
+        className='w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#2b2b2b] text-white text-sm font-semibold tracking-wide hover:bg-black active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed'
       >
         {submitting && <Loader2 className='w-4 h-4 animate-spin' />}
-        {submitLabel || 'Enviar'}
+        {submitLabel || 'Confirmar mi lugar'}
       </button>
     </form>
   );
@@ -118,16 +118,91 @@ export function FormRenderer({
 
 // ============ Bloques ============
 
+/**
+ * Reconoce líneas con marcadores (emoji o palabra clave) para renderizarlas
+ * como filas con ícono. La línea de ubicación se convierte en link a Google Maps.
+ */
+type InfoLineKind = 'date' | 'location' | 'time' | 'text';
+
+function classifyInfoLine(raw: string): { kind: InfoLineKind; text: string } {
+  const line = raw.trim();
+  const lower = line.toLowerCase();
+  // Quita emoji/símbolo inicial para dejar el texto limpio
+  const stripLead = (s: string) => s.replace(/^[^\p{L}\p{N}]+/u, '').trim();
+
+  if (line.startsWith('📅') || /\b(fecha|d[ií]a|viernes|lunes|martes|mi[eé]rcoles|jueves|s[aá]bado|domingo)\b/.test(lower)) {
+    return { kind: 'date', text: stripLead(line) };
+  }
+  if (line.startsWith('📍') || line.startsWith('🗺') || /\b(cabildo|direcci[oó]n|ubicaci[oó]n|caba|av\.|avenida|calle)\b/.test(lower)) {
+    return { kind: 'location', text: stripLead(line) };
+  }
+  if (line.startsWith('🕐') || line.startsWith('⏰') || /\b(hs|horario|hora)\b/.test(lower)) {
+    return { kind: 'time', text: stripLead(line) };
+  }
+  return { kind: 'text', text: line };
+}
+
+function InfoLineIcon({ kind }: { kind: InfoLineKind }) {
+  const cls = 'w-4 h-4 text-[#2b2b2b] flex-shrink-0 mt-0.5';
+  if (kind === 'date') return <Calendar className={cls} />;
+  if (kind === 'location') return <MapPin className={cls} />;
+  if (kind === 'time') return <Clock className={cls} />;
+  return null;
+}
+
 function InfoBlock({ field }: { field: FormField }) {
+  const lines = (field.description || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map(classifyInfoLine);
+
+  const structured = lines.some((l) => l.kind !== 'text');
+
   return (
-    <div className='rounded-xl bg-gradient-to-br from-[#FBE8EA] to-[#fdf3f4] border border-[#f9bbc4]/40 px-5 py-4'>
+    <div className='rounded-2xl bg-[#fbe8ea] border border-[#f7cbcb]/60 px-5 py-4'>
       {field.label && (
-        <p className='text-sm font-semibold text-[#660e1b] mb-1'>{field.label}</p>
-      )}
-      {field.description && (
-        <p className='text-sm text-gray-700 whitespace-pre-line leading-relaxed'>
-          {field.description}
+        <p className='text-[13px] font-semibold uppercase tracking-wider text-[#2b2b2b] mb-3'>
+          {field.label}
         </p>
+      )}
+
+      {structured ? (
+        <ul className='space-y-2.5'>
+          {lines.map((line, i) => {
+            if (line.kind === 'location') {
+              const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(line.text)}`;
+              return (
+                <li key={i}>
+                  <a
+                    href={mapsUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='group flex items-start gap-2.5 text-sm text-[#2b2b2b] font-medium hover:text-black transition-colors'
+                  >
+                    <InfoLineIcon kind='location' />
+                    <span className='underline decoration-[#eba2a8] decoration-2 underline-offset-2'>
+                      {line.text}
+                    </span>
+                    <ExternalLink className='w-3.5 h-3.5 text-[#545454] flex-shrink-0 mt-0.5 opacity-70 group-hover:opacity-100 transition-opacity' />
+                  </a>
+                </li>
+              );
+            }
+            return (
+              <li key={i} className='flex items-start gap-2.5 text-sm text-[#2b2b2b] font-medium'>
+                <InfoLineIcon kind={line.kind} />
+                <span>{line.text}</span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        field.description && (
+          <p className='text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
+            {field.description}
+          </p>
+        )
       )}
     </div>
   );
@@ -146,12 +221,12 @@ function FieldBlock({
 }) {
   return (
     <div>
-      <label className='block text-sm font-medium text-gray-800 mb-1.5'>
+      <label className='block text-sm font-medium text-[#2b2b2b] mb-1.5'>
         {field.label}
-        {field.required && <span className='text-[#EBA2A8] ml-0.5'>*</span>}
+        {field.required && <span className='text-[#eba2a8] ml-0.5'>*</span>}
       </label>
       {field.description && (
-        <p className='text-xs text-gray-500 mb-2 whitespace-pre-line'>{field.description}</p>
+        <p className='text-[13px] text-[#3a3a3a] mb-2 whitespace-pre-line'>{field.description}</p>
       )}
 
       <FieldInput field={field} value={value} onChange={onChange} hasError={!!error} />
@@ -247,17 +322,17 @@ function FieldInput({
                 onClick={() => onChange(opt.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-sm text-left transition-all ${
                   selected
-                    ? 'border-[#EBA2A8] bg-[#FBE8EA] text-[#660e1b] font-medium shadow-sm'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-[#f9bbc4] hover:bg-[#FBE8EA]/30'
+                    ? 'border-[#eba2a8] bg-[#fbe8ea] text-[#2b2b2b] font-medium shadow-sm'
+                    : 'border-[#f7cbcb]/70 bg-white text-[#3a3a3a] hover:border-[#eba2a8] hover:bg-[#fbe8ea]/40'
                 }`}
                 aria-pressed={selected}
               >
                 <span
-                  className={`w-4.5 h-4.5 w-[18px] h-[18px] rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                    selected ? 'border-[#660e1b]' : 'border-gray-300'
+                  className={`w-[18px] h-[18px] rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                    selected ? 'border-[#2b2b2b]' : 'border-[#f7cbcb]'
                   }`}
                 >
-                  {selected && <span className='w-2 h-2 rounded-full bg-[#660e1b]' />}
+                  {selected && <span className='w-2 h-2 rounded-full bg-[#2b2b2b]' />}
                 </span>
                 {opt.label}
               </button>
@@ -286,14 +361,14 @@ function FieldInput({
                 onClick={() => toggle(opt.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-sm text-left transition-all ${
                   selected
-                    ? 'border-[#EBA2A8] bg-[#FBE8EA] text-[#660e1b] font-medium shadow-sm'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-[#f9bbc4] hover:bg-[#FBE8EA]/30'
+                    ? 'border-[#eba2a8] bg-[#fbe8ea] text-[#2b2b2b] font-medium shadow-sm'
+                    : 'border-[#f7cbcb]/70 bg-white text-[#3a3a3a] hover:border-[#eba2a8] hover:bg-[#fbe8ea]/40'
                 }`}
                 aria-pressed={selected}
               >
                 <span
                   className={`w-[18px] h-[18px] rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                    selected ? 'border-[#660e1b] bg-[#660e1b]' : 'border-gray-300 bg-white'
+                    selected ? 'border-[#2b2b2b] bg-[#2b2b2b]' : 'border-[#f7cbcb] bg-white'
                   }`}
                 >
                   {selected && <Check className='w-3 h-3 text-white' />}
@@ -326,8 +401,8 @@ function FieldInput({
                   onClick={() => setValue(v)}
                   className={`px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
                     selected
-                      ? 'border-[#EBA2A8] bg-[#FBE8EA] text-[#660e1b] shadow-sm'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-[#f9bbc4] hover:bg-[#FBE8EA]/30'
+                      ? 'border-[#eba2a8] bg-[#fbe8ea] text-[#2b2b2b] shadow-sm'
+                      : 'border-[#f7cbcb]/70 bg-white text-[#3a3a3a] hover:border-[#eba2a8] hover:bg-[#fbe8ea]/40'
                   }`}
                   aria-pressed={selected}
                 >

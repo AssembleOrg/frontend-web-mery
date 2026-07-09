@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, usePathname, redirect } from 'next/navigation';
+import { useRouter, useParams, redirect } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
@@ -48,8 +48,8 @@ interface CategoryPurchase {
 
 export default function AdminUsuariosPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'es';
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   const [users, setUsers] = useState<User[]>([]);
   const [categories, setCategories] = useState<VideoCategory[]>([]);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import {
   User as UserIcon,
   Settings,
@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Users,
   Gift,
+  ClipboardList,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
@@ -78,7 +79,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
 
   const handleAvatarClick = () => {
     if (isAdmin) {
-      router.push(`/${locale}/admin/cursos`);
+      router.push(`/${locale}/admin`);
     } else {
       setIsOpen(!isOpen);
     }
@@ -154,7 +155,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
             {isAdmin && (
               <>
                 <Link
-                  href={`/${locale}/admin/cursos`}
+                  href='/admin'
                   onClick={handleMenuItemClick}
                   className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
                 >
@@ -163,7 +164,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
                 </Link>
 
                 <Link
-                  href={`/${locale}/admin/usuarios`}
+                  href='/admin/usuarios'
                   onClick={handleMenuItemClick}
                   className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
                 >
@@ -172,18 +173,27 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
                 </Link>
 
                 <Link
-                  href={`/${locale}/admin/cupones`}
+                  href='/admin/cupones'
                   onClick={handleMenuItemClick}
                   className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
                 >
                   <Gift className='w-5 h-5' />
                   <span className='font-medium'>Cupones</span>
                 </Link>
+
+                <Link
+                  href='/admin/formularios'
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <ClipboardList className='w-5 h-5' />
+                  <span className='font-medium'>Formularios</span>
+                </Link>
               </>
             )}
 
             <Link
-              href={`/${locale}/mi-cuenta`}
+              href='/mi-cuenta'
               onClick={handleMenuItemClick}
               className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
             >

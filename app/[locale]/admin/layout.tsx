@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
 import { AuthGate } from '@/components/auth/AuthGate';
@@ -13,13 +13,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
   const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    // Extract locale from pathname
-    const locale = pathname.split('/')[1] || 'es';
-
     // Wait for auth to load
     if (isLoading) return;
 
@@ -34,7 +32,7 @@ export default function AdminLayout({
       router.push(`/${locale}`);
       return;
     }
-  }, [isLoading, isAuthenticated, user, router, pathname]);
+  }, [isLoading, isAuthenticated, user, router, locale]);
 
   // Show loading state while checking auth
   if (isLoading) {

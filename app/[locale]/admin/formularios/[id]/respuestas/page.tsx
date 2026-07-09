@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, usePathname, useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   ArrowLeft,
   Download,
@@ -63,9 +63,8 @@ function formatAnswer(field: FormField, value: unknown): string {
 
 export default function RespuestasFormularioPage() {
   const router = useRouter();
-  const pathname = usePathname();
   const params = useParams();
-  const locale = pathname.split('/')[1] || 'es';
+  const locale = (params.locale as string) || 'es';
   const formId = params.id as string;
 
   const [analytics, setAnalytics] = useState<FormAnalytics | null>(null);

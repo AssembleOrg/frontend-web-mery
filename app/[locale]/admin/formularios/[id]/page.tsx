@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter, usePathname, useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, BarChart3, Link2, Save } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { FormBuilder, type FormBuilderValue } from '@/components/admin/form-builder';
@@ -22,9 +22,8 @@ const STATUS_LABEL: Record<FormStatus, string> = {
 
 export default function EditarFormularioPage() {
   const router = useRouter();
-  const pathname = usePathname();
   const params = useParams();
-  const locale = pathname.split('/')[1] || 'es';
+  const locale = (params.locale as string) || 'es';
   const formId = params.id as string;
 
   const [form, setForm] = useState<FormDto | null>(null);

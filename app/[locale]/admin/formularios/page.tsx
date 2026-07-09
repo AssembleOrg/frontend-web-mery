@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   PlusCircle,
   Edit,
@@ -42,8 +42,8 @@ function formatDate(dateStr: string): string {
 
 export default function AdminFormulariosPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'es';
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
   const { showConfirm } = useModal();
 
   const [forms, setForms] = useState<FormDto[]>([]);

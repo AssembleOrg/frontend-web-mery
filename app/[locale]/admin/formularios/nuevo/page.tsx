@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { FormBuilder, slugify, type FormBuilderValue } from '@/components/admin/form-builder';
@@ -19,8 +19,8 @@ const emptyForm: FormBuilderValue = {
 
 export default function NuevoFormularioPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'es';
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   const [value, setValue] = useState<FormBuilderValue>(emptyForm);
   const [slugEdited, setSlugEdited] = useState(false);

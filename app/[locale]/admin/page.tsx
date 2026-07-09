@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { FaGraduationCap, FaVideo, FaUsers, FaChartLine, FaGift, FaClipboardList } from 'react-icons/fa';
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'es';
+  const params = useParams();
+  const locale = (params.locale as string) || 'es';
 
   const dashboardCards = [
     {

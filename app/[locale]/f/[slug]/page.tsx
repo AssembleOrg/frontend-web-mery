@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import { CheckCircle2, Lock } from 'lucide-react';
 import { FormRenderer } from '@/components/forms/form-renderer';
 import {
@@ -58,72 +59,96 @@ export default function PublicFormPage() {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-[#fdf3f4] via-white to-[#fdf3f4]'>
-      <div className='max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-14'>
+    <div className='min-h-screen bg-[#eba2a8]'>
+      <div className='max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16'>
         {/* Marca */}
-        <div className='text-center mb-8'>
-          <p className='font-primary text-2xl sm:text-3xl text-[#660e1b] tracking-wide'>
-            Mery García
-          </p>
-          <div className='mt-2 mx-auto w-16 h-0.5 bg-[#f9bbc4] rounded-full' />
+        <div className='flex justify-center mb-9 sm:mb-11'>
+          <Image
+            src='/Img-home/mery-blanco-logo.png'
+            alt='Mery García'
+            width={150}
+            height={45}
+            priority
+            className='h-10 sm:h-12 w-auto'
+            style={{ objectFit: 'contain' }}
+          />
         </div>
 
+        {/* Layout: logos de partners flanqueando el form (solo desktop) — 25% / 50% / 25% */}
+        <div className='lg:flex lg:items-center lg:gap-6 xl:gap-10'>
+          {/* Partner izquierda: Anastasia Beverly Hills */}
+          <div className='hidden lg:flex lg:basis-1/4 flex-shrink-0 justify-center px-2'>
+            <Image
+              src='/form/anastasia-logo.png'
+              alt='Anastasia Beverly Hills'
+              width={280}
+              height={244}
+              className='w-full max-w-[220px] h-auto opacity-95'
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+
+          {/* Columna central: el formulario */}
+          <div className='w-full lg:basis-1/2 lg:flex-shrink-0'>
+
         {state === 'loading' && (
-          <div className='bg-white rounded-2xl border border-[#f9bbc4]/30 shadow-sm p-8 space-y-4 animate-pulse'>
-            <div className='h-7 bg-gray-100 rounded w-3/4' />
-            <div className='h-4 bg-gray-100 rounded w-1/2' />
-            <div className='h-10 bg-gray-100 rounded' />
-            <div className='h-10 bg-gray-100 rounded' />
-            <div className='h-10 bg-gray-100 rounded' />
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-8 space-y-4 animate-pulse'>
+            <div className='h-7 bg-[#fbe8ea] rounded w-3/4' />
+            <div className='h-4 bg-[#fbe8ea] rounded w-1/2' />
+            <div className='h-11 bg-[#fbe8ea] rounded-xl' />
+            <div className='h-11 bg-[#fbe8ea] rounded-xl' />
+            <div className='h-11 bg-[#fbe8ea] rounded-xl' />
           </div>
         )}
 
         {state === 'not-found' && (
-          <div className='bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center'>
-            <p className='text-lg font-semibold text-gray-800 mb-1'>Formulario no encontrado</p>
-            <p className='text-sm text-gray-500'>
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-10 text-center'>
+            <p className='text-lg font-semibold text-[#2b2b2b] mb-1'>Formulario no encontrado</p>
+            <p className='text-sm text-[#545454]'>
               El enlace puede estar vencido o ser incorrecto.
             </p>
           </div>
         )}
 
         {state === 'closed' && form && (
-          <div className='bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center'>
-            <div className='mx-auto w-12 h-12 rounded-full bg-[#FBE8EA] flex items-center justify-center mb-4'>
-              <Lock className='w-5 h-5 text-[#660e1b]' />
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-10 text-center'>
+            <div className='mx-auto w-12 h-12 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-4'>
+              <Lock className='w-5 h-5 text-[#2b2b2b]' />
             </div>
-            <h1 className='text-lg font-semibold text-gray-800 mb-2'>{form.title}</h1>
-            <p className='text-sm text-gray-500 whitespace-pre-line'>{form.closedMessage}</p>
+            <h1 className='font-primary text-xl text-[#2b2b2b] mb-2 tracking-wide'>{form.title}</h1>
+            <p className='text-sm text-[#3a3a3a] whitespace-pre-line'>{form.closedMessage}</p>
           </div>
         )}
 
         {state === 'success' && (
-          <div className='bg-white rounded-2xl border border-[#f9bbc4]/40 shadow-sm p-10 text-center'>
-            <div className='mx-auto w-14 h-14 rounded-full bg-[#FBE8EA] flex items-center justify-center mb-4'>
-              <CheckCircle2 className='w-7 h-7 text-[#660e1b]' />
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-10 sm:p-12 text-center'>
+            <div className='mx-auto w-16 h-16 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-5'>
+              <CheckCircle2 className='w-8 h-8 text-[#2b2b2b]' />
             </div>
-            <h1 className='text-xl font-semibold text-gray-800 mb-2'>¡Registro enviado!</h1>
-            <p className='text-sm text-gray-600 whitespace-pre-line leading-relaxed'>
+            <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] mb-3 tracking-wide'>
+              ¡Tu lugar está confirmado!
+            </h1>
+            <p className='text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
               {successMessage}
             </p>
           </div>
         )}
 
         {state === 'ready' && form && (
-          <div className='bg-white rounded-2xl border border-[#f9bbc4]/30 shadow-sm overflow-hidden'>
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
             {/* Encabezado del formulario */}
-            <div className='px-6 sm:px-8 pt-7 pb-5 border-b border-[#FBE8EA]'>
-              <h1 className='text-xl sm:text-2xl font-semibold text-gray-900 leading-snug'>
+            <div className='px-6 sm:px-9 pt-8 pb-6 border-b border-[#fbe8ea]'>
+              <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] leading-tight tracking-wide'>
                 {form.title}
               </h1>
               {form.description && (
-                <p className='mt-2 text-sm text-gray-600 whitespace-pre-line leading-relaxed'>
+                <p className='mt-2.5 text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
                   {form.description}
                 </p>
               )}
             </div>
 
-            <div className='px-6 sm:px-8 py-7'>
+            <div className='px-6 sm:px-9 py-8'>
               <FormRenderer
                 fields={form.fields || []}
                 submitLabel={form.submitLabel}
@@ -136,8 +161,24 @@ export default function PublicFormPage() {
             </div>
           </div>
         )}
+          </div>
+          {/* /Columna central */}
 
-        <p className='text-center text-xs text-gray-400 mt-8'>
+          {/* Partner derecha: Juleriaque */}
+          <div className='hidden lg:flex lg:basis-1/4 flex-shrink-0 justify-center px-2'>
+            <Image
+              src='/form/juleriaque.png'
+              alt='Juleriaque'
+              width={280}
+              height={280}
+              className='w-full max-w-[220px] h-auto opacity-95'
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+        </div>
+        {/* /Layout partners */}
+
+        <p className='text-center text-xs text-white/70 mt-9'>
           © {new Date().getFullYear()} Mery García
         </p>
       </div>
