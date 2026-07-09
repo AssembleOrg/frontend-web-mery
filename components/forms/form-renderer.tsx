@@ -63,8 +63,11 @@ export function FormRenderer({
       if (field.type === 'email' && typeof value === 'string' && !EMAIL_REGEX.test(value.trim())) {
         newErrors[field.id] = 'Ingresá un email válido';
       }
-      if (field.type === 'phone' && typeof value === 'string' && value.replace(/\D/g, '').length < 6) {
-        newErrors[field.id] = 'Ingresá un teléfono válido';
+      if (field.type === 'phone' && typeof value === 'string') {
+        const digits = value.replace(/\D/g, '').length;
+        if (digits < 6 || digits > 15) {
+          newErrors[field.id] = 'Ingresá un teléfono válido (6 a 15 dígitos)';
+        }
       }
     }
 
@@ -84,7 +87,16 @@ export function FormRenderer({
     e.preventDefault();
     if (preview) return;
     if (!validate()) return;
-    await onSubmit(answers);
+
+    // Normalizar emails antes de enviar (trim + lowercase), sin mutar el estado
+    // visible para no reposicionar el cursor. El backend re-normaliza igual.
+    const normalized: FormAnswers = { ...answers };
+    for (const field of answerableFields) {
+      if (field.type === 'email' && typeof normalized[field.id] === 'string') {
+        normalized[field.id] = (normalized[field.id] as string).trim().toLowerCase();
+      }
+    }
+    await onSubmit(normalized);
   };
 
   return (

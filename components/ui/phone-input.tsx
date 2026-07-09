@@ -105,6 +105,9 @@ export function PhoneInput({
 
   const handleNumberChange = (raw: string) => {
     const cleaned = raw.replace(/[^\d\s-]/g, '');
+    // Límite E.164: el número nacional + código de país no supera 15 dígitos.
+    // El dial (ej. +54) ya aporta dígitos, así que topamos el input local en 15.
+    if (cleaned.replace(/\D/g, '').length > 15) return;
     setLocalNumber(cleaned);
     initializedRef.current = true;
     emit(country, cleaned);

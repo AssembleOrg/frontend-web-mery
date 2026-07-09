@@ -75,9 +75,9 @@ export default function PublicFormPage() {
         </div>
 
         {/* Layout: logos de partners flanqueando el form (solo desktop) — 25% / 50% / 25% */}
-        <div className='lg:flex lg:items-center lg:gap-6 xl:gap-10'>
+        <div className='lg:grid lg:grid-cols-[1fr_2fr_1fr] lg:items-center lg:gap-6 xl:gap-10'>
           {/* Partner izquierda: Anastasia Beverly Hills */}
-          <div className='hidden lg:flex lg:basis-1/4 flex-shrink-0 justify-center px-2'>
+          <div className='hidden lg:flex justify-center px-2'>
             <Image
               src='/form/anastasia-logo.png'
               alt='Anastasia Beverly Hills'
@@ -89,7 +89,7 @@ export default function PublicFormPage() {
           </div>
 
           {/* Columna central: el formulario */}
-          <div className='w-full lg:basis-1/2 lg:flex-shrink-0'>
+          <div className='w-full'>
 
         {state === 'loading' && (
           <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-8 space-y-4 animate-pulse'>
@@ -165,7 +165,7 @@ export default function PublicFormPage() {
           {/* /Columna central */}
 
           {/* Partner derecha: Juleriaque */}
-          <div className='hidden lg:flex lg:basis-1/4 flex-shrink-0 justify-center px-2'>
+          <div className='hidden lg:flex justify-center px-2'>
             <Image
               src='/form/juleriaque.png'
               alt='Juleriaque'
