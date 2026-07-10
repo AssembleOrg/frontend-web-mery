@@ -10,22 +10,42 @@ import {
   ChevronLeft,
   ChevronRight,
   Users,
-  CalendarDays,
   Clock,
   TrendingUp,
+  Check,
+  X,
+  MailCheck,
+  Loader2,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import {
   getFormAnalytics,
   getFormResponses,
   downloadFormResponsesCsv,
+  updateFormResponseStatus,
   type FormAnalytics,
   type FormField,
   type FormResponseDto,
+  type FormResponseStatus,
   type YesNoAnswer,
 } from '@/lib/forms-api';
 
 const PAGE_SIZE = 25;
+
+type StatusFilter = 'all' | FormResponseStatus;
+
+const STATUS_TABS: { key: StatusFilter; label: string }[] = [
+  { key: 'all', label: 'Todas' },
+  { key: 'pending', label: 'Pendientes' },
+  { key: 'accepted', label: 'Aceptadas' },
+  { key: 'rejected', label: 'Rechazadas' },
+];
+
+const STATUS_META: Record<FormResponseStatus, { label: string; className: string }> = {
+  pending: { label: 'Pendiente', className: 'bg-amber-50 text-amber-700 border border-amber-200' },
+  accepted: { label: 'Aceptada', className: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
+  rejected: { label: 'Rechazada', className: 'bg-gray-100 text-gray-500 border border-gray-200' },
+};
 
 function formatDateTime(dateStr: string): string {
   return new Date(dateStr).toLocaleString('es-AR', {
@@ -72,21 +92,29 @@ export default function RespuestasFormularioPage() {
   const [responses, setResponses] = useState<FormResponseDto[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [filteredTotal, setFilteredTotal] = useState(0);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [actioningId, setActioningId] = useState<string | null>(null);
 
   const fetchAll = useCallback(async () => {
     setIsLoading(true);
     try {
       const [analyticsData, responsesData] = await Promise.all([
         getFormAnalytics(formId),
-        getFormResponses(formId, { page, limit: PAGE_SIZE }),
+        getFormResponses(formId, {
+          page,
+          limit: PAGE_SIZE,
+          status: statusFilter === 'all' ? undefined : statusFilter,
+        }),
       ]);
       setAnalytics(analyticsData);
       setFields((responsesData.data.form.fields || []).filter((f) => f.type !== 'info'));
       setResponses(responsesData.data.responses);
       setTotalPages(responsesData.meta.totalPages || 1);
+      setFilteredTotal(responsesData.meta.total || 0);
     } catch (error) {
       console.error(error);
       toast.error('No se pudieron cargar las respuestas');
@@ -94,11 +122,45 @@ export default function RespuestasFormularioPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [formId, page, locale, router]);
+  }, [formId, page, statusFilter, locale, router]);
 
   useEffect(() => {
     fetchAll();
   }, [fetchAll]);
+
+  const handleStatusFilter = (next: StatusFilter) => {
+    setPage(1);
+    setStatusFilter(next);
+  };
+
+  const handleChangeStatus = async (response: FormResponseDto, next: FormResponseStatus) => {
+    if (actioningId) return;
+    setActioningId(response.id);
+    const willInvite = next === 'accepted' && !response.invitationSentAt;
+    try {
+      const updated = await updateFormResponseStatus(formId, response.id, next);
+      setResponses((prev) =>
+        prev.map((r) => (r.id === response.id ? { ...r, ...updated } : r)),
+      );
+      // Refrescar contadores de analítica en segundo plano
+      getFormAnalytics(formId).then(setAnalytics).catch(() => {});
+      toast.success(
+        willInvite
+          ? 'Aceptada · invitación enviada por email'
+          : next === 'accepted'
+            ? 'Marcada como aceptada'
+            : next === 'rejected'
+              ? 'Marcada como rechazada'
+              : 'Vuelta a pendiente',
+      );
+    } catch (error) {
+      console.error(error);
+      const msg = error instanceof Error ? error.message : 'No se pudo actualizar';
+      toast.error(msg);
+    } finally {
+      setActioningId(null);
+    }
+  };
 
   const handleExport = async () => {
     setExporting(true);
@@ -176,19 +238,18 @@ export default function RespuestasFormularioPage() {
 
       {/* Stat tiles */}
       <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4'>
+        <StatTile icon={Users} label='Total de respuestas' value={String(analytics.total)} />
         <StatTile
-          icon={Users}
-          label='Total de respuestas'
-          value={String(analytics.total)}
+          icon={MailCheck}
+          label='Aceptadas · invitadas'
+          value={String(analytics.statusCounts?.accepted ?? 0)}
         />
-        <StatTile icon={TrendingUp} label='Hoy' value={String(analytics.today)} />
-        <StatTile icon={CalendarDays} label='Últimos 7 días' value={String(analytics.last7Days)} />
         <StatTile
           icon={Clock}
-          label='Última respuesta'
-          value={analytics.lastResponseAt ? formatDateTime(analytics.lastResponseAt) : '—'}
-          small
+          label='Pendientes'
+          value={String(analytics.statusCounts?.pending ?? 0)}
         />
+        <StatTile icon={TrendingUp} label='Hoy' value={String(analytics.today)} />
       </div>
 
       {/* Respuestas por día */}
@@ -253,36 +314,66 @@ export default function RespuestasFormularioPage() {
 
       {/* Tabla de respuestas */}
       <section className='bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden'>
-        <div className='px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between'>
-          <h2 className='text-sm font-semibold text-gray-800'>
-            Respuestas individuales ({analytics.total})
-          </h2>
-          {totalPages > 1 && (
-            <div className='flex items-center gap-2 text-sm text-gray-500'>
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-                className='p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors'
-              >
-                <ChevronLeft className='w-4 h-4' />
-              </button>
-              <span className='tabular-nums'>
-                {page} / {totalPages}
-              </span>
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page >= totalPages}
-                className='p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors'
-              >
-                <ChevronRight className='w-4 h-4' />
-              </button>
-            </div>
-          )}
+        <div className='px-5 sm:px-6 py-4 border-b border-gray-100 space-y-3'>
+          <div className='flex items-center justify-between gap-3'>
+            <h2 className='text-sm font-semibold text-gray-800'>
+              Respuestas individuales ({statusFilter === 'all' ? analytics.total : filteredTotal})
+            </h2>
+            {totalPages > 1 && (
+              <div className='flex items-center gap-2 text-sm text-gray-500'>
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                  className='p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors'
+                >
+                  <ChevronLeft className='w-4 h-4' />
+                </button>
+                <span className='tabular-nums'>
+                  {page} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                  className='p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors'
+                >
+                  <ChevronRight className='w-4 h-4' />
+                </button>
+              </div>
+            )}
+          </div>
+          {/* Filtro por estado de decisión */}
+          <div className='flex flex-wrap items-center gap-1.5'>
+            {STATUS_TABS.map((tab) => {
+              const active = statusFilter === tab.key;
+              const count =
+                tab.key === 'all'
+                  ? analytics.total
+                  : analytics.statusCounts?.[tab.key] ?? 0;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => handleStatusFilter(tab.key)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                    active
+                      ? 'bg-[#660e1b] text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {tab.label}
+                  <span className={`tabular-nums ${active ? 'text-white/70' : 'text-gray-400'}`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {responses.length === 0 ? (
           <div className='p-10 text-center text-sm text-gray-400'>
-            Todavía no hay respuestas. Compartí el link público para empezar a recibirlas.
+            {statusFilter === 'all'
+              ? 'Todavía no hay respuestas. Compartí el link público para empezar a recibirlas.'
+              : 'No hay respuestas con este estado.'}
           </div>
         ) : (
           <ul className='divide-y divide-gray-50'>
@@ -310,6 +401,7 @@ export default function RespuestasFormularioPage() {
                       </p>
                       <p className='text-xs text-gray-400'>{formatDateTime(response.createdAt)}</p>
                     </div>
+                    <StatusBadge status={response.status} />
                     <ChevronDown
                       className={`w-4 h-4 text-gray-300 flex-shrink-0 transition-transform ${
                         expanded ? 'rotate-180' : ''
@@ -329,6 +421,61 @@ export default function RespuestasFormularioPage() {
                           </div>
                         ))}
                       </dl>
+
+                      {/* Acciones de decisión */}
+                      <div className='flex flex-wrap items-center gap-2 mt-4'>
+                        {response.status === 'accepted' ? (
+                          <>
+                            <span className='inline-flex items-center gap-1.5 text-xs text-emerald-700'>
+                              <MailCheck className='w-3.5 h-3.5' />
+                              {response.invitationSentAt
+                                ? `Invitación enviada · ${formatDateTime(response.invitationSentAt)}`
+                                : 'Aceptada'}
+                            </span>
+                            <button
+                              onClick={() => handleChangeStatus(response, 'pending')}
+                              disabled={actioningId === response.id}
+                              className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100 transition-colors disabled:opacity-50'
+                            >
+                              Deshacer
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => handleChangeStatus(response, 'accepted')}
+                              disabled={actioningId === response.id}
+                              className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#660e1b] text-white text-xs font-semibold hover:bg-[#7a1220] transition-colors disabled:opacity-50'
+                            >
+                              {actioningId === response.id ? (
+                                <Loader2 className='w-3.5 h-3.5 animate-spin' />
+                              ) : (
+                                <Check className='w-3.5 h-3.5' />
+                              )}
+                              Aceptar y enviar invitación
+                            </button>
+                            {response.status !== 'rejected' && (
+                              <button
+                                onClick={() => handleChangeStatus(response, 'rejected')}
+                                disabled={actioningId === response.id}
+                                className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-gray-500 text-xs font-medium hover:bg-gray-50 transition-colors disabled:opacity-50'
+                              >
+                                <X className='w-3.5 h-3.5' />
+                                Rechazar
+                              </button>
+                            )}
+                            {response.status === 'rejected' && (
+                              <button
+                                onClick={() => handleChangeStatus(response, 'pending')}
+                                disabled={actioningId === response.id}
+                                className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-gray-500 text-xs font-medium hover:bg-gray-100 transition-colors disabled:opacity-50'
+                              >
+                                Volver a pendiente
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
                   )}
                 </li>
@@ -338,6 +485,17 @@ export default function RespuestasFormularioPage() {
         )}
       </section>
     </div>
+  );
+}
+
+function StatusBadge({ status }: { status: FormResponseStatus }) {
+  const meta = STATUS_META[status] ?? STATUS_META.pending;
+  return (
+    <span
+      className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium flex-shrink-0 ${meta.className}`}
+    >
+      {meta.label}
+    </span>
   );
 }
 

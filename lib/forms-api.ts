@@ -68,10 +68,14 @@ export type YesNoAnswer = { value: boolean; context?: string };
 export type FormAnswerValue = string | string[] | YesNoAnswer;
 export type FormAnswers = Record<string, FormAnswerValue>;
 
+export type FormResponseStatus = 'pending' | 'accepted' | 'rejected';
+
 export interface FormResponseDto {
   id: string;
   formId: string;
   answers: FormAnswers;
+  status: FormResponseStatus;
+  invitationSentAt: string | null;
   createdAt: string;
 }
 
@@ -90,6 +94,7 @@ export interface FormAnalytics {
     answered: number;
     options: { id: string; label: string; count: number; percent: number }[];
   }[];
+  statusCounts: { pending: number; accepted: number; rejected: number };
 }
 
 export interface CreateFormInput {
@@ -216,7 +221,7 @@ export async function duplicateForm(id: string): Promise<FormDto> {
 
 export async function getFormResponses(
   id: string,
-  params?: { page?: number; limit?: number },
+  params?: { page?: number; limit?: number; status?: FormResponseStatus },
 ): Promise<{
   data: { form: Pick<FormDto, 'id' | 'title' | 'slug' | 'fields'>; responses: FormResponseDto[] };
   meta: PaginationMeta;
@@ -224,8 +229,21 @@ export async function getFormResponses(
   const qs = new URLSearchParams();
   if (params?.page) qs.set('page', String(params.page));
   if (params?.limit) qs.set('limit', String(params.limit));
+  if (params?.status) qs.set('status', params.status);
   const query = qs.toString() ? `?${qs.toString()}` : '';
   return request(`/forms/${id}/responses${query}`);
+}
+
+/** Cambia el estado de una respuesta. Al aceptar, el backend envía el email de invitación. */
+export async function updateFormResponseStatus(
+  formId: string,
+  responseId: string,
+  status: FormResponseStatus,
+): Promise<FormResponseDto> {
+  return request<FormResponseDto>(`/forms/${formId}/responses/${responseId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
 }
 
 export async function getFormAnalytics(id: string): Promise<FormAnalytics> {
