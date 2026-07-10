@@ -59,17 +59,17 @@ export default function PublicFormPage() {
   };
 
   return (
-    <div className='min-h-screen bg-[#eba2a8]'>
+    <div className='min-h-screen bg-[#fbe8ea]'>
       <div className='max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16'>
         {/* Marca */}
-        <div className='flex justify-center mb-9 sm:mb-11'>
+        <div className='flex justify-center'>
           <Image
-            src='/Img-home/mery-blanco-logo.png'
+            src='/form/merygarcia_brow_artist_gris_transparente_centrado_clean.png'
             alt='Mery García'
-            width={150}
-            height={45}
+            width={260}
+            height={90}
             priority
-            className='h-10 sm:h-12 w-auto'
+            className='w-auto max-w-[220px] sm:max-w-[260px] h-auto'
             style={{ objectFit: 'contain' }}
           />
         </div>
@@ -79,11 +79,11 @@ export default function PublicFormPage() {
           {/* Partner izquierda: Anastasia Beverly Hills */}
           <div className='hidden lg:flex justify-center px-2'>
             <Image
-              src='/form/anastasia-logo.png'
+              src='/form/anastasia-logo-wide.png'
               alt='Anastasia Beverly Hills'
-              width={280}
-              height={244}
-              className='w-full max-w-[220px] h-auto opacity-95'
+              width={1024}
+              height={200}
+              className='w-full max-w-[240px] lg:max-w-[260px] h-auto opacity-95'
               style={{ objectFit: 'contain' }}
             />
           </div>
@@ -178,7 +178,7 @@ export default function PublicFormPage() {
         </div>
         {/* /Layout partners */}
 
-        <p className='text-center text-xs text-white/70 mt-9'>
+        <p className='text-center text-xs text-[#545454]/70 mt-9'>
           © {new Date().getFullYear()} Mery García
         </p>
       </div>
