@@ -61,19 +61,6 @@ export default function PublicFormPage() {
   return (
     <div className='min-h-screen bg-[#fbe8ea]'>
       <div className='max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16'>
-        {/* Marca */}
-        <div className='flex justify-center'>
-          <Image
-            src='/form/merygarcia_brow_artist_gris_transparente_centrado_clean.png'
-            alt='Mery García'
-            width={260}
-            height={90}
-            priority
-            className='w-auto max-w-[220px] sm:max-w-[260px] h-auto'
-            style={{ objectFit: 'contain' }}
-          />
-        </div>
-
         {/* Layout: logos de partners flanqueando el form (solo desktop) — 25% / 50% / 25% */}
         <div className='lg:grid lg:grid-cols-[1fr_2fr_1fr] lg:items-center lg:gap-6 xl:gap-10'>
           {/* Partner izquierda: Anastasia Beverly Hills */}
@@ -111,31 +98,63 @@ export default function PublicFormPage() {
         )}
 
         {state === 'closed' && form && (
-          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-10 text-center'>
-            <div className='mx-auto w-12 h-12 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-4'>
-              <Lock className='w-5 h-5 text-[#2b2b2b]' />
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
+            {/* Banner hero — mismo ancho del form, pegado, sin margen */}
+            <Image
+              src='/form/aver1.jpg'
+              alt='Mery García'
+              width={564}
+              height={562}
+              priority
+              className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
+            />
+            <div className='p-10 text-center'>
+              <div className='mx-auto w-12 h-12 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-4'>
+                <Lock className='w-5 h-5 text-[#2b2b2b]' />
+              </div>
+              <h1 className='font-primary text-xl text-[#2b2b2b] mb-2 tracking-wide'>{form.title}</h1>
+              <p className='text-sm text-[#3a3a3a] whitespace-pre-line'>{form.closedMessage}</p>
             </div>
-            <h1 className='font-primary text-xl text-[#2b2b2b] mb-2 tracking-wide'>{form.title}</h1>
-            <p className='text-sm text-[#3a3a3a] whitespace-pre-line'>{form.closedMessage}</p>
           </div>
         )}
 
         {state === 'success' && (
-          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 p-10 sm:p-12 text-center'>
-            <div className='mx-auto w-16 h-16 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-5'>
-              <CheckCircle2 className='w-8 h-8 text-[#2b2b2b]' />
+          <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
+            {/* Banner hero — mismo ancho del form, pegado, sin margen */}
+            <Image
+              src='/form/aver1.jpg'
+              alt='Mery García'
+              width={564}
+              height={562}
+              priority
+              className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
+            />
+            <div className='p-10 sm:p-12 text-center'>
+              <div className='mx-auto w-16 h-16 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-5'>
+                <CheckCircle2 className='w-8 h-8 text-[#2b2b2b]' />
+              </div>
+              <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] mb-3 tracking-wide'>
+                ¡Tu lugar está confirmado!
+              </h1>
+              <p className='text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
+                {successMessage}
+              </p>
             </div>
-            <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] mb-3 tracking-wide'>
-              ¡Tu lugar está confirmado!
-            </h1>
-            <p className='text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
-              {successMessage}
-            </p>
           </div>
         )}
 
         {state === 'ready' && form && (
           <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
+            {/* Banner hero — mismo ancho del form, pegado, sin margen */}
+            <Image
+              src='/form/aver1.jpg'
+              alt='Mery García'
+              width={564}
+              height={562}
+              priority
+              className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
+            />
+
             {/* Encabezado del formulario */}
             <div className='px-6 sm:px-9 pt-8 pb-6 border-b border-[#fbe8ea]'>
               <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] leading-tight tracking-wide'>
