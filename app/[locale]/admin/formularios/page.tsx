@@ -216,7 +216,7 @@ export default function AdminFormulariosPage() {
                   {/* Respuestas */}
                   <button
                     onClick={() => router.push(`/${locale}/admin/formularios/${form.id}/respuestas`)}
-                    className='flex lg:flex-col items-center lg:items-center gap-2 lg:gap-0 px-4 py-2 rounded-lg bg-[#FBE8EA]/60 hover:bg-[#FBE8EA] transition-colors self-start lg:self-auto'
+                    className='flex lg:flex-col items-center lg:items-center gap-2 lg:gap-0 px-4 py-2 rounded-lg bg-[#FBE8EA]/60 hover:bg-[#FBE8EA] transition-colors self-start lg:self-auto cursor-pointer'
                     title='Ver respuestas y analítica'
                   >
                     <span className='text-xl font-bold text-[#660e1b]'>
@@ -284,7 +284,7 @@ function ActionButton({
     <button
       onClick={onClick}
       title={title}
-      className={`p-2 rounded-lg transition-colors ${
+      className={`p-2 rounded-lg transition-colors cursor-pointer ${
         danger
           ? 'text-red-400 hover:text-red-600 hover:bg-red-50'
           : 'text-gray-400 hover:text-[#660e1b] hover:bg-[#FBE8EA]/60'

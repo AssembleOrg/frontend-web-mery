@@ -165,7 +165,7 @@ export default function EditarFormularioPage() {
           </button>
           <button
             onClick={() => router.push(`/${locale}/admin/formularios/${formId}/respuestas`)}
-            className='inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors'
+            className='inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer'
           >
             <BarChart3 className='w-4 h-4' />
             <span className='hidden sm:inline'>Respuestas</span>
