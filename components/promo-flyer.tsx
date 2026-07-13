@@ -62,7 +62,7 @@ export default function PromoFlyer() {
         {/* DESKTOP: flyer horizontal (16:9). Oculto en < md. */}
         <div className='relative hidden md:block aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-2xl bg-black'>
           <Image
-            src='/form/Flyer-evento.jpeg'
+            src='/form/Flyer-evento.jpg'
             alt='Invitación a la Master Class de Autostyling de Mery García'
             fill
             priority
