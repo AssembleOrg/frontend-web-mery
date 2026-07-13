@@ -44,7 +44,7 @@ export default function PublicFormPage() {
     setSubmitError('');
     try {
       const result = await submitFormResponse(slug, answers);
-      setSuccessMessage(result.message || form?.successMessage || '¡Gracias! Recibimos tu respuesta.');
+      setSuccessMessage(result.message || form?.successMessage || 'Gracias por completar el formulario. Muy pronto recibirás la confirmación de tu lugar por email.');
       setState('success');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
@@ -134,7 +134,7 @@ export default function PublicFormPage() {
                 <CheckCircle2 className='w-8 h-8 text-[#2b2b2b]' />
               </div>
               <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] mb-3 tracking-wide'>
-                ¡Tu lugar está pre agendado!
+                ¡Recibimos tu inscripción!
               </h1>
               <p className='text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
                 {successMessage}
