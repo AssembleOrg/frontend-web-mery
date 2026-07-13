@@ -134,7 +134,7 @@ export default function PublicFormPage() {
                 <CheckCircle2 className='w-8 h-8 text-[#2b2b2b]' />
               </div>
               <h1 className='font-primary text-2xl sm:text-3xl text-[#2b2b2b] mb-3 tracking-wide'>
-                ¡Tu lugar está confirmado!
+                ¡Tu lugar está pre agendado!
               </h1>
               <p className='text-sm text-[#3a3a3a] whitespace-pre-line leading-relaxed'>
                 {successMessage}
