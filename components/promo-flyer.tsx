@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 
-const RESERVA_URL = 'https://merygarcia.com.ar/f/masterclass-autostyling';
+const RESERVA_URL = 'https://eventos.juleriaque.com.ar/evento/601';
 
 export default function PromoFlyer() {
   const [isOpen, setIsOpen] = useState(true);
@@ -15,7 +15,7 @@ export default function PromoFlyer() {
       className='fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in-0 duration-300'
       role='dialog'
       aria-modal='true'
-      aria-label='Master Class de Autostyling'
+      aria-label='Masterclass Anastasia Beverly Hills por Mery García en Juleriaque'
     >
       {/* Overlay */}
       <div
@@ -25,7 +25,7 @@ export default function PromoFlyer() {
       />
 
       {/* Contenedor del flyer */}
-      <div className='relative z-[70] w-full max-w-[92vw] md:max-w-[880px] animate-in zoom-in-95 duration-300'>
+      <div className='relative z-[70] w-full max-w-[92vw] md:max-w-[460px] animate-in zoom-in-95 duration-300'>
         {/* Botón cerrar (flota en la esquina del flyer) */}
         <button
           onClick={() => setIsOpen(false)}
@@ -35,51 +35,27 @@ export default function PromoFlyer() {
           <X className='h-5 w-5' />
         </button>
 
-        {/* MOBILE: flyer vertical (9:16). Oculto en >= md. */}
-        <div className='relative block md:hidden aspect-[940/1640] max-h-[82vh] mx-auto overflow-hidden rounded-2xl shadow-2xl bg-black'>
+        {/* Flyer vertical (4:5). Misma imagen en mobile y desktop. */}
+        <div className='relative aspect-[4/5] max-h-[85vh] mx-auto overflow-hidden rounded-2xl shadow-2xl bg-black'>
           <Image
-            src='/form/flyer-mobile.png'
-            alt='Invitación a la Master Class de Autostyling de Mery García'
+            src='/form/juleriaque-mobile.jpg'
+            alt='Masterclass Anastasia Beverly Hills por Mery García en Juleriaque. Viernes 24 de julio, 16.30 y 18.30 hs, Av. Cabildo 1985, CABA'
             fill
             priority
-            sizes='92vw'
+            sizes='(min-width: 768px) 460px, 92vw'
             className='object-contain'
           />
           {/*
-            Botón INVISIBLE sobre "Reservá tu clase aquí…" (versión mobile, centrado abajo).
-            Coordenadas en % respecto al flyer 9:16. CALIBRAR con `bg-red-500/30` temporal.
+            Botón INVISIBLE sobre "REGISTRATE" (inferior-izquierda).
+            Coordenadas en % respecto al flyer 4:5. CALIBRAR con `bg-red-500/30` temporal.
           */}
           <a
             href={RESERVA_URL}
             target='_blank'
             rel='noopener noreferrer'
-            aria-label='Reservá tu clase en la Master Class de Autostyling'
+            aria-label='Registrate en la Masterclass de Juleriaque'
             className='absolute rounded-md'
-            style={{ top: '82%', left: '25%', width: '50%', height: '8%' }}
-          />
-        </div>
-
-        {/* DESKTOP: flyer horizontal (16:9). Oculto en < md. */}
-        <div className='relative hidden md:block aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-2xl bg-black'>
-          <Image
-            src='/form/flyer-evento.jpg'
-            alt='Invitación a la Master Class de Autostyling de Mery García'
-            fill
-            priority
-            sizes='880px'
-            className='object-contain'
-          />
-          {/*
-            Botón INVISIBLE sobre "Reservá tu clase aquí…" (versión desktop, inferior-derecha).
-            Coordenadas en % respecto al flyer 16:9. CALIBRAR con `bg-red-500/30` temporal.
-          */}
-          <a
-            href={RESERVA_URL}
-            target='_blank'
-            rel='noopener noreferrer'
-            aria-label='Reservá tu clase en la Master Class de Autostyling'
-            className='absolute rounded-md'
-            style={{ top: '65%', left: '66%', width: '30%', height: '15%' }}
+            style={{ top: '89.5%', left: '5%', width: '25%', height: '4.5%' }}
           />
         </div>
       </div>
