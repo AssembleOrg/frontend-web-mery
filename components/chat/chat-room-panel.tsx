@@ -10,7 +10,8 @@ import { ChatMessageBubble } from './chat-message-bubble';
 import { ChatDateSeparator } from './chat-date-separator';
 import { ChatInput } from './chat-input';
 import { ChatWarning } from './chat-warning';
-import { Loader2, Lock, Clock, ChevronLeft } from 'lucide-react';
+import { ChatTokenControls, TokenDots } from './chat-token-controls';
+import { Loader2, Lock, ChevronLeft, Ban } from 'lucide-react';
 
 interface Props {
   room: ChatRoom;
@@ -20,13 +21,23 @@ interface Props {
 
 const EMPTY_MESSAGES: readonly ChatMessage[] = Object.freeze([]);
 
-export function ChatRoomPanel({ room, showCounterpart = false, onMobileBack }: Readonly<Props>) {
+export function ChatRoomPanel({ room: roomProp, showCounterpart = false, onMobileBack }: Readonly<Props>) {
+  // La sala del store es la fuente viva (tokens, unread) — el prop es el fallback
+  // para el primer render antes de que el store se hidrate.
+  const storedRoom = useChatStore((s) => s.rooms[roomProp.id]);
+  const room = storedRoom ?? roomProp;
   const messages = useChatStore((s) => s.messages[room.id] ?? EMPTY_MESSAGES);
   const typing = useChatStore((s) => s.typing[room.id] ?? null);
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUBADMIN';
 
-  const { loadInitial, loadOlder, sendText, sendImage, setTyping, markRead } = useChatRoom(room.id);
+  const { loadInitial, loadOlder, sendText, sendImage, setTyping, markRead, upsertRoom } = useChatRoom(room.id);
+
+  // Registro la sala en el store para que los eventos de WS (tokens, lecturas)
+  // encuentren dónde aplicarse también del lado del alumno.
+  useEffect(() => {
+    upsertRoom(roomProp);
+  }, [roomProp, upsertRoom]);
 
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [olderCursor, setOlderCursor] = useState<string | null>(null);
@@ -93,7 +104,11 @@ export function ChatRoomPanel({ room, showCounterpart = false, onMobileBack }: R
     }
   };
 
-  const disabled = room.status === 'LOCKED' || room.status === 'CLOSED';
+  const tokenLimit = room.tokenLimit ?? 3;
+  const tokens = room.tokens ?? 0;
+  // El bloqueo por tokens frena solo al alumno; el admin siempre puede escribir.
+  const tokenBlocked = !isAdmin && (room.tokensBlocked ?? tokens >= tokenLimit);
+  const disabled = room.status === 'LOCKED' || room.status === 'CLOSED' || tokenBlocked;
   const counterpartName = [room.user.firstName, room.user.lastName].filter(Boolean).join(' ') || room.user.email;
 
   return (
@@ -117,6 +132,24 @@ export function ChatRoomPanel({ room, showCounterpart = false, onMobileBack }: R
           </div>
           <RoomStatusBadge status={room.status} />
         </div>
+      )}
+
+      {/* Tokens: el admin los administra, el alumno solo ve cuántos lleva */}
+      {isAdmin ? (
+        <div className='shrink-0'>
+          <ChatTokenControls room={room} />
+        </div>
+      ) : (
+        tokens > 0 && (
+          <div className='shrink-0 border-b border-border bg-[#fff4f6] dark:bg-[#3a1f26] px-3 py-2 flex items-center gap-2 text-[11px] text-[#660e1b] dark:text-[#ffd3d9]'>
+            <TokenDots tokens={tokens} limit={tokenLimit} />
+            <span>
+              {tokenBlocked
+                ? `Usaste tus ${tokenLimit} consultas en este curso.`
+                : `Llevás ${tokens} de ${tokenLimit} consultas marcadas. Aprovechá las que te quedan.`}
+            </span>
+          </div>
+        )
       )}
 
       {/* Zona de Mensajes: Es el ÚNICO que tiene permitido scrollear */}
@@ -167,9 +200,20 @@ export function ChatRoomPanel({ room, showCounterpart = false, onMobileBack }: R
       {/* Footer / Input: shrink-0 y fuera del div de scroll asegura que sea STICKY */}
 <div className="shrink-0 w-full bg-white dark:bg-card border-t border-border/50 z-20">
         {disabled ? (
-          <div className='px-4 py-4 text-[11px] text-muted-foreground flex items-center gap-2 italic'>
-             <Lock className='w-3.5 h-3.5' /> Chat deshabilitado.
-          </div>
+          tokenBlocked ? (
+            <div className='px-4 py-4 text-[11px] text-[#660e1b] dark:text-[#ffd3d9] flex items-start gap-2'>
+              <Ban className='w-3.5 h-3.5 mt-0.5 shrink-0' />
+              <span>
+                Alcanzaste el límite de {tokenLimit} consultas marcadas en este
+                curso, así que este chat queda solo lectura. Podés seguir viendo
+                el curso y las respuestas anteriores.
+              </span>
+            </div>
+          ) : (
+            <div className='px-4 py-4 text-[11px] text-muted-foreground flex items-center gap-2 italic'>
+              <Lock className='w-3.5 h-3.5' /> Chat deshabilitado.
+            </div>
+          )
         ) : (
           <ChatInput onSendText={sendText} onSendImage={sendImage} onTyping={setTyping} />
         )}

@@ -185,7 +185,9 @@ export default function AdminChatsPage() {
   );
 }
 
-function RoomListItem({ room, active, onClick }: { room: ChatRoom; active: boolean; onClick: () => void; }) {
+function RoomListItem({ room: roomProp, active, onClick }: { room: ChatRoom; active: boolean; onClick: () => void; }) {
+  const stored = useChatStore((s) => s.rooms[roomProp.id]);
+  const room = stored ?? roomProp;
   const name = [room.user.firstName, room.user.lastName].filter(Boolean).join(' ') || room.user.email;
   const initials = name.split(' ').map((p) => p[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
   const last = room.lastMessage;
@@ -200,7 +202,21 @@ function RoomListItem({ room, active, onClick }: { room: ChatRoom; active: boole
           <span className='font-medium text-sm text-foreground truncate'>{name}</span>
           <span className='text-[10px] text-muted-foreground shrink-0'>{time}</span>
         </div>
-        <div className='text-xs text-muted-foreground truncate'>{room.category.name}</div>
+        <div className='flex items-center gap-2'>
+          <span className='text-xs text-muted-foreground truncate'>{room.category.name}</span>
+          {(room.tokens ?? 0) > 0 && (
+            <span
+              title={`${room.tokens} de ${room.tokenLimit} tokens marcados`}
+              className={`text-[10px] rounded-full px-1.5 py-0.5 shrink-0 ${
+                room.tokensBlocked
+                  ? 'bg-red-100 text-red-700'
+                  : 'bg-amber-100 text-amber-700'
+              }`}
+            >
+              🎫 {room.tokens}/{room.tokenLimit}
+            </span>
+          )}
+        </div>
         <div className='flex items-center justify-between gap-2 mt-0.5'>
           <span className='text-xs text-muted-foreground truncate'>{lastPreview}</span>
           {(room.unread ?? 0) > 0 && (

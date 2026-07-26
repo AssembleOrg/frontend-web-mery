@@ -64,6 +64,18 @@ export function useChatConnection() {
     }) => {
       setTyping(p.roomId, p.typing ? { userId: p.userId, role: p.role } : null);
     };
+    const onTokensChanged = (p: {
+      roomId: string;
+      tokens: number;
+      tokenLimit: number;
+      tokensBlocked: boolean;
+    }) => {
+      useChatStore.getState().setRoomTokens(p.roomId, {
+        tokens: p.tokens,
+        tokenLimit: p.tokenLimit,
+        tokensBlocked: p.tokensBlocked,
+      });
+    };
     const onReadReceipt = (p: {
       roomId: string;
       readerRole: 'ADMIN' | 'SUBADMIN' | 'USER';
@@ -85,6 +97,7 @@ export function useChatConnection() {
       socket.on('unread_changed', onUnreadChanged);
       socket.on('typing', onTyping);
       socket.on('read_receipt', onReadReceipt);
+      socket.on('tokens_changed', onTokensChanged);
       boundRef.current = true;
     }
 
@@ -99,6 +112,7 @@ export function useChatConnection() {
       socket.off('unread_changed', onUnreadChanged);
       socket.off('typing', onTyping);
       socket.off('read_receipt', onReadReceipt);
+      socket.off('tokens_changed', onTokensChanged);
       boundRef.current = false;
     };
   }, [isAuthenticated, appendMessage, bumpUnread, setTyping, setUnreadTotal, upsertRoom]);

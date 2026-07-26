@@ -30,6 +30,11 @@ interface ChatActions {
     readAt: string,
   ) => void;
   markRoomRead: (roomId: RoomId) => void;
+  /** Aplica el estado de tokens que llega por WS o tras una acción del admin. */
+  setRoomTokens: (
+    roomId: RoomId,
+    tokens: { tokens: number; tokenLimit: number; tokensBlocked: boolean },
+  ) => void;
   setTyping: (
     roomId: RoomId,
     typing: { userId: string; role: string } | null,
@@ -92,6 +97,14 @@ export const useChatStore = create<ChatState & ChatActions>()(
     markRoomRead: (roomId) =>
       set((s) => {
         if (s.rooms[roomId]) s.rooms[roomId].unread = 0;
+      }),
+    setRoomTokens: (roomId, tokens) =>
+      set((s) => {
+        const room = s.rooms[roomId];
+        if (!room) return;
+        room.tokens = tokens.tokens;
+        room.tokenLimit = tokens.tokenLimit;
+        room.tokensBlocked = tokens.tokensBlocked;
       }),
     setTyping: (roomId, typing) =>
       set((s) => {

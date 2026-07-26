@@ -76,10 +76,12 @@ export function CourseQuizModal({
     [quiz, answers],
   );
 
-  const wrongIds = useMemo(
-    () => new Set(result?.wrongQuestionIds ?? []),
-    [result],
-  );
+  const handleRetry = useCallback(() => {
+    // Reintento libre: limpiamos respuestas y resultado, sin cerrar la modal.
+    setResult(null);
+    setAnswers({});
+    setLoadError(null);
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!quiz || !allAnswered || submitting) return;
@@ -209,16 +211,12 @@ export function CourseQuizModal({
                     No alcanzaste el puntaje necesario
                   </h3>
                   <p className='text-sm text-muted-foreground mt-1'>
-                    {result.correctCount} de {result.totalQuestions} respuestas
-                    correctas. Las preguntas incorrectas están marcadas abajo.
+                    Tuviste más de {result.maxWrong} respuestas incorrectas.
                   </p>
                   <p className='text-sm text-muted-foreground mt-2'>
-                    Podés reintentar en 24 horas
-                    {result.nextAttemptAt
-                      ? ` (a partir del ${formatDateTime(result.nextAttemptAt)})`
-                      : ''}
-                    . Te recomendamos volver a ver el curso y prestar atención a
-                    los detalles.
+                    Te recomendamos volver a ver el curso completo y prestar
+                    atención a los detalles. Podés repetirlo y rendir el examen
+                    las veces que necesites.
                   </p>
                 </>
               )}
@@ -233,16 +231,11 @@ export function CourseQuizModal({
             !cooldownUntil && (
               <div className='space-y-5'>
                 {quiz.questions.map((q, idx) => {
-                  const isWrong = !!result && wrongIds.has(q.id);
                   const answered = answers[q.id];
                   return (
                     <div
                       key={q.id}
-                      className={`p-4 rounded-xl border transition-colors ${
-                        isWrong
-                          ? 'border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-900'
-                          : 'border-border bg-white dark:bg-card'
-                      }`}
+                      className='p-4 rounded-xl border border-border bg-white dark:bg-card transition-colors'
                     >
                       <div className='flex items-start gap-2'>
                         <span className='flex-shrink-0 w-6 h-6 rounded-full bg-[#f9bbc4]/30 text-[#660e1b] dark:text-[#f9bbc4] text-xs font-bold flex items-center justify-center mt-0.5'>
@@ -251,9 +244,6 @@ export function CourseQuizModal({
                         <p className='text-sm text-foreground flex-1'>
                           {q.text}
                         </p>
-                        {isWrong && (
-                          <XCircle className='w-5 h-5 text-red-500 flex-shrink-0' />
-                        )}
                       </div>
                       <div className='flex gap-2 mt-3 ml-8'>
                         {([true, false] as const).map((value) => (
@@ -289,12 +279,22 @@ export function CourseQuizModal({
           !cooldownUntil && (
             <div className='px-4 py-3 border-t border-border bg-white dark:bg-background'>
               {result ? (
-                <button
-                  onClick={onClose}
-                  className='w-full py-2.5 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white font-medium text-sm transition-colors'
-                >
-                  Cerrar
-                </button>
+                <div className='flex flex-col sm:flex-row gap-2'>
+                  {!result.passed && result.canRetry && (
+                    <button
+                      onClick={handleRetry}
+                      className='flex-1 py-2.5 rounded-lg bg-[#f9bbc4] text-[#660e1b] hover:brightness-95 font-bold text-sm transition-all'
+                    >
+                      Volver a rendir
+                    </button>
+                  )}
+                  <button
+                    onClick={onClose}
+                    className='flex-1 py-2.5 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white font-medium text-sm transition-colors'
+                  >
+                    Cerrar
+                  </button>
+                </div>
               ) : (
                 <button
                   onClick={handleSubmit}

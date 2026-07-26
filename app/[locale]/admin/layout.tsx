@@ -9,6 +9,7 @@ import {
   Users,
   Gift,
   MessageCircle,
+  Settings,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
@@ -21,6 +22,7 @@ const navItems = [
   { href: 'admin/usuarios', label: 'Usuarios', icon: Users },
   { href: 'admin/cupones', label: 'Cupones', icon: Gift },
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
+  { href: 'admin/configuracion', label: 'Config', icon: Settings },
 ];
 
 export default function AdminLayout({

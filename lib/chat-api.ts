@@ -27,6 +27,13 @@ export interface ChatRoom {
   gracePeriodEnd: string | null;
   lastMessageAt: string | null;
   studentInitiated: boolean;
+  /** Tokens marcados por el admin en esta conversación */
+  tokens: number;
+  /** Tokens necesarios para bloquear (configurable en el panel admin) */
+  tokenLimit: number;
+  /** true cuando tokens >= tokenLimit: el alumno ya no puede escribir */
+  tokensBlocked: boolean;
+  tokensBlockedAt: string | null;
   category: ChatCategory;
   user: ChatUser;
   createdAt: string;
@@ -64,6 +71,25 @@ export interface EligibilityInfo {
   purchaseActive: boolean;
   quizRequired: boolean;
   quizPassed: boolean;
+}
+
+export interface ChatTokenEvent {
+  id: string;
+  roomId: string;
+  adminId: string;
+  amount: number;
+  balanceAfter: number;
+  reason: string | null;
+  createdAt: string;
+  admin?: ChatUser;
+}
+
+export interface TokenMutationResult {
+  room: ChatRoom;
+  event: ChatTokenEvent | null;
+  changed: boolean;
+  blockedNow?: boolean;
+  unblockedNow?: boolean;
 }
 
 function authHeaders(): HeadersInit {
@@ -147,4 +173,17 @@ export const chatApi = {
     const s = q.toString();
     return api<ChatRoom[]>(`/chat/admin/rooms${s ? `?${s}` : ''}`);
   },
+  /** Suma tokens (o resta, con amount negativo) a una conversación. */
+  addTokens: (roomId: string, amount: number, reason?: string) =>
+    api<TokenMutationResult>(`/chat/admin/rooms/${roomId}/tokens`, {
+      method: 'POST',
+      body: JSON.stringify({ amount, reason }),
+    }),
+  resetTokens: (roomId: string, reason?: string) =>
+    api<TokenMutationResult>(`/chat/admin/rooms/${roomId}/tokens/reset`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    }),
+  tokenHistory: (roomId: string) =>
+    api<ChatTokenEvent[]>(`/chat/admin/rooms/${roomId}/tokens`),
 };
