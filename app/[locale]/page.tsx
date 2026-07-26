@@ -1,4 +1,5 @@
 import { Navigation } from '@/components/navigation';
+import PromoFlyer from '@/components/promo-flyer';
 import { ExpandableServiceGallery } from '@/components/expandable-service-gallery';
 import { BookingCTA } from '@/components/booking-cta';
 import { LearnMoreSection } from '@/components/learn-more-section';
@@ -45,6 +46,7 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen-dvh bg-background'>
+      <PromoFlyer />
       <Navigation />
 
       {/* Hero Section with Quote */}

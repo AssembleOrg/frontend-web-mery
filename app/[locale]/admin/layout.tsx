@@ -38,6 +38,7 @@ export default function AdminLayout({
   const mobileFullScreen = useChatStore((s) => s.mobileFullScreen);
 
   useEffect(() => {
+    // Esperamos a que termine de resolverse la sesión.
     if (isLoading) return;
     if (!isAuthenticated) {
       router.push(`/${locale}/login`);

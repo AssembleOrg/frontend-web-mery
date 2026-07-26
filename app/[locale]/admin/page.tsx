@@ -7,6 +7,8 @@ import {
   Users,
   Gift,
   MessageCircle,
+  ClipboardList,
+  Settings,
   ChevronRight,
   PlusCircle,
 } from 'lucide-react';
@@ -34,11 +36,25 @@ const sections = [
     cta: 'Ver cupones',
   },
   {
+    href: 'admin/formularios',
+    label: 'Formularios',
+    description: 'Formularios públicos, respuestas y analítica',
+    icon: ClipboardList,
+    cta: 'Ver formularios',
+  },
+  {
     href: 'admin/chats',
     label: 'Chats',
     description: 'Mensajes de alumnos activos',
     icon: MessageCircle,
     cta: 'Ver chats',
+  },
+  {
+    href: 'admin/configuracion',
+    label: 'Configuración',
+    description: 'Ajustes generales del portal',
+    icon: Settings,
+    cta: 'Ver configuración',
   },
 ];
 

@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import {
   User as UserIcon,
   Settings,
   LogOut,
   ChevronDown,
+  Users,
+  Gift,
+  ClipboardList,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
@@ -150,18 +153,47 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
           <div className='py-1'>
             {/* Admin: Panel Admin */}
             {isAdmin && (
-              <Link
-                href={`/${locale}/admin`}
-                onClick={handleMenuItemClick}
-                className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-              >
-                <Settings className='w-5 h-5' />
-                <span className='font-medium'>Panel Admin</span>
-              </Link>
+              <>
+                <Link
+                  href='/admin'
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <Settings className='w-5 h-5' />
+                  <span className='font-medium'>Panel Admin</span>
+                </Link>
+
+                <Link
+                  href='/admin/usuarios'
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <Users className='w-5 h-5' />
+                  <span className='font-medium'>Asignar Cursos</span>
+                </Link>
+
+                <Link
+                  href='/admin/cupones'
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <Gift className='w-5 h-5' />
+                  <span className='font-medium'>Cupones</span>
+                </Link>
+
+                <Link
+                  href='/admin/formularios'
+                  onClick={handleMenuItemClick}
+                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+                >
+                  <ClipboardList className='w-5 h-5' />
+                  <span className='font-medium'>Formularios</span>
+                </Link>
+              </>
             )}
 
             <Link
-              href={`/${locale}/mi-cuenta`}
+              href='/mi-cuenta'
               onClick={handleMenuItemClick}
               className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
             >
