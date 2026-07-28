@@ -46,7 +46,7 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen-dvh bg-background'>
-      <PromoFlyer />
+      {/* <PromoFlyer /> */}
       <Navigation />
 
       {/* Hero Section with Quote */}
