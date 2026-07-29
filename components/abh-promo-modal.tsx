@@ -10,9 +10,8 @@ const OPEN_DELAY_MS = 800;
 const CODE = 'ABHXMERYGARCIA';
 const SHOP_URL = 'https://www.juleriaque.com.ar/s?q=anastasia';
 
-// Panel superior. Para usar el arte real de la campaña, reemplazar por el
-// archivo definitivo y cambiar object-contain por object-cover.
-const IMAGE_SRC = '/form/anastasia-logo-wide.png';
+// Foto de producto ABH, compartida con las landings de formularios.
+const IMAGE_SRC = '/form/aver1.jpg';
 
 export default function AbhPromoModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,17 +74,17 @@ export default function AbhPromoModal() {
           <X className='h-4 w-4' />
         </button>
 
-        <div className='relative flex h-[170px] items-center justify-center bg-[#fbe8ea] px-10'>
+        <div className='relative h-[190px] w-full overflow-hidden bg-[#fbe8ea]'>
           <Image
             src={IMAGE_SRC}
-            alt='Anastasia Beverly Hills'
-            width={1024}
-            height={200}
+            alt='Productos Anastasia Beverly Hills'
+            fill
+            sizes='(min-width: 640px) 420px, 92vw'
             priority
-            className='h-auto w-full max-w-[240px] object-contain'
+            className='object-cover'
           />
           <span className='absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-[#660e1b] px-3.5 py-1.5 text-[10px] font-bold tracking-[0.14em] text-[#fbe8ea] whitespace-nowrap'>
-            × MERY GARCÍA
+            ANASTASIA BEVERLY HILLS
           </span>
         </div>
 
