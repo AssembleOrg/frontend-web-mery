@@ -34,6 +34,15 @@
       "titleHighlight": "Mery García?",
       "description": "Descubrí la historia, experiencia y pasión de una artista con más de 20 años dedicada al tatuaje cosmético.",
       "button": "Conocer su historia"
+    },
+    "videoShowcase": {
+      "eyebrow": "La experiencia presencial",
+      "title": "Lo que pasa",
+      "titleHighlight": "en mi silla",
+      "description": "Sin filtros, sin promesas vacías. Un minuto real del proceso: la consulta, la primera línea, el momento en que te ves al espejo. Así se siente sentarse en mi silla por primera vez.",
+      "cta": "Reservar tu lugar",
+      "playLabel": "Reproducir video",
+      "duration": "60 seg"
     }
   },
   "about": {

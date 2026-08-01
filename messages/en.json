@@ -34,6 +34,15 @@
       "titleHighlight": "Mery García?",
       "description": "Discover the story, experience, and passion of an artist with over 20 years dedicated to cosmetic tattooing.",
       "button": "Learn her story"
+    },
+    "videoShowcase": {
+      "eyebrow": "The in-person experience",
+      "title": "What happens",
+      "titleHighlight": "in my chair",
+      "description": "No filters, no empty promises. One real minute of the process: the consultation, the first stroke, the moment you look in the mirror. This is what it feels like to sit in my chair for the first time.",
+      "cta": "Book your spot",
+      "playLabel": "Play video",
+      "duration": "60 sec"
     }
   },
   "about": {
