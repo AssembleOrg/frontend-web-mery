@@ -667,6 +667,22 @@
         "title": "Eyebrow Lamination",
         "description": "Disciplines wavy and voluminous eyebrow hairs. Useful for correcting volume and implants."
       },
+      "eyebrowModelingBrowRefill": {
+        "title": "Eyebrow Modeling + Brow Refill",
+        "description": "Combo: shaping your eyebrows plus density reactivation with a hyper-realistic shadow effect."
+      },
+      "eyebrowLaminationModeling": {
+        "title": "Eyebrow Lamination + Modeling",
+        "description": "Combo: lamination to discipline the hairs plus shaping of your eyebrows."
+      },
+      "eyebrowLaminationBrowRefill": {
+        "title": "Eyebrow Lamination + Brow Refill",
+        "description": "Combo: lamination to discipline the hairs plus density reactivation with a hyper-realistic shadow effect."
+      },
+      "eyebrowLaminationModelingBrowRefill": {
+        "title": "Lamination + Modeling + Brow Refill",
+        "description": "Full combo: lamination, eyebrow shaping and density reactivation with a hyper-realistic shadow effect."
+      },
       "eyebrowTint": {
         "title": "Eyebrow Tint",
         "description": "For people with gray or very light eyebrow hairs. Hand-dyed hair by hair."
