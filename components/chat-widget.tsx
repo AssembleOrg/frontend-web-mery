@@ -22,11 +22,11 @@ export default function ChatWidget() {
     injected.current = true;
 
     const identifier = user?.id || user?.email || undefined;
+    // NO seteamos title/accentColor: el diseño (nombre, color, logo, posición,
+    // CSS) lo maneja la consola de chatbots y el widget lo aplica solo.
     (window as unknown as { __RAG_WIDGET_CONFIG?: Record<string, unknown> }).__RAG_WIDGET_CONFIG = {
       appToken: APP_TOKEN,
       baseUrl: BASE_URL,
-      title: 'Formaciones · Mery García',
-      accentColor: '#E6A8B8',
       ...(identifier ? { userIdentifier: identifier } : {}),
     };
 

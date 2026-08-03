@@ -115,7 +115,7 @@ export default function ProblemReportWidget() {
         onPointerUp={handlePointerUp}
         onClick={() => { if (!didDragRef.current) setIsOpen(true); didDragRef.current = false; }}
         style={pos ? { top: pos.y, left: pos.x } : undefined}
-        className={`fixed z-[120] inline-flex items-center gap-2 rounded-full bg-[#2B2B2B] px-2.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-[#FBE8EA] shadow-lg transition hover:bg-[#1f1f1f] sm:cursor-grab sm:active:cursor-grabbing select-none${pos ? '' : ' bottom-[64px] right-3 sm:bottom-5 sm:right-5'}`}
+        className={`fixed z-[120] inline-flex items-center gap-2 rounded-full bg-[#2B2B2B] px-2.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-[#FBE8EA] shadow-lg transition hover:bg-[#1f1f1f] sm:cursor-grab sm:active:cursor-grabbing select-none${pos ? '' : ' bottom-[64px] left-3 sm:bottom-5 sm:left-5'}`}
       >
         <Headset className='h-4 w-4 pointer-events-none' />
         <span className='hidden sm:inline pointer-events-none'>¿Problemas?</span>
