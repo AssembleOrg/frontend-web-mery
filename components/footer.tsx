@@ -8,7 +8,8 @@ import { Logo } from './logo';
 export function Footer() {
   return (
     <footer className='bg-card border-t'>
-      <div className='container mx-auto px-4 py-12'>
+      {/* pb extra en mobile: la burbuja de reporte (fixed bottom-5 right-5) flota sobre el final del footer. */}
+      <div className='container mx-auto px-4 py-12 pb-24 md:pb-12'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
           {/* Brand */}
           <div>
@@ -114,11 +115,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className='border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground'>
+        <div className='border-t mt-8 pt-8 flex flex-col items-center gap-2 text-center text-sm text-muted-foreground'>
           <p className='font-secondary'>
             © 2025 Mery García. Todos los derechos reservados.
           </p>
-          <div className='flex items-center mt-2 md:mt-0'>
+          {/* Centrado: en la esquina inferior derecha lo tapaba la burbuja de reporte de problemas. */}
+          <div className='flex items-center'>
             <p className='font-secondary mr-2'>Desarrollado by</p>
             <a
               href='https://wa.me/5491138207230?text=Hola%20Pistech,%20me%20comunico%20a%20través%20de%20merygarcia%20web.%20Me%20gustaría%20saber%20más%20sobre%20sus%20servicios%20digitales%20que%20ofrecen.'

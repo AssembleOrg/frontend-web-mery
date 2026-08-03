@@ -34,6 +34,15 @@
       "titleHighlight": "Mery García?",
       "description": "Descubrí la historia, experiencia y pasión de una artista con más de 20 años dedicada al tatuaje cosmético.",
       "button": "Conocer su historia"
+    },
+    "videoShowcase": {
+      "eyebrow": "La experiencia presencial",
+      "title": "Lo que pasa",
+      "titleHighlight": "en mi silla",
+      "description": "Sin filtros, sin promesas vacías. Un minuto real del proceso: la consulta, la primera línea, el momento en que te ves al espejo. Así se siente sentarse en mi silla por primera vez.",
+      "cta": "Reservar tu lugar",
+      "playLabel": "Reproducir video",
+      "duration": "60 seg"
     }
   },
   "about": {
@@ -651,6 +660,22 @@
       "eyebrowLamination": {
         "title": "Laminado de cejas",
         "description": "Disciplina tus vellos ondulados y el volumen. Útil para corregir volumen e implantes."
+      },
+      "eyebrowModelingBrowRefill": {
+        "title": "Modelado de cejas + Brow Refill",
+        "description": "Combo: modelado de la forma de tus cejas más la reactivación de densidad con efecto sombra hiperrealista."
+      },
+      "eyebrowLaminationModeling": {
+        "title": "Laminado de cejas + Modelado",
+        "description": "Combo: laminado para disciplinar el vello más el modelado de la forma de tus cejas."
+      },
+      "eyebrowLaminationBrowRefill": {
+        "title": "Laminado de cejas + Brow Refill",
+        "description": "Combo: laminado para disciplinar el vello más la reactivación de densidad con efecto sombra hiperrealista."
+      },
+      "eyebrowLaminationModelingBrowRefill": {
+        "title": "Laminado + Modelado + Brow Refill",
+        "description": "Combo completo: laminado, modelado de la forma y reactivación de densidad con efecto sombra hiperrealista."
       },
       "eyebrowTint": {
         "title": "Tinte de cejas",

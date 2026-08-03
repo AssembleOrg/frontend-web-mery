@@ -44,7 +44,7 @@ export default async function LocaleLayout({
         <ModalProvider>
           <AuthInterceptorProvider>
             <RequestTrackerProvider />
-            <PromoModal />
+            {/* <PromoModal /> */}
             {/* <CuotasModal /> */}
             {children}
             <ProblemReportWidget />
