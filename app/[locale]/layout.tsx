@@ -9,6 +9,7 @@ import { AuthInterceptorProvider } from '@/components/auth/AuthInterceptorProvid
 import PromoModal from '@/components/promo-modal';
 import CuotasModal from '@/components/cuotas-modal';
 import ProblemReportWidget from '@/components/problem-report-widget';
+import ChatWidget from '@/components/chat-widget';
 import RequestTrackerProvider from '@/components/request-tracker-provider';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
@@ -47,6 +48,7 @@ export default async function LocaleLayout({
             {/* <CuotasModal /> */}
             {children}
             <ProblemReportWidget />
+            <ChatWidget />
             <Script
               src='https://sdk.mercadopago.com/js/v2'
               strategy='lazyOnload'
