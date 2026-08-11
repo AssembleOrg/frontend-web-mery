@@ -215,7 +215,7 @@ export function ChatRoomPanel({ room: roomProp, showCounterpart = false, onMobil
             </div>
           )
         ) : (
-          <ChatInput onSendText={sendText} onSendImage={sendImage} onTyping={setTyping} />
+          <ChatInput onSendText={sendText} onSendImage={sendImage} onTyping={setTyping} isAdmin={isAdmin} />
         )}
       </div>
     </div>

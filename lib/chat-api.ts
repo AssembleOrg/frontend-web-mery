@@ -92,6 +92,14 @@ export interface TokenMutationResult {
   unblockedNow?: boolean;
 }
 
+export interface QuickReply {
+  id: string;
+  title: string;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 function authHeaders(): HeadersInit {
   const token = Cookies.get('auth_token');
   return {
@@ -186,4 +194,53 @@ export const chatApi = {
     }),
   tokenHistory: (roomId: string) =>
     api<ChatTokenEvent[]>(`/chat/admin/rooms/${roomId}/tokens`),
+
+  /** Transcribe un audio vía Groq (backend). No persiste el audio. */
+  transcribe: async (blob: Blob): Promise<string> => {
+    const token = Cookies.get('auth_token');
+    const ext = blob.type.includes('mp4')
+      ? 'm4a'
+      : blob.type.includes('ogg')
+        ? 'ogg'
+        : 'webm';
+    const file = new File([blob], `nota_de_voz.${ext}`, { type: blob.type });
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${API_BASE_URL}/chat/transcribe`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: form,
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(
+        (data as { message?: string }).message ||
+          'No se pudo transcribir el audio',
+      );
+    }
+    const json = (await res.json()) as { data: { text: string } };
+    return json.data.text;
+  },
+
+  quickReplies: {
+    list: (search?: string) => {
+      const q = search ? `?search=${encodeURIComponent(search)}` : '';
+      return api<QuickReply[]>(`/chat/admin/quick-replies${q}`);
+    },
+    create: (payload: { title: string; body: string }) =>
+      api<QuickReply>('/chat/admin/quick-replies', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+    update: (id: string, payload: { title?: string; body?: string }) =>
+      api<QuickReply>(`/chat/admin/quick-replies/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      }),
+    remove: (id: string) =>
+      api<{ deleted: boolean }>(`/chat/admin/quick-replies/${id}`, {
+        method: 'DELETE',
+      }),
+  },
 };

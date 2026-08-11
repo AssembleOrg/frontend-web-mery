@@ -1,7 +1,9 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { ImageIcon, Send, Loader2 } from 'lucide-react';
+import { ImageIcon, Send, Loader2, Zap } from 'lucide-react';
+import { VoiceRecorder } from './voice-recorder';
+import { QuickRepliesDrawer } from './quick-replies-drawer';
 
 interface Props {
   disabled?: boolean;
@@ -9,6 +11,8 @@ interface Props {
   onSendImage: (file: File) => Promise<void> | void;
   onTyping?: (typing: boolean) => void;
   placeholder?: string;
+  /** Habilita micrófono (transcripción Groq) y respuestas rápidas. Solo admin. */
+  isAdmin?: boolean;
 }
 
 export function ChatInput({
@@ -17,12 +21,31 @@ export function ChatInput({
   onSendImage,
   onTyping,
   placeholder = 'Escribí un mensaje…',
+  isAdmin = false,
 }: Props) {
   const [value, setValue] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [quickOpen, setQuickOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const typingRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Inserta texto (transcripción o respuesta rápida) en el input para editarlo
+  // antes de enviar. Nunca envía automáticamente.
+  const insertText = (text: string) => {
+    setValue((prev) => {
+      const sep = prev.trim() ? (prev.endsWith('\n') ? '' : '\n') : '';
+      return prev + sep + text;
+    });
+    requestAnimationFrame(() => {
+      const el = textareaRef.current;
+      if (el) {
+        el.focus();
+        el.selectionStart = el.selectionEnd = el.value.length;
+      }
+    });
+  };
 
   // EFECTO PREMIUM: Auto-resize + Ocultar scroll si no es necesario
   useEffect(() => {
@@ -88,6 +111,14 @@ export function ChatInput({
         }
       `}</style>
 
+      {isAdmin && (
+        <QuickRepliesDrawer
+          open={quickOpen}
+          onClose={() => setQuickOpen(false)}
+          onPick={insertText}
+        />
+      )}
+
       <input
         ref={fileRef}
         type='file'
@@ -98,48 +129,77 @@ export function ChatInput({
           if (f) void handleImage(f);
         }}
       />
-      
-      <button
-        type='button'
-        className='p-2 rounded-full hover:bg-muted disabled:opacity-50 shrink-0 transition-colors mb-0.5'
-        disabled={disabled || uploading}
-        onClick={() => fileRef.current?.click()}
-      >
-        {uploading ? (
-          <Loader2 className='w-5 h-5 animate-spin' />
-        ) : (
-          <ImageIcon className='w-5 h-5 text-[#eba2a8]' />
-        )}
-      </button>
 
-      <textarea
-        ref={textareaRef}
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          triggerTyping();
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            void handleSend();
-          }
-        }}
-        placeholder={placeholder}
-        disabled={disabled}
-        rows={1}
-        // min-w-0 y overflow-hidden por defecto son la clave
-        className='flex-1 min-w-0 resize-none rounded-2xl border border-border bg-background px-4 py-2.5 text-sm leading-normal max-h-32 focus:outline-none focus:ring-2 focus:ring-[#f9bbc4] disabled:opacity-60 transition-all overflow-hidden'
-      />
+      {/* Botón de imagen: oculto mientras se graba/transcribe (el grabador toma la fila) */}
+      {!recording && (
+        <button
+          type='button'
+          className='p-2 rounded-full hover:bg-muted disabled:opacity-50 shrink-0 transition-colors mb-0.5'
+          disabled={disabled || uploading}
+          onClick={() => fileRef.current?.click()}
+        >
+          {uploading ? (
+            <Loader2 className='w-5 h-5 animate-spin' />
+          ) : (
+            <ImageIcon className='w-5 h-5 text-[#eba2a8]' />
+          )}
+        </button>
+      )}
 
-      <button
-        type='button'
-        disabled={disabled || !value.trim()}
-        onClick={() => void handleSend()}
-        className='p-2.5 rounded-full bg-[#f9bbc4] text-white hover:bg-[#eba2a8] active:scale-95 disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed shrink-0 transition-all flex items-center justify-center shadow-sm mb-0.5'
-      >
-        <Send className='w-5 h-5' />
-      </button>
+      {/* Grabador: instancia ÚNICA y persistente. En idle es solo el botón mic;
+          al grabar/transcribir se expande y toma la fila (via onActiveChange). */}
+      {isAdmin && (
+        <VoiceRecorder
+          disabled={disabled}
+          onTranscription={insertText}
+          onActiveChange={setRecording}
+        />
+      )}
+
+      {isAdmin && !recording && (
+        <button
+          type='button'
+          onClick={() => setQuickOpen(true)}
+          disabled={disabled}
+          title='Respuestas rápidas'
+          className='p-2 rounded-full hover:bg-muted disabled:opacity-50 shrink-0 transition-colors mb-0.5'
+        >
+          <Zap className='w-5 h-5 text-[#eba2a8]' />
+        </button>
+      )}
+
+      {!recording && (
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+            triggerTyping();
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              void handleSend();
+            }
+          }}
+          placeholder={placeholder}
+          disabled={disabled}
+          rows={1}
+          // min-w-0 y overflow-hidden por defecto son la clave
+          className='flex-1 min-w-0 resize-none rounded-2xl border border-border bg-background px-4 py-2.5 text-sm leading-normal max-h-32 focus:outline-none focus:ring-2 focus:ring-[#f9bbc4] disabled:opacity-60 transition-all overflow-hidden'
+        />
+      )}
+
+      {!recording && (
+        <button
+          type='button'
+          disabled={disabled || !value.trim()}
+          onClick={() => void handleSend()}
+          className='p-2.5 rounded-full bg-[#f9bbc4] text-white hover:bg-[#eba2a8] active:scale-95 disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed shrink-0 transition-all flex items-center justify-center shadow-sm mb-0.5'
+        >
+          <Send className='w-5 h-5' />
+        </button>
+      )}
     </div>
   );
 }
