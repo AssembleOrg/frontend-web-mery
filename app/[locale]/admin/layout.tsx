@@ -8,6 +8,7 @@ import {
   GraduationCap,
   Users,
   Gift,
+  Sparkles,
   MessageCircle,
   Settings,
 } from 'lucide-react';
@@ -21,6 +22,7 @@ const navItems = [
   { href: 'admin/cursos', label: 'Cursos', icon: GraduationCap },
   { href: 'admin/usuarios', label: 'Usuarios', icon: Users },
   { href: 'admin/cupones', label: 'Cupones', icon: Gift },
+  { href: 'admin/promos', label: 'Promos', icon: Sparkles },
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
   { href: 'admin/configuracion', label: 'Config', icon: Settings },
 ];

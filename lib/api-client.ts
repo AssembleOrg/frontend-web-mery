@@ -872,6 +872,97 @@ export const confirmCouponConsumption = async (
   });
 };
 
+// ==================== Promo Campaigns ====================
+
+export interface PromoCampaign {
+  id: string;
+  name: string;
+  description: string | null;
+  startsAt: string;
+  endsAt: string;
+  isActive: boolean;
+  rewardDiscountPercent: number | null;
+  rewardValidityDays: number;
+  rewardExcludeOwned: boolean;
+  rewardsIssuedAt: string | null;
+  issuedCouponsCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreatePromoCampaignDto {
+  name: string;
+  description?: string;
+  startsAt: string;
+  endsAt: string;
+  isActive?: boolean;
+  rewardDiscountPercent?: number;
+  rewardValidityDays?: number;
+  rewardExcludeOwned?: boolean;
+}
+
+export type UpdatePromoCampaignDto = Partial<CreatePromoCampaignDto>;
+
+export interface EligiblePreview {
+  eligibleCount: number;
+  alreadyIssued: boolean;
+  rewardsIssuedAt: string | null;
+}
+
+export interface IssueRewardsResult {
+  issued: number;
+  emailed: number;
+  skipped: number;
+}
+
+export const getPromoCampaigns = async (): Promise<PromoCampaign[]> => {
+  const response = await apiRequest<PromoCampaign[]>('/promo-campaigns');
+  return response.data;
+};
+
+export const createPromoCampaign = async (
+  data: CreatePromoCampaignDto,
+): Promise<PromoCampaign> => {
+  const response = await apiRequest<PromoCampaign>('/promo-campaigns', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return response.data;
+};
+
+export const updatePromoCampaign = async (
+  id: string,
+  data: UpdatePromoCampaignDto,
+): Promise<PromoCampaign> => {
+  const response = await apiRequest<PromoCampaign>(`/promo-campaigns/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  return response.data;
+};
+
+export const deletePromoCampaign = async (id: string): Promise<void> => {
+  await apiRequest(`/promo-campaigns/${id}`, { method: 'DELETE' });
+};
+
+export const getPromoEligible = async (id: string): Promise<EligiblePreview> => {
+  const response = await apiRequest<EligiblePreview>(
+    `/promo-campaigns/${id}/eligible`,
+  );
+  return response.data;
+};
+
+export const issuePromoRewards = async (
+  id: string,
+  force = false,
+): Promise<IssueRewardsResult> => {
+  const response = await apiRequest<IssueRewardsResult>(
+    `/promo-campaigns/${id}/issue-rewards${force ? '?force=true' : ''}`,
+    { method: 'POST', body: '{}' },
+  );
+  return response.data;
+};
+
 export const apiClient = {
   // Categories
   getCategories,
