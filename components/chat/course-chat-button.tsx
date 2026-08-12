@@ -38,9 +38,8 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
             prev.id === nextRoom.id &&
             prev.status === nextRoom.status &&
             prev.unlockedAt === nextRoom.unlockedAt &&
-            prev.gracePeriodEnd === nextRoom.gracePeriodEnd &&
-            prev.tokens === nextRoom.tokens &&
-            prev.tokenLimit === nextRoom.tokenLimit
+            prev.expiresAt === nextRoom.expiresAt &&
+            prev.blocked === nextRoom.blocked
           ) {
             return prev;
           }
@@ -179,17 +178,16 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
         className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white dark:hover:text-[#3a1f26] text-sm font-primary font-medium transition-colors'
       >
         <MessageCircle className='w-4 h-4' />
-        {room.tokensBlocked ? 'Ver conversación' : 'Entrar al chat'}
+        {room.blocked || room.status === 'CLOSED' ? 'Ver conversación' : 'Entrar al chat'}
       </button>
-      {room.tokensBlocked && (
+      {room.blocked && (
         <p className='mt-2 text-[11px] text-center text-muted-foreground'>
-          Usaste tus {room.tokenLimit} consultas de este curso: el chat queda
-          solo lectura.
+          Este chat fue bloqueado: queda solo lectura.
         </p>
       )}
-      {!room.tokensBlocked && room.tokens > 0 && (
+      {!room.blocked && room.status === 'CLOSED' && (
         <p className='mt-2 text-[11px] text-center text-muted-foreground'>
-          Consultas marcadas: {room.tokens} de {room.tokenLimit}.
+          Esta conversación se cerró: queda solo lectura.
         </p>
       )}
       {open && (

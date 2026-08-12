@@ -64,16 +64,18 @@ export function useChatConnection() {
     }) => {
       setTyping(p.roomId, p.typing ? { userId: p.userId, role: p.role } : null);
     };
-    const onTokensChanged = (p: {
+    const onRoomUpdated = (p: {
       roomId: string;
-      tokens: number;
-      tokenLimit: number;
-      tokensBlocked: boolean;
+      status?: 'LOCKED' | 'ACTIVE' | 'GRACE' | 'CLOSED';
+      blocked?: boolean;
+      blockedAt?: string | null;
+      expiresAt?: string | null;
     }) => {
-      useChatStore.getState().setRoomTokens(p.roomId, {
-        tokens: p.tokens,
-        tokenLimit: p.tokenLimit,
-        tokensBlocked: p.tokensBlocked,
+      useChatStore.getState().setRoomState(p.roomId, {
+        status: p.status,
+        blocked: p.blocked,
+        blockedAt: p.blockedAt,
+        expiresAt: p.expiresAt,
       });
     };
     const onReadReceipt = (p: {
@@ -97,7 +99,7 @@ export function useChatConnection() {
       socket.on('unread_changed', onUnreadChanged);
       socket.on('typing', onTyping);
       socket.on('read_receipt', onReadReceipt);
-      socket.on('tokens_changed', onTokensChanged);
+      socket.on('room_updated', onRoomUpdated);
       boundRef.current = true;
     }
 
@@ -112,7 +114,7 @@ export function useChatConnection() {
       socket.off('unread_changed', onUnreadChanged);
       socket.off('typing', onTyping);
       socket.off('read_receipt', onReadReceipt);
-      socket.off('tokens_changed', onTokensChanged);
+      socket.off('room_updated', onRoomUpdated);
       boundRef.current = false;
     };
   }, [isAuthenticated, appendMessage, bumpUnread, setTyping, setUnreadTotal, upsertRoom]);

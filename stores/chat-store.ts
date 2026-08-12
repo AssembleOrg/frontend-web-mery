@@ -30,10 +30,15 @@ interface ChatActions {
     readAt: string,
   ) => void;
   markRoomRead: (roomId: RoomId) => void;
-  /** Aplica el estado de tokens que llega por WS o tras una acción del admin. */
-  setRoomTokens: (
+  /** Aplica cambios de estado del chat (bloqueo/vida) que llegan por WS o tras una acción del admin. */
+  setRoomState: (
     roomId: RoomId,
-    tokens: { tokens: number; tokenLimit: number; tokensBlocked: boolean },
+    state: {
+      status?: ChatRoom['status'];
+      blocked?: boolean;
+      blockedAt?: string | null;
+      expiresAt?: string | null;
+    },
   ) => void;
   setTyping: (
     roomId: RoomId,
@@ -98,13 +103,14 @@ export const useChatStore = create<ChatState & ChatActions>()(
       set((s) => {
         if (s.rooms[roomId]) s.rooms[roomId].unread = 0;
       }),
-    setRoomTokens: (roomId, tokens) =>
+    setRoomState: (roomId, state) =>
       set((s) => {
         const room = s.rooms[roomId];
         if (!room) return;
-        room.tokens = tokens.tokens;
-        room.tokenLimit = tokens.tokenLimit;
-        room.tokensBlocked = tokens.tokensBlocked;
+        if (state.status !== undefined) room.status = state.status;
+        if (state.blocked !== undefined) room.blocked = state.blocked;
+        if (state.blockedAt !== undefined) room.blockedAt = state.blockedAt;
+        if (state.expiresAt !== undefined) room.expiresAt = state.expiresAt;
       }),
     setTyping: (roomId, typing) =>
       set((s) => {

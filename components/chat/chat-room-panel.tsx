@@ -10,7 +10,7 @@ import { ChatMessageBubble } from './chat-message-bubble';
 import { ChatDateSeparator } from './chat-date-separator';
 import { ChatInput } from './chat-input';
 import { ChatWarning } from './chat-warning';
-import { ChatTokenControls, TokenDots } from './chat-token-controls';
+import { ChatBlockControls } from './chat-block-controls';
 import { Loader2, Lock, ChevronLeft, Ban } from 'lucide-react';
 
 interface Props {
@@ -104,11 +104,9 @@ export function ChatRoomPanel({ room: roomProp, showCounterpart = false, onMobil
     }
   };
 
-  const tokenLimit = room.tokenLimit ?? 3;
-  const tokens = room.tokens ?? 0;
-  // El bloqueo por tokens frena solo al alumno; el admin siempre puede escribir.
-  const tokenBlocked = !isAdmin && (room.tokensBlocked ?? tokens >= tokenLimit);
-  const disabled = room.status === 'LOCKED' || room.status === 'CLOSED' || tokenBlocked;
+  // El bloqueo manual frena solo al alumno; el admin siempre puede escribir.
+  const manuallyBlocked = !isAdmin && room.blocked;
+  const disabled = room.status === 'LOCKED' || room.status === 'CLOSED' || manuallyBlocked;
   const counterpartName = [room.user.firstName, room.user.lastName].filter(Boolean).join(' ') || room.user.email;
 
   return (
@@ -134,20 +132,16 @@ export function ChatRoomPanel({ room: roomProp, showCounterpart = false, onMobil
         </div>
       )}
 
-      {/* Tokens: el admin los administra, el alumno solo ve cuántos lleva */}
+      {/* Admin: controles de bloqueo + vida del chat. Alumno: aviso si está bloqueado */}
       {isAdmin ? (
         <div className='shrink-0'>
-          <ChatTokenControls room={room} />
+          <ChatBlockControls room={room} />
         </div>
       ) : (
-        tokens > 0 && (
+        room.blocked && (
           <div className='shrink-0 border-b border-border bg-[#fff4f6] dark:bg-[#3a1f26] px-3 py-2 flex items-center gap-2 text-[11px] text-[#660e1b] dark:text-[#ffd3d9]'>
-            <TokenDots tokens={tokens} limit={tokenLimit} />
-            <span>
-              {tokenBlocked
-                ? `Usaste tus ${tokenLimit} consultas en este curso.`
-                : `Llevás ${tokens} de ${tokenLimit} consultas marcadas. Aprovechá las que te quedan.`}
-            </span>
+            <Ban className='w-3.5 h-3.5 shrink-0' />
+            <span>Este chat fue bloqueado. No podés enviar mensajes nuevos.</span>
           </div>
         )
       )}
@@ -200,13 +194,20 @@ export function ChatRoomPanel({ room: roomProp, showCounterpart = false, onMobil
       {/* Footer / Input: shrink-0 y fuera del div de scroll asegura que sea STICKY */}
 <div className="shrink-0 w-full bg-white dark:bg-card border-t border-border/50 z-20">
         {disabled ? (
-          tokenBlocked ? (
+          manuallyBlocked ? (
             <div className='px-4 py-4 text-[11px] text-[#660e1b] dark:text-[#ffd3d9] flex items-start gap-2'>
               <Ban className='w-3.5 h-3.5 mt-0.5 shrink-0' />
               <span>
-                Alcanzaste el límite de {tokenLimit} consultas marcadas en este
-                curso, así que este chat queda solo lectura. Podés seguir viendo
-                el curso y las respuestas anteriores.
+                Este chat fue bloqueado, así que queda solo lectura. Podés seguir
+                viendo el curso y las respuestas anteriores.
+              </span>
+            </div>
+          ) : room.status === 'CLOSED' ? (
+            <div className='px-4 py-4 text-[11px] text-muted-foreground flex items-start gap-2'>
+              <Lock className='w-3.5 h-3.5 mt-0.5 shrink-0' />
+              <span>
+                Esta conversación se cerró (pasaron los días de vida del chat).
+                Queda solo lectura.
               </span>
             </div>
           ) : (

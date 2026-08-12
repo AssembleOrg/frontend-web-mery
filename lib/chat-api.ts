@@ -27,13 +27,11 @@ export interface ChatRoom {
   gracePeriodEnd: string | null;
   lastMessageAt: string | null;
   studentInitiated: boolean;
-  /** Tokens marcados por el admin en esta conversación */
-  tokens: number;
-  /** Tokens necesarios para bloquear (configurable en el panel admin) */
-  tokenLimit: number;
-  /** true cuando tokens >= tokenLimit: el alumno ya no puede escribir */
-  tokensBlocked: boolean;
-  tokensBlockedAt: string | null;
+  /** true cuando el admin bloqueó el chat: el alumno ya no puede escribir */
+  blocked: boolean;
+  blockedAt: string | null;
+  /** Fin de vida del chat. Al vencer pasa a CLOSED (solo lectura). */
+  expiresAt: string | null;
   category: ChatCategory;
   user: ChatUser;
   createdAt: string;
@@ -73,23 +71,9 @@ export interface EligibilityInfo {
   quizPassed: boolean;
 }
 
-export interface ChatTokenEvent {
-  id: string;
-  roomId: string;
-  adminId: string;
-  amount: number;
-  balanceAfter: number;
-  reason: string | null;
-  createdAt: string;
-  admin?: ChatUser;
-}
-
-export interface TokenMutationResult {
+export interface RoomMutationResult {
   room: ChatRoom;
-  event: ChatTokenEvent | null;
   changed: boolean;
-  blockedNow?: boolean;
-  unblockedNow?: boolean;
 }
 
 export interface QuickReply {
@@ -181,19 +165,22 @@ export const chatApi = {
     const s = q.toString();
     return api<ChatRoom[]>(`/chat/admin/rooms${s ? `?${s}` : ''}`);
   },
-  /** Suma tokens (o resta, con amount negativo) a una conversación. */
-  addTokens: (roomId: string, amount: number, reason?: string) =>
-    api<TokenMutationResult>(`/chat/admin/rooms/${roomId}/tokens`, {
+  /** Bloquea el chat: el alumno deja de poder enviar mensajes. */
+  blockRoom: (roomId: string) =>
+    api<RoomMutationResult>(`/chat/admin/rooms/${roomId}/block`, {
       method: 'POST',
-      body: JSON.stringify({ amount, reason }),
     }),
-  resetTokens: (roomId: string, reason?: string) =>
-    api<TokenMutationResult>(`/chat/admin/rooms/${roomId}/tokens/reset`, {
+  /** Desbloquea el chat. */
+  unblockRoom: (roomId: string) =>
+    api<RoomMutationResult>(`/chat/admin/rooms/${roomId}/unblock`, {
       method: 'POST',
-      body: JSON.stringify({ reason }),
     }),
-  tokenHistory: (roomId: string) =>
-    api<ChatTokenEvent[]>(`/chat/admin/rooms/${roomId}/tokens`),
+  /** Extiende/reabre la vida del chat (días opcional; default = configurado). */
+  extendRoom: (roomId: string, days?: number) =>
+    api<RoomMutationResult>(`/chat/admin/rooms/${roomId}/extend`, {
+      method: 'POST',
+      body: JSON.stringify({ days }),
+    }),
 
   /** Transcribe un audio vía Groq (backend). No persiste el audio. */
   transcribe: async (blob: Blob): Promise<string> => {

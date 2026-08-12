@@ -204,16 +204,20 @@ function RoomListItem({ room: roomProp, active, onClick }: { room: ChatRoom; act
         </div>
         <div className='flex items-center gap-2'>
           <span className='text-xs text-muted-foreground truncate'>{room.category.name}</span>
-          {(room.tokens ?? 0) > 0 && (
+          {room.blocked && (
             <span
-              title={`${room.tokens} de ${room.tokenLimit} tokens marcados`}
-              className={`text-[10px] rounded-full px-1.5 py-0.5 shrink-0 ${
-                room.tokensBlocked
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-amber-100 text-amber-700'
-              }`}
+              title='Chat bloqueado'
+              className='text-[10px] rounded-full px-1.5 py-0.5 shrink-0 bg-red-100 text-red-700'
             >
-              🎫 {room.tokens}/{room.tokenLimit}
+              🚫 Bloqueado
+            </span>
+          )}
+          {room.status === 'CLOSED' && (
+            <span
+              title='Chat cerrado (venció la vida del chat)'
+              className='text-[10px] rounded-full px-1.5 py-0.5 shrink-0 bg-gray-100 text-gray-500'
+            >
+              🔒 Cerrado
             </span>
           )}
         </div>
