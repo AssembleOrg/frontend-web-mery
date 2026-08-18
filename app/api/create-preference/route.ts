@@ -35,7 +35,14 @@ export async function POST(req: NextRequest) {
   const webhookBaseUrl = (backendUrl || frontendUrl)!.replace(/\/$/, '');
 
   try {
-    const { items, locale, userEmail, userId, couponId, installments: requestedInstallments } = await req.json();
+    const {
+      items,
+      locale,
+      userEmail,
+      userId,
+      couponCode,
+      installments: requestedInstallments,
+    } = await req.json();
     const effectiveLocale = locale || 'es';
 
     if (!items || items.length === 0) {
@@ -59,46 +66,56 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const preferenceItems = items.map((item: any) => {
-      const quantity = Number(item.quantity);
-      const price = Number(item.price);
+    // BLINDAJE DE PRECIO: no se confía en el precio que manda el cliente. El
+    // backend es la autoridad: calcula los line-items desde la DB, valida el
+    // cupón (vigencia, categorías, propiedad del cupón personal) y resuelve las
+    // cuotas. Acá solo se arma la preference de MP con esos precios.
+    const categoryIds = items.map((item: any) => String(item.id));
+    const authToken = req.cookies.get('auth_token')?.value;
+    const apiBase = process.env.NEXT_PUBLIC_API_URL?.startsWith('http')
+      ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')
+      : `${(process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '')}/api`;
 
-      if (isNaN(quantity) || quantity <= 0) {
-        throw new Error(`Cantidad inválida para el item: ${item.title}`);
-      }
-      if (isNaN(price) || price <= 0) {
-        throw new Error(`Precio inválido para el item: ${item.title}`);
-      }
-
-      return {
-        id: String(item.id),
-        title: item.title,
-        description: item.description || item.title,
-        quantity: quantity,
-        unit_price: price,
-        currency_id: 'ARS',
-      };
+    const quoteRes = await fetch(`${apiBase}/checkout/quote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
+      body: JSON.stringify({
+        categoryIds,
+        couponCode: couponCode || undefined,
+        installments: requestedInstallments,
+      }),
     });
 
-    // Cuotas: el frontend envía el plan elegido (3 o 6). Excepción: cursos
-    // cobrados en USD por fuera de la plataforma (Nanoblading, Camuflaje
-    // Senior) sólo aceptan pago único.
-    const hasNonInstallmentItem = items.some((item: any) => {
-      const title = String(item.title || '').toLowerCase();
-      return (
-        title.includes('nanoblading') ||
-        title.includes('camuflaje senior') ||
-        title.includes('camuflaje señor')
+    if (!quoteRes.ok) {
+      const err = await quoteRes.json().catch(() => ({}));
+      return NextResponse.json(
+        { error: err.message || 'No se pudo calcular el precio del pedido.' },
+        { status: quoteRes.status === 401 ? 401 : 400 }
       );
-    });
-    // 2 se habilita cuando aplica el cupón del 40% (fuerza máx. 2 cuotas).
-    const allowedInstallments = [2, 3, 6];
-    const planFromClient = Number(requestedInstallments);
-    const safePlan = allowedInstallments.includes(planFromClient) ? planFromClient : 6;
-    const installments = hasNonInstallmentItem ? 1 : safePlan;
+    }
 
-    // Extraer category IDs de los items
-    const categoryIds = items.map((item: any) => item.id);
+    const quote = (await quoteRes.json()).data;
+    if (!quote?.items?.length) {
+      return NextResponse.json(
+        { error: 'No se pudo calcular el precio del pedido.' },
+        { status: 400 }
+      );
+    }
+
+    const preferenceItems = quote.items.map((item: any) => ({
+      id: String(item.categoryId),
+      title: item.title,
+      description: item.description || item.title,
+      quantity: 1,
+      unit_price: Number(item.unitPrice),
+      currency_id: 'ARS',
+    }));
+
+    const installments = Number(quote.installments) || 6;
+    const couponId = quote.couponId || '';
 
     // Expiración de la preference: 15 minutos
     const now = new Date();

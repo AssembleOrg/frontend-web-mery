@@ -206,8 +206,10 @@ export default function FinalizarCompraPage() {
           locale,
           userId: user.id,
           userEmail: user.email,
-          couponId: appliedCoupon?.couponId || undefined,
-          installments: forceMaxTwoCuotas ? 2 : installmentPlan,
+          // El backend calcula el precio autoritativo y valida el cupón por
+          // código; no se manda ni el precio ni el descuento del cliente.
+          couponCode: appliedCoupon?.valid ? appliedCoupon.couponCode : undefined,
+          installments: installmentPlan,
         }),
       });
 
