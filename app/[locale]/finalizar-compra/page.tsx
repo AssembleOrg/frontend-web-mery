@@ -15,6 +15,7 @@ import {
   confirmCouponConsumption,
   type ValidateCouponResponse,
 } from '@/lib/api-client';
+import { FORCE_MAX_2_CUOTAS_COUPON_IDS } from '@/lib/installments-config';
 
 // Convención del sistema: priceARS === USD_ONLY_SENTINEL && priceUSD > 0
 // marca un curso USD-only (Nanoblading, Camuflaje Senior). Esos no se
@@ -120,10 +121,13 @@ export default function FinalizarCompraPage() {
     [arsItems, appliedCoupon]
   );
 
-  // El cupón del 40% fuerza el pago a un máximo de 2 cuotas (podés pagar en 1 o
-  // 2). No toca la lógica del cupón: solo limita las cuotas en el checkout.
+  // Ciertos cupones (ej. MERY40) fuerzan el pago a un máximo de 2 cuotas (podés
+  // pagar en 1 o 2). Se atan por ID de cupón (no por %/código, que pueden
+  // cambiar). No toca la lógica del cupón: solo limita las cuotas en el checkout.
   const forceMaxTwoCuotas = !!(
-    appliedCoupon?.valid && appliedCoupon.discountPercent === 40
+    appliedCoupon?.valid &&
+    appliedCoupon.couponId &&
+    FORCE_MAX_2_CUOTAS_COUPON_IDS.has(appliedCoupon.couponId)
   );
   // Al forzar 2 cuotas no aplica el descuento del plan 3-cuotas: se cotiza a
   // precio de lista (mismo factor que el plan 6).

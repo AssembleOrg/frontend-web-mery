@@ -29,3 +29,9 @@ export const NON_INSTALLMENT_SLUGS = new Set<string>([
   'nanoblading',
   'camuflaje-senior',
 ]);
+
+// Cupones que fuerzan el pago a máximo 2 cuotas. Se atan por ID (no por código)
+// porque el código puede cambiar. Ej.: MERY40 (promo 40% en pesos).
+export const FORCE_MAX_2_CUOTAS_COUPON_IDS = new Set<string>([
+  'cmsy0uzw60000gxy4z87n96sb',
+]);
