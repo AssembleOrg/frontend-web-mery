@@ -37,6 +37,8 @@ interface CheckoutViewProps {
   installmentPlan: InstallmentPlan;
   onInstallmentPlanChange: (plan: InstallmentPlan) => void;
   showInstallmentSelector: boolean;
+  // Si el cupón limita las cuotas (ej. 40% → 2), se muestra un aviso en vez del selector.
+  maxInstallments?: number;
   // IDs de items USD-only (se gestionan por fuera de MP)
   usdOnlyItemIds: string[];
   // Totales pre-calculados (solo items ARS)
@@ -66,6 +68,7 @@ export const CheckoutView = ({
   onRemoveCoupon,
   installmentPlan,
   onInstallmentPlanChange,
+  maxInstallments,
   showInstallmentSelector,
   usdOnlyItemIds,
   subtotalARS,
@@ -154,6 +157,16 @@ export const CheckoutView = ({
               <h2 className='text-xl font-primary font-bold text-foreground mb-6 flex items-center gap-3'>
                 <CreditCard className='w-5 h-5 text-[#f9bbc4]' /> Método de Pago
               </h2>
+
+              {!showInstallmentSelector && maxInstallments && (
+                <div className='mb-5 flex items-start gap-1.5'>
+                  <Info className='w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5' />
+                  <p className='text-xs text-muted-foreground'>
+                    Con este cupón el pago es en hasta {maxInstallments} cuotas
+                    sin interés (podés elegir 1 o {maxInstallments}).
+                  </p>
+                </div>
+              )}
 
               {showInstallmentSelector && (
                 <div className='mb-5'>

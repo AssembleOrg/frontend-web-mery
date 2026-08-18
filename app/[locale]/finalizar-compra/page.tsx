@@ -120,7 +120,15 @@ export default function FinalizarCompraPage() {
     [arsItems, appliedCoupon]
   );
 
-  const breakdown = useMemo(() => computeBreakdown(installmentPlan), [computeBreakdown, installmentPlan]);
+  // El cupón del 40% fuerza el pago a un máximo de 2 cuotas (podés pagar en 1 o
+  // 2). No toca la lógica del cupón: solo limita las cuotas en el checkout.
+  const forceMaxTwoCuotas = !!(
+    appliedCoupon?.valid && appliedCoupon.discountPercent === 40
+  );
+  // Al forzar 2 cuotas no aplica el descuento del plan 3-cuotas: se cotiza a
+  // precio de lista (mismo factor que el plan 6).
+  const planForPricing: InstallmentPlan = forceMaxTwoCuotas ? 6 : installmentPlan;
+  const breakdown = useMemo(() => computeBreakdown(planForPricing), [computeBreakdown, planForPricing]);
   const totalAt6Cuotas = useMemo(() => computeBreakdown(6).finalTotal, [computeBreakdown]);
   const totalAt3Cuotas = useMemo(() => computeBreakdown(3).finalTotal, [computeBreakdown]);
 
@@ -195,7 +203,7 @@ export default function FinalizarCompraPage() {
           userId: user.id,
           userEmail: user.email,
           couponId: appliedCoupon?.couponId || undefined,
-          installments: installmentPlan,
+          installments: forceMaxTwoCuotas ? 2 : installmentPlan,
         }),
       });
 
@@ -291,7 +299,8 @@ export default function FinalizarCompraPage() {
         onRemoveCoupon={handleRemoveCoupon}
         installmentPlan={installmentPlan}
         onInstallmentPlanChange={setInstallmentPlan}
-        showInstallmentSelector={hasArsItems}
+        showInstallmentSelector={hasArsItems && !forceMaxTwoCuotas}
+        maxInstallments={forceMaxTwoCuotas ? 2 : undefined}
         usdOnlyItemIds={usdOnlyItems.map((i) => i.id)}
         subtotalARS={breakdown.subtotal}
         couponDiscountARS={breakdown.couponDiscount}

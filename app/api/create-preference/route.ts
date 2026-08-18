@@ -91,7 +91,8 @@ export async function POST(req: NextRequest) {
         title.includes('camuflaje señor')
       );
     });
-    const allowedInstallments = [3, 6];
+    // 2 se habilita cuando aplica el cupón del 40% (fuerza máx. 2 cuotas).
+    const allowedInstallments = [2, 3, 6];
     const planFromClient = Number(requestedInstallments);
     const safePlan = allowedInstallments.includes(planFromClient) ? planFromClient : 6;
     const installments = hasNonInstallmentItem ? 1 : safePlan;
