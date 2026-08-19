@@ -30,8 +30,7 @@ export const NON_INSTALLMENT_SLUGS = new Set<string>([
   'camuflaje-senior',
 ]);
 
-// Cupones que fuerzan el pago a máximo 2 cuotas. Se atan por ID (no por código)
-// porque el código puede cambiar. Ej.: MERY40 (promo 40% en pesos).
-export const FORCE_MAX_2_CUOTAS_COUPON_IDS = new Set<string>([
-  'cmsy0uzw60000gxy4z87n96sb',
-]);
+// El tope de 2 cuotas ahora sale de la promo global (setting checkout.promoActive
+// + checkout.promoMaxInstallments), no de un cupón. Se deja vacío por si más
+// adelante se quiere volver a atar a un cupón puntual.
+export const FORCE_MAX_2_CUOTAS_COUPON_IDS = new Set<string>([]);

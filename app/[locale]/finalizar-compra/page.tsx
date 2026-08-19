@@ -13,9 +13,10 @@ import { toast } from 'react-hot-toast';
 import {
   validateCoupon,
   confirmCouponConsumption,
+  getCheckoutPromo,
   type ValidateCouponResponse,
+  type CheckoutPromo,
 } from '@/lib/api-client';
-import { FORCE_MAX_2_CUOTAS_COUPON_IDS } from '@/lib/installments-config';
 
 // Convención del sistema: priceARS === USD_ONLY_SENTINEL && priceUSD > 0
 // marca un curso USD-only (Nanoblading, Camuflaje Senior). Esos no se
@@ -42,6 +43,19 @@ export default function FinalizarCompraPage() {
 
   // Plan de cuotas: 6 (precio de lista) o 3 (10% off). Default: 6.
   const [installmentPlan, setInstallmentPlan] = useState<InstallmentPlan>(6);
+
+  // Promo global (descuento fijo sin cupón). Se resuelve en el backend; acá se
+  // usa solo para reflejarla en pantalla (el precio cobrado es el del quote).
+  const [promo, setPromo] = useState<CheckoutPromo>({
+    active: false,
+    discountPercent: 0,
+    maxInstallments: 2,
+  });
+  useEffect(() => {
+    getCheckoutPromo()
+      .then(setPromo)
+      .catch(() => {});
+  }, []);
 
   // Compute initial form data based on user data
   const initialFormData = useMemo(() => {
@@ -82,11 +96,18 @@ export default function FinalizarCompraPage() {
   );
   const hasArsItems = arsItems.length > 0;
 
+  // La promo global (si está activa) aplica un descuento fijo a TODA compra y
+  // limita las cuotas. Es excluyente con el cupón: si hay cupón válido, manda el
+  // cupón. El precio real lo calcula el backend (quote); esto es solo display.
+  const promoOn = promo.active && promo.discountPercent > 0 && !appliedCoupon?.valid;
+
   const computeBreakdown = useCallback(
     (plan: InstallmentPlan) => {
-      const cuotasFactor = plan === 3 ? 0.9 : 1;
+      // Durante la promo no hay descuento por plan 3 (se topa a max cuotas).
+      const cuotasFactor = !promoOn && plan === 3 ? 0.9 : 1;
       let subtotal = 0;
       let couponDiscount = 0;
+      let promoDiscount = 0;
       let cuotasDiscount = 0;
       const perItemPrice = new Map<string, number>();
 
@@ -97,14 +118,17 @@ export default function FinalizarCompraPage() {
         const isEligible =
           appliedCoupon?.valid &&
           appliedCoupon.applicableCategoryIds.includes(item.category.id);
-        const couponFactor = isEligible
+        const discountFactor = isEligible
           ? 1 - appliedCoupon.discountPercent / 100
-          : 1;
-        const afterCoupon = Math.round(list * couponFactor);
-        couponDiscount += list - afterCoupon;
+          : promoOn
+            ? 1 - promo.discountPercent / 100
+            : 1;
+        const afterDiscount = Math.round(list * discountFactor);
+        if (isEligible) couponDiscount += list - afterDiscount;
+        else if (promoOn) promoDiscount += list - afterDiscount;
 
-        const afterCuotas = Math.round(afterCoupon * cuotasFactor);
-        cuotasDiscount += afterCoupon - afterCuotas;
+        const afterCuotas = Math.round(afterDiscount * cuotasFactor);
+        cuotasDiscount += afterDiscount - afterCuotas;
 
         perItemPrice.set(item.id, afterCuotas);
       }
@@ -113,25 +137,19 @@ export default function FinalizarCompraPage() {
       return {
         subtotal,
         couponDiscount,
+        promoDiscount,
         cuotasDiscount: Math.max(0, cuotasDiscount),
         finalTotal,
         perItemPrice,
       };
     },
-    [arsItems, appliedCoupon]
+    [arsItems, appliedCoupon, promoOn, promo.discountPercent]
   );
 
-  // Ciertos cupones (ej. MERY40) fuerzan el pago a un máximo de 2 cuotas (podés
-  // pagar en 1 o 2). Se atan por ID de cupón (no por %/código, que pueden
-  // cambiar). No toca la lógica del cupón: solo limita las cuotas en el checkout.
-  const forceMaxTwoCuotas = !!(
-    appliedCoupon?.valid &&
-    appliedCoupon.couponId &&
-    FORCE_MAX_2_CUOTAS_COUPON_IDS.has(appliedCoupon.couponId)
-  );
-  // Al forzar 2 cuotas no aplica el descuento del plan 3-cuotas: se cotiza a
-  // precio de lista (mismo factor que el plan 6).
-  const planForPricing: InstallmentPlan = forceMaxTwoCuotas ? 6 : installmentPlan;
+  // La promo limita el pago a un máximo de cuotas. Sin promo, plan normal (3/6).
+  const limitInstallments = promoOn;
+  // Con el tope de cuotas se cotiza a precio de lista (sin el 10% del plan 3).
+  const planForPricing: InstallmentPlan = limitInstallments ? 6 : installmentPlan;
   const breakdown = useMemo(() => computeBreakdown(planForPricing), [computeBreakdown, planForPricing]);
   const totalAt6Cuotas = useMemo(() => computeBreakdown(6).finalTotal, [computeBreakdown]);
   const totalAt3Cuotas = useMemo(() => computeBreakdown(3).finalTotal, [computeBreakdown]);
@@ -305,8 +323,11 @@ export default function FinalizarCompraPage() {
         onRemoveCoupon={handleRemoveCoupon}
         installmentPlan={installmentPlan}
         onInstallmentPlanChange={setInstallmentPlan}
-        showInstallmentSelector={hasArsItems && !forceMaxTwoCuotas}
-        maxInstallments={forceMaxTwoCuotas ? 2 : undefined}
+        showInstallmentSelector={hasArsItems && !limitInstallments}
+        maxInstallments={limitInstallments ? promo.maxInstallments : undefined}
+        promoActive={promoOn}
+        promoDiscountPercent={promo.discountPercent}
+        promoDiscountARS={breakdown.promoDiscount}
         usdOnlyItemIds={usdOnlyItems.map((i) => i.id)}
         subtotalARS={breakdown.subtotal}
         couponDiscountARS={breakdown.couponDiscount}

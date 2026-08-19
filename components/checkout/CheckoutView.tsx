@@ -37,8 +37,12 @@ interface CheckoutViewProps {
   installmentPlan: InstallmentPlan;
   onInstallmentPlanChange: (plan: InstallmentPlan) => void;
   showInstallmentSelector: boolean;
-  // Si el cupón limita las cuotas (ej. 40% → 2), se muestra un aviso en vez del selector.
+  // Si la promo limita las cuotas (ej. → 2), se muestra un aviso en vez del selector.
   maxInstallments?: number;
+  // Promo global (descuento fijo sin cupón).
+  promoActive?: boolean;
+  promoDiscountPercent?: number;
+  promoDiscountARS?: number;
   // IDs de items USD-only (se gestionan por fuera de MP)
   usdOnlyItemIds: string[];
   // Totales pre-calculados (solo items ARS)
@@ -69,6 +73,9 @@ export const CheckoutView = ({
   installmentPlan,
   onInstallmentPlanChange,
   maxInstallments,
+  promoActive,
+  promoDiscountPercent,
+  promoDiscountARS,
   showInstallmentSelector,
   usdOnlyItemIds,
   subtotalARS,
@@ -376,6 +383,12 @@ export const CheckoutView = ({
                 <div className='flex justify-between text-[#660e1b]'>
                   <span>Cupón ({appliedCoupon!.discountPercent}%)</span>
                   <span>-{formatARS(couponDiscountARS)}</span>
+                </div>
+              )}
+              {promoActive && (promoDiscountARS ?? 0) > 0 && (
+                <div className='flex justify-between text-[#660e1b]'>
+                  <span>Promo ({promoDiscountPercent}%)</span>
+                  <span>-{formatARS(promoDiscountARS!)}</span>
                 </div>
               )}
               {hasCuotasDiscount && (

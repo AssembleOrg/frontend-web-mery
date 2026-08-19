@@ -772,6 +772,20 @@ export const confirmCouponConsumption = async (
   });
 };
 
+// ==================== Checkout / Promo global ====================
+
+export interface CheckoutPromo {
+  active: boolean;
+  discountPercent: number;
+  maxInstallments: number;
+}
+
+/** Estado de la promo global (descuento fijo sin cupón). Endpoint público. */
+export const getCheckoutPromo = async (): Promise<CheckoutPromo> => {
+  const response = await apiRequest<CheckoutPromo>('/checkout/promo');
+  return response.data;
+};
+
 export const apiClient = {
   // Categories
   getCategories,
