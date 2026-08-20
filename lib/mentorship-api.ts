@@ -101,6 +101,16 @@ export const mentorshipApi = {
     const s = q.toString();
     return api<AdminMentorship[]>(`/mentorship/admin/calendar${s ? `?${s}` : ''}`);
   },
+  adminSlots: () => api<MentorshipSlot[]>('/mentorship/admin/slots'),
+  adminCancel: (id: string) =>
+    api<{ cancelled: boolean }>(`/mentorship/admin/${id}/cancel`, {
+      method: 'POST',
+    }),
+  adminReschedule: (id: string, start: string) =>
+    api<Mentorship>(`/mentorship/admin/${id}/reschedule`, {
+      method: 'POST',
+      body: JSON.stringify({ start }),
+    }),
   adminAvailability: () =>
     api<MentorshipAvailability[]>('/mentorship/admin/availability'),
   adminCreateAvailability: (payload: {

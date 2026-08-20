@@ -9,6 +9,10 @@ import {
   Loader2,
   Power,
   Video,
+  Ban,
+  RefreshCw,
+  X,
+  Check,
 } from 'lucide-react';
 import {
   mentorshipApi,
@@ -16,6 +20,7 @@ import {
   minutesToHHMM,
   type MentorshipAvailability,
   type AdminMentorship,
+  type MentorshipSlot,
 } from '@/lib/mentorship-api';
 
 function hhmmToMin(v: string): number {
@@ -34,6 +39,24 @@ export default function AdminMentoriasPage() {
   const [start, setStart] = useState('12:00');
   const [end, setEnd] = useState('13:00');
   const [saving, setSaving] = useState(false);
+
+  // Reprogramación admin
+  const [rescheduleFor, setRescheduleFor] = useState<AdminMentorship | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  async function cancelBooking(b: AdminMentorship) {
+    if (!confirm(`¿Cancelar la mentoría de ${b.user.email}? Se libera el cupo y se borra el evento de Google.`)) return;
+    setBusyId(b.id);
+    try {
+      await mentorshipApi.adminCancel(b.id);
+      toast.success('Mentoría cancelada');
+      void load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -272,6 +295,32 @@ export default function AdminMentoriasPage() {
                           </a>
                         )}
                         <StatusBadge status={b.status} />
+                        {b.status === 'SCHEDULED' && (
+                          <div className='flex items-center gap-1 shrink-0'>
+                            <button
+                              type='button'
+                              disabled={busyId === b.id}
+                              onClick={() => setRescheduleFor(b)}
+                              title='Reprogramar'
+                              className='p-1.5 rounded-md hover:bg-muted text-muted-foreground disabled:opacity-40'
+                            >
+                              <RefreshCw className='w-4 h-4' />
+                            </button>
+                            <button
+                              type='button'
+                              disabled={busyId === b.id}
+                              onClick={() => void cancelBooking(b)}
+                              title='Cancelar'
+                              className='p-1.5 rounded-md hover:bg-red-50 text-red-500 disabled:opacity-40'
+                            >
+                              {busyId === b.id ? (
+                                <Loader2 className='w-4 h-4 animate-spin' />
+                              ) : (
+                                <Ban className='w-4 h-4' />
+                              )}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -281,6 +330,172 @@ export default function AdminMentoriasPage() {
           </div>
         )}
       </section>
+
+      {rescheduleFor && (
+        <AdminRescheduleModal
+          booking={rescheduleFor}
+          onClose={() => setRescheduleFor(null)}
+          onDone={() => {
+            setRescheduleFor(null);
+            void load();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function AdminRescheduleModal({
+  booking,
+  onClose,
+  onDone,
+}: Readonly<{
+  booking: AdminMentorship;
+  onClose: () => void;
+  onDone: () => void;
+}>) {
+  const [slots, setSlots] = useState<MentorshipSlot[] | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    mentorshipApi
+      .adminSlots()
+      .then((s) => setSlots(s.filter((x) => x.available)))
+      .catch(() => setSlots([]));
+  }, []);
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, MentorshipSlot[]>();
+    for (const s of slots ?? []) {
+      const key = new Date(s.start).toLocaleDateString('es-AR', {
+        weekday: 'long',
+        day: '2-digit',
+        month: '2-digit',
+        timeZone: 'America/Argentina/Buenos_Aires',
+      });
+      const arr = map.get(key) ?? [];
+      arr.push(s);
+      map.set(key, arr);
+    }
+    return Array.from(map.entries());
+  }, [slots]);
+
+  async function confirm() {
+    if (!selected) {
+      toast.error('Elegí un horario');
+      return;
+    }
+    setSaving(true);
+    try {
+      await mentorshipApi.adminReschedule(booking.id, selected);
+      toast.success('Mentoría reprogramada');
+      onDone();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const studentName =
+    [booking.user.firstName, booking.user.lastName].filter(Boolean).join(' ') ||
+    booking.user.email;
+
+  return (
+    <div className='fixed inset-0 z-[70] flex items-center justify-center p-4'>
+      <button
+        type='button'
+        aria-label='Cerrar'
+        onClick={onClose}
+        className='absolute inset-0 bg-black/40'
+      />
+      <div className='relative w-full max-w-md bg-white dark:bg-card rounded-2xl shadow-2xl flex flex-col max-h-[88vh]'>
+        <div className='flex items-center justify-between px-4 py-3 border-b border-border shrink-0'>
+          <div className='min-w-0'>
+            <h3 className='font-bold text-foreground'>Reprogramar mentoría</h3>
+            <p className='text-xs text-muted-foreground truncate'>
+              {studentName} · {booking.category.name}
+            </p>
+          </div>
+          <button
+            type='button'
+            onClick={onClose}
+            className='p-1.5 rounded-full hover:bg-muted text-muted-foreground'
+          >
+            <X className='w-5 h-5' />
+          </button>
+        </div>
+
+        <div className='flex-1 overflow-y-auto p-4 min-h-0'>
+          {slots === null ? (
+            <div className='py-6 flex justify-center'>
+              <Loader2 className='w-5 h-5 animate-spin text-muted-foreground' />
+            </div>
+          ) : grouped.length === 0 ? (
+            <p className='text-sm text-muted-foreground py-6 text-center'>
+              No hay horarios libres.
+            </p>
+          ) : (
+            <div className='space-y-3'>
+              {grouped.map(([day, daySlots]) => (
+                <div key={day}>
+                  <p className='text-xs font-semibold text-foreground capitalize mb-1.5'>
+                    {day}
+                  </p>
+                  <div className='flex flex-wrap gap-2'>
+                    {daySlots.map((s) => {
+                      const label = new Date(s.start).toLocaleTimeString('es-AR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        timeZone: 'America/Argentina/Buenos_Aires',
+                      });
+                      const active = selected === s.start;
+                      return (
+                        <button
+                          key={s.start}
+                          type='button'
+                          onClick={() => setSelected(s.start)}
+                          className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+                            active
+                              ? 'bg-[#f9bbc4] text-white border-[#f9bbc4]'
+                              : 'border-border hover:border-[#f9bbc4]'
+                          }`}
+                        >
+                          {label} hs
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className='flex items-center justify-end gap-2 px-4 py-3 border-t border-border shrink-0'>
+          <button
+            type='button'
+            onClick={onClose}
+            className='px-3 py-2 text-sm rounded-lg text-muted-foreground hover:bg-muted'
+          >
+            Cancelar
+          </button>
+          <button
+            type='button'
+            onClick={() => void confirm()}
+            disabled={saving || !selected}
+            className='inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-[#660e1b] text-white hover:opacity-90 disabled:opacity-50'
+          >
+            {saving ? (
+              <Loader2 className='w-4 h-4 animate-spin' />
+            ) : (
+              <Check className='w-4 h-4' />
+            )}
+            Reprogramar
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
