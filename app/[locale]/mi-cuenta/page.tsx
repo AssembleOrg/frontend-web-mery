@@ -17,6 +17,7 @@ import {
   Key,
   Eye,
   EyeOff,
+  LayoutDashboard,
 } from 'lucide-react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -32,6 +33,7 @@ export default function MiCuentaPage() {
 
   const { logout, user, updateProfile, changePassword, isLoading: authLoading } = useAuth();
   const { courses: userCourses, isLoading: loading } = useUserCourses();
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUBADMIN';
 
   // Estado del formulario de perfil
   const [profileForm, setProfileForm] = useState({
@@ -184,12 +186,14 @@ export default function MiCuentaPage() {
               Mis Cursos
             </h2>
 
-            <MentorshipBanner
-              defaultEmail={user?.email ?? ''}
-              courseNames={Object.fromEntries(
-                userCourses.map((uc) => [uc.course.id, uc.course.title]),
-              )}
-            />
+            {!isAdmin && (
+              <MentorshipBanner
+                defaultEmail={user?.email ?? ''}
+                courseNames={Object.fromEntries(
+                  userCourses.map((uc) => [uc.course.id, uc.course.title]),
+                )}
+              />
+            )}
 
             {loading ? (
               <MiCuentaSkeleton />
@@ -721,6 +725,19 @@ export default function MiCuentaPage() {
                       </button>
                     );
                   })}
+
+                  {isAdmin && (
+                    <>
+                      <hr className='my-4 border-border' />
+                      <Link
+                        href='/es/admin'
+                        className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] transition-colors duration-200'
+                      >
+                        <LayoutDashboard className='w-5 h-5 text-[#EBA2A8]' />
+                        Panel Admin
+                      </Link>
+                    </>
+                  )}
 
                   <hr className='my-4 border-border' />
 

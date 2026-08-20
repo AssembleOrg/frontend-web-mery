@@ -539,11 +539,12 @@
 /* Bot de ayuda externo (rag-webchat). El color lo define su consola; acá solo
    ajustamos tamaño/posición para que sea más discreto y no tape la UI. */
 #rag-btn {
-  width: 48px !important;
-  height: 48px !important;
+  width: 44px !important;
+  height: 44px !important;
   border-radius: 14px !important;
-  font-size: 22px !important;
-  box-shadow: 0 6px 20px rgba(43, 43, 43, 0.18) !important;
+  font-size: 20px !important;
+  background: #eba2a8 !important;
+  box-shadow: 0 6px 20px rgba(235, 162, 168, 0.35) !important;
 }
 /* En mobile el input del chat del curso vive abajo: subimos el bot para no taparlo. */
 @media (max-width: 640px) {

@@ -454,13 +454,15 @@ export default function AdminUsuariosPage() {
                   }`}
                 >
                   <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <p className='font-medium text-gray-900'>
+                    <div className='flex-1 min-w-0'>
+                      <p className='font-medium text-gray-900 truncate'>
                         {user.firstName && user.lastName
                           ? `${user.firstName} ${user.lastName}`
                           : user.name || 'Sin nombre'}
                       </p>
-                      <p className='text-sm text-gray-600'>{user.email}</p>
+                      <p className='text-sm text-gray-600 truncate' title={user.email}>
+                        {user.email}
+                      </p>
                       <div className='flex items-center gap-2 mt-1'>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full ${
@@ -518,12 +520,12 @@ export default function AdminUsuariosPage() {
           {selectedUser ? (
             <>
               <div className='mb-6'>
-                <h2 className='text-xl font-semibold text-gray-900 mb-2'>
+                <h2 className='text-xl font-semibold text-gray-900 mb-2 break-words'>
                   {selectedUser.firstName && selectedUser.lastName
                     ? `${selectedUser.firstName} ${selectedUser.lastName}`
                     : selectedUser.name || 'Usuario'}
                 </h2>
-                <p className='text-gray-600'>{selectedUser.email}</p>
+                <p className='text-gray-600 break-words'>{selectedUser.email}</p>
               </div>
 
               {/* Asignar nuevo curso */}
@@ -551,26 +553,22 @@ export default function AdminUsuariosPage() {
                     ))}
                   </select>
 
-                  <div className='flex items-center gap-2'>
-                    <label className='text-sm text-gray-700 whitespace-nowrap'>
+                  <div>
+                    <label className='block text-sm text-gray-700 mb-1'>
                       Duración:
                     </label>
-                    <div className='flex gap-2 flex-1'>
+                    <select
+                      value={assignMonths}
+                      onChange={(e) => setAssignMonths(Number(e.target.value))}
+                      disabled={isLoading}
+                      className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
+                    >
                       {ACCESS_DURATIONS.map((m) => (
-                        <button
-                          key={m}
-                          type='button'
-                          onClick={() => setAssignMonths(m)}
-                          className={`flex-1 py-1.5 px-2 rounded-lg border text-sm font-medium transition-colors ${
-                            assignMonths === m
-                              ? 'border-[var(--mg-pink)] bg-[var(--mg-pink)] text-white'
-                              : 'border-gray-300 bg-white text-gray-700 hover:border-[var(--mg-pink-lighter)]'
-                          }`}
-                        >
+                        <option key={m} value={m}>
                           {m} meses
-                        </button>
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   </div>
 
                   <button

@@ -10,6 +10,8 @@ export function SlotPickerModal({
   defaultEmail,
   mode,
   mentorshipId,
+  admin = false,
+  subtitle,
   onClose,
   onDone,
 }: Readonly<{
@@ -17,6 +19,10 @@ export function SlotPickerModal({
   defaultEmail: string;
   mode: 'book' | 'reschedule';
   mentorshipId?: string;
+  /** Modo admin: usa adminSlots/adminReschedule en vez de las fns del alumno. */
+  admin?: boolean;
+  /** Línea secundaria bajo el título (ej. "Juana Pérez · Nanoblading"). */
+  subtitle?: string;
   onClose: () => void;
   onDone: () => void;
 }>) {
@@ -26,11 +32,10 @@ export function SlotPickerModal({
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    mentorshipApi
-      .slots()
+    (admin ? mentorshipApi.adminSlots() : mentorshipApi.slots())
       .then((s) => setSlots(s.filter((x) => x.available)))
       .catch(() => setSlots([]));
-  }, []);
+  }, [admin]);
 
   // Bloquear scroll de fondo, esconder el bot externo y cerrar con Escape.
   useEffect(() => {
@@ -76,7 +81,9 @@ export function SlotPickerModal({
     setSaving(true);
     try {
       if (mode === 'reschedule' && mentorshipId) {
-        await mentorshipApi.reschedule(mentorshipId, selected);
+        await (admin
+          ? mentorshipApi.adminReschedule(mentorshipId, selected)
+          : mentorshipApi.reschedule(mentorshipId, selected));
         toast.success('Mentoría reprogramada');
       } else {
         await mentorshipApi.book({
@@ -109,9 +116,14 @@ export function SlotPickerModal({
             <span className='flex-shrink-0 w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center'>
               <CalendarClock className='w-[18px] h-[18px] text-[#EBA2A8]' />
             </span>
-            <h3 className='font-semibold leading-tight'>
-              {mode === 'reschedule' ? 'Reprogramar mentoría' : 'Reservá tu mentoría'}
-            </h3>
+            <div className='min-w-0'>
+              <h3 className='font-semibold leading-tight'>
+                {mode === 'reschedule' ? 'Reprogramar mentoría' : 'Reservá tu mentoría'}
+              </h3>
+              {subtitle && (
+                <p className='text-xs text-white/60 truncate mt-0.5'>{subtitle}</p>
+              )}
+            </div>
           </div>
           <button
             type='button'

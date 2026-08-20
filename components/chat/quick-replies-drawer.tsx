@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { chatApi, type QuickReply } from '@/lib/chat-api';
+import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
 
 interface Props {
   open: boolean;
@@ -31,6 +32,7 @@ export function QuickRepliesDrawer({ open, onClose, onPick }: Readonly<Props>) {
   const [search, setSearch] = useState('');
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -89,10 +91,11 @@ export function QuickRepliesDrawer({ open, onClose, onPick }: Readonly<Props>) {
   }
 
   async function remove(id: string) {
-    if (!confirm('¿Eliminar esta respuesta rápida?')) return;
     try {
       await chatApi.quickReplies.remove(id);
       setItems((prev) => prev.filter((r) => r.id !== id));
+      setDeleteId(null);
+      toast.success('Respuesta eliminada');
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Error al eliminar');
     }
@@ -255,7 +258,7 @@ export function QuickRepliesDrawer({ open, onClose, onPick }: Readonly<Props>) {
                   </button>
                   <button
                     type='button'
-                    onClick={() => void remove(r.id)}
+                    onClick={() => setDeleteId(r.id)}
                     className='inline-flex items-center gap-1 px-2 py-1 text-[11px] rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40'
                   >
                     <Trash2 className='w-3 h-3' /> Eliminar
@@ -266,6 +269,18 @@ export function QuickRepliesDrawer({ open, onClose, onPick }: Readonly<Props>) {
           )}
         </div>
       </div>
+
+      {deleteId && (
+        <ConfirmDialog
+          title='¿Eliminar esta respuesta rápida?'
+          description='Dejará de estar disponible para insertar en los chats.'
+          confirmLabel='Sí, eliminar'
+          cancelLabel='No, volver'
+          destructive
+          onConfirm={() => remove(deleteId)}
+          onClose={() => setDeleteId(null)}
+        />
+      )}
     </div>
   );
 }
