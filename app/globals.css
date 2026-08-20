@@ -535,3 +535,23 @@
     }
   }
 }
+
+/* Bot de ayuda externo (rag-webchat). El color lo define su consola; acá solo
+   ajustamos tamaño/posición para que sea más discreto y no tape la UI. */
+#rag-btn {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 14px !important;
+  font-size: 22px !important;
+  box-shadow: 0 6px 20px rgba(43, 43, 43, 0.18) !important;
+}
+/* En mobile el input del chat del curso vive abajo: subimos el bot para no taparlo. */
+@media (max-width: 640px) {
+  #rag-btn {
+    bottom: 84px !important;
+  }
+}
+/* Mientras el alumno tiene abierto un modal (chat/examen/mentoría) escondemos el bot. */
+body.hide-rag-widget #rag-root {
+  display: none !important;
+}

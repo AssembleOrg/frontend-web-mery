@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { X, CheckCircle2, XCircle, Clock, GraduationCap, Loader2 } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { X, CheckCircle2, RotateCcw, Clock, GraduationCap, Loader2 } from 'lucide-react';
 import {
   getCourseQuiz,
   submitCourseQuiz,
@@ -38,16 +38,26 @@ export function CourseQuizModal({
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<QuizAttemptResult | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+
+  const total = quiz?.questions.length ?? 0;
+  const answeredCount = useMemo(
+    () => (quiz ? quiz.questions.filter((q) => typeof answers[q.id] === 'boolean').length : 0),
+    [quiz, answers],
+  );
+  const remaining = total - answeredCount;
 
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('hide-rag-widget');
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = prev;
+      document.body.classList.remove('hide-rag-widget');
       window.removeEventListener('keydown', onKey);
     };
   }, [onClose]);
@@ -89,6 +99,8 @@ export function CourseQuizModal({
     try {
       const res = await submitCourseQuiz(categoryId, answers);
       setResult(res.data);
+      // El banner de resultado aparece arriba: aseguramos que se vea.
+      bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
       if (res.data.passed) onPassed?.();
     } catch (err) {
       setLoadError(
@@ -109,16 +121,18 @@ export function CourseQuizModal({
 
   return (
     <div className='fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4'>
-      <div className='w-full sm:max-w-2xl max-h-[92vh] sm:max-h-[85vh] bg-white dark:bg-background rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col'>
+      <div className='w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[85dvh] bg-white dark:bg-background rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col'>
         {/* Header */}
-        <div className='flex items-center justify-between px-4 py-3 border-b border-border bg-[#f9bbc4]/20'>
-          <div className='min-w-0 flex items-center gap-2'>
-            <GraduationCap className='w-5 h-5 text-[#660e1b] dark:text-[#f9bbc4] flex-shrink-0' />
+        <div className='flex items-center justify-between gap-3 px-5 py-4 bg-[#2B2B2B] text-white'>
+          <div className='min-w-0 flex items-center gap-3'>
+            <span className='flex-shrink-0 w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center'>
+              <GraduationCap className='w-[18px] h-[18px] text-[#EBA2A8]' />
+            </span>
             <div className='min-w-0'>
-              <div className='text-xs uppercase tracking-wider text-[#660e1b] dark:text-[#f9bbc4]'>
+              <div className='text-[10px] uppercase tracking-[0.18em] text-[#EBA2A8] font-medium'>
                 Examen final · Verdadero o Falso
               </div>
-              <div className='font-bold text-foreground truncate'>
+              <div className='font-semibold truncate leading-tight'>
                 {categoryName}
               </div>
             </div>
@@ -126,17 +140,17 @@ export function CourseQuizModal({
           <button
             onClick={onClose}
             aria-label='Cerrar'
-            className='p-2 rounded-full hover:bg-white/60 dark:hover:bg-card transition-colors'
+            className='p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors'
           >
             <X className='w-5 h-5' />
           </button>
         </div>
 
         {/* Body */}
-        <div className='flex-1 min-h-0 overflow-y-auto p-4 sm:p-6'>
+        <div ref={bodyRef} className='flex-1 min-h-0 overflow-y-auto p-4 sm:p-6'>
           {loading && (
             <div className='flex items-center justify-center py-16'>
-              <Loader2 className='w-8 h-8 text-[#f9bbc4] animate-spin' />
+              <Loader2 className='w-8 h-8 text-[#EBA2A8] animate-spin' />
             </div>
           )}
 
@@ -166,7 +180,7 @@ export function CourseQuizModal({
 
           {!loading && !loadError && cooldownUntil && (
             <div className='text-center py-12 max-w-md mx-auto'>
-              <Clock className='w-14 h-14 text-[#f9bbc4] mx-auto mb-4' />
+              <Clock className='w-14 h-14 text-[#EBA2A8] mx-auto mb-4' />
               <h3 className='text-lg font-bold text-foreground mb-2'>
                 Todavía no podés reintentar
               </h3>
@@ -186,37 +200,34 @@ export function CourseQuizModal({
 
           {/* Resultado del intento recién enviado */}
           {result && (
-            <div
-              className={`mb-6 p-4 rounded-xl border text-center ${
-                result.passed
-                  ? 'bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-900'
-                  : 'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-900'
-              }`}
-            >
+            <div className='mb-6 rounded-2xl bg-[#1c1c1e] text-white p-6 text-center'>
               {result.passed ? (
                 <>
-                  <CheckCircle2 className='w-10 h-10 text-green-500 mx-auto mb-2' />
-                  <h3 className='font-bold text-foreground'>
-                    ¡Felicitaciones, aprobaste!
-                  </h3>
-                  <p className='text-sm text-muted-foreground mt-1'>
-                    {result.correctCount} de {result.totalQuestions} respuestas
-                    correctas. Ya tenés el chat del curso desbloqueado.
+                  <span className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-500/15 ring-1 ring-green-500/30 mb-3'>
+                    <CheckCircle2 className='w-7 h-7 text-green-400' />
+                  </span>
+                  <h3 className='text-lg font-bold'>¡Felicitaciones, aprobaste!</h3>
+                  <p className='text-sm text-white/60 mt-1.5'>
+                    <span className='font-semibold text-white'>
+                      {result.correctCount}/{result.totalQuestions}
+                    </span>{' '}
+                    respuestas correctas. Ya tenés el chat del curso desbloqueado.
                   </p>
                 </>
               ) : (
                 <>
-                  <XCircle className='w-10 h-10 text-red-500 mx-auto mb-2' />
-                  <h3 className='font-bold text-foreground'>
-                    No alcanzaste el puntaje necesario
-                  </h3>
-                  <p className='text-sm text-muted-foreground mt-1'>
-                    Tuviste más de {result.maxWrong} respuestas incorrectas.
+                  <span className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#EBA2A8]/15 ring-1 ring-[#EBA2A8]/30 mb-3'>
+                    <RotateCcw className='w-7 h-7 text-[#EBA2A8]' />
+                  </span>
+                  <h3 className='text-lg font-bold'>Casi. Volvé a intentarlo</h3>
+                  <p className='text-sm text-white/60 mt-1.5'>
+                    Para aprobar podías errar hasta{' '}
+                    <span className='font-semibold text-white'>{result.maxWrong}</span>, y esta
+                    vez tuviste más.
                   </p>
-                  <p className='text-sm text-muted-foreground mt-2'>
-                    Te recomendamos volver a ver el curso completo y prestar
-                    atención a los detalles. Podés repetirlo y rendir el examen
-                    las veces que necesites.
+                  <p className='text-xs text-white/40 mt-3 max-w-xs mx-auto leading-relaxed'>
+                    Repasá el curso con calma y prestá atención a los detalles. Podés rendir el
+                    examen las veces que necesites.
                   </p>
                 </>
               )}
@@ -230,6 +241,31 @@ export function CourseQuizModal({
             !alreadyPassed &&
             !cooldownUntil && (
               <div className='space-y-5'>
+                {!result && (
+                  <div className='rounded-xl border border-border bg-muted/40 px-4 py-3'>
+                    <div className='flex items-center justify-between gap-3 text-xs'>
+                      <span className='text-muted-foreground'>
+                        Podés errar hasta{' '}
+                        <strong className='text-foreground'>{quiz.maxWrong}</strong> de{' '}
+                        <strong className='text-foreground'>{total}</strong>
+                        {quiz.status.attempts > 0 && (
+                          <span className='text-muted-foreground'>
+                            {' '}· Intento {quiz.status.attempts + 1}
+                          </span>
+                        )}
+                      </span>
+                      <span className='font-semibold text-foreground shrink-0'>
+                        {answeredCount}/{total}
+                      </span>
+                    </div>
+                    <div className='mt-2 h-1.5 w-full rounded-full bg-border overflow-hidden'>
+                      <div
+                        className='h-full rounded-full bg-[#EBA2A8] transition-all duration-300'
+                        style={{ width: `${total ? (answeredCount / total) * 100 : 0}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
                 {quiz.questions.map((q, idx) => {
                   const answered = answers[q.id];
                   return (
@@ -238,7 +274,7 @@ export function CourseQuizModal({
                       className='p-4 rounded-xl border border-border bg-white dark:bg-card transition-colors'
                     >
                       <div className='flex items-start gap-2'>
-                        <span className='flex-shrink-0 w-6 h-6 rounded-full bg-[#f9bbc4]/30 text-[#660e1b] dark:text-[#f9bbc4] text-xs font-bold flex items-center justify-center mt-0.5'>
+                        <span className='flex-shrink-0 w-6 h-6 rounded-full bg-[#2B2B2B] text-white text-xs font-semibold flex items-center justify-center mt-0.5'>
                           {idx + 1}
                         </span>
                         <p className='text-sm text-foreground flex-1'>
@@ -254,10 +290,10 @@ export function CourseQuizModal({
                             onClick={() =>
                               setAnswers((prev) => ({ ...prev, [q.id]: value }))
                             }
-                            className={`px-5 py-1.5 rounded-full border-2 text-sm font-medium transition-colors disabled:cursor-not-allowed ${
+                            className={`px-5 py-1.5 rounded-full border text-sm font-medium transition-colors disabled:cursor-not-allowed ${
                               answered === value
-                                ? 'border-[#f9bbc4] bg-[#f9bbc4] text-[#660e1b]'
-                                : 'border-border text-muted-foreground hover:border-[#f9bbc4]'
+                                ? 'border-[#EBA2A8] bg-[#EBA2A8]/15 text-[#2B2B2B] dark:text-[#EBA2A8]'
+                                : 'border-border text-muted-foreground hover:border-[#EBA2A8]'
                             }`}
                           >
                             {value ? 'Verdadero' : 'Falso'}
@@ -277,20 +313,20 @@ export function CourseQuizModal({
           quiz?.required &&
           !alreadyPassed &&
           !cooldownUntil && (
-            <div className='px-4 py-3 border-t border-border bg-white dark:bg-background'>
+            <div className='px-4 py-3 border-t border-border bg-white dark:bg-background pb-[calc(0.75rem+env(safe-area-inset-bottom))]'>
               {result ? (
                 <div className='flex flex-col sm:flex-row gap-2'>
                   {!result.passed && result.canRetry && (
                     <button
                       onClick={handleRetry}
-                      className='flex-1 py-2.5 rounded-lg bg-[#f9bbc4] text-[#660e1b] hover:brightness-95 font-bold text-sm transition-all'
+                      className='flex-1 py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] font-semibold text-sm transition-colors'
                     >
                       Volver a rendir
                     </button>
                   )}
                   <button
                     onClick={onClose}
-                    className='flex-1 py-2.5 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white font-medium text-sm transition-colors'
+                    className='flex-1 py-2.5 rounded-lg border border-border text-foreground hover:border-[#EBA2A8] font-medium text-sm transition-colors'
                   >
                     Cerrar
                   </button>
@@ -299,12 +335,12 @@ export function CourseQuizModal({
                 <button
                   onClick={handleSubmit}
                   disabled={!allAnswered || submitting}
-                  className='w-full py-2.5 rounded-lg bg-[#f9bbc4] text-[#660e1b] hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-sm transition-all flex items-center justify-center gap-2'
+                  className='w-full py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm transition-colors flex items-center justify-center gap-2'
                 >
                   {submitting && <Loader2 className='w-4 h-4 animate-spin' />}
                   {allAnswered
                     ? 'Enviar respuestas'
-                    : 'Respondé todas las preguntas'}
+                    : `Te falta${remaining === 1 ? '' : 'n'} ${remaining} pregunta${remaining === 1 ? '' : 's'}`}
                 </button>
               )}
             </div>

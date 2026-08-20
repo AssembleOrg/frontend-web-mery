@@ -330,7 +330,7 @@ export default function CursoDetallePage() {
                   alt='Mery García'
                   width={500}
                   height={120}
-                  className='h-16 mx-auto mb-4 filter brightness-0 invert'
+                  className='h-10 sm:h-14 w-auto mx-auto mb-4 filter brightness-0 invert'
                 />
                 <p className='text-lg font-light tracking-[0.15em] text-[#f9bbc4]'>
                   FORMACIONES

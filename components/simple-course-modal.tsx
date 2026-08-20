@@ -219,7 +219,7 @@ export default function SimpleCourseModal({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className='w-full max-w-4xl h-[90vh] mx-auto flex flex-col'>
+      <div className='w-full max-w-4xl h-[90dvh] mx-auto flex flex-col'>
         <div className='flex-1 overflow-y-auto'>
           <div className='relative'>
             {loadingVideo ? (

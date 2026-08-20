@@ -36,7 +36,7 @@ export default function PromoFlyer() {
         </button>
 
         {/* Flyer vertical (4:5). Misma imagen en mobile y desktop. */}
-        <div className='relative aspect-[4/5] max-h-[85vh] mx-auto overflow-hidden rounded-2xl shadow-2xl bg-black'>
+        <div className='relative aspect-[4/5] max-h-[85dvh] mx-auto overflow-hidden rounded-2xl shadow-2xl bg-black'>
           <Image
             src='/form/juleriaque-mobile.jpg'
             alt='Masterclass Anastasia Beverly Hills por Mery García en Juleriaque. Viernes 24 de julio, 16.30 y 18.30 hs, Av. Cabildo 1985, CABA'

@@ -54,7 +54,11 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
             prev.status === computed.status &&
             prev.videosCompleted === computed.videosCompleted &&
             prev.videosTotal === computed.videosTotal &&
-            prev.progressPercent === computed.progressPercent
+            prev.progressPercent === computed.progressPercent &&
+            prev.quizPassed === computed.quizPassed &&
+            prev.quizRequired === computed.quizRequired &&
+            prev.mentorshipCompleted === computed.mentorshipCompleted &&
+            prev.mentorshipRequired === computed.mentorshipRequired
           ) {
             return prev;
           }
@@ -138,9 +142,9 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
         <>
           <button
             onClick={() => setQuizOpen(true)}
-            className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white dark:hover:text-[#3a1f26] text-sm font-primary font-medium transition-colors'
+            className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] text-sm font-primary font-medium transition-colors'
           >
-            <GraduationCap className='w-4 h-4' />
+            <GraduationCap className='w-4 h-4 text-[#EBA2A8]' />
             Realizar examen final
           </button>
           {quizOpen && (
@@ -195,9 +199,9 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
     <>
       <button
         onClick={() => setOpen(true)}
-        className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 border-[#f9bbc4] text-[#660e1b] dark:text-[#f9bbc4] hover:bg-[#f9bbc4] hover:text-white dark:hover:text-[#3a1f26] text-sm font-primary font-medium transition-colors'
+        className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] text-sm font-primary font-medium transition-colors'
       >
-        <MessageCircle className='w-4 h-4' />
+        <MessageCircle className='w-4 h-4 text-[#EBA2A8]' />
         {room.blocked || room.status === 'CLOSED' ? 'Ver conversación' : 'Entrar al chat'}
       </button>
       {room.blocked && (

@@ -124,7 +124,7 @@ export function QuickRepliesDrawer({ open, onClose, onPick }: Readonly<Props>) {
       />
 
       {/* Sheet */}
-      <div className='qr-sheet relative w-full bg-white dark:bg-card rounded-t-2xl shadow-2xl flex flex-col max-h-[88vh] md:max-h-[85vh] md:mx-auto md:max-w-lg md:mb-4 md:rounded-2xl'>
+      <div className='qr-sheet relative w-full bg-white dark:bg-card rounded-t-2xl shadow-2xl flex flex-col max-h-[88dvh] md:max-h-[85dvh] md:mx-auto md:max-w-lg md:mb-4 md:rounded-2xl'>
         {/* Handle + header */}
         <div className='shrink-0 px-4 pt-3 pb-2 border-b border-border'>
           <div className='mx-auto mb-2 h-1.5 w-10 rounded-full bg-muted md:hidden' />

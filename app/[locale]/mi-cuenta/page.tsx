@@ -24,6 +24,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserCourses } from '@/hooks/useUserCourses';
 import { MiCuentaSkeleton } from '@/components/mi-cuenta/MiCuentaSkeleton';
 import { CourseChatButton } from '@/components/chat/course-chat-button';
+import { MentorshipBanner } from '@/components/mentorship/mentorship-banner';
 
 export default function MiCuentaPage() {
   const router = useRouter();
@@ -182,6 +183,13 @@ export default function MiCuentaPage() {
             <h2 className='text-2xl font-primary font-bold text-foreground mb-6'>
               Mis Cursos
             </h2>
+
+            <MentorshipBanner
+              defaultEmail={user?.email ?? ''}
+              courseNames={Object.fromEntries(
+                userCourses.map((uc) => [uc.course.id, uc.course.title]),
+              )}
+            />
 
             {loading ? (
               <MiCuentaSkeleton />

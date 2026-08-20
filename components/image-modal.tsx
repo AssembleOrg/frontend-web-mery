@@ -36,13 +36,13 @@ export function ImageModal({ isOpen, onClose, imageSrc, imageAlt }: ImageModalPr
         )}
         
         {/* Full-size image */}
-        <div className="relative max-h-[85vh] max-w-[85vw]">
+        <div className="relative max-h-[85dvh] max-w-[85vw]">
           <Image
             src={imageSrc}
             alt={imageAlt}
             width={1200}
             height={1600}
-            className={`h-auto w-auto max-h-[85vh] max-w-[85vw] object-contain transition-all duration-500 rounded-lg ${
+            className={`h-auto w-auto max-h-[85dvh] max-w-[85vw] object-contain transition-all duration-500 rounded-lg ${
               imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
             }`}
             onLoad={() => setImageLoaded(true)}

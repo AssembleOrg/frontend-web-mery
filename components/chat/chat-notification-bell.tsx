@@ -98,7 +98,7 @@ export function ChatNotificationBell() {
               No tenés mensajes sin leer.
             </div>
           ) : (
-            <ul className='max-h-[60vh] overflow-y-auto'>
+            <ul className='max-h-[60dvh] overflow-y-auto'>
               {rooms.map((r) => {
                 const name =
                   [r.user.firstName, r.user.lastName]
