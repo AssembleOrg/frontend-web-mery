@@ -1,8 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
 import { useAuthStore } from '@/stores/auth-store';
 import { useChatStore } from '@/stores/chat-store';
+import { useMentorshipNotifStore } from '@/stores/mentorship-notif-store';
 import { chatApi, type ChatMessage } from '@/lib/chat-api';
 import { disconnectChatSocket, getChatSocket } from '@/lib/chat-socket';
 
@@ -78,6 +80,32 @@ export function useChatConnection() {
         expiresAt: p.expiresAt,
       });
     };
+    const onMentorshipEvent = (p: {
+      type: 'booked' | 'rescheduled' | 'cancelled';
+      mentorshipId: string;
+      studentName: string;
+      courseName: string;
+      start: string;
+    }) => {
+      useMentorshipNotifStore.getState().add(p);
+      const verb =
+        p.type === 'booked'
+          ? 'reservó'
+          : p.type === 'rescheduled'
+            ? 'reprogramó'
+            : 'canceló';
+      const when = new Date(p.start).toLocaleString('es-AR', {
+        weekday: 'short',
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Argentina/Buenos_Aires',
+      });
+      toast(`${p.studentName} ${verb} su mentoría — ${p.courseName} (${when} hs)`, {
+        icon: '📅',
+      });
+    };
     const onReadReceipt = (p: {
       roomId: string;
       readerRole: 'ADMIN' | 'SUBADMIN' | 'USER';
@@ -100,6 +128,7 @@ export function useChatConnection() {
       socket.on('typing', onTyping);
       socket.on('read_receipt', onReadReceipt);
       socket.on('room_updated', onRoomUpdated);
+      socket.on('mentorship_event', onMentorshipEvent);
       boundRef.current = true;
     }
 
@@ -115,6 +144,7 @@ export function useChatConnection() {
       socket.off('typing', onTyping);
       socket.off('read_receipt', onReadReceipt);
       socket.off('room_updated', onRoomUpdated);
+      socket.off('mentorship_event', onMentorshipEvent);
       boundRef.current = false;
     };
   }, [isAuthenticated, appendMessage, bumpUnread, setTyping, setUnreadTotal, upsertRoom]);

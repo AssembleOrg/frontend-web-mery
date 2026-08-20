@@ -17,6 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { useChatStore } from '@/stores/chat-store';
+import { MentorshipNotificationBell } from '@/components/mentorship/mentorship-notification-bell';
 
 const navItems = [
   { href: 'admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -86,9 +87,12 @@ export default function AdminLayout({
             <aside className='hidden md:flex flex-col w-52 flex-shrink-0'>
               <div className='bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden sticky top-6'>
                 <div className='px-4 py-4 border-b border-gray-100'>
-                  <p className='text-[11px] font-semibold text-[#EBA2A8] uppercase tracking-widest'>
-                    Panel Admin
-                  </p>
+                  <div className='flex items-center justify-between'>
+                    <p className='text-[11px] font-semibold text-[#EBA2A8] uppercase tracking-widest'>
+                      Panel Admin
+                    </p>
+                    <MentorshipNotificationBell />
+                  </div>
                   <p className='text-sm font-medium text-gray-700 mt-0.5 truncate'>
                     {user.name || user.email}
                   </p>
