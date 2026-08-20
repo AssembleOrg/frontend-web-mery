@@ -10,6 +10,7 @@ import {
   Gift,
   Sparkles,
   MessageCircle,
+  CalendarClock,
   Settings,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,6 +25,7 @@ const navItems = [
   { href: 'admin/cupones', label: 'Cupones', icon: Gift },
   { href: 'admin/promos', label: 'Promos', icon: Sparkles },
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
+  { href: 'admin/mentorias', label: 'Mentorías', icon: CalendarClock },
   { href: 'admin/configuracion', label: 'Config', icon: Settings },
 ];
 

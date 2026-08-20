@@ -69,6 +69,8 @@ export interface EligibilityInfo {
   purchaseActive: boolean;
   quizRequired: boolean;
   quizPassed: boolean;
+  mentorshipRequired: boolean;
+  mentorshipCompleted: boolean;
 }
 
 export interface RoomMutationResult {

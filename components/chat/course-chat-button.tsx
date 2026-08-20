@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { chatApi, type ChatRoom, type EligibilityInfo } from '@/lib/chat-api';
 import { CourseChatModal } from './course-chat-modal';
 import { CourseQuizModal } from '@/components/quiz/course-quiz-modal';
+import { MentorshipGate } from '@/components/mentorship/mentorship-gate';
+import { useAuthStore } from '@/stores/auth-store';
 
 interface Props {
   categoryId: string;
@@ -12,6 +14,7 @@ interface Props {
 }
 
 export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) {
+  const user = useAuthStore((s) => s.user);
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<ChatRoom | null>(null);
   const [info, setInfo] = useState<EligibilityInfo | null>(null);
@@ -152,6 +155,23 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
             />
           )}
         </>
+      );
+    }
+
+    // Videos + examen listos, falta la mentoría → gate de reserva de mentoría.
+    if (
+      videosDone &&
+      !quizPending &&
+      info.mentorshipRequired &&
+      !info.mentorshipCompleted
+    ) {
+      return (
+        <MentorshipGate
+          categoryId={categoryId}
+          categoryName={categoryName}
+          defaultEmail={user?.email ?? ''}
+          onChanged={() => void fetchEligibility(false)}
+        />
       );
     }
 
