@@ -79,6 +79,37 @@ export const dinMedium = localFont({
   adjustFontFallback: 'Arial',
 });
 
+// D-DIN Condensed - Weights 400 (regular) + 700 (bold)
+export const dinCondensed = localFont({
+  src: [
+    {
+      path: '../public/font/D-DINCondensed.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/D-DINCondensed.woff',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/D-DINCondensed-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/D-DINCondensed-Bold.woff',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-din-condensed',
+  display: 'swap',
+  fallback: ['Arial Narrow', 'Impact', 'sans-serif'],
+  preload: true,
+  adjustFontFallback: 'Arial',
+});
+
 // ITC Avant Garde - for admin panel
 export const avantGardeAdmin = localFont({
   src: [

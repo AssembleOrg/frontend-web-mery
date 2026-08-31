@@ -53,8 +53,8 @@ export default async function HomePage() {
 
   return (
     <div className='min-h-screen-dvh bg-background'>
-      {/* <PromoFlyer /> */}
-      <AbhPromoModal />
+      <PromoFlyer />
+      {/* <AbhPromoModal /> */}
       <Navigation />
 
       {/* Hero Section: Video (left) + Quote (right) */}

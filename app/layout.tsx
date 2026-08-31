@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Poppins } from 'next/font/google';
-import { dinLight, dinRegular, dinMedium, avantGardeAdmin } from '@/lib/fonts';
+import { dinLight, dinRegular, dinMedium, dinCondensed, avantGardeAdmin } from '@/lib/fonts';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -56,7 +56,7 @@ export default function RootLayout({
     <html
       lang='es'
       suppressHydrationWarning
-      className={`${dinLight.variable} ${dinRegular.variable} ${dinMedium.variable} ${avantGardeAdmin.variable} ${poppins.variable}`}
+      className={`${dinLight.variable} ${dinRegular.variable} ${dinMedium.variable} ${dinCondensed.variable} ${avantGardeAdmin.variable} ${poppins.variable}`}
     >
       <body
         className='antialiased'
