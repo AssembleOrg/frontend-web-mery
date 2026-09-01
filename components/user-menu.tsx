@@ -56,7 +56,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
 
   const displayName = user.name || user.email;
   const initials = getInitials(displayName);
-  const isAdmin = user.role === 'ADMIN';
+  const isAdmin = user.role === 'ADMIN' || user.role === 'SUBADMIN';
 
   const handleLogout = async () => {
     try {
@@ -151,7 +151,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
 
           {/* Menu Items */}
           <div className='py-1'>
-            {/* Admin: Panel Admin primero */}
+            {/* Admin: Panel Admin */}
             {isAdmin && (
               <>
                 <Link

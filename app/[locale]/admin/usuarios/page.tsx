@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams, redirect } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -44,7 +45,10 @@ interface CategoryPurchase {
   categoryId: string;
   category: VideoCategory;
   createdAt: string;
+  expiresAt?: string | null;
 }
+
+const ACCESS_DURATIONS = [3, 6, 12] as const;
 
 export default function AdminUsuariosPage() {
   const router = useRouter();
@@ -57,6 +61,8 @@ export default function AdminUsuariosPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userCourses, setUserCourses] = useState<CategoryPurchase[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [assignMonths, setAssignMonths] = useState<number>(12);
+  const [renewMonths, setRenewMonths] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
@@ -64,6 +70,8 @@ export default function AdminUsuariosPage() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+
+  const rightPanelRef = useRef<HTMLDivElement>(null);
 
   // Resetear página cuando cambia el término de búsqueda
   useEffect(() => {
@@ -99,6 +107,14 @@ export default function AdminUsuariosPage() {
   useEffect(() => {
     if (selectedUser) {
       loadUserCourses(selectedUser.id);
+    }
+  }, [selectedUser]);
+
+  // Scroll automático al panel de asignación en mobile al seleccionar usuario
+  useEffect(() => {
+    if (!selectedUser || !rightPanelRef.current) return;
+    if (window.innerWidth < 1024) {
+      rightPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [selectedUser]);
 
@@ -237,6 +253,7 @@ export default function AdminUsuariosPage() {
             amount: 0,
             currency: 'ARS',
             notes: 'Asignación manual por administrador',
+            durationMonths: assignMonths,
           }),
         }
       );
@@ -251,6 +268,54 @@ export default function AdminUsuariosPage() {
       loadUserCourses(selectedUser.id);
     } catch (error: any) {
       toast.error(error.message || 'Error al asignar curso');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRenewCourse = async (categoryId: string) => {
+    if (!selectedUser) return;
+
+    const purchase = userCourses.find((uc) => uc.categoryId === categoryId);
+    if (!purchase) return;
+    const months = renewMonths[categoryId] ?? 12;
+
+    try {
+      setIsLoading(true);
+      const token = getAuthToken();
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${selectedUser.id}/categories/${categoryId}/renew`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+          body: JSON.stringify({
+            durationMonths: months,
+            paymentMethod: 'manual_renewal',
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Error al renovar curso');
+      }
+
+      const responseData = await response.json();
+      const newExpiry = responseData.data?.expiresAt;
+      toast.success(
+        `"${purchase.category.name}" renovado por ${months} meses${
+          newExpiry
+            ? ` (vence ${new Date(newExpiry).toLocaleDateString('es-ES')})`
+            : ''
+        }`
+      );
+      loadUserCourses(selectedUser.id);
+    } catch (error: any) {
+      toast.error(error.message || 'Error al renovar curso');
     } finally {
       setIsLoading(false);
     }
@@ -320,21 +385,22 @@ export default function AdminUsuariosPage() {
   return (
     <div className='space-y-6 font-admin'>
       {/* Header */}
-      <div className='flex justify-between items-center'>
+      <div className='space-y-3'>
+        <button
+          onClick={() => router.push(`/${locale}/admin`)}
+          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
+        >
+          <ArrowLeft className='w-3.5 h-3.5' />
+          Volver al Dashboard
+        </button>
         <div>
-          <h1 className='text-3xl font-bold text-gray-900'>
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>
             Gestión de Usuarios
           </h1>
-          <p className='mt-2 text-gray-600'>
+          <p className='mt-1 text-sm text-gray-500'>
             Asigna cursos manualmente a usuarios (para pagos externos)
           </p>
         </div>
-        <button
-          onClick={() => redirect('/mi-cuenta')}
-          className='text-gray-600 hover:text-gray-900'
-        >
-          ← Volver al Dashboard
-        </button>
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
@@ -353,7 +419,7 @@ export default function AdminUsuariosPage() {
                 placeholder='Buscar por email o nombre (mín. 3 caracteres)...'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent'
+                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
               />
             </div>
             {searchTerm &&
@@ -369,7 +435,7 @@ export default function AdminUsuariosPage() {
           <div className='space-y-2 max-h-[500px] overflow-y-auto'>
             {isLoadingUsers ? (
               <div className='text-center py-8'>
-                <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-500'></div>
+                <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[var(--mg-pink)]'></div>
                 <p className='mt-2 text-gray-600'>Cargando usuarios...</p>
               </div>
             ) : users.length === 0 ? (
@@ -383,18 +449,20 @@ export default function AdminUsuariosPage() {
                   onClick={() => setSelectedUser(user)}
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     selectedUser?.id === user.id
-                      ? 'border-pink-500 bg-pink-50'
-                      : 'border-gray-200 hover:border-pink-300 hover:bg-gray-50'
+                      ? 'border-[var(--mg-pink)] bg-[var(--mg-pink-light)]'
+                      : 'border-gray-200 hover:border-[var(--mg-pink-lighter)] hover:bg-gray-50'
                   }`}
                 >
                   <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <p className='font-medium text-gray-900'>
+                    <div className='flex-1 min-w-0'>
+                      <p className='font-medium text-gray-900 truncate'>
                         {user.firstName && user.lastName
                           ? `${user.firstName} ${user.lastName}`
                           : user.name || 'Sin nombre'}
                       </p>
-                      <p className='text-sm text-gray-600'>{user.email}</p>
+                      <p className='text-sm text-gray-600 truncate' title={user.email}>
+                        {user.email}
+                      </p>
                       <div className='flex items-center gap-2 mt-1'>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full ${
@@ -420,25 +488,25 @@ export default function AdminUsuariosPage() {
 
           {/* Paginación */}
           {!isLoadingUsers && users.length > 0 && (
-            <div className='mt-4 flex items-center justify-between border-t pt-4'>
-              <div className='text-sm text-gray-600'>
-                Mostrando {users.length} de {totalUsers} usuarios
+            <div className='mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t pt-4'>
+              <div className='text-xs text-gray-500'>
+                {users.length} de {totalUsers} usuarios
               </div>
               <div className='flex items-center gap-2'>
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                  className='px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm'
+                  className='px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-colors'
                 >
                   Anterior
                 </button>
-                <span className='text-sm text-gray-600'>
-                  Página {currentPage} de {totalPages}
+                <span className='text-xs text-gray-500 tabular-nums'>
+                  {currentPage} / {totalPages}
                 </span>
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage >= totalPages}
-                  className='px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm'
+                  className='px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-colors'
                 >
                   Siguiente
                 </button>
@@ -448,22 +516,22 @@ export default function AdminUsuariosPage() {
         </div>
 
         {/* Panel derecho: Asignar cursos */}
-        <div className='bg-white rounded-xl shadow-sm border p-6'>
+        <div ref={rightPanelRef} className='bg-white rounded-xl shadow-sm border p-6'>
           {selectedUser ? (
             <>
               <div className='mb-6'>
-                <h2 className='text-xl font-semibold text-gray-900 mb-2'>
+                <h2 className='text-xl font-semibold text-gray-900 mb-2 break-words'>
                   {selectedUser.firstName && selectedUser.lastName
                     ? `${selectedUser.firstName} ${selectedUser.lastName}`
                     : selectedUser.name || 'Usuario'}
                 </h2>
-                <p className='text-gray-600'>{selectedUser.email}</p>
+                <p className='text-gray-600 break-words'>{selectedUser.email}</p>
               </div>
 
               {/* Asignar nuevo curso */}
-              <div className='mb-6 p-4 bg-pink-50 rounded-lg border border-pink-200'>
+              <div className='mb-6 p-4 bg-[var(--mg-pink-light)] rounded-lg border border-[var(--mg-pink-lighter)]'>
                 <h3 className='font-semibold text-gray-900 mb-3 flex items-center gap-2'>
-                  <FaGift className='text-pink-600' />
+                  <FaGift className='text-[var(--mg-pink)]' />
                   Asignar Nuevo Curso
                 </h3>
 
@@ -471,7 +539,7 @@ export default function AdminUsuariosPage() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent'
+                    className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
                     disabled={isLoading || isLoadingCategories}
                   >
                     <option value=''>Seleccionar curso...</option>
@@ -485,10 +553,28 @@ export default function AdminUsuariosPage() {
                     ))}
                   </select>
 
+                  <div>
+                    <label className='block text-sm text-gray-700 mb-1'>
+                      Duración:
+                    </label>
+                    <select
+                      value={assignMonths}
+                      onChange={(e) => setAssignMonths(Number(e.target.value))}
+                      disabled={isLoading}
+                      className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
+                    >
+                      {ACCESS_DURATIONS.map((m) => (
+                        <option key={m} value={m}>
+                          {m} meses
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <button
                     onClick={handleAssignCourse}
                     disabled={!selectedCategory || isLoading}
-                    className='w-full bg-pink-600 hover:bg-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium transition-colors'
+                    className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium transition-colors'
                   >
                     {isLoading ? 'Asignando...' : 'Asignar Curso'}
                   </button>
@@ -504,43 +590,89 @@ export default function AdminUsuariosPage() {
                 <div className='space-y-2 max-h-[400px] overflow-y-auto'>
                   {isLoadingUserCourses ? (
                     <div className='text-center py-4'>
-                      <div className='inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-pink-500'></div>
+                      <div className='inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-[var(--mg-pink)]'></div>
                     </div>
                   ) : userCourses.length === 0 ? (
                     <div className='text-center py-8 text-gray-500'>
                       Este usuario no tiene cursos asignados
                     </div>
                   ) : (
-                    userCourses.map((purchase) => (
-                      <div
-                        key={purchase.id}
-                        className='p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'
-                      >
-                        <div className='flex items-center justify-between'>
-                          <div className='flex-1'>
-                            <p className='font-medium text-gray-900'>
-                              {purchase.category.name}
-                            </p>
-                            <p className='text-sm text-gray-600'>
-                              Asignado:{' '}
-                              {new Date(purchase.createdAt).toLocaleDateString(
-                                'es-ES'
-                              )}
-                            </p>
+                    userCourses.map((purchase) => {
+                      const expired =
+                        purchase.expiresAt &&
+                        new Date(purchase.expiresAt) < new Date();
+                      return (
+                        <div
+                          key={purchase.id}
+                          className='p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'
+                        >
+                          <div className='flex items-center justify-between'>
+                            <div className='flex-1'>
+                              <p className='font-medium text-gray-900'>
+                                {purchase.category.name}
+                              </p>
+                              <p className='text-sm text-gray-600'>
+                                Asignado:{' '}
+                                {new Date(
+                                  purchase.createdAt
+                                ).toLocaleDateString('es-ES')}
+                              </p>
+                              <p
+                                className={`text-sm ${
+                                  expired
+                                    ? 'text-red-600 font-medium'
+                                    : 'text-gray-600'
+                                }`}
+                              >
+                                {purchase.expiresAt
+                                  ? `${expired ? 'Venció' : 'Vence'}: ${new Date(purchase.expiresAt).toLocaleDateString('es-ES')}`
+                                  : 'Acceso permanente'}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() =>
+                                handleRemoveCourse(purchase.categoryId)
+                              }
+                              disabled={isLoading}
+                              className='text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed p-2'
+                              title='Quitar acceso'
+                            >
+                              <FaTimesCircle className='text-xl' />
+                            </button>
                           </div>
-                          <button
-                            onClick={() =>
-                              handleRemoveCourse(purchase.categoryId)
-                            }
-                            disabled={isLoading}
-                            className='text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed p-2'
-                            title='Quitar acceso'
-                          >
-                            <FaTimesCircle className='text-xl' />
-                          </button>
+
+                          {/* Renovación: extiende desde el vencimiento vigente o desde hoy si ya venció */}
+                          <div className='mt-2 pt-2 border-t border-gray-100 flex items-center gap-2'>
+                            <select
+                              value={renewMonths[purchase.categoryId] ?? 12}
+                              onChange={(e) =>
+                                setRenewMonths((prev) => ({
+                                  ...prev,
+                                  [purchase.categoryId]: Number(e.target.value),
+                                }))
+                              }
+                              disabled={isLoading}
+                              className='px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
+                            >
+                              {ACCESS_DURATIONS.map((m) => (
+                                <option key={m} value={m}>
+                                  {m} meses
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              onClick={() =>
+                                handleRenewCourse(purchase.categoryId)
+                              }
+                              disabled={isLoading}
+                              className='px-3 py-1 rounded-lg border border-[var(--mg-pink)] text-[var(--mg-pink)] hover:bg-[var(--mg-pink)] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors'
+                            >
+                              Renovar
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>

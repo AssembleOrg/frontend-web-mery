@@ -8,6 +8,7 @@ import { SimpleLogo } from './simple-logo';
 import { MobileMenu } from './mobile-menu';
 import { UserMenu } from './user-menu';
 import { CartIcon } from './cart-icon';
+import { ChatNotificationBell } from './chat/chat-notification-bell';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -82,6 +83,13 @@ export function Navigation() {
             <div className='hidden xl:flex items-center ml-2'>
               <CartIcon />
             </div>
+
+            {/* Chat notifications */}
+            {isAuthenticated && (
+              <div className='hidden xl:flex items-center ml-1'>
+                <ChatNotificationBell />
+              </div>
+            )}
 
             {/* User Menu / Login Button */}
             <div className='hidden xl:flex items-center ml-2'>

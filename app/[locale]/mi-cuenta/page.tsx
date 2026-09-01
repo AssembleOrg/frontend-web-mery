@@ -17,12 +17,15 @@ import {
   Key,
   Eye,
   EyeOff,
+  LayoutDashboard,
 } from 'lucide-react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCourses } from '@/hooks/useUserCourses';
 import { MiCuentaSkeleton } from '@/components/mi-cuenta/MiCuentaSkeleton';
+import { CourseChatButton } from '@/components/chat/course-chat-button';
+import { MentorshipBanner } from '@/components/mentorship/mentorship-banner';
 
 export default function MiCuentaPage() {
   const router = useRouter();
@@ -30,6 +33,7 @@ export default function MiCuentaPage() {
 
   const { logout, user, updateProfile, changePassword, isLoading: authLoading } = useAuth();
   const { courses: userCourses, isLoading: loading } = useUserCourses();
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUBADMIN';
 
   // Estado del formulario de perfil
   const [profileForm, setProfileForm] = useState({
@@ -182,6 +186,15 @@ export default function MiCuentaPage() {
               Mis Cursos
             </h2>
 
+            {!isAdmin && (
+              <MentorshipBanner
+                defaultEmail={user?.email ?? ''}
+                courseNames={Object.fromEntries(
+                  userCourses.map((uc) => [uc.course.id, uc.course.title]),
+                )}
+              />
+            )}
+
             {loading ? (
               <MiCuentaSkeleton />
             ) : userCourses.length === 0 ? (
@@ -270,6 +283,11 @@ export default function MiCuentaPage() {
                             ? 'Comenzar Curso'
                             : 'Continuar Curso'}
                         </Link>
+
+                        <CourseChatButton
+                          categoryId={course.id}
+                          categoryName={course.title}
+                        />
 
                         {/* Información adicional */}
                         <div className='mt-4 pt-4 border-t border-border'>
@@ -707,6 +725,19 @@ export default function MiCuentaPage() {
                       </button>
                     );
                   })}
+
+                  {isAdmin && (
+                    <>
+                      <hr className='my-4 border-border' />
+                      <Link
+                        href='/es/admin'
+                        className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] transition-colors duration-200'
+                      >
+                        <LayoutDashboard className='w-5 h-5 text-[#EBA2A8]' />
+                        Panel Admin
+                      </Link>
+                    </>
+                  )}
 
                   <hr className='my-4 border-border' />
 

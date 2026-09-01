@@ -219,7 +219,7 @@ export default function OfertasCourseModal({
   // Función para renderizar texto con párrafos y negritas
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className='w-full max-w-4xl h-[90vh] mx-auto bg-white rounded-lg flex flex-col'>
+      <div className='w-full max-w-4xl h-[90dvh] mx-auto bg-white rounded-lg flex flex-col'>
         <div className='flex-1 overflow-y-auto'>
           {/* Video de presentación o imagen */}
           {loadingVideo ? (

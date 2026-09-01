@@ -305,6 +305,106 @@ export const getVideoProgress = async (
 };
 
 // ============================================
+// QUIZ (examen final por curso)
+// ============================================
+
+export interface QuizQuestion {
+  id: string;
+  text: string;
+}
+
+export interface QuizStatus {
+  required: boolean;
+  passed: boolean;
+  canAttempt: boolean;
+  nextAttemptAt: string | null;
+  attempts: number;
+  /** El backend nunca informa qué preguntas estuvieron mal. */
+  lastAttempt: {
+    passed: boolean;
+    correctCount: number;
+    totalQuestions: number;
+    createdAt: string;
+  } | null;
+}
+
+export interface QuizInfo {
+  required: boolean;
+  /** Máximo de respuestas incorrectas admitidas para aprobar */
+  maxWrong: number;
+  questions: QuizQuestion[];
+  status: QuizStatus;
+}
+
+export interface QuizAttemptResult {
+  passed: boolean;
+  correctCount: number;
+  totalQuestions: number;
+  maxWrong: number;
+  canRetry: boolean;
+  nextAttemptAt: string | null;
+}
+
+/**
+ * Get final quiz questions + status for a course/category
+ * GET /quiz/category/:categoryId
+ */
+export const getCourseQuiz = async (
+  categoryId: string
+): Promise<ApiResponse<QuizInfo>> => {
+  return apiRequest<QuizInfo>(`/quiz/category/${categoryId}`);
+};
+
+/**
+ * Submit a quiz attempt
+ * POST /quiz/category/:categoryId/attempt
+ */
+export const submitCourseQuiz = async (
+  categoryId: string,
+  answers: Record<string, boolean>
+): Promise<ApiResponse<QuizAttemptResult>> => {
+  return apiRequest<QuizAttemptResult>(`/quiz/category/${categoryId}/attempt`, {
+    method: 'POST',
+    body: JSON.stringify({ answers }),
+  });
+};
+
+// ============================================
+// SETTINGS (configuración editable del panel admin)
+// ============================================
+
+export interface AppSetting {
+  key: string;
+  label: string;
+  description: string;
+  type: 'int' | 'boolean' | 'string';
+  value: string | number | boolean;
+  rawValue: string;
+  defaultValue: string;
+  min: number | null;
+  max: number | null;
+  updatedAt: string | null;
+}
+
+/** GET /settings/admin */
+export const getAdminSettings = async (): Promise<ApiResponse<AppSetting[]>> => {
+  return apiRequest<AppSetting[]>('/settings/admin');
+};
+
+/** PUT /settings/admin/:key */
+export const updateAdminSetting = async (
+  key: string,
+  value: string
+): Promise<
+  ApiResponse<{ key: string; value: string | number | boolean; rawValue: string; updatedAt: string }>
+> => {
+  return apiRequest(`/settings/admin/${encodeURIComponent(key)}`, {
+    method: 'PUT',
+    body: JSON.stringify({ value }),
+  });
+};
+
+// ============================================
 // ADMIN VIDEO MANAGEMENT
 // ============================================
 

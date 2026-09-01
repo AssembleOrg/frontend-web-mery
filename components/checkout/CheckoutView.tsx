@@ -402,14 +402,15 @@ export const CheckoutView = ({
                 <span>{formatARS(finalTotalARS)}</span>
               </div>
             </div>
-            <div className='mt-6 alert-high border rounded-lg p-4'>
-              <p className='text-sm text-[#660e1b]'>
-                <strong className='text-[#660e1b]'>¡Importante!</strong> Después
-                de completar tu compra...
+            <div className='mt-6 alert-high border border-[#f7cbcb] rounded-lg p-4'>
+              <p className='text-sm'>
+                <strong>¡Importante!</strong> Después de completar tu compra
+                recibirás:
               </p>
-              <ul className='text-sm text-[#660e1b] mt-2 space-y-1'>
+              <ul className='text-sm mt-2 space-y-1'>
                 <li>• Email de confirmación</li>
-                <li>• El acceso al curso puede demorar hasta 48 hs</li>
+                <li>• Credenciales de acceso</li>
+                <li>• Acceso inmediato a tus cursos</li>
               </ul>
             </div>
           </div>
