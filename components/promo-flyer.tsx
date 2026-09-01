@@ -132,7 +132,7 @@ export default function PromoFlyer() {
               className='flyer-rise absolute right-0 z-40 whitespace-nowrap bg-[#F9BBC4] font-semibold uppercase text-[#2B2B2B]'
               style={{
                 animationDelay: '0.5s',
-                top: '62%',
+                top: '70%',
                 fontSize: 'clamp(8px, 2.6cqw, 11px)',
                 letterSpacing: 'clamp(0.06em, 0.5cqw, 0.14em)',
                 paddingBlock: 'clamp(0.25rem, 1cqw, 0.4rem)',
