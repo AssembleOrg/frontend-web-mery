@@ -169,8 +169,8 @@ export const CheckoutView = ({
                 <div className='mb-5 flex items-start gap-1.5'>
                   <Info className='w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5' />
                   <p className='text-xs text-muted-foreground'>
-                    Con este cupón el pago es en hasta {maxInstallments} cuotas
-                    sin interés (podés elegir 1 o {maxInstallments}).
+                    El pago es en hasta {maxInstallments} cuotas sin interés
+                    (podés elegir 1 o {maxInstallments}).
                   </p>
                 </div>
               )}
