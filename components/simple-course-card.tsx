@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { PROMO_CONFIG } from '@/lib/promo-config';
-import { INSTALLMENTS_CONFIG, INSTALLMENTS_DISCOUNT_HINT } from '@/lib/installments-config';
 
 interface SimpleCourseCardProps {
   image: string;
@@ -21,10 +20,8 @@ export default function SimpleCourseCard({
   price,
   originalPrice,
   description,
-  slug,
   onCourseClick,
 }: SimpleCourseCardProps) {
-  const installmentsText = slug ? INSTALLMENTS_CONFIG[slug] : undefined;
   const handleClick = () => {
     if (onCourseClick) {
       onCourseClick();
@@ -83,30 +80,12 @@ export default function SimpleCourseCard({
               </div>
               <div className='flex items-baseline gap-2'>
                 <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
-                {installmentsText && (
-                  <p className='text-xs text-gray-500'>({installmentsText})</p>
-                )}
               </div>
-              {installmentsText && (
-                <p className='text-xs font-primary-medium text-[#660e1b]'>
-                  {INSTALLMENTS_DISCOUNT_HINT}
-                </p>
-              )}
             </div>
           ) : (
-            <>
-              <div className='flex items-baseline gap-2'>
-                <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
-                {installmentsText && (
-                  <p className='text-xs text-gray-500'>({installmentsText})</p>
-                )}
-              </div>
-              {installmentsText && (
-                <p className='text-xs font-primary-medium text-[#660e1b] mt-0.5'>
-                  {INSTALLMENTS_DISCOUNT_HINT}
-                </p>
-              )}
-            </>
+            <div className='flex items-baseline gap-2'>
+              <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
+            </div>
           )}
         </div>
         <button

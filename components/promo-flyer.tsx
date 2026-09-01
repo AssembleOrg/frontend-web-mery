@@ -177,36 +177,8 @@ export default function PromoFlyer() {
               </p>
             </div>
 
-            {/* CTA con flecha */}
+            {/* CTA */}
             <div className='relative flex w-full flex-col items-center'>
-              <span
-                className='absolute -scale-x-100 text-[#F9BBC4]'
-                style={{ top: 'clamp(-2.75rem, -9cqw, -2rem)', right: 'clamp(0.75rem, 6cqw, 2rem)' }}
-              >
-                <svg
-                  aria-hidden
-                  width='38'
-                  height='44'
-                  viewBox='0 0 44 50'
-                  fill='none'
-                  className='flyer-arrow block h-auto w-[clamp(28px,9cqw,44px)]'
-                >
-                  <path
-                    d='M10 4C9 20 16 36 34 43'
-                    stroke='currentColor'
-                    strokeWidth='1.25'
-                    strokeLinecap='round'
-                  />
-                  <path
-                    d='M27 44l7-1-2-7'
-                    stroke='currentColor'
-                    strokeWidth='1.25'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </span>
-
               <a
                 href={FORMACIONES_URL}
                 className='flyer-rise font-semibold uppercase text-white underline-offset-[6px] transition-colors hover:text-[#F9BBC4] hover:underline focus:outline-none'
