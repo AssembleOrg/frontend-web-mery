@@ -12,6 +12,7 @@ import {
   Settings,
   ChevronRight,
   PlusCircle,
+  Mail,
 } from 'lucide-react';
 
 const sections = [
@@ -50,6 +51,12 @@ const sections = [
     label: 'Formularios',
     description: 'Formularios públicos, respuestas y analítica',
     icon: ClipboardList,
+  },
+  {
+    href: 'admin/emails',
+    label: 'Emails',
+    description: 'Enviar promociones a clientes',
+    icon: Mail,
   },
   {
     href: 'admin/configuracion',

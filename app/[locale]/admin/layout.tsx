@@ -12,6 +12,7 @@ import {
   CalendarClock,
   Settings,
   FileText,
+  Mail,
   MoreHorizontal,
   X,
 } from 'lucide-react';
@@ -29,6 +30,7 @@ const navItems = [
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
   { href: 'admin/mentorias', label: 'Mentorías', icon: CalendarClock },
   { href: 'admin/formularios', label: 'Formularios', icon: FileText },
+  { href: 'admin/emails', label: 'Emails', icon: Mail },
   { href: 'admin/configuracion', label: 'Config', icon: Settings },
 ];
 

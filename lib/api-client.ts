@@ -118,7 +118,7 @@ function getAuthHeaders(): HeadersInit {
 /**
  * Make API request
  */
-async function apiRequest<T>(
+export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
