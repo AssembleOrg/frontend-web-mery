@@ -71,7 +71,7 @@ export default async function HomePage() {
         <div className='container mx-auto px-4 max-w-7xl relative z-10'>
           <div className='grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center'>
             {/* Video — LEFT */}
-            <div className='lg:col-span-5 order-1 flex justify-center lg:justify-start'>
+            <div className='hidden lg:col-span-5 lg:order-1 lg:flex lg:justify-start'>
               <div className='w-full max-w-[320px] sm:max-w-[360px]'>
                 <VideoShowcase
                   vimeoId={HOME_VIDEO_ID}
