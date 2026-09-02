@@ -16,9 +16,9 @@ export interface CampaignResult {
 }
 
 export const emailApi = {
-  formacionesCampaign: (limit = 150, confirm = false) =>
+  formacionesCampaign: (limit = 150, confirm = false, recipients?: CampaignRecipient[]) =>
     apiRequest<CampaignResult>('/email/campaigns/formaciones/send', {
       method: 'POST',
-      body: JSON.stringify({ limit, confirm }),
+      body: JSON.stringify({ limit, confirm, recipients }),
     }),
 };
