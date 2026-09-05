@@ -1,13 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { X, CheckCircle2, RotateCcw, Clock, GraduationCap, Loader2 } from 'lucide-react';
+import { X, CheckCircle2, RotateCcw, Clock, GraduationCap, Loader2, CalendarClock } from 'lucide-react';
 import {
   getCourseQuiz,
   submitCourseQuiz,
   type QuizInfo,
   type QuizAttemptResult,
 } from '@/lib/api-client';
+import { mentorshipApi } from '@/lib/mentorship-api';
 
 interface Props {
   categoryId: string;
@@ -38,6 +39,12 @@ export function CourseQuizModal({
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<QuizAttemptResult | null>(null);
+  // Estado de la mentoría tras aprobar (una gratis por cuenta).
+  const [ment, setMent] = useState<{
+    canBook: boolean;
+    blockedByOtherCourse?: boolean;
+  } | null>(null);
+  const [mentLoading, setMentLoading] = useState(false);
   const bodyRef = useRef<HTMLDivElement | null>(null);
 
   const total = quiz?.questions.length ?? 0;
@@ -91,6 +98,8 @@ export function CourseQuizModal({
     setResult(null);
     setAnswers({});
     setLoadError(null);
+    setMent(null);
+    setMentLoading(false);
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -101,7 +110,21 @@ export function CourseQuizModal({
       setResult(res.data);
       // El banner de resultado aparece arriba: aseguramos que se vea.
       bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-      if (res.data.passed) onPassed?.();
+      if (res.data.passed) {
+        onPassed?.();
+        // Al aprobar, informamos si le corresponde la mentoría gratuita.
+        setMentLoading(true);
+        mentorshipApi
+          .eligibility(categoryId)
+          .then((e) =>
+            setMent({
+              canBook: e.canBook,
+              blockedByOtherCourse: e.blockedByOtherCourse,
+            }),
+          )
+          .catch(() => setMent(null))
+          .finally(() => setMentLoading(false));
+      }
     } catch (err) {
       setLoadError(
         (err as Error).message || 'No pudimos enviar tus respuestas.',
@@ -211,8 +234,45 @@ export function CourseQuizModal({
                     <span className='font-semibold text-white'>
                       {result.correctCount}/{result.totalQuestions}
                     </span>{' '}
-                    respuestas correctas. Ya tenés el chat del curso desbloqueado.
+                    respuestas correctas.
                   </p>
+
+                  {/* Mentoría: una gratuita por cuenta. Mensaje según corresponda. */}
+                  <div className='mt-4 rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-left'>
+                    {mentLoading ? (
+                      <p className='flex items-center gap-2 text-sm text-white/60'>
+                        <Loader2 className='w-4 h-4 animate-spin' />
+                        Verificando tu mentoría…
+                      </p>
+                    ) : ment?.canBook ? (
+                      <>
+                        <p className='flex items-center gap-2 text-sm font-semibold text-white'>
+                          <CalendarClock className='w-4 h-4 text-[#EBA2A8]' />
+                          Tenés una mentoría de cortesía disponible
+                        </p>
+                        <p className='mt-1 text-[13px] leading-relaxed text-white/60'>
+                          Cada cuenta cuenta con una mentoría gratuita. Reservá tu
+                          horario para coordinarla y desbloquear el chat del curso.
+                        </p>
+                      </>
+                    ) : ment?.blockedByOtherCourse ? (
+                      <>
+                        <p className='flex items-center gap-2 text-sm font-semibold text-white'>
+                          <CalendarClock className='w-4 h-4 text-[#EBA2A8]' />
+                          Ya usaste tu mentoría de cortesía
+                        </p>
+                        <p className='mt-1 text-[13px] leading-relaxed text-white/60'>
+                          La mentoría gratuita es una por cuenta y ya la aprovechaste
+                          en otra formación. Para acceder a la mentoría de este curso
+                          podés adquirir una mentoría adicional.
+                        </p>
+                      </>
+                    ) : (
+                      <p className='text-[13px] leading-relaxed text-white/60'>
+                        Aprobaste el examen final del curso.
+                      </p>
+                    )}
+                  </div>
                 </>
               ) : (
                 <>
