@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import {
   mentorshipApi,
   formatSlot,
+  formatTime,
   type MentorshipEligibility,
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
@@ -71,7 +72,7 @@ export function MentorshipGate({
         <div className='text-xs leading-relaxed'>
           <span className='font-semibold'>Mentoría agendada</span>
           <span className='text-white/60'> · </span>
-          <span className='capitalize text-white/80'>{formatSlot(m.scheduledStart)} hs</span>
+          <span className='capitalize text-white/80'>{formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs</span>
           <p className='text-[11px] text-white/40 mt-0.5'>
             Gestionala desde el bloque de arriba.
           </p>
@@ -108,6 +109,22 @@ export function MentorshipGate({
           />
         )}
       </>
+    );
+  }
+
+  // Ya usó su mentoría gratuita (una por cuenta) en otra formación.
+  if (elig.blockedByOtherCourse) {
+    return (
+      <div className='mt-3 flex items-start gap-2.5 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
+        <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
+        <div className='text-xs leading-relaxed'>
+          <span className='font-semibold'>Mentoría no disponible</span>
+          <p className='text-[11px] text-white/60 mt-0.5'>
+            La mentoría gratuita es una sola por cuenta y ya la usaste en otra
+            formación.
+          </p>
+        </div>
+      </div>
     );
   }
 

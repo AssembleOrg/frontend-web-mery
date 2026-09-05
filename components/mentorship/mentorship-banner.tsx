@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import {
   mentorshipApi,
   formatSlot,
+  formatTime,
   type Mentorship,
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
@@ -78,7 +79,7 @@ export function MentorshipBanner({
               {courseName(m)}
             </p>
             <p className='mt-1 text-sm text-white/60 capitalize'>
-              {formatSlot(m.scheduledStart)} hs
+              {formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs
             </p>
 
             <div className='mt-3 flex flex-wrap items-center gap-2'>

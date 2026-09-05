@@ -173,11 +173,14 @@ export function SlotPickerModal({
                     </p>
                     <div className='flex flex-wrap gap-2'>
                       {daySlots.map((s) => {
-                        const label = new Date(s.start).toLocaleTimeString('es-AR', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          timeZone: 'America/Argentina/Buenos_Aires',
-                        });
+                        const fmt = (iso: string) =>
+                          new Date(iso).toLocaleTimeString('es-AR', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                            timeZone: 'America/Argentina/Buenos_Aires',
+                          });
+                        const label = `${fmt(s.start)} – ${fmt(s.end)}`;
                         const active = selected === s.start;
                         return (
                           <button

@@ -28,6 +28,8 @@ export interface MentorshipEligibility {
   examPassed: boolean;
   alreadyBooked: boolean;
   mentorship: Mentorship | null;
+  /** Ya usó su mentoría gratuita (una por cuenta) en otra formación. */
+  blockedByOtherCourse?: boolean;
   canBook: boolean;
 }
 
@@ -150,6 +152,17 @@ export function formatSlot(iso: string): string {
     month: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    hour12: false,
+    timeZone: 'America/Argentina/Buenos_Aires',
+  });
+}
+
+// Solo la hora (HH:MM), útil para el fin de un rango
+export function formatTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString('es-AR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
     timeZone: 'America/Argentina/Buenos_Aires',
   });
 }
