@@ -167,7 +167,13 @@ export default function SimpleCourseModal({
   const showUSDOption =
     !isUSDCourse && course.priceUSD && course.priceUSD > 0;
 
-  const installmentsText = INSTALLMENTS_CONFIG[course.slug] ?? null;
+  // Durante la promo el pago es hasta en 2 cuotas sin interés; fuera de la promo,
+  // el plan habitual configurado por curso.
+  const installmentsText = INSTALLMENTS_CONFIG[course.slug]
+    ? isPromoActive()
+      ? '2 cuotas sin interés'
+      : INSTALLMENTS_CONFIG[course.slug]
+    : null;
   const isAutostylism = isAutostylismCourse(course.slug, course.title);
   // Cursos ARS regulares (no autostyling, no USD-only, no gratis) tienen
   // 20% OFF al pagar por transferencia. Autostyling tiene su propio 10%.

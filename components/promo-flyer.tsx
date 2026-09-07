@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
+import { isPromoActive } from '@/lib/promo-config';
 
-const STORAGE_KEY = 'formaciones-40off-2026';
+const STORAGE_KEY = 'formaciones-40off-2026-09-13';
 const OPEN_DELAY_MS = 800;
 const FORMACIONES_URL = '/formaciones';
 
@@ -12,6 +13,8 @@ export default function PromoFlyer() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    // Solo se muestra mientras la promo está vigente (se apaga solo al vencer).
+    if (!isPromoActive()) return;
     const timer = setTimeout(() => {
       if (!sessionStorage.getItem(STORAGE_KEY)) {
         setIsOpen(true);
@@ -41,7 +44,7 @@ export default function PromoFlyer() {
       className='fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in-0 duration-300'
       role='dialog'
       aria-modal='true'
-      aria-label='40% OFF en todas las formaciones, tiempo limitado del 1 al 5 de septiembre'
+      aria-label='40% OFF en todas las formaciones, tiempo limitado del 7 al 13 de septiembre'
       style={{ fontFamily: 'var(--font-din-condensed)' }}
     >
       {/* Animaciones del flyer */}
@@ -173,7 +176,7 @@ export default function PromoFlyer() {
                 className='flyer-rise mt-4 font-semibold uppercase tracking-[0.3em] text-white'
                 style={{ animationDelay: '0.58s', fontSize: 'clamp(12px, 3.8cqw, 15px)' }}
               >
-                Del 1/9 al 5/9
+                Del 7/9 al 13/9
               </p>
             </div>
 

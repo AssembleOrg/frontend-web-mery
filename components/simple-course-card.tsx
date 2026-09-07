@@ -1,7 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { PROMO_CONFIG } from '@/lib/promo-config';
+import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
+
+// Formaciones que NO ofrecen cuotas (pago único / se coordinan aparte).
+const NO_CUOTAS_SLUGS = new Set<string>([
+  'nanoblading',
+  'camuflaje-senior',
+  'brow-essentials-private-sessions',
+]);
 
 interface SimpleCourseCardProps {
   image: string;
@@ -20,8 +27,12 @@ export default function SimpleCourseCard({
   price,
   originalPrice,
   description,
+  slug,
   onCourseClick,
 }: SimpleCourseCardProps) {
+  // Durante la promo se ofrecen 2 cuotas sin interés (salvo pago único).
+  const showCuotas =
+    isPromoActive() && (slug ? !NO_CUOTAS_SLUGS.has(slug) : true);
   const handleClick = () => {
     if (onCourseClick) {
       onCourseClick();
@@ -86,6 +97,9 @@ export default function SimpleCourseCard({
             <div className='flex items-baseline gap-2'>
               <p className='text-lg font-semibold text-gray-900 dark:text-gray-100'>{price}</p>
             </div>
+          )}
+          {showCuotas && (
+            <p className='text-xs text-gray-500 mt-1'>2 cuotas sin interés</p>
           )}
         </div>
         <button

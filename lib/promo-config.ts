@@ -12,27 +12,27 @@ import { DateTime } from 'luxon';
 
 export const PROMO_CONFIG = {
   // Fechas de inicio y fin de la promoción (GMT-3, Buenos Aires)
-  // Promoción del 1 al 5 de septiembre de 2026 inclusive (termina el 6/9 a las 00:00)
+  // Promoción del 7 al 13 de septiembre de 2026 inclusive (termina el 13/9 a las 23:59)
   START_DATE: DateTime.fromObject(
-    { year: 2026, month: 9, day: 1, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 9, day: 7, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   END_DATE: DateTime.fromObject(
-    { year: 2026, month: 9, day: 6, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 9, day: 13, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Fecha de desactivación completa (después de esta fecha se bloquea todo)
   DISABLE_DATE: DateTime.fromObject(
-    { year: 2026, month: 9, day: 6, hour: 1, minute: 0, second: 0 },
+    { year: 2026, month: 9, day: 14, hour: 0, minute: 1, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Período de compra activo
   PURCHASE_START: DateTime.fromObject(
-    { year: 2026, month: 9, day: 1, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 9, day: 7, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   PURCHASE_END: DateTime.fromObject(
-    { year: 2026, month: 9, day: 6, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 9, day: 13, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
 
@@ -50,7 +50,7 @@ export const PROMO_CONFIG = {
   TEXTS: {
     modalTitle: '40% OFF',
     modalSubtitle: 'en todas las formaciones',
-    modalDateRange: 'Del 1 al 5 de Septiembre inclusive',
+    modalDateRange: 'Del 7 al 13 de Septiembre inclusive',
     modalCTA: 'Ver Formaciones',
     modalDescription:
       'No dejes pasar esta oportunidad para sumar nuevos servicios y/o perfeccionar tus resultados',

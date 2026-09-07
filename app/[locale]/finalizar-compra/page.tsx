@@ -17,6 +17,7 @@ import {
   type ValidateCouponResponse,
   type CheckoutPromo,
 } from '@/lib/api-client';
+import { isPromoActive } from '@/lib/promo-config';
 
 // Convención del sistema: priceARS === USD_ONLY_SENTINEL && priceUSD > 0
 // marca un curso USD-only (Nanoblading, Camuflaje Senior). Esos no se
@@ -147,7 +148,9 @@ export default function FinalizarCompraPage() {
   );
 
   // La promo limita el pago a un máximo de cuotas. Sin promo, plan normal (3/6).
-  const limitInstallments = promoOn;
+  // Se activa por el setting del backend (promoOn) o por la ventana de fechas de
+  // la promo (isPromoActive) — esto último se apaga solo al vencer.
+  const limitInstallments = promoOn || isPromoActive();
   // Con el tope de cuotas se cotiza a precio de lista (sin el 10% del plan 3).
   const planForPricing: InstallmentPlan = limitInstallments ? 6 : installmentPlan;
   const breakdown = useMemo(() => computeBreakdown(planForPricing), [computeBreakdown, planForPricing]);
@@ -227,7 +230,7 @@ export default function FinalizarCompraPage() {
           // El backend calcula el precio autoritativo y valida el cupón por
           // código; no se manda ni el precio ni el descuento del cliente.
           couponCode: appliedCoupon?.valid ? appliedCoupon.couponCode : undefined,
-          installments: installmentPlan,
+          installments: limitInstallments ? promo.maxInstallments : installmentPlan,
         }),
       });
 
