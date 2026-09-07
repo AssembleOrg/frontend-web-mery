@@ -227,9 +227,7 @@ export default function FinalizarCompraPage() {
           // El backend calcula el precio autoritativo y valida el cupón por
           // código; no se manda ni el precio ni el descuento del cliente.
           couponCode: appliedCoupon?.valid ? appliedCoupon.couponCode : undefined,
-          // Se ofrece hasta 2 cuotas sin interés (los cursos USD/pago único no
-          // pasan por Mercado Pago).
-          installments: 2,
+          installments: installmentPlan,
         }),
       });
 
@@ -325,8 +323,8 @@ export default function FinalizarCompraPage() {
         onRemoveCoupon={handleRemoveCoupon}
         installmentPlan={installmentPlan}
         onInstallmentPlanChange={setInstallmentPlan}
-        showInstallmentSelector={false}
-        maxInstallments={2}
+        showInstallmentSelector={hasArsItems && !limitInstallments}
+        maxInstallments={limitInstallments ? promo.maxInstallments : undefined}
         promoActive={promoOn}
         promoDiscountPercent={promo.discountPercent}
         promoDiscountARS={breakdown.promoDiscount}
