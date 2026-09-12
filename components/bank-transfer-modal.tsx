@@ -69,7 +69,9 @@ export const BankTransferModal = ({
 
   return (
     <div
-      className='fixed inset-0 bg-black/75 z-[60] flex items-center justify-center p-4'
+      // z-[100]: este modal siempre se abre DESDE otro modal (compra de curso,
+      // compra de mentoría), así que tiene que quedar por encima de todos ellos.
+      className='fixed inset-0 bg-black/75 z-[100] flex items-center justify-center p-4'
       onClick={onClose}
     >
       <div
