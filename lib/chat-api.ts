@@ -111,12 +111,126 @@ async function api<T>(endpoint: string, init: RequestInit = {}): Promise<T> {
   return json.data;
 }
 
+export interface CategoryEligibility {
+  room: ChatRoom;
+  computed: EligibilityInfo;
+}
+
+// ---------------------------------------------------------------------------
+// Batching de elegibilidad por curso
+// ---------------------------------------------------------------------------
+// La pantalla "mi cuenta" monta un CourseChatButton por curso y cada uno pedía
+// /chat/rooms/by-category/:id por su cuenta — N requests al montar y otros N en
+// cada focus de la ventana. Acá se juntan todas las peticiones que caen en la
+// misma ventana de tiempo y se resuelven con un solo GET
+// /chat/rooms/by-categories?ids=a,b,c. Además hay un micro-cache por id para
+// que dos focus seguidos no vuelvan a pegarle al backend.
+
+const BATCH_WINDOW_MS = 40;
+const ELIGIBILITY_TTL_MS = 10_000;
+const MAX_IDS_PER_BATCH = 50;
+
+interface PendingRequest {
+  resolve: (value: CategoryEligibility) => void;
+  reject: (reason: unknown) => void;
+}
+
+const eligibilityCache = new Map<
+  string,
+  { at: number; value: CategoryEligibility }
+>();
+const pending = new Map<string, PendingRequest[]>();
+let batchTimer: ReturnType<typeof setTimeout> | null = null;
+
+async function flushEligibilityBatch() {
+  batchTimer = null;
+  const ids = [...pending.keys()];
+  if (!ids.length) return;
+
+  const batches: string[][] = [];
+  for (let i = 0; i < ids.length; i += MAX_IDS_PER_BATCH) {
+    batches.push(ids.slice(i, i + MAX_IDS_PER_BATCH));
+  }
+
+  await Promise.all(
+    batches.map(async (batchIds) => {
+      const waiters = new Map(
+        batchIds.map((id) => [id, pending.get(id) ?? []] as const),
+      );
+      for (const id of batchIds) pending.delete(id);
+
+      try {
+        const { items } = await api<{
+          items: Array<{
+            categoryId: string;
+            room: ChatRoom;
+            computed: EligibilityInfo;
+          }>;
+        }>(`/chat/rooms/by-categories?ids=${batchIds.join(',')}`);
+
+        const byCategory = new Map(items.map((i) => [i.categoryId, i]));
+        const now = Date.now();
+        for (const id of batchIds) {
+          const item = byCategory.get(id);
+          const callbacks = waiters.get(id) ?? [];
+          if (!item) {
+            const err = new Error('No se encontró el chat de este curso');
+            for (const cb of callbacks) cb.reject(err);
+            continue;
+          }
+          const value: CategoryEligibility = {
+            room: item.room,
+            computed: item.computed,
+          };
+          eligibilityCache.set(id, { at: now, value });
+          for (const cb of callbacks) cb.resolve(value);
+        }
+      } catch (err) {
+        for (const id of batchIds) {
+          for (const cb of waiters.get(id) ?? []) cb.reject(err);
+        }
+      }
+    }),
+  );
+}
+
+function requestEligibility(
+  categoryId: string,
+  { force = false }: { force?: boolean } = {},
+): Promise<CategoryEligibility> {
+  if (!force) {
+    const cached = eligibilityCache.get(categoryId);
+    if (cached && Date.now() - cached.at < ELIGIBILITY_TTL_MS) {
+      return Promise.resolve(cached.value);
+    }
+  }
+
+  return new Promise<CategoryEligibility>((resolve, reject) => {
+    const waiters = pending.get(categoryId);
+    if (waiters) waiters.push({ resolve, reject });
+    else pending.set(categoryId, [{ resolve, reject }]);
+
+    batchTimer ??= setTimeout(() => void flushEligibilityBatch(), BATCH_WINDOW_MS);
+  });
+}
+
+/** Invalida el cache de elegibilidad (todo, o un curso puntual). */
+export function invalidateEligibility(categoryId?: string) {
+  if (categoryId) eligibilityCache.delete(categoryId);
+  else eligibilityCache.clear();
+}
+
 export const chatApi = {
   myRooms: () => api<ChatRoom[]>('/chat/rooms'),
-  myRoomForCategory: (categoryId: string) =>
-    api<{ room: ChatRoom; computed: EligibilityInfo }>(
-      `/chat/rooms/by-category/${categoryId}`,
-    ),
+  /**
+   * Coalescido: varias llamadas simultáneas (una por curso) terminan en un solo
+   * request al backend. `force: true` saltea el micro-cache — usalo después de
+   * aprobar el examen o completar la mentoría.
+   */
+  myRoomForCategory: (
+    categoryId: string,
+    options?: { force?: boolean },
+  ): Promise<CategoryEligibility> => requestEligibility(categoryId, options),
   unreadCount: () => api<{ total: number }>('/chat/unread-count'),
   messages: (roomId: string, cursor?: string, limit = 50) => {
     const q = new URLSearchParams();

@@ -26,11 +26,12 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
   openRef.current = open;
 
   const fetchEligibility = useCallback(
-    async (withSpinner: boolean) => {
+    async (withSpinner: boolean, force = false) => {
       if (withSpinner) setLoading(true);
       try {
         const { room: nextRoom, computed } = await chatApi.myRoomForCategory(
           categoryId,
+          { force },
         );
         if (cancelledRef.current) return;
         // Solo updatear si algo cambió realmente — evita re-renders innecesarios
@@ -153,9 +154,9 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
               categoryName={categoryName}
               onClose={() => {
                 setQuizOpen(false);
-                void fetchEligibility(false);
+                void fetchEligibility(false, true);
               }}
-              onPassed={() => void fetchEligibility(false)}
+              onPassed={() => void fetchEligibility(false, true)}
             />
           )}
         </>
@@ -174,7 +175,7 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
           categoryId={categoryId}
           categoryName={categoryName}
           defaultEmail={user?.email ?? ''}
-          onChanged={() => void fetchEligibility(false)}
+          onChanged={() => void fetchEligibility(false, true)}
         />
       );
     }
