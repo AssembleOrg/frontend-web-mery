@@ -45,6 +45,11 @@ export default function CursoDetallePage() {
   const [quizOpen, setQuizOpen] = useState(false);
   const quizAutoOpenedRef = useRef(false);
 
+  // En mobile/tablet la lista de lecciones queda DEBAJO del reproductor, así que
+  // al elegir una hay que subir la vista: si no, el video cambia fuera de
+  // pantalla y parece que no pasó nada.
+  const playerRef = useRef<HTMLDivElement | null>(null);
+
   // Race condition prevention: AbortController para cancelar requests
   const loadCourseAbortController = useRef<AbortController | null>(null);
   const lessonSelectAbortController = useRef<AbortController | null>(null);
@@ -71,6 +76,22 @@ export default function CursoDetallePage() {
 
       setSelectedLesson(lesson);
       setCurrentLesson(lesson);
+
+      // Solo cuando el layout está apilado (abajo de xl); en desktop el
+      // reproductor ya está a la vista, al lado de la lista.
+      if (
+        typeof window !== 'undefined' &&
+        window.matchMedia('(max-width: 1279px)').matches
+      ) {
+        const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)')
+          .matches;
+        requestAnimationFrame(() => {
+          playerRef.current?.scrollIntoView({
+            behavior: smooth ? 'smooth' : 'auto',
+            block: 'start',
+          });
+        });
+      }
 
       // Solo intentamos cargar el video si hay token (usuario autenticado)
       if (!token) {
@@ -365,7 +386,10 @@ export default function CursoDetallePage() {
               )}
               <div className='flex flex-col xl:flex-row gap-6 xl:gap-8 items-start'>
                 {/* Área principal centrada */}
-                <div className='flex-1 w-full xl:flex xl:justify-center'>
+                <div
+                  ref={playerRef}
+                  className='flex-1 w-full scroll-mt-24 xl:flex xl:justify-center'
+                >
                   <div className='w-full xl:max-w-4xl 2xl:max-w-5xl'>
                     {selectedLesson ? (
                       <div className='space-y-8'>
