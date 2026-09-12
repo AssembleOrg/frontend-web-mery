@@ -103,6 +103,15 @@ export function MobileMenu() {
             >
               CONTACTO
             </Link>
+            {isAuthenticated && (
+              <Link
+                href='/presencialidad'
+                className='block text-lg font-primary font-medium transition-colors hover:text-primary text-[#8b1538] dark:text-[#F9BBC4]'
+                onClick={closeMenu}
+              >
+                PRESENCIALIDAD
+              </Link>
+            )}
           </nav>
 
           {/* CTA Buttons */}

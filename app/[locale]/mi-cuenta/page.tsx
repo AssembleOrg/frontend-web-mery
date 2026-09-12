@@ -26,7 +26,6 @@ import { useUserCourses } from '@/hooks/useUserCourses';
 import { MiCuentaSkeleton } from '@/components/mi-cuenta/MiCuentaSkeleton';
 import { CourseChatButton } from '@/components/chat/course-chat-button';
 import { MentorshipBanner } from '@/components/mentorship/mentorship-banner';
-import { PresencialBanner } from '@/components/presencial/presencial-banner';
 
 export default function MiCuentaPage() {
   const router = useRouter();
@@ -188,15 +187,12 @@ export default function MiCuentaPage() {
             </h2>
 
             {!isAdmin && (
-              <>
-                <MentorshipBanner
-                  defaultEmail={user?.email ?? ''}
-                  courseNames={Object.fromEntries(
-                    userCourses.map((uc) => [uc.course.id, uc.course.title]),
-                  )}
-                />
-                <PresencialBanner />
-              </>
+              <MentorshipBanner
+                defaultEmail={user?.email ?? ''}
+                courseNames={Object.fromEntries(
+                  userCourses.map((uc) => [uc.course.id, uc.course.title]),
+                )}
+              />
             )}
 
             {loading ? (
@@ -729,6 +725,14 @@ export default function MiCuentaPage() {
                       </button>
                     );
                   })}
+
+                  <Link
+                    href='/es/presencialidad'
+                    className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left bg-gradient-to-r from-[#8b1538] to-[#EBA2A8] text-white hover:opacity-90 transition-opacity duration-200'
+                  >
+                    <MapPin className='w-5 h-5' />
+                    Presencialidad
+                  </Link>
 
                   {isAdmin && (
                     <>

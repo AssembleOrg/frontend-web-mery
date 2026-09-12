@@ -10,6 +10,7 @@ import {
   Users,
   Gift,
   ClipboardList,
+  MapPin,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
@@ -199,6 +200,14 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
             >
               <UserIcon className='w-5 h-5' />
               <span className='font-medium'>Mi Cuenta</span>
+            </Link>
+            <Link
+              href='/presencialidad'
+              onClick={handleMenuItemClick}
+              className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+            >
+              <MapPin className='w-5 h-5 text-[#8b1538]' />
+              <span className='font-medium'>Presencialidad</span>
             </Link>
           </div>
 

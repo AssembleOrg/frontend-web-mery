@@ -60,6 +60,14 @@ export function Navigation() {
             >
               CONTACTO
             </Link>
+            {isAuthenticated && (
+              <Link
+                href='/presencialidad'
+                className='text-sm font-primary font-medium transition-colors hover:text-primary text-[#8b1538] dark:text-[#F9BBC4] whitespace-nowrap'
+              >
+                PRESENCIALIDAD
+              </Link>
+            )}
           </div>
 
           {/* Right side controls */}
