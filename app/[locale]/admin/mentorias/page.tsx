@@ -31,7 +31,7 @@ import { AdminPresencialesList } from '@/components/presencial/admin-presenciale
 type Tab = 'calendario' | 'presenciales' | 'disponibilidad' | 'reservas';
 const TABS: { key: Tab; label: string }[] = [
   { key: 'calendario', label: 'Calendario' },
-  { key: 'presenciales', label: 'Presenciales' },
+  { key: 'presenciales', label: 'Presencialidad' },
   { key: 'disponibilidad', label: 'Disponibilidad' },
   { key: 'reservas', label: 'Reservas' },
 ];
@@ -158,7 +158,7 @@ export default function AdminMentoriasPage() {
     <div className='mx-auto w-full max-w-4xl px-3 py-4 sm:px-4 sm:py-6'>
       <h1 className='text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 mb-5'>
         <CalendarClock className='w-5 h-5 sm:w-6 sm:h-6 text-[#EBA2A8]' />
-        Mentorías
+        Mentoría / Presencialidad
       </h1>
 
       {/* Tabs */}

@@ -29,7 +29,7 @@ const navItems = [
   { href: 'admin/usuarios', label: 'Usuarios', icon: Users },
   { href: 'admin/cupones', label: 'Cupones', icon: Gift },
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
-  { href: 'admin/mentorias', label: 'Mentorías', icon: CalendarClock },
+  { href: 'admin/mentorias', label: 'Mentoría / Presencialidad', icon: CalendarClock },
   { href: 'admin/productos-mentoria', label: 'Productos mentoría', icon: Package },
   { href: 'admin/formularios', label: 'Formularios', icon: FileText },
   { href: 'admin/emails', label: 'Emails', icon: Mail },
