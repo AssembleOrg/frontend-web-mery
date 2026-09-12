@@ -9,7 +9,6 @@ import {
   type QuizAttemptResult,
 } from '@/lib/api-client';
 import { mentorshipApi } from '@/lib/mentorship-api';
-import { MentorshipPurchaseModal } from '@/components/mentorship/mentorship-purchase-modal';
 
 interface Props {
   categoryId: string;
@@ -46,7 +45,6 @@ export function CourseQuizModal({
     blockedByOtherCourse?: boolean;
   } | null>(null);
   const [mentLoading, setMentLoading] = useState(false);
-  const [showPurchase, setShowPurchase] = useState(false);
   const bodyRef = useRef<HTMLDivElement | null>(null);
 
   const total = quiz?.questions.length ?? 0;
@@ -265,16 +263,8 @@ export function CourseQuizModal({
                         </p>
                         <p className='mt-1 text-[13px] leading-relaxed text-white/60'>
                           La mentoría gratuita es una por cuenta y ya la aprovechaste
-                          en otra formación. Para acceder a la mentoría de este curso
-                          podés adquirir una mentoría adicional.
+                          en otra formación.
                         </p>
-                        <button
-                          type='button'
-                          onClick={() => setShowPurchase(true)}
-                          className='mt-3 w-full rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20'
-                        >
-                          Comprar mentoría
-                        </button>
                       </>
                     ) : (
                       <p className='text-[13px] leading-relaxed text-white/60'>
@@ -415,13 +405,6 @@ export function CourseQuizModal({
             </div>
           )}
       </div>
-
-      {showPurchase && (
-        <MentorshipPurchaseModal
-          categoryId={categoryId}
-          onClose={() => setShowPurchase(false)}
-        />
-      )}
     </div>
   );
 }
