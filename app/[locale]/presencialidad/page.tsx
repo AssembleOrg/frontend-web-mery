@@ -67,7 +67,7 @@ export default function PresencialidadPage() {
 
   return (
     <ProtectedRoute>
-      <div className='min-h-screen bg-gradient-to-b from-[#FBE8EA] via-white to-white'>
+      <div className='min-h-screen bg-background'>
         <Navigation />
 
         <main className='max-w-3xl mx-auto px-4 sm:px-6 pt-8 pb-16'>
@@ -97,21 +97,19 @@ export default function PresencialidadPage() {
           {/* Estado de mi inscripción */}
           {active && (
             <div
-              className={`mb-6 rounded-2xl p-4 sm:p-5 flex items-start gap-3 shadow-sm ${
-                active.status === 'CONFIRMED'
-                  ? 'bg-[#DCFCE7] ring-1 ring-[#22C55E]/50'
-                  : 'bg-[#FEF3C7] ring-1 ring-[#F59E0B]/50'
+              className={`mb-6 rounded-2xl p-4 sm:p-5 flex items-start gap-3 shadow-sm bg-[#FBE8EA] ring-1 ${
+                active.status === 'CONFIRMED' ? 'ring-[#8b1538]/40' : 'ring-[#EBA2A8]'
               }`}
             >
               <span
-                className={`shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center ${
-                  active.status === 'CONFIRMED' ? 'bg-[#16A34A] text-white' : 'bg-[#F59E0B] text-white'
+                className={`shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center text-white ${
+                  active.status === 'CONFIRMED' ? 'bg-[#8b1538]' : 'bg-[#EBA2A8]'
                 }`}
               >
                 {active.status === 'CONFIRMED' ? <CheckCircle2 className='w-6 h-6' /> : <Hourglass className='w-6 h-6' />}
               </span>
               <div className='min-w-0'>
-                <p className={`text-base font-bold ${active.status === 'CONFIRMED' ? 'text-[#166534]' : 'text-[#92400E]'}`}>
+                <p className={`text-base font-bold ${active.status === 'CONFIRMED' ? 'text-[#660e1b]' : 'text-[#8b1538]'}`}>
                   {active.status === 'CONFIRMED' ? 'Tu clase está confirmada' : 'Estás anotada · pendiente de confirmación'}
                 </p>
                 <p className='text-sm text-[#2B2B2B]/80 mt-0.5'>{active.class.title}</p>
@@ -135,12 +133,12 @@ export default function PresencialidadPage() {
           )}
 
           {recentBad && (
-            <div className='mb-6 rounded-2xl p-4 sm:p-5 flex items-start gap-3 bg-[#FEE2E2] ring-1 ring-red-300/60'>
-              <span className='shrink-0 w-11 h-11 rounded-2xl bg-red-500 text-white flex items-center justify-center'>
+            <div className='mb-6 rounded-2xl p-4 sm:p-5 flex items-start gap-3 bg-[#FBE8EA] ring-1 ring-[#8b1538]/40'>
+              <span className='shrink-0 w-11 h-11 rounded-2xl bg-[#5c0e24] text-white flex items-center justify-center'>
                 <Ban className='w-6 h-6' />
               </span>
               <div>
-                <p className='text-base font-bold text-red-800'>
+                <p className='text-base font-bold text-[#5c0e24]'>
                   {recentBad.status === 'REJECTED' ? 'No pudimos confirmar tu lugar' : 'Esa fecha se canceló'}
                 </p>
                 <p className='text-sm text-[#2B2B2B]/70 mt-0.5'>

@@ -84,7 +84,7 @@ export function DayClassesModal({
       <button type='button' aria-label='Cerrar' onClick={onClose} className='absolute inset-0 bg-[#2B2B2B]/50 backdrop-blur-sm' />
       <div className='relative w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden'>
         {/* Header con fecha grande */}
-        <div className='bg-gradient-to-br from-[#660e1b] to-[#EBA2A8] text-white px-6 pt-6 pb-5 shrink-0'>
+        <div className='bg-[#8b1538] text-white px-6 pt-6 pb-5 shrink-0'>
           <button
             type='button'
             onClick={onClose}
@@ -104,13 +104,16 @@ export function DayClassesModal({
           {classes.map((c) => {
             const mine = isMine(c);
             const confirmedMine = mine && c.mySignup!.status === 'CONFIRMED';
+            // Escala de marca (rosa claro → rosa → bordó) para el estado de la
+            // fecha; las clases en las que estoy anotada se distinguen por el
+            // chip relleno, no por otro matiz.
             const tone = mine
               ? confirmedMine
-                ? { band: 'bg-[#16A34A]', chip: 'bg-[#DCFCE7] text-[#166534]', label: 'Tu lugar está confirmado', Icon: CheckCircle2 }
-                : { band: 'bg-[#8b1538]', chip: 'bg-[#FBE8EA] text-[#8b1538]', label: 'Anotada · pendiente de confirmación', Icon: Hourglass }
+                ? { band: 'bg-[#8b1538]', chip: 'bg-[#8b1538] text-white', label: 'Tu lugar está confirmado', Icon: CheckCircle2 }
+                : { band: 'bg-[#8b1538]', chip: 'bg-[#EBA2A8] text-white', label: 'Anotada · pendiente de confirmación', Icon: Hourglass }
               : c.status === 'CONFIRMED'
-                ? { band: 'bg-[#22C55E]', chip: 'bg-[#DCFCE7] text-[#166534]', label: 'Fecha confirmada', Icon: CheckCircle2 }
-                : { band: 'bg-[#F59E0B]', chip: 'bg-[#FEF3C7] text-[#92400E]', label: 'Fecha tentativa', Icon: Sparkles };
+                ? { band: 'bg-[#EBA2A8]', chip: 'bg-[#FBE8EA] text-[#660e1b]', label: 'Fecha confirmada', Icon: CheckCircle2 }
+                : { band: 'bg-[#F7CBCB]', chip: 'bg-[#FBE8EA] text-[#545454]', label: 'Fecha tentativa', Icon: Sparkles };
             const Icon = tone.Icon;
             const disabled = !mine && hasActiveSignup;
             return (
@@ -145,7 +148,7 @@ export function DayClassesModal({
                           type='button'
                           disabled={busyId === c.id}
                           onClick={() => setCancelFor(c)}
-                          className='inline-flex items-center gap-1.5 text-xs font-medium text-[#2B2B2B]/60 hover:text-red-600'
+                          className='inline-flex items-center gap-1.5 text-xs font-medium text-[#2B2B2B]/60 hover:text-[#8b1538]'
                         >
                           <Ban className='w-3.5 h-3.5' /> Cancelar mi inscripción
                         </button>
