@@ -36,10 +36,13 @@ export function MentorshipPurchaseModal({ categoryId, onClose }: Readonly<Props>
     setLoading(true);
     try {
       const all = await mentorshipApi.products();
-      const filtered = categoryId
+      // Primero los del curso actual (o genéricos); si el curso no tiene
+      // productos propios, mostramos todos igual.
+      const own = categoryId
         ? all.filter((p) => !p.categoryId || p.categoryId === categoryId)
-        : all;
-      setProducts(filtered);
+        : [];
+      const rest = all.filter((p) => !own.includes(p));
+      setProducts(own.length > 0 ? [...own, ...rest] : all);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {

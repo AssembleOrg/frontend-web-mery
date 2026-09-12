@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Bell, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { useChatStore } from '@/stores/chat-store';
 import { useChatConnection } from '@/hooks/useChat';
@@ -65,10 +65,11 @@ export function ChatNotificationBell() {
     >
       <button
         onClick={toggle}
-        aria-label='Notificaciones'
+        aria-label='Mensajes del chat'
+        title='Mensajes'
         className='relative p-2 rounded-full hover:bg-muted transition-colors'
       >
-        <Bell className='w-5 h-5 text-foreground' />
+        <MessageCircle className='w-5 h-5 text-foreground' />
         {unread > 0 && (
           <span className='absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#f9bbc4] text-white text-[10px] font-semibold flex items-center justify-center'>
             {unread > 99 ? '99+' : unread}

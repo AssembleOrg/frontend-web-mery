@@ -75,22 +75,22 @@ export function StudentCalendar({
     ).length;
 
   return (
-    <div className='rounded-3xl bg-white shadow-[0_10px_40px_-15px_rgba(102,14,27,0.25)] ring-1 ring-[#F9BBC4]/50 overflow-hidden'>
-      {/* Header degradé */}
-      <div className='bg-gradient-to-r from-[#660e1b] via-[#8b1538] to-[#EBA2A8] px-4 sm:px-6 py-4 text-white'>
+    <div className='rounded-2xl bg-white shadow-sm ring-1 ring-[#F9BBC4]/60 overflow-hidden'>
+      {/* Header */}
+      <div className='bg-white border-b border-[#F9BBC4]/60 px-4 sm:px-6 py-4 text-[#2B2B2B]'>
         <div className='flex items-center justify-between gap-2'>
           <button
             type='button'
             disabled={cursor <= minMonth}
             onClick={() => setCursor((c) => c.minus({ months: 1 }))}
             aria-label='Mes anterior'
-            className='p-2 rounded-full bg-white/15 hover:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+            className='p-2 rounded-full text-[#8b1538] hover:bg-[#FBE8EA] disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
           >
             <ChevronLeft className='w-5 h-5' />
           </button>
           <div className='text-center'>
-            <p className='text-[11px] uppercase tracking-[0.25em] text-white/70'>Presencialidad</p>
-            <h2 className='text-xl sm:text-2xl font-bold capitalize leading-tight'>
+            <p className='text-[11px] uppercase tracking-[0.25em] text-[#8b1538]/70'>Presencialidad</p>
+            <h2 className='text-xl sm:text-2xl font-bold capitalize leading-tight text-[#2B2B2B]'>
               {cursor.setLocale('es').toFormat('LLLL yyyy')}
             </h2>
           </div>
@@ -99,12 +99,12 @@ export function StudentCalendar({
             disabled={cursor >= maxMonth}
             onClick={() => setCursor((c) => c.plus({ months: 1 }))}
             aria-label='Mes siguiente'
-            className='p-2 rounded-full bg-white/15 hover:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+            className='p-2 rounded-full text-[#8b1538] hover:bg-[#FBE8EA] disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
           >
             <ChevronRight className='w-5 h-5' />
           </button>
         </div>
-        <p className='mt-2 text-center text-xs text-white/80'>
+        <p className='mt-2 text-center text-xs text-[#2B2B2B]/55'>
           {monthCount('tentative') + monthCount('confirmed') + monthCount('mine') === 0
             ? 'Sin fechas este mes'
             : 'Tocá un día pintado para ver las clases y anotarte'}

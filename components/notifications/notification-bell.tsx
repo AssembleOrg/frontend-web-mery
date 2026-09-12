@@ -201,6 +201,7 @@ export function NotificationBell() {
         type='button'
         onClick={toggle}
         aria-label='Notificaciones'
+        title='Notificaciones'
         className='relative p-2 rounded-full hover:bg-muted transition-colors'
       >
         {unread > 0 ? (

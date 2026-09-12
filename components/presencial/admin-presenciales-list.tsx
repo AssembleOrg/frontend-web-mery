@@ -1,31 +1,48 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
-import { Plus, Pencil, Trash2, Loader2, Users, MapPin } from 'lucide-react';
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Loader2,
+  Users,
+  MapPin,
+  ChevronLeft,
+  ChevronRight,
+  History,
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
   presencialApi,
   hourLabel,
-  formatPresencialDate,
   CLASS_STATUS_LABEL,
   type PresencialClassAdmin,
 } from '@/lib/presencial-api';
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
 import { PresencialClassForm } from './presencial-class-form';
 
+const TZ = 'America/Argentina/Buenos_Aires';
+const PAGE_SIZE = 30;
+
 const STATUS_STYLE: Record<PresencialClassAdmin['status'], string> = {
-  TENTATIVE: 'border border-dashed border-[#EBA2A8] text-[#8b1538] bg-[#fbe8ea]/60',
-  CONFIRMED: 'bg-[#EBA2A8] text-[#2B2B2B]',
+  TENTATIVE: 'border border-dashed border-[#F59E0B] text-[#92400E] bg-[#FEF3C7]',
+  CONFIRMED: 'bg-[#DCFCE7] text-[#166534]',
   CANCELLED: 'bg-muted text-muted-foreground line-through',
   COMPLETED: 'bg-muted text-muted-foreground',
 };
 
-/** CRUD de clases presenciales (lista). Confirmar/cancelar también desde acá. */
+function fmtDate(dateStr: string) {
+  return DateTime.fromISO(dateStr, { zone: TZ }).setLocale('es');
+}
+
+/** CRUD de clases presenciales. Próximas (default) o solo pasadas; de a 30. */
 export function AdminPresencialesList() {
   const [rows, setRows] = useState<PresencialClassAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPast, setShowPast] = useState(false);
+  const [page, setPage] = useState(1);
   const [form, setForm] = useState<{ open: boolean; initial: PresencialClassAdmin | null }>({
     open: false,
     initial: null,
@@ -37,10 +54,12 @@ export function AdminPresencialesList() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const from = showPast
-        ? undefined
-        : DateTime.now().setZone('America/Argentina/Buenos_Aires').startOf('day').toUTC().toISO()!;
-      setRows(await presencialApi.adminCalendar({ from }));
+      const startOfToday = DateTime.now().setZone(TZ).startOf('day').toUTC().toISO()!;
+      // Próximas: desde hoy, ascendente. Pasadas: hasta hoy, más reciente primero.
+      const data = showPast
+        ? (await presencialApi.adminCalendar({ to: startOfToday })).reverse()
+        : await presencialApi.adminCalendar({ from: startOfToday });
+      setRows(data);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -49,11 +68,21 @@ export function AdminPresencialesList() {
   }, [showPast]);
 
   useEffect(() => {
+    setPage(1);
+  }, [showPast]);
+
+  useEffect(() => {
     void load();
     const onChanged = () => void load();
     window.addEventListener('presencial:changed', onChanged);
     return () => window.removeEventListener('presencial:changed', onChanged);
   }, [load]);
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const pageRows = useMemo(
+    () => rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [rows, page],
+  );
 
   const emit = () => window.dispatchEvent(new CustomEvent('presencial:changed'));
 
@@ -83,17 +112,36 @@ export function AdminPresencialesList() {
 
   return (
     <div className='space-y-3'>
-      <div className='flex flex-wrap items-center justify-between gap-2'>
-        <label className='flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer'>
-          <input type='checkbox' checked={showPast} onChange={(e) => setShowPast(e.target.checked)} />
-          Mostrar pasadas
-        </label>
+      {/* Toolbar */}
+      <div className='flex items-center justify-between gap-2'>
+        <div className='inline-flex rounded-lg bg-muted/60 p-0.5 text-xs'>
+          <button
+            type='button'
+            onClick={() => setShowPast(false)}
+            className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+              !showPast ? 'bg-[#2B2B2B] text-white' : 'text-muted-foreground'
+            }`}
+          >
+            Próximas
+          </button>
+          <button
+            type='button'
+            onClick={() => setShowPast(true)}
+            className={`px-3 py-1.5 rounded-md font-medium inline-flex items-center gap-1 transition-colors ${
+              showPast ? 'bg-[#2B2B2B] text-white' : 'text-muted-foreground'
+            }`}
+          >
+            <History className='w-3.5 h-3.5' /> Pasadas
+          </button>
+        </div>
         <button
           type='button'
           onClick={() => setForm({ open: true, initial: null })}
-          className='inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f]'
+          className='inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 text-sm font-semibold rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f]'
         >
-          <Plus className='w-4 h-4 text-[#EBA2A8]' /> Nueva clase presencial
+          <Plus className='w-4 h-4 text-[#EBA2A8]' />
+          <span className='hidden sm:inline'>Nueva clase presencial</span>
+          <span className='sm:hidden'>Nueva</span>
         </button>
       </div>
 
@@ -104,87 +152,139 @@ export function AdminPresencialesList() {
       ) : rows.length === 0 ? (
         <div className='text-center py-12'>
           <MapPin className='w-10 h-10 mx-auto mb-3 text-muted-foreground/40' />
-          <p className='text-sm font-medium'>No hay clases presenciales.</p>
-          <p className='text-xs text-muted-foreground mt-1'>Creá la primera con el botón de arriba.</p>
+          <p className='text-sm font-medium'>
+            {showPast ? 'No hay clases pasadas.' : 'No hay clases próximas.'}
+          </p>
+          {!showPast && (
+            <p className='text-xs text-muted-foreground mt-1'>Creá la primera con el botón de arriba.</p>
+          )}
         </div>
       ) : (
-        <div className='space-y-2'>
-          {rows.map((c) => {
-            const active = c.status === 'TENTATIVE' || c.status === 'CONFIRMED';
-            return (
-              <div
-                key={c.id}
-                className='rounded-xl border border-border bg-white dark:bg-card p-3 flex flex-wrap items-start gap-3'
-              >
-                <div className='min-w-0 flex-1'>
-                  <div className='flex flex-wrap items-center gap-2'>
-                    <p className='text-sm font-semibold'>{c.title}</p>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[c.status]}`}>
-                      {CLASS_STATUS_LABEL[c.status]}
-                    </span>
-                    {c.restrictToStudents && (
-                      <span className='text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground'>
-                        solo alumnas
-                      </span>
-                    )}
-                  </div>
-                  <p className='text-xs text-muted-foreground capitalize'>
-                    {formatPresencialDate(c.date)} · {hourLabel(c.startHour)}–{hourLabel(c.endHour)} hs
-                  </p>
-                  {c.categories.length > 0 && (
-                    <p className='text-[11px] text-muted-foreground'>
-                      {c.categories.map((x) => x.name).join(' · ')}
-                    </p>
-                  )}
-                  <p className='mt-1 text-xs flex items-center gap-1.5'>
-                    <Users className='w-3.5 h-3.5 text-[#8b1538]' />
-                    <span className='font-semibold'>{c.counts.active}</span> inscriptas
-                    <span className='text-muted-foreground'>
-                      ({c.counts.pending} pend. · {c.counts.confirmed} conf.)
-                    </span>
-                  </p>
-                </div>
+        <>
+          <p className='text-[11px] text-muted-foreground'>
+            {rows.length} clase{rows.length === 1 ? '' : 's'}
+            {totalPages > 1 && ` · página ${page} de ${totalPages}`}
+          </p>
 
-                <div className='flex flex-wrap items-center gap-1.5'>
-                  {c.status === 'TENTATIVE' && (
-                    <button
-                      type='button'
-                      onClick={() => setConfirmFor(c)}
-                      className='px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f]'
-                    >
-                      Confirmar
-                    </button>
-                  )}
-                  {active && (
-                    <button
-                      type='button'
-                      onClick={() => setCancelFor(c)}
-                      className='px-2.5 py-1.5 text-xs rounded-lg border border-border text-red-600 hover:border-red-400'
-                    >
-                      Cancelar
-                    </button>
-                  )}
-                  <button
-                    type='button'
-                    onClick={() => setForm({ open: true, initial: c })}
-                    className='p-1.5 rounded-lg hover:bg-muted text-muted-foreground'
-                    title='Editar'
-                  >
-                    <Pencil className='w-4 h-4' />
-                  </button>
-                  <button
-                    type='button'
-                    onClick={() => setDeleteFor(c)}
-                    className='p-1.5 rounded-lg hover:bg-red-50 text-red-500'
-                    title='Borrar'
-                  >
-                    <Trash2 className='w-4 h-4' />
-                  </button>
+          <div className='space-y-2'>
+            {pageRows.map((c) => {
+              const active = c.status === 'TENTATIVE' || c.status === 'CONFIRMED';
+              const d = fmtDate(c.date);
+              return (
+                <div
+                  key={c.id}
+                  className='rounded-xl border border-border bg-white dark:bg-card overflow-hidden'
+                >
+                  <div className='flex gap-3 p-3'>
+                    {/* Fecha compacta */}
+                    <div className='shrink-0 w-12 rounded-lg bg-[#FBE8EA] text-[#8b1538] flex flex-col items-center justify-center py-1.5'>
+                      <span className='text-[10px] uppercase leading-none'>{d.toFormat('LLL')}</span>
+                      <span className='text-lg font-bold leading-tight'>{d.day}</span>
+                      <span className='text-[10px] leading-none capitalize'>{d.toFormat('ccc')}</span>
+                    </div>
+
+                    <div className='min-w-0 flex-1'>
+                      <div className='flex flex-wrap items-center gap-1.5'>
+                        <p className='text-sm font-semibold leading-tight'>{c.title}</p>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[c.status]}`}>
+                          {CLASS_STATUS_LABEL[c.status]}
+                        </span>
+                        {c.restrictToStudents && (
+                          <span className='text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground'>
+                            solo alumnas
+                          </span>
+                        )}
+                      </div>
+                      <p className='text-xs text-muted-foreground mt-0.5'>
+                        {hourLabel(c.startHour)}–{hourLabel(c.endHour)} hs · {d.toFormat('yyyy')}
+                      </p>
+                      {c.categories.length > 0 && (
+                        <p className='text-[11px] text-muted-foreground truncate'>
+                          {c.categories.map((x) => x.name).join(' · ')}
+                        </p>
+                      )}
+                      <p className='mt-1 text-xs flex items-center gap-1.5'>
+                        <Users className='w-3.5 h-3.5 text-[#8b1538]' />
+                        <span className='font-semibold'>{c.counts.active}</span> inscriptas
+                        <span className='text-muted-foreground'>
+                          ({c.counts.pending} pend. · {c.counts.confirmed} conf.)
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Acciones: fila propia, cómoda en mobile */}
+                  <div className='flex items-center gap-1.5 px-3 py-2 border-t border-border/60 bg-muted/20'>
+                    {c.status === 'TENTATIVE' && (
+                      <button
+                        type='button'
+                        onClick={() => setConfirmFor(c)}
+                        className='flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f]'
+                      >
+                        Confirmar
+                      </button>
+                    )}
+                    {active && (
+                      <button
+                        type='button'
+                        onClick={() => setCancelFor(c)}
+                        className='flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-red-600 hover:border-red-400'
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                    <div className='ml-auto flex items-center gap-1'>
+                      <button
+                        type='button'
+                        onClick={() => setForm({ open: true, initial: c })}
+                        className='p-2 rounded-lg hover:bg-muted text-muted-foreground'
+                        title='Editar'
+                        aria-label='Editar'
+                      >
+                        <Pencil className='w-4 h-4' />
+                      </button>
+                      <button
+                        type='button'
+                        onClick={() => setDeleteFor(c)}
+                        className='p-2 rounded-lg hover:bg-red-50 text-red-500'
+                        title='Borrar'
+                        aria-label='Borrar'
+                      >
+                        <Trash2 className='w-4 h-4' />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+
+          {totalPages > 1 && (
+            <div className='flex items-center justify-center gap-2 pt-2'>
+              <button
+                type='button'
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+                className='p-2 rounded-lg border border-border disabled:opacity-40'
+                aria-label='Página anterior'
+              >
+                <ChevronLeft className='w-4 h-4' />
+              </button>
+              <span className='text-xs text-muted-foreground'>
+                {page} / {totalPages}
+              </span>
+              <button
+                type='button'
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className='p-2 rounded-lg border border-border disabled:opacity-40'
+                aria-label='Página siguiente'
+              >
+                <ChevronRight className='w-4 h-4' />
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {form.open && (
@@ -197,7 +297,7 @@ export function AdminPresencialesList() {
       {confirmFor && (
         <ConfirmDialog
           title='¿Confirmar la clase presencial?'
-          description={`${confirmFor.title} · ${formatPresencialDate(confirmFor.date)}. Se confirma el lugar de las ${confirmFor.counts.pending} pendientes y se les avisa por email y en la app.`}
+          description={`${confirmFor.title} · ${fmtDate(confirmFor.date).toFormat("cccc d 'de' LLLL")}. Se confirma el lugar de las ${confirmFor.counts.pending} pendientes y se les avisa por email y en la app.`}
           confirmLabel='Sí, confirmar'
           onConfirm={() => confirm(confirmFor)}
           onClose={() => setConfirmFor(null)}
@@ -206,7 +306,7 @@ export function AdminPresencialesList() {
       {cancelFor && (
         <ConfirmDialog
           title='¿Cancelar la clase presencial?'
-          description={`${cancelFor.title} · ${formatPresencialDate(cancelFor.date)}. Las ${cancelFor.counts.active} inscriptas quedan canceladas y se les avisa.`}
+          description={`${cancelFor.title} · ${fmtDate(cancelFor.date).toFormat("cccc d 'de' LLLL")}. Las ${cancelFor.counts.active} inscriptas quedan canceladas y se les avisa.`}
           confirmLabel='Sí, cancelar clase'
           destructive
           onConfirm={() => cancel(cancelFor)}

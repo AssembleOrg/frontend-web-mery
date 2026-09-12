@@ -1,8 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { DateTime } from 'luxon';
-import { CheckCircle2, Hourglass, MapPin, CalendarDays, Ban } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Hourglass, MapPin, CalendarDays, Ban } from 'lucide-react';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -18,6 +19,14 @@ import {
 const TZ = 'America/Argentina/Buenos_Aires';
 
 export default function PresencialidadPage() {
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'es';
+  const goBack = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) router.back();
+    else router.push(`/${locale}/mi-cuenta`);
+  };
+
   const [classes, setClasses] = useState<PresencialClassForStudent[]>([]);
   const [mine, setMine] = useState<PresencialSignupMine[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +71,15 @@ export default function PresencialidadPage() {
         <Navigation />
 
         <main className='max-w-3xl mx-auto px-4 sm:px-6 pt-8 pb-16'>
+          {/* Volver */}
+          <button
+            type='button'
+            onClick={goBack}
+            className='mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[#8b1538] hover:text-[#660e1b] transition-colors'
+          >
+            <ArrowLeft className='w-4 h-4' /> Volver
+          </button>
+
           {/* Título */}
           <div className='mb-6'>
             <p className='inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.25em] text-[#8b1538]'>
