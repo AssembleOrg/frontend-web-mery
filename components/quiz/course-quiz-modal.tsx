@@ -226,80 +226,80 @@ export function CourseQuizModal({
           {/* Resultado del intento recién enviado */}
           {result && (
             <div className='mb-6 rounded-2xl bg-[#FBE8EA] text-[#2B2B2B] ring-1 ring-[#F9BBC4] p-6 text-center'>
-              {result.passed ? (
-                <>
-                  <span className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-white ring-1 ring-[#EBA2A8] text-[#8b1538] mb-3'>
-                    <CheckCircle2 className='w-7 h-7' />
-                  </span>
-                  <h3 className='text-lg font-bold text-[#8b1538]'>¡Felicitaciones, aprobaste!</h3>
-                  <p className='text-sm text-[#2B2B2B]/70 mt-1.5'>
-                    <span className='font-semibold text-[#2B2B2B]'>
-                      {result.correctCount}/{result.totalQuestions}
-                    </span>{' '}
-                    respuestas correctas.
-                  </p>
+              <span className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-white ring-1 ring-[#EBA2A8] text-[#8b1538] mb-3'>
+                {result.passed ? (
+                  <CheckCircle2 className='w-7 h-7' />
+                ) : (
+                  <RotateCcw className='w-7 h-7' />
+                )}
+              </span>
+              <h3 className='text-lg font-bold text-[#8b1538]'>
+                {result.passed
+                  ? '¡Felicitaciones, aprobaste!'
+                  : 'No alcanzaste el mínimo'}
+              </h3>
 
-                  {/* Mentoría: una gratuita por cuenta. Mensaje según corresponda. */}
-                  <div className='mt-4 rounded-xl bg-white ring-1 ring-[#F9BBC4] px-4 py-3 text-left'>
-                    {mentLoading ? (
-                      <p className='flex items-center gap-2 text-sm text-[#2B2B2B]/60'>
-                        <Loader2 className='w-4 h-4 animate-spin text-[#8b1538]' />
-                        Verificando tu mentoría…
-                      </p>
-                    ) : ment?.canBook ? (
-                      <>
-                        <p className='flex items-center gap-2 text-sm font-semibold text-[#8b1538]'>
-                          <CalendarClock className='w-4 h-4 shrink-0' />
-                          Tenés una mentoría de cortesía disponible
-                        </p>
-                        <p className='mt-1 text-[13px] leading-relaxed text-[#2B2B2B]/65'>
-                          Cada cuenta cuenta con una mentoría gratuita. Reservá tu
-                          horario para coordinarla y desbloquear el chat del curso.
-                        </p>
-                      </>
-                    ) : ment?.blockedByOtherCourse ? (
-                      <>
-                        <p className='flex items-center gap-2 text-sm font-semibold text-[#8b1538]'>
-                          <CalendarClock className='w-4 h-4 shrink-0' />
-                          Ya usaste tu mentoría de cortesía
-                        </p>
-                        <p className='mt-1 text-[13px] leading-relaxed text-[#2B2B2B]/65'>
-                          La mentoría gratuita es una por cuenta y ya la aprovechaste
-                          en otra formación. Para acceder a la mentoría de este curso
-                          podés adquirir una mentoría adicional.
-                        </p>
-                        <button
-                          type='button'
-                          onClick={() => setShowPurchase(true)}
-                          className='mt-3 w-full rounded-lg bg-[#8b1538] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#660e1b]'
-                        >
-                          Comprar mentoría
-                        </button>
-                      </>
-                    ) : (
-                      <p className='text-[13px] leading-relaxed text-[#2B2B2B]/65'>
-                        Aprobaste el examen final del curso.
-                      </p>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <span className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-white ring-1 ring-[#EBA2A8] text-[#8b1538] mb-3'>
-                    <RotateCcw className='w-7 h-7' />
-                  </span>
-                  <h3 className='text-lg font-bold text-[#8b1538]'>Casi. Volvé a intentarlo</h3>
-                  <p className='text-sm text-[#2B2B2B]/70 mt-1.5'>
-                    Para aprobar podías errar hasta{' '}
-                    <span className='font-semibold text-[#2B2B2B]'>{result.maxWrong}</span>, y esta
-                    vez tuviste más.
-                  </p>
-                  <p className='text-xs text-[#2B2B2B]/55 mt-3 max-w-xs mx-auto leading-relaxed'>
-                    Repasá el curso con calma y prestá atención a los detalles. Podés rendir el
-                    examen las veces que necesites.
-                  </p>
-                </>
+              {/* El porcentaje de acierto se informa siempre; el resultado del
+                  examen ya no condiciona los pasos siguientes. */}
+              <p className='text-sm text-[#2B2B2B]/70 mt-1.5'>
+                <span className='font-semibold text-[#2B2B2B]'>
+                  {result.totalQuestions
+                    ? Math.round((result.correctCount / result.totalQuestions) * 100)
+                    : 0}
+                  % de acierto
+                </span>{' '}
+                · {result.correctCount}/{result.totalQuestions} respuestas correctas.
+              </p>
+              {!result.passed && (
+                <p className='text-xs text-[#2B2B2B]/55 mt-2 max-w-xs mx-auto leading-relaxed'>
+                  Para aprobar podías errar hasta {result.maxWrong}. Repasá el curso y
+                  rendilo de nuevo las veces que necesites.
+                </p>
               )}
+
+              {/* Mentoría: una gratuita por cuenta. Mensaje según corresponda. */}
+              <div className='mt-4 rounded-xl bg-white ring-1 ring-[#F9BBC4] px-4 py-3 text-left'>
+                {mentLoading ? (
+                  <p className='flex items-center gap-2 text-sm text-[#2B2B2B]/60'>
+                    <Loader2 className='w-4 h-4 animate-spin text-[#8b1538]' />
+                    Verificando tu mentoría…
+                  </p>
+                ) : ment?.canBook ? (
+                  <>
+                    <p className='flex items-center gap-2 text-sm font-semibold text-[#8b1538]'>
+                      <CalendarClock className='w-4 h-4 shrink-0' />
+                      Tenés una mentoría de cortesía disponible
+                    </p>
+                    <p className='mt-1 text-[13px] leading-relaxed text-[#2B2B2B]/65'>
+                      Cada cuenta cuenta con una mentoría gratuita. Reservá tu
+                      horario para coordinarla y desbloquear el chat del curso.
+                    </p>
+                  </>
+                ) : ment?.blockedByOtherCourse ? (
+                  <>
+                    <p className='flex items-center gap-2 text-sm font-semibold text-[#8b1538]'>
+                      <CalendarClock className='w-4 h-4 shrink-0' />
+                      Ya usaste tu mentoría de cortesía
+                    </p>
+                    <p className='mt-1 text-[13px] leading-relaxed text-[#2B2B2B]/65'>
+                      La mentoría gratuita es una por cuenta y ya la aprovechaste
+                      en otra formación. Para acceder a la mentoría de este curso
+                      podés adquirir una mentoría adicional.
+                    </p>
+                    <button
+                      type='button'
+                      onClick={() => setShowPurchase(true)}
+                      className='mt-3 w-full rounded-lg bg-[#8b1538] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#660e1b]'
+                    >
+                      Comprar mentoría
+                    </button>
+                  </>
+                ) : (
+                  <p className='text-[13px] leading-relaxed text-[#2B2B2B]/65'>
+                    Ya rendiste el examen final del curso.
+                  </p>
+                )}
+              </div>
             </div>
           )}
 

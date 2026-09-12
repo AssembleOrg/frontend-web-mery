@@ -136,17 +136,31 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
     const videosDone = info.videosTotal > 0 && remaining === 0;
     const quizPending = info.quizRequired && !info.quizPassed;
 
-    // Videos completos pero examen final pendiente → CTA para rendirlo
-    if (videosDone && quizPending) {
+    // El examen sigue siendo el paso que va después de los videos, con el mismo
+    // peso visual de siempre. Lo único que cambió es que ya no hay que aprobarlo
+    // para seguir: la mentoría queda disponible en paralelo.
+    if (videosDone) {
+      const needsMentorship =
+        info.mentorshipRequired && !info.mentorshipCompleted;
       return (
         <>
-          <button
-            onClick={() => setQuizOpen(true)}
-            className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] text-sm font-primary font-medium transition-colors'
-          >
-            <GraduationCap className='w-4 h-4 text-[#EBA2A8]' />
-            Realizar examen final
-          </button>
+          {quizPending && (
+            <button
+              onClick={() => setQuizOpen(true)}
+              className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] text-sm font-primary font-medium transition-colors'
+            >
+              <GraduationCap className='w-4 h-4 text-[#EBA2A8]' />
+              Realizar examen final
+            </button>
+          )}
+          {needsMentorship && (
+            <MentorshipGate
+              categoryId={categoryId}
+              categoryName={categoryName}
+              defaultEmail={user?.email ?? ''}
+              onChanged={() => void fetchEligibility(false)}
+            />
+          )}
           {quizOpen && (
             <CourseQuizModal
               categoryId={categoryId}
@@ -162,34 +176,16 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
       );
     }
 
-    // Videos + examen listos, falta la mentoría → gate de reserva de mentoría.
-    if (
-      videosDone &&
-      !quizPending &&
-      info.mentorshipRequired &&
-      !info.mentorshipCompleted
-    ) {
-      return (
-        <MentorshipGate
-          categoryId={categoryId}
-          categoryName={categoryName}
-          defaultEmail={user?.email ?? ''}
-          onChanged={() => void fetchEligibility(false)}
-        />
-      );
-    }
-
     return (
       <button
         disabled
-        title={`Completá todos los videos del curso (95% o más)${quizPending ? ' y aprobá el examen final' : ''} para desbloquear el chat`}
+        title='Completá todos los videos del curso (95% o más) para desbloquear el chat'
         className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-border text-muted-foreground text-sm cursor-not-allowed'
       >
         <Lock className='w-4 h-4' />
         <span>
           Chat bloqueado · faltan {remaining} video
           {remaining === 1 ? '' : 's'}
-          {quizPending ? ' + examen final' : ''}
         </span>
       </button>
     );
