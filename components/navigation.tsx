@@ -9,6 +9,7 @@ import { MobileMenu } from './mobile-menu';
 import { UserMenu } from './user-menu';
 import { CartIcon } from './cart-icon';
 import { ChatNotificationBell } from './chat/chat-notification-bell';
+import { NotificationBell } from './notifications/notification-bell';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -86,7 +87,8 @@ export function Navigation() {
 
             {/* Chat notifications */}
             {isAuthenticated && (
-              <div className='hidden xl:flex items-center ml-1'>
+              <div className='hidden xl:flex items-center ml-1 gap-0.5'>
+                <NotificationBell />
                 <ChatNotificationBell />
               </div>
             )}
@@ -111,7 +113,8 @@ export function Navigation() {
               <LanguageToggle />
               <ModeToggle />
             </div>
-            <div className='xl:hidden'>
+            <div className='xl:hidden flex items-center gap-0.5'>
+              {isAuthenticated && <NotificationBell />}
               <MobileMenu />
             </div>
           </div>

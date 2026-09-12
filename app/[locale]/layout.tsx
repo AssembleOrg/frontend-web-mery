@@ -11,6 +11,7 @@ import CuotasModal from '@/components/cuotas-modal';
 import ProblemReportWidget from '@/components/problem-report-widget';
 // import ChatWidget from '@/components/chat-widget'; // Chat IA oculto por ahora
 import RequestTrackerProvider from '@/components/request-tracker-provider';
+import { PwaProvider } from '@/components/pwa/pwa-provider';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
 
@@ -44,6 +45,7 @@ export default async function LocaleLayout({
         <ModalProvider>
           <AuthInterceptorProvider>
             <RequestTrackerProvider />
+            <PwaProvider />
             {/* <PromoModal /> */}
             {/* <CuotasModal /> */}
             {children}

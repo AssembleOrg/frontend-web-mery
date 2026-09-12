@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import { useAuthStore } from '@/stores/auth-store';
 import { useChatStore } from '@/stores/chat-store';
 import { useMentorshipNotifStore } from '@/stores/mentorship-notif-store';
+import { useNotificationsStore } from '@/stores/notifications-store';
+import type { AppNotification } from '@/lib/notifications-api';
 import { chatApi, type ChatMessage } from '@/lib/chat-api';
 import { disconnectChatSocket, getChatSocket } from '@/lib/chat-socket';
 
@@ -22,6 +24,7 @@ export function useChatConnection() {
     if (!isAuthenticated) {
       disconnectChatSocket();
       useChatStore.getState().clear();
+      useNotificationsStore.getState().clear();
       boundRef.current = false;
       return;
     }
@@ -106,6 +109,11 @@ export function useChatConnection() {
         icon: '📅',
       });
     };
+    // Notificación persistente (campana): se agrega al instante + toast.
+    const onNotification = (n: AppNotification) => {
+      useNotificationsStore.getState().add(n);
+      toast(n.title, { icon: '🔔', duration: 6000 });
+    };
     // Clases presenciales: aviso in-app (toast) + refresco de banners/calendario.
     const onPresencialEvent = (p: {
       type: 'signup' | 'signup_cancelled' | 'confirmed' | 'rejected' | 'class_cancelled';
@@ -154,6 +162,7 @@ export function useChatConnection() {
       socket.on('room_updated', onRoomUpdated);
       socket.on('mentorship_event', onMentorshipEvent);
       socket.on('presencial_event', onPresencialEvent);
+      socket.on('notification', onNotification);
       boundRef.current = true;
     }
 
@@ -171,6 +180,7 @@ export function useChatConnection() {
       socket.off('room_updated', onRoomUpdated);
       socket.off('mentorship_event', onMentorshipEvent);
       socket.off('presencial_event', onPresencialEvent);
+      socket.off('notification', onNotification);
       boundRef.current = false;
     };
   }, [isAuthenticated, appendMessage, bumpUnread, setTyping, setUnreadTotal, upsertRoom]);

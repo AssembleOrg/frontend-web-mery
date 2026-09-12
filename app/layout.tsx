@@ -12,6 +12,12 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://merygarcia.com.ar'),
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Mery García',
+  },
   title: 'Mery García - Tatuaje Cosmético',
   description:
     'Artista del tatuaje cosmético con más de 20 años de experiencia. Servicios de nanoblading, lip blush, styling de cejas & formaciones profesionales.',
@@ -45,6 +51,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#2B2B2B',
 };
 
 export default function RootLayout({
