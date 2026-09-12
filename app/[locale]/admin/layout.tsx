@@ -13,6 +13,7 @@ import {
   Settings,
   FileText,
   Mail,
+  Package,
   MoreHorizontal,
   X,
 } from 'lucide-react';
@@ -29,6 +30,7 @@ const navItems = [
   { href: 'admin/cupones', label: 'Cupones', icon: Gift },
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
   { href: 'admin/mentorias', label: 'Mentorías', icon: CalendarClock },
+  { href: 'admin/productos-mentoria', label: 'Productos mentoría', icon: Package },
   { href: 'admin/formularios', label: 'Formularios', icon: FileText },
   { href: 'admin/emails', label: 'Emails', icon: Mail },
   { href: 'admin/configuracion', label: 'Config', icon: Settings },

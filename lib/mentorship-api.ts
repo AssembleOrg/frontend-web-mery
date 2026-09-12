@@ -28,9 +28,54 @@ export interface MentorshipEligibility {
   examPassed: boolean;
   alreadyBooked: boolean;
   mentorship: Mentorship | null;
-  /** Ya usó su mentoría gratuita (una por cuenta) en otra formación. */
+  /** Ya usó su mentoría gratuita (una por cuenta). */
+  freeUsed?: boolean;
+  /** Créditos pagos disponibles para reservar (0/1). */
+  availableCredits?: number;
+  /** Ya usó la gratis y no tiene crédito → tiene que comprar. */
+  needsPurchase?: boolean;
+  /** Compat: alias de needsPurchase. */
   blockedByOtherCourse?: boolean;
   canBook: boolean;
+}
+
+export type MentorshipProductType = 'MENTORSHIP' | 'ONE_TO_ONE';
+
+export interface MentorshipVariant {
+  id: string;
+  productId: string;
+  label: string;
+  amount: string; // Decimal serializado
+  currency: 'ARS' | 'USD';
+  isActive: boolean;
+  sortOrder: number;
+}
+
+export interface MentorshipProduct {
+  id: string;
+  categoryId: string | null;
+  category?: { id: string; name: string; slug?: string } | null;
+  name: string;
+  description: string | null;
+  type: MentorshipProductType;
+  isActive: boolean;
+  sortOrder: number;
+  variants: MentorshipVariant[];
+}
+
+export interface MentorshipCredit {
+  id: string;
+  userId: string;
+  productId: string | null;
+  product?: { id: string; name: string; type: MentorshipProductType } | null;
+  categoryId: string | null;
+  type: MentorshipProductType;
+  amount: string | null;
+  currency: string | null;
+  note: string | null;
+  status: 'AVAILABLE' | 'USED';
+  mentorshipId: string | null;
+  createdAt: string;
 }
 
 export interface AdminMentorship extends Mentorship {
@@ -93,6 +138,97 @@ export const mentorshipApi = {
     }),
   cancel: (id: string) =>
     api<{ cancelled: boolean }>(`/mentorship/${id}/cancel`, { method: 'POST' }),
+
+  // Productos pagos (público) + créditos del alumno
+  products: () => api<MentorshipProduct[]>('/mentorship/products'),
+  myCredits: () => api<MentorshipCredit[]>('/mentorship/my-credits'),
+
+  // Admin: catálogo de productos + variantes
+  adminProducts: () => api<MentorshipProduct[]>('/mentorship/admin/products'),
+  adminCreateProduct: (payload: {
+    name: string;
+    type?: MentorshipProductType;
+    categoryId?: string | null;
+    description?: string | null;
+    isActive?: boolean;
+    sortOrder?: number;
+  }) =>
+    api<MentorshipProduct>('/mentorship/admin/products', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  adminUpdateProduct: (
+    id: string,
+    payload: Partial<{
+      name: string;
+      type: MentorshipProductType;
+      categoryId: string | null;
+      description: string | null;
+      isActive: boolean;
+      sortOrder: number;
+    }>,
+  ) =>
+    api<MentorshipProduct>(`/mentorship/admin/products/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+  adminDeleteProduct: (id: string) =>
+    api<{ deleted: boolean }>(`/mentorship/admin/products/${id}`, {
+      method: 'DELETE',
+    }),
+  adminAddVariant: (
+    productId: string,
+    payload: {
+      label: string;
+      amount: number;
+      currency?: 'ARS' | 'USD';
+      isActive?: boolean;
+      sortOrder?: number;
+    },
+  ) =>
+    api<MentorshipVariant>(`/mentorship/admin/products/${productId}/variants`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  adminUpdateVariant: (
+    id: string,
+    payload: Partial<{
+      label: string;
+      amount: number;
+      currency: 'ARS' | 'USD';
+      isActive: boolean;
+      sortOrder: number;
+    }>,
+  ) =>
+    api<MentorshipVariant>(`/mentorship/admin/variants/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+  adminDeleteVariant: (id: string) =>
+    api<{ deleted: boolean }>(`/mentorship/admin/variants/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Admin: créditos pagos (validación manual)
+  adminListCredits: (userId: string) =>
+    api<MentorshipCredit[]>(`/mentorship/admin/credits?userId=${encodeURIComponent(userId)}`),
+  adminGrantCredit: (payload: {
+    userId: string;
+    productId?: string;
+    categoryId?: string;
+    type?: MentorshipProductType;
+    amount?: number;
+    currency?: 'ARS' | 'USD';
+    note?: string;
+  }) =>
+    api<MentorshipCredit>('/mentorship/admin/credits', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  adminRevokeCredit: (id: string) =>
+    api<{ deleted: boolean }>(`/mentorship/admin/credits/${id}`, {
+      method: 'DELETE',
+    }),
 
   // Admin
   adminCalendar: (filter?: { from?: string; to?: string; status?: string }) => {

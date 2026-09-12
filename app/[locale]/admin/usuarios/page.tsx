@@ -3,8 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import {
+  mentorshipApi,
+  type MentorshipProduct,
+  type MentorshipCredit,
+} from '@/lib/mentorship-api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -67,6 +72,12 @@ export default function AdminUsuariosPage() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isLoadingUserCourses, setIsLoadingUserCourses] = useState(false);
+  // Mentoría: productos pagos + créditos del usuario
+  const [mentProducts, setMentProducts] = useState<MentorshipProduct[]>([]);
+  const [selectedMentProduct, setSelectedMentProduct] = useState('');
+  const [creditNote, setCreditNote] = useState('');
+  const [userCredits, setUserCredits] = useState<MentorshipCredit[]>([]);
+  const [isGrantingCredit, setIsGrantingCredit] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -107,8 +118,56 @@ export default function AdminUsuariosPage() {
   useEffect(() => {
     if (selectedUser) {
       loadUserCourses(selectedUser.id);
+      loadUserCredits(selectedUser.id);
     }
   }, [selectedUser]);
+
+  // Catálogo de productos de mentoría (para otorgar créditos)
+  useEffect(() => {
+    mentorshipApi
+      .adminProducts()
+      .then((rows) => setMentProducts(rows.filter((p) => p.isActive)))
+      .catch(() => {});
+  }, []);
+
+  const loadUserCredits = async (userId: string) => {
+    try {
+      setUserCredits(await mentorshipApi.adminListCredits(userId));
+    } catch {
+      setUserCredits([]);
+    }
+  };
+
+  const handleGrantCredit = async () => {
+    if (!selectedUser || !selectedMentProduct) return;
+    setIsGrantingCredit(true);
+    try {
+      await mentorshipApi.adminGrantCredit({
+        userId: selectedUser.id,
+        productId: selectedMentProduct,
+        note: creditNote.trim() || undefined,
+      });
+      toast.success('Crédito otorgado');
+      setSelectedMentProduct('');
+      setCreditNote('');
+      await loadUserCredits(selectedUser.id);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setIsGrantingCredit(false);
+    }
+  };
+
+  const handleRevokeCredit = async (id: string) => {
+    if (!selectedUser) return;
+    try {
+      await mentorshipApi.adminRevokeCredit(id);
+      toast.success('Crédito borrado');
+      await loadUserCredits(selectedUser.id);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
 
   // Scroll automático al panel de asignación en mobile al seleccionar usuario
   useEffect(() => {
@@ -579,6 +638,89 @@ export default function AdminUsuariosPage() {
                     {isLoading ? 'Asignando...' : 'Asignar Curso'}
                   </button>
                 </div>
+              </div>
+
+              {/* Otorgar crédito de mentoría (validación manual del pago) */}
+              <div className='mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200'>
+                <h3 className='font-semibold text-gray-900 mb-3'>
+                  Otorgar crédito de mentoría / clase
+                </h3>
+                <p className='text-xs text-gray-500 mb-3'>
+                  Usalo tras confirmar la transferencia. Habilita al alumno a
+                  reservar la mentoría (o coordinar la clase one-to-one).
+                </p>
+                <div className='space-y-3'>
+                  <select
+                    value={selectedMentProduct}
+                    onChange={(e) => setSelectedMentProduct(e.target.value)}
+                    disabled={isGrantingCredit}
+                    className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
+                  >
+                    <option value=''>Seleccionar producto...</option>
+                    {mentProducts.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                        {p.type === 'ONE_TO_ONE' ? ' (one-to-one)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    value={creditNote}
+                    onChange={(e) => setCreditNote(e.target.value)}
+                    placeholder='Nota (ej. comprobante / medio de pago)'
+                    className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent'
+                  />
+                  <button
+                    onClick={handleGrantCredit}
+                    disabled={!selectedMentProduct || isGrantingCredit}
+                    className='w-full bg-[var(--mg-pink-cta)] hover:bg-[var(--mg-pink)] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium transition-colors'
+                  >
+                    {isGrantingCredit ? 'Otorgando...' : 'Otorgar crédito'}
+                  </button>
+                </div>
+
+                {userCredits.length > 0 && (
+                  <div className='mt-4 space-y-2'>
+                    <p className='text-sm font-medium text-gray-700'>
+                      Créditos ({userCredits.length})
+                    </p>
+                    {userCredits.map((c) => (
+                      <div
+                        key={c.id}
+                        className='flex items-center justify-between rounded-lg bg-white border border-gray-200 px-3 py-2 text-sm'
+                      >
+                        <span className='min-w-0'>
+                          <span className='font-medium'>
+                            {c.product?.name ?? c.type}
+                          </span>{' '}
+                          <span
+                            className={
+                              c.status === 'AVAILABLE'
+                                ? 'text-green-600'
+                                : 'text-gray-400'
+                            }
+                          >
+                            · {c.status === 'AVAILABLE' ? 'Disponible' : 'Usado'}
+                          </span>
+                          {c.note && (
+                            <span className='block text-xs text-gray-400 truncate'>
+                              {c.note}
+                            </span>
+                          )}
+                        </span>
+                        {c.status === 'AVAILABLE' && (
+                          <button
+                            onClick={() => handleRevokeCredit(c.id)}
+                            className='ml-2 rounded p-1 text-red-500 hover:bg-red-50'
+                            aria-label='Borrar crédito'
+                          >
+                            <Trash2 className='h-4 w-4' />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Lista de cursos actuales */}
