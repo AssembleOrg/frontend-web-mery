@@ -80,12 +80,22 @@ export default function AdminConfiguracionPage() {
           {settings.map((s) => {
             const draft = drafts[s.key] ?? s.rawValue;
             const dirty = draft !== s.rawValue;
+            // Los textos largos (ej. el mensaje de despedida del chat) no
+            // entran en el input chico de una línea: van en un textarea a lo
+            // ancho, debajo de la descripción.
+            const isLongText = s.type === 'string';
             return (
               <div
                 key={s.key}
                 className='bg-white border border-gray-100 rounded-xl p-4 shadow-sm'
               >
-                <div className='flex flex-col sm:flex-row sm:items-center gap-3'>
+                <div
+                  className={
+                    isLongText
+                      ? 'flex flex-col gap-3'
+                      : 'flex flex-col sm:flex-row sm:items-center gap-3'
+                  }
+                >
                   <div className='flex-1 min-w-0'>
                     <h2 className='font-semibold text-gray-900'>{s.label}</h2>
                     <p className='text-sm text-gray-500 mt-0.5'>{s.description}</p>
@@ -97,7 +107,13 @@ export default function AdminConfiguracionPage() {
                     )}
                   </div>
 
-                  <div className='flex items-center gap-2 shrink-0'>
+                  <div
+                    className={
+                      isLongText
+                        ? 'flex flex-col gap-2 items-stretch'
+                        : 'flex items-center gap-2 shrink-0'
+                    }
+                  >
                     {s.type === 'boolean' ? (
                       <select
                         value={draft}
@@ -109,6 +125,23 @@ export default function AdminConfiguracionPage() {
                         <option value='true'>Activado</option>
                         <option value='false'>Desactivado</option>
                       </select>
+                    ) : isLongText ? (
+                      <>
+                        <textarea
+                          value={draft}
+                          maxLength={s.max ?? undefined}
+                          rows={4}
+                          onChange={(e) =>
+                            setDrafts((d) => ({ ...d, [s.key]: e.target.value }))
+                          }
+                          className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm leading-relaxed resize-y'
+                        />
+                        {s.max != null && (
+                          <p className='text-[11px] text-gray-400 text-right'>
+                            {draft.length}/{s.max}
+                          </p>
+                        )}
+                      </>
                     ) : (
                       <input
                         type={s.type === 'int' ? 'number' : 'text'}
@@ -124,7 +157,9 @@ export default function AdminConfiguracionPage() {
                     <button
                       onClick={() => void save(s)}
                       disabled={!dirty || savingKey === s.key}
-                      className='px-4 py-2 rounded-lg bg-[#f9bbc4] text-[#660e1b] font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2'
+                      className={`px-4 py-2 rounded-lg bg-[#f9bbc4] text-[#660e1b] font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 ${
+                        isLongText ? 'self-end' : ''
+                      }`}
                     >
                       {savingKey === s.key ? (
                         <Loader2 className='w-4 h-4 animate-spin' />
