@@ -25,6 +25,16 @@ import {
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from '@/components/mentorship/slot-picker-modal';
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
+import { AdminCalendar } from '@/components/presencial/admin-calendar';
+import { AdminPresencialesList } from '@/components/presencial/admin-presenciales-list';
+
+type Tab = 'calendario' | 'presenciales' | 'disponibilidad' | 'reservas';
+const TABS: { key: Tab; label: string }[] = [
+  { key: 'calendario', label: 'Calendario' },
+  { key: 'presenciales', label: 'Presenciales' },
+  { key: 'disponibilidad', label: 'Disponibilidad' },
+  { key: 'reservas', label: 'Reservas' },
+];
 
 function hhmmToMin(v: string): number {
   const [h, m] = v.split(':').map(Number);
@@ -40,6 +50,7 @@ export default function AdminMentoriasPage() {
   const [bookings, setBookings] = useState<AdminMentorship[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('SCHEDULED');
+  const [tab, setTab] = useState<Tab>('calendario');
 
   // Form nueva franja
   const [weekday, setWeekday] = useState(1);
@@ -150,7 +161,29 @@ export default function AdminMentoriasPage() {
         Mentorías
       </h1>
 
+      {/* Tabs */}
+      <div className='flex gap-1 mb-5 overflow-x-auto rounded-xl bg-muted/50 p-1'>
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            type='button'
+            onClick={() => setTab(t.key)}
+            className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+              tab === t.key
+                ? 'bg-[#2B2B2B] text-white'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'calendario' && <AdminCalendar />}
+      {tab === 'presenciales' && <AdminPresencialesList />}
+
       {/* Disponibilidad */}
+      {tab === 'disponibilidad' && (
       <section className='mb-8'>
         <h2 className='text-sm font-bold text-foreground mb-3'>Disponibilidad semanal</h2>
         <div className='rounded-2xl border border-border bg-white dark:bg-card p-3 sm:p-4'>
@@ -242,8 +275,10 @@ export default function AdminMentoriasPage() {
           )}
         </div>
       </section>
+      )}
 
-      {/* Calendario de mentorías */}
+      {/* Reservas (lista) */}
+      {tab === 'reservas' && (
       <section>
         <div className='flex items-center justify-between gap-2 mb-3'>
           <h2 className='text-sm font-bold text-foreground'>Reservas</h2>
@@ -295,6 +330,7 @@ export default function AdminMentoriasPage() {
           </div>
         )}
       </section>
+      )}
 
       {rescheduleFor && (
         <SlotPickerModal

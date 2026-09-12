@@ -106,6 +106,30 @@ export function useChatConnection() {
         icon: '📅',
       });
     };
+    // Clases presenciales: aviso in-app (toast) + refresco de banners/calendario.
+    const onPresencialEvent = (p: {
+      type: 'signup' | 'signup_cancelled' | 'confirmed' | 'rejected' | 'class_cancelled';
+      classId: string;
+      title: string;
+      start: string;
+      studentName?: string;
+    }) => {
+      const when = new Date(p.start).toLocaleDateString('es-AR', {
+        weekday: 'short',
+        day: '2-digit',
+        month: '2-digit',
+        timeZone: 'America/Argentina/Buenos_Aires',
+      });
+      const msg: Record<typeof p.type, string> = {
+        signup: `${p.studentName ?? 'Una alumna'} se anotó a ${p.title} (${when})`,
+        signup_cancelled: `${p.studentName ?? 'Una alumna'} se bajó de ${p.title} (${when})`,
+        confirmed: `✅ Tu clase presencial "${p.title}" (${when}) está confirmada`,
+        rejected: `No pudimos confirmar tu lugar en "${p.title}" (${when})`,
+        class_cancelled: `La clase presencial "${p.title}" (${when}) se canceló`,
+      };
+      toast(msg[p.type], { icon: '🏫', duration: 6000 });
+      window.dispatchEvent(new CustomEvent('presencial:changed'));
+    };
     const onReadReceipt = (p: {
       roomId: string;
       readerRole: 'ADMIN' | 'SUBADMIN' | 'USER';
@@ -129,6 +153,7 @@ export function useChatConnection() {
       socket.on('read_receipt', onReadReceipt);
       socket.on('room_updated', onRoomUpdated);
       socket.on('mentorship_event', onMentorshipEvent);
+      socket.on('presencial_event', onPresencialEvent);
       boundRef.current = true;
     }
 
@@ -145,6 +170,7 @@ export function useChatConnection() {
       socket.off('read_receipt', onReadReceipt);
       socket.off('room_updated', onRoomUpdated);
       socket.off('mentorship_event', onMentorshipEvent);
+      socket.off('presencial_event', onPresencialEvent);
       boundRef.current = false;
     };
   }, [isAuthenticated, appendMessage, bumpUnread, setTyping, setUnreadTotal, upsertRoom]);

@@ -26,6 +26,7 @@ import { useUserCourses } from '@/hooks/useUserCourses';
 import { MiCuentaSkeleton } from '@/components/mi-cuenta/MiCuentaSkeleton';
 import { CourseChatButton } from '@/components/chat/course-chat-button';
 import { MentorshipBanner } from '@/components/mentorship/mentorship-banner';
+import { PresencialBanner } from '@/components/presencial/presencial-banner';
 
 export default function MiCuentaPage() {
   const router = useRouter();
@@ -187,12 +188,15 @@ export default function MiCuentaPage() {
             </h2>
 
             {!isAdmin && (
-              <MentorshipBanner
-                defaultEmail={user?.email ?? ''}
-                courseNames={Object.fromEntries(
-                  userCourses.map((uc) => [uc.course.id, uc.course.title]),
-                )}
-              />
+              <>
+                <MentorshipBanner
+                  defaultEmail={user?.email ?? ''}
+                  courseNames={Object.fromEntries(
+                    userCourses.map((uc) => [uc.course.id, uc.course.title]),
+                  )}
+                />
+                <PresencialBanner />
+              </>
             )}
 
             {loading ? (
