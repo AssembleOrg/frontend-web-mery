@@ -22,6 +22,7 @@ import {
 } from '@/lib/presencial-api';
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
 import { PresencialClassForm } from './presencial-class-form';
+import { RescheduleClassModal } from './reschedule-class-modal';
 
 const TZ = 'America/Argentina/Buenos_Aires';
 const PAGE_SIZE = 30;
@@ -49,6 +50,9 @@ export function AdminPresencialesList() {
   });
   const [confirmFor, setConfirmFor] = useState<PresencialClassAdmin | null>(null);
   const [cancelFor, setCancelFor] = useState<PresencialClassAdmin | null>(null);
+  const [rescheduleFor, setRescheduleFor] = useState<PresencialClassAdmin | null>(
+    null,
+  );
   const [deleteFor, setDeleteFor] = useState<PresencialClassAdmin | null>(null);
 
   const load = useCallback(async () => {
@@ -227,8 +231,17 @@ export function AdminPresencialesList() {
                     {active && (
                       <button
                         type='button'
+                        onClick={() => setRescheduleFor(c)}
+                        className='flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#EBA2A8] text-[#8b1538] hover:bg-[#FBE8EA]'
+                      >
+                        Reprogramar
+                      </button>
+                    )}
+                    {active && (
+                      <button
+                        type='button'
                         onClick={() => setCancelFor(c)}
-                        className='flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-red-600 hover:border-red-400'
+                        className='flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-[#8b1538] hover:border-[#EBA2A8]'
                       >
                         Cancelar
                       </button>
@@ -286,6 +299,21 @@ export function AdminPresencialesList() {
           )}
         </>
       )}
+
+      {rescheduleFor && (
+
+        <RescheduleClassModal
+
+          klass={rescheduleFor}
+
+          onClose={() => setRescheduleFor(null)}
+
+          onDone={() => setRescheduleFor(null)}
+
+        />
+
+      )}
+
 
       {form.open && (
         <PresencialClassForm

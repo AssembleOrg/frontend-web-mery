@@ -209,6 +209,15 @@ export const presencialApi = {
       `/presencial-classes/admin/${id}/confirm`,
       { method: 'POST' },
     ),
+  /** Mueve la fecha conservando inscripciones y señas. */
+  adminRescheduleClass: (
+    id: string,
+    payload: { date: string; startHour: number; endHour: number },
+  ) =>
+    api<{ rescheduled: boolean; notified: number; class: PresencialClass }>(
+      `/presencial-classes/admin/${id}/reschedule`,
+      { method: 'POST', body: JSON.stringify(payload) },
+    ),
   adminCancelClass: (id: string) =>
     api<{ cancelled: boolean; notified: number }>(
       `/presencial-classes/admin/${id}/cancel`,

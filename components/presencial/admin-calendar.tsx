@@ -28,6 +28,7 @@ import {
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
 import { SlotPickerModal } from '@/components/mentorship/slot-picker-modal';
 import { PresencialClassForm } from './presencial-class-form';
+import { RescheduleClassModal } from './reschedule-class-modal';
 
 const TZ = 'America/Argentina/Buenos_Aires';
 
@@ -59,6 +60,8 @@ export function AdminCalendar() {
   // Acciones
   const [confirmClassFor, setConfirmClassFor] = useState<PresencialClassAdmin | null>(null);
   const [cancelClassFor, setCancelClassFor] = useState<PresencialClassAdmin | null>(null);
+  const [rescheduleClassFor, setRescheduleClassFor] =
+    useState<PresencialClassAdmin | null>(null);
   const [rejectSignupFor, setRejectSignupFor] = useState<PresencialSignupAdmin | null>(null);
   const [editClass, setEditClass] = useState<PresencialClassAdmin | null>(null);
   const [newClassDate, setNewClassDate] = useState<string | null>(null);
@@ -427,8 +430,15 @@ export function AdminCalendar() {
                           )}
                           <button
                             type='button'
+                            onClick={() => setRescheduleClassFor(c)}
+                            className='flex-1 py-1.5 text-xs font-semibold rounded-lg border border-[#EBA2A8] text-[#8b1538] hover:bg-[#FBE8EA]'
+                          >
+                            Reprogramar
+                          </button>
+                          <button
+                            type='button'
                             onClick={() => setCancelClassFor(c)}
-                            className='flex-1 py-1.5 text-xs font-medium rounded-lg border border-border text-red-600 hover:border-red-400'
+                            className='flex-1 py-1.5 text-xs font-medium rounded-lg border border-border text-[#8b1538] hover:border-[#EBA2A8]'
                           >
                             Cancelar clase
                           </button>
@@ -486,6 +496,14 @@ export function AdminCalendar() {
       </div>
 
       {/* Diálogos */}
+      {rescheduleClassFor && (
+        <RescheduleClassModal
+          klass={rescheduleClassFor}
+          onClose={() => setRescheduleClassFor(null)}
+          onDone={() => setRescheduleClassFor(null)}
+        />
+      )}
+
       {confirmClassFor && (
         <ConfirmDialog
           title='¿Confirmar la clase presencial?'
