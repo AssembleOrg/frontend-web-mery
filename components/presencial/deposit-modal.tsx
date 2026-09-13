@@ -144,9 +144,22 @@ export function DepositModal({
                   <CalendarClock className='w-4 h-4 shrink-0' />
                   Antes de continuar
                 </p>
-                <p className='mt-2 text-[13px] leading-relaxed text-[#2B2B2B]/75'>
-                  {disclaimer}
-                </p>
+                {/* El texto es editable desde el admin y viene con párrafos
+                    separados por una línea en blanco. */}
+                <div className='mt-2 space-y-2'>
+                  {disclaimer
+                    .split(/\n\s*\n/)
+                    .map((p) => p.trim())
+                    .filter(Boolean)
+                    .map((paragraph) => (
+                      <p
+                        key={paragraph.slice(0, 40)}
+                        className='text-[13px] leading-relaxed text-[#2B2B2B]/75'
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                </div>
               </div>
 
               <label className='flex items-start gap-2.5 cursor-pointer'>
@@ -160,7 +173,8 @@ export function DepositModal({
                   className='mt-0.5 w-4 h-4 shrink-0 accent-[#8b1538]'
                 />
                 <span className='text-[13px] leading-relaxed text-[#2B2B2B]/80'>
-                  Leí y acepto las condiciones de la reserva.
+                  Leí y acepto las condiciones: la fecha puede reprogramarse y mi
+                  seña se traslada a la nueva.
                 </span>
               </label>
               {showAcceptError && (
