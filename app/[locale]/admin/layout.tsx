@@ -15,8 +15,7 @@ import {
   Mail,
   Package,
   MoreHorizontal,
-  X,
-} from 'lucide-react';
+  X, Wallet } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
 import { AuthGate } from '@/components/auth/AuthGate';
@@ -31,6 +30,7 @@ const navItems = [
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
   { href: 'admin/mentorias', label: 'Mentoría / Presencialidad', icon: CalendarClock },
   { href: 'admin/productos-mentoria', label: 'Productos mentoría', icon: Package },
+  { href: 'admin/senas-presenciales', label: 'Señas presenciales', icon: Wallet },
   { href: 'admin/formularios', label: 'Formularios', icon: FileText },
   { href: 'admin/emails', label: 'Emails', icon: Mail },
   { href: 'admin/configuracion', label: 'Config', icon: Settings },

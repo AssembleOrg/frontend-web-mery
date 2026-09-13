@@ -15,6 +15,27 @@ export type PresencialSignupStatus =
   | 'CANCELLED'
   | 'COMPLETED';
 
+export type PresencialDepositStatus = 'NONE' | 'PENDING' | 'PAID' | 'FAILED';
+
+/** Seña de lista de una clase. Sin precio, la fecha no se puede reservar. */
+export interface PresencialPrice {
+  id: string;
+  name: string;
+  amountUSD: number | null;
+  amountARS: number | null;
+  isActive: boolean;
+  sortOrder?: number;
+}
+
+/** Monto autoritativo calculado por el backend al momento de reservar. */
+export interface PresencialDepositQuote {
+  amountARS: number;
+  amountUSD: number | null;
+  /** Cotización usada; null si el precio ya estaba en pesos. */
+  rate: number | null;
+  priceName: string;
+}
+
 export interface PresencialCategory {
   id: string;
   name: string;
@@ -35,11 +56,17 @@ export interface PresencialClass {
   restrictToStudents: boolean;
   confirmedAt: string | null;
   categories: PresencialCategory[];
+  price: PresencialPrice | null;
 }
 
 /** Clase para la alumna: incluye el estado de SU inscripción (nunca cupos). */
 export interface PresencialClassForStudent extends PresencialClass {
-  mySignup: { id: string; status: PresencialSignupStatus } | null;
+  mySignup: {
+    id: string;
+    status: PresencialSignupStatus;
+    depositStatus: PresencialDepositStatus;
+    depositAmountARS: number | null;
+  } | null;
 }
 
 export interface PresencialSignupMine {
@@ -48,6 +75,9 @@ export interface PresencialSignupMine {
   note: string | null;
   confirmedAt: string | null;
   createdAt: string;
+  depositStatus: PresencialDepositStatus;
+  depositAmountARS: number | null;
+  depositPaidAt: string | null;
   class: PresencialClass;
 }
 
@@ -105,6 +135,15 @@ export interface PresencialClassPayload {
   endHour: number;
   categoryIds?: string[];
   restrictToStudents?: boolean;
+  priceId?: string | null;
+}
+
+export interface PresencialPricePayload {
+  name: string;
+  amountUSD?: number | null;
+  amountARS?: number | null;
+  isActive?: boolean;
+  sortOrder?: number;
 }
 
 export const presencialApi = {
@@ -116,6 +155,25 @@ export const presencialApi = {
       `/presencial-classes/${classId}/signup`,
       { method: 'POST', body: JSON.stringify({ note }) },
     ),
+  /** Monto de la seña + texto del disclaimer, para el popup de reserva. */
+  depositInfo: (classId: string) =>
+    api<{ deposit: PresencialDepositQuote | null; disclaimer: string }>(
+      `/presencial-classes/${classId}/deposit`,
+    ),
+  /** Crea la preference de MP. El backend rechaza si no se aceptó el disclaimer. */
+  startDeposit: (classId: string) =>
+    api<{
+      signupId: string;
+      preferenceId: string;
+      initPoint: string;
+      sandboxInitPoint?: string;
+      amountARS: number;
+      amountUSD: number | null;
+      rate: number | null;
+    }>(`/presencial-classes/${classId}/deposit`, {
+      method: 'POST',
+      body: JSON.stringify({ acceptedDisclaimer: true }),
+    }),
   cancelSignup: (signupId: string) =>
     api<{ cancelled: boolean }>(`/presencial-classes/signups/${signupId}/cancel`, {
       method: 'POST',
@@ -155,6 +213,22 @@ export const presencialApi = {
     api<{ cancelled: boolean; notified: number }>(
       `/presencial-classes/admin/${id}/cancel`,
       { method: 'POST' },
+    ),
+  adminPrices: () => api<PresencialPrice[]>('/presencial-classes/admin/prices'),
+  adminCreatePrice: (payload: PresencialPricePayload) =>
+    api<PresencialPrice>('/presencial-classes/admin/prices', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  adminUpdatePrice: (id: string, payload: Partial<PresencialPricePayload>) =>
+    api<PresencialPrice>(`/presencial-classes/admin/prices/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+  adminDeletePrice: (id: string) =>
+    api<{ deleted: boolean; classesLeftWithoutPrice: number }>(
+      `/presencial-classes/admin/prices/${id}`,
+      { method: 'DELETE' },
     ),
   adminConfirmSignup: (id: string) =>
     api<{ confirmed: boolean }>(`/presencial-classes/admin/signups/${id}/confirm`, {
@@ -198,3 +272,13 @@ export const CLASS_STATUS_LABEL: Record<PresencialClassStatus, string> = {
   CANCELLED: 'Cancelada',
   COMPLETED: 'Realizada',
 };
+
+export function formatDepositAmount(amountARS: number): string {
+  return `$${Math.round(amountARS).toLocaleString('es-AR')}`;
+}
+
+export function formatPriceLabel(p: PresencialPrice): string {
+  if (p.amountARS != null) return `$${Math.round(p.amountARS).toLocaleString('es-AR')}`;
+  if (p.amountUSD != null) return `USD ${Math.round(p.amountUSD).toLocaleString('en-US')}`;
+  return 'Sin monto';
+}

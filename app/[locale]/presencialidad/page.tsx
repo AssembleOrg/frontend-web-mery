@@ -53,7 +53,19 @@ export default function PresencialidadPage() {
     return () => window.removeEventListener('presencial:changed', onChanged);
   }, [load]);
 
-  const active = mine.find((s) => s.status === 'PENDING' || s.status === 'CONFIRMED');
+  // Una seña empezada y no pagada NO ocupa el lugar: si no, quien abandona el
+  // pago a mitad de camino queda trabada sin poder elegir otra fecha.
+  const active = mine.find(
+    (s) =>
+      (s.status === 'PENDING' || s.status === 'CONFIRMED') &&
+      s.depositStatus !== 'PENDING' &&
+      s.depositStatus !== 'FAILED',
+  );
+  const unpaidDeposit = mine.find(
+    (s) =>
+      (s.status === 'PENDING' || s.status === 'CONFIRMED') &&
+      s.depositStatus === 'PENDING',
+  );
   const recentBad = !active
     ? mine.find(
         (s) =>
@@ -127,6 +139,37 @@ export default function PresencialidadPage() {
                   className='mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8b1538] hover:underline'
                 >
                   <CalendarDays className='w-3.5 h-3.5' /> Ver en el calendario
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!active && unpaidDeposit && (
+            <div className='mb-6 rounded-2xl p-4 sm:p-5 flex items-start gap-3 bg-[#FBE8EA] ring-1 ring-[#EBA2A8]'>
+              <span className='shrink-0 w-11 h-11 rounded-2xl bg-[#EBA2A8] text-white flex items-center justify-center'>
+                <Hourglass className='w-6 h-6' />
+              </span>
+              <div className='min-w-0'>
+                <p className='text-base font-bold text-[#8b1538]'>
+                  Te quedó una seña sin completar
+                </p>
+                <p className='text-sm text-[#2B2B2B]/80 mt-0.5'>
+                  {unpaidDeposit.class.title}
+                </p>
+                <p className='text-sm text-[#2B2B2B]/60 capitalize'>
+                  {fmtDay(unpaidDeposit.class.date)}
+                </p>
+                <button
+                  type='button'
+                  onClick={() =>
+                    setSelected({
+                      dateKey: unpaidDeposit.class.date,
+                      list: classes.filter((c) => c.date === unpaidDeposit.class.date),
+                    })
+                  }
+                  className='mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8b1538] hover:underline'
+                >
+                  <CalendarDays className='w-3.5 h-3.5' /> Retomar el pago
                 </button>
               </div>
             </div>

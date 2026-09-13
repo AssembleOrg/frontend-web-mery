@@ -7,7 +7,9 @@ import {
   presencialApi,
   HOUR_OPTIONS,
   hourLabel,
+  formatPriceLabel,
   type PresencialClass,
+  type PresencialPrice,
 } from '@/lib/presencial-api';
 import { getCategories, type Category } from '@/lib/api-client';
 
@@ -34,11 +36,17 @@ export function PresencialClassForm({
     new Set(initial?.categories.map((c) => c.id) ?? []),
   );
   const [restrict, setRestrict] = useState(initial?.restrictToStudents ?? false);
+  const [prices, setPrices] = useState<PresencialPrice[]>([]);
+  const [priceId, setPriceId] = useState(initial?.price?.id ?? '');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     getCategories({ isActive: true, limit: 100 })
       .then((r) => setCategories(r.data.data))
+      .catch(() => {});
+    presencialApi
+      .adminPrices()
+      .then(setPrices)
       .catch(() => {});
   }, []);
 
@@ -79,6 +87,7 @@ export function PresencialClassForm({
         endHour,
         categoryIds: Array.from(selected),
         restrictToStudents: restrict,
+        priceId: priceId || null,
       };
       if (initial) {
         await presencialApi.adminUpdate(initial.id, payload);
@@ -130,6 +139,32 @@ export function PresencialClassForm({
               rows={2}
               className='w-full px-3 py-2 text-sm rounded-lg border border-border bg-background'
             />
+          </div>
+
+          <div>
+            <label className='block text-xs font-medium text-muted-foreground mb-1'>
+              Seña
+            </label>
+            <select
+              value={priceId}
+              onChange={(e) => setPriceId(e.target.value)}
+              className='w-full px-3 py-2 text-sm rounded-lg border border-border bg-background'
+            >
+              <option value=''>Sin seña — no se puede reservar</option>
+              {prices
+                .filter((p) => p.isActive || p.id === priceId)
+                .map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} · {formatPriceLabel(p)}
+                    {p.isActive ? '' : ' (inactivo)'}
+                  </option>
+                ))}
+            </select>
+            <p className='mt-1 text-[11px] text-muted-foreground'>
+              {priceId
+                ? 'La alumna acepta el disclaimer y paga por Mercado Pago para reservar.'
+                : 'Sin seña la fecha se muestra en el calendario pero no se puede reservar.'}
+            </p>
           </div>
 
           <div className='grid grid-cols-3 gap-2'>

@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
-import { X, Clock, CheckCircle2, Hourglass, Ban, Loader2, Sparkles } from 'lucide-react';
+import { X, Clock, CheckCircle2, Hourglass, Ban, Loader2, Sparkles, Wallet } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
   presencialApi,
   hourLabel,
+  formatDepositAmount,
   type PresencialClassForStudent,
 } from '@/lib/presencial-api';
+import { DepositModal } from './deposit-modal';
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
 
 const TZ = 'America/Argentina/Buenos_Aires';
@@ -29,8 +31,8 @@ export function DayClassesModal({
   onChanged: () => void;
 }>) {
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [signupFor, setSignupFor] = useState<PresencialClassForStudent | null>(null);
   const [cancelFor, setCancelFor] = useState<PresencialClassForStudent | null>(null);
+  const [depositFor, setDepositFor] = useState<PresencialClassForStudent | null>(null);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -46,20 +48,6 @@ export function DayClassesModal({
   }, [onClose]);
 
   const day = DateTime.fromISO(dateKey, { zone: TZ }).setLocale('es');
-
-  async function signup(c: PresencialClassForStudent) {
-    setBusyId(c.id);
-    try {
-      await presencialApi.signup(c.id);
-      toast.success('¡Anotada! Te confirmamos por email y en la app.');
-      setSignupFor(null);
-      onChanged();
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setBusyId(null);
-    }
-  }
 
   async function cancel(c: PresencialClassForStudent) {
     if (!c.mySignup) return;
@@ -104,6 +92,9 @@ export function DayClassesModal({
           {classes.map((c) => {
             const mine = isMine(c);
             const confirmedMine = mine && c.mySignup!.status === 'CONFIRMED';
+            const paidDeposit = c.mySignup?.depositStatus === 'PAID';
+            // Empezó a pagar y no terminó: se le ofrece retomar.
+            const pendingDeposit = c.mySignup?.depositStatus === 'PENDING';
             // Escala de marca (rosa claro → rosa → bordó) para el estado de la
             // fecha; las clases en las que estoy anotada se distinguen por el
             // chip relleno, no por otro matiz.
@@ -143,26 +134,49 @@ export function DayClassesModal({
 
                   <div className='mt-4'>
                     {mine ? (
-                      new Date(c.startAt).getTime() > Date.now() && (
-                        <button
-                          type='button'
-                          disabled={busyId === c.id}
-                          onClick={() => setCancelFor(c)}
-                          className='inline-flex items-center gap-1.5 text-xs font-medium text-[#2B2B2B]/60 hover:text-[#8b1538]'
-                        >
-                          <Ban className='w-3.5 h-3.5' /> Cancelar mi inscripción
-                        </button>
-                      )
+                      <>
+                        {paidDeposit && (
+                          <p className='mb-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#8b1538]'>
+                            <Wallet className='w-3.5 h-3.5' /> Seña pagada
+                            {c.mySignup?.depositAmountARS
+                              ? ` · ${formatDepositAmount(c.mySignup.depositAmountARS)}`
+                              : ''}
+                          </p>
+                        )}
+                        {pendingDeposit && (
+                          <button
+                            type='button'
+                            onClick={() => setDepositFor(c)}
+                            className='mb-2 w-full py-2.5 rounded-xl bg-[#8b1538] hover:bg-[#660e1b] text-white text-sm font-bold transition-colors'
+                          >
+                            Retomar el pago de la seña
+                          </button>
+                        )}
+                        {new Date(c.startAt).getTime() > Date.now() && (
+                          <button
+                            type='button'
+                            disabled={busyId === c.id}
+                            onClick={() => setCancelFor(c)}
+                            className='inline-flex items-center gap-1.5 text-xs font-medium text-[#2B2B2B]/60 hover:text-[#8b1538]'
+                          >
+                            <Ban className='w-3.5 h-3.5' /> Cancelar mi inscripción
+                          </button>
+                        )}
+                      </>
+                    ) : !c.price ? (
+                      <p className='text-[11px] text-center text-[#2B2B2B]/50 leading-relaxed'>
+                        Las reservas para esta fecha todavía no están abiertas.
+                      </p>
                     ) : (
                       <>
                         <button
                           type='button'
                           disabled={disabled || busyId === c.id}
-                          onClick={() => setSignupFor(c)}
+                          onClick={() => setDepositFor(c)}
                           className='w-full py-2.5 rounded-xl bg-[#8b1538] hover:bg-[#660e1b] text-white text-sm font-bold shadow-md shadow-[#8b1538]/25 disabled:bg-[#2B2B2B]/15 disabled:text-[#2B2B2B]/40 disabled:shadow-none transition-all active:scale-[0.99] flex items-center justify-center gap-2'
                         >
                           {busyId === c.id ? <Loader2 className='w-4 h-4 animate-spin' /> : null}
-                          Anotarme a esta fecha
+                          Reservar mi lugar
                         </button>
                         {disabled && (
                           <p className='mt-1.5 text-[11px] text-center text-[#2B2B2B]/50'>
@@ -182,13 +196,12 @@ export function DayClassesModal({
         </div>
       </div>
 
-      {signupFor && (
-        <ConfirmDialog
-          title='¿Anotarte a esta clase presencial?'
-          description={`${signupFor.title} · ${day.toFormat("cccc d 'de' LLLL")} · ${hourLabel(signupFor.startHour)} a ${hourLabel(signupFor.endHour)} hs. Te confirmamos por email y en la app.`}
-          confirmLabel='Sí, anotarme'
-          onConfirm={() => signup(signupFor)}
-          onClose={() => setSignupFor(null)}
+      {depositFor && (
+        <DepositModal
+          klass={depositFor}
+          dayLabel={day.toFormat("cccc d 'de' LLLL")}
+          onClose={() => setDepositFor(null)}
+          onStarted={onChanged}
         />
       )}
       {cancelFor && (
