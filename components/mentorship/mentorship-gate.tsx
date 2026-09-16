@@ -10,7 +10,6 @@ import {
   type MentorshipEligibility,
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
-import { MentorshipPurchaseModal } from './mentorship-purchase-modal';
 
 interface Props {
   categoryId: string;
@@ -29,7 +28,6 @@ export function MentorshipGate({
   const [elig, setElig] = useState<MentorshipEligibility | null>(null);
   const [loading, setLoading] = useState(true);
   const [picker, setPicker] = useState(false);
-  const [purchase, setPurchase] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -114,36 +112,19 @@ export function MentorshipGate({
     );
   }
 
-  // Ya usó su mentoría gratuita (una por cuenta) → puede comprar otra.
+  // Ya usó su mentoría gratuita (una por cuenta).
   if (elig.blockedByOtherCourse || elig.needsPurchase) {
     return (
-      <>
-        <div className='mt-3 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
-          <div className='flex items-start gap-2.5'>
-            <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
-            <div className='text-xs leading-relaxed'>
-              <span className='font-semibold'>Mentoría de cortesía ya utilizada</span>
-              <p className='text-[11px] text-white/60 mt-0.5'>
-                La mentoría gratuita es una por cuenta. Podés comprar una mentoría
-                adicional para reservar otra.
-              </p>
-            </div>
-          </div>
-          <button
-            type='button'
-            onClick={() => setPurchase(true)}
-            className='mt-3 w-full rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20'
-          >
-            Comprar mentoría
-          </button>
+      <div className='mt-3 flex items-start gap-2.5 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
+        <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
+        <div className='text-xs leading-relaxed'>
+          <span className='font-semibold'>Mentoría no disponible</span>
+          <p className='text-[11px] text-white/60 mt-0.5'>
+            La mentoría gratuita es una sola por cuenta y ya la usaste en otra
+            formación.
+          </p>
         </div>
-        {purchase && (
-          <MentorshipPurchaseModal
-            categoryId={categoryId}
-            onClose={() => setPurchase(false)}
-          />
-        )}
-      </>
+      </div>
     );
   }
 
