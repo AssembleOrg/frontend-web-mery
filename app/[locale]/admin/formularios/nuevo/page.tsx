@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
+import { BackButton } from '@/components/ui/back-button';
 import { toast } from 'react-hot-toast';
 import { FormBuilder, slugify, type FormBuilderValue } from '@/components/admin/form-builder';
 import { createForm, FormsApiError } from '@/lib/forms-api';
@@ -80,13 +81,7 @@ export default function NuevoFormularioPage() {
       {/* Header */}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
         <div className='flex items-center gap-3'>
-          <button
-            onClick={() => router.push(`/${locale}/admin/formularios`)}
-            className='p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors'
-            title='Volver'
-          >
-            <ArrowLeft className='w-5 h-5' />
-          </button>
+          <BackButton onClick={() => router.push(`/${locale}/admin/formularios`)} />
           <div>
             <h1 className='text-2xl font-bold text-gray-900'>Nuevo formulario</h1>
             <p className='text-sm text-gray-500'>Diseñá los campos y publicalo cuando esté listo.</p>

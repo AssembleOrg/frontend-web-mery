@@ -210,6 +210,20 @@
   }
 }
 
+/* Modal / bottom-sheet entrance + exit (premium, iOS-friendly) */
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlay-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes sheet-out { from { transform: translateY(0); } to { transform: translateY(100%); } }
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(10px) scale(0.98); }
+}
+
 /* Sparkle Animation for Gift Cards */
 @keyframes twinkle {
   0%,
@@ -429,6 +443,26 @@
   /* Sparkle Animation */
   .animate-twinkle {
     animation: twinkle 2s ease-in-out infinite;
+  }
+
+  /* Modal / bottom-sheet transitions.
+     .is-closing flips a mounted overlay to its exit animation before unmount. */
+  .animate-overlay-in { animation: overlay-in 0.22s ease-out; }
+  .animate-overlay-in.is-closing { animation: overlay-out 0.2s ease-in forwards; }
+  .animate-sheet-in { animation: sheet-in 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+  .animate-sheet-in.is-closing { animation: sheet-out 0.24s ease-in forwards; }
+  .animate-pop-in { animation: pop-in 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+  .animate-pop-in.is-closing { animation: pop-out 0.2s ease-in forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-overlay-in,
+    .animate-overlay-in.is-closing,
+    .animate-sheet-in,
+    .animate-sheet-in.is-closing,
+    .animate-pop-in,
+    .animate-pop-in.is-closing {
+      animation: none;
+    }
   }
 
   /* Star Shape using clip-path */

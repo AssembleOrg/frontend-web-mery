@@ -217,9 +217,9 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className='absolute right-0 mt-2 w-[min(92vw,360px)] rounded-2xl border border-border bg-white dark:bg-card shadow-2xl z-[60] overflow-hidden'>
-          <div className='flex items-center justify-between px-4 py-3 border-b border-border'>
-            <p className='text-sm font-semibold'>Notificaciones</p>
+        <div className='fixed inset-x-3 top-[calc(env(safe-area-inset-top)+4rem)] mx-auto max-w-[380px] sm:absolute sm:inset-x-auto sm:top-auto sm:right-0 sm:mt-2 sm:mx-0 sm:w-[360px] rounded-2xl border border-border bg-white dark:bg-card shadow-2xl z-[60] overflow-hidden animate-pop-in'>
+          <div className='flex items-center justify-between px-4 py-3.5 border-b border-border'>
+            <p className='text-sm font-primary-medium'>Notificaciones</p>
             {unread > 0 && (
               <button
                 type='button'
@@ -231,7 +231,7 @@ export function NotificationBell() {
             )}
           </div>
 
-          <div className='max-h-[55vh] overflow-y-auto'>
+          <div className='max-h-[60dvh] overflow-y-auto overscroll-contain'>
             {loading && items.length === 0 ? (
               <div className='py-8 flex justify-center'>
                 <Loader2 className='w-5 h-5 animate-spin text-muted-foreground' />
@@ -255,7 +255,7 @@ export function NotificationBell() {
                       <span className='mt-1.5 w-2 h-2 rounded-full bg-[#8b1538] shrink-0' />
                     )}
                     <div className='min-w-0 flex-1'>
-                      <p className={`text-sm leading-snug ${n.readAt ? 'text-foreground/80' : 'font-semibold'}`}>
+                      <p className={`text-sm leading-snug ${n.readAt ? 'text-foreground/80' : 'font-primary-medium'}`}>
                         {n.title}
                       </p>
                       {n.body && (
@@ -270,7 +270,7 @@ export function NotificationBell() {
           </div>
 
           {/* Push + instalar */}
-          <div className='border-t border-border px-4 py-3 space-y-2 bg-muted/30'>
+          <div className='border-t border-border px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:pb-3 space-y-2 bg-muted/30'>
             {pushOn === null ? null : pushOn ? (
               <button
                 type='button'

@@ -31,19 +31,29 @@ export function DayClassesModal({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [signupFor, setSignupFor] = useState<PresencialClassForStudent | null>(null);
   const [cancelFor, setCancelFor] = useState<PresencialClassForStudent | null>(null);
+  const [closing, setClosing] = useState(false);
+
+  // Cierre con animación de salida: marca closing, espera la anim y recién desmonta.
+  // Fallback por si prefers-reduced-motion desactiva la animación (no dispara onAnimationEnd).
+  const requestClose = () => {
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(onClose, 260);
+  };
 
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') requestClose();
     };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
-  }, [onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const day = DateTime.fromISO(dateKey, { zone: TZ }).setLocale('es');
 
@@ -81,26 +91,34 @@ export function DayClassesModal({
 
   return (
     <div className='fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-0 sm:p-4'>
-      <button type='button' aria-label='Cerrar' onClick={onClose} className='absolute inset-0 bg-[#2B2B2B]/50 backdrop-blur-sm' />
-      <div className='relative w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden'>
-        {/* Header con fecha grande */}
-        <div className='bg-gradient-to-br from-[#660e1b] to-[#EBA2A8] text-white px-6 pt-6 pb-5 shrink-0'>
+      <button
+        type='button'
+        aria-label='Cerrar'
+        onClick={requestClose}
+        className={`absolute inset-0 bg-[#1c1c1e]/60 backdrop-blur-sm animate-overlay-in ${closing ? 'is-closing' : ''}`}
+      />
+      <div
+        onAnimationEnd={() => closing && onClose()}
+        className={`relative w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[92dvh] overflow-hidden animate-sheet-in sm:animate-pop-in ${closing ? 'is-closing' : ''}`}
+      >
+        {/* Header dark premium con fecha grande */}
+        <div className='bg-[#1c1c1e] text-white px-6 pt-7 pb-6 shrink-0'>
           <button
             type='button'
-            onClick={onClose}
+            onClick={requestClose}
             aria-label='Cerrar'
-            className='absolute top-4 right-4 p-2 rounded-full bg-white/15 hover:bg-white/30 transition-colors'
+            className='absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors active:scale-95'
           >
             <X className='w-5 h-5' />
           </button>
-          <p className='text-[11px] uppercase tracking-[0.25em] text-white/75 capitalize'>
+          <p className='text-[11px] uppercase tracking-[0.28em] text-white/55 capitalize'>
             {day.toFormat('cccc')}
           </p>
-          <p className='text-5xl font-bold leading-none mt-1'>{day.day}</p>
-          <p className='text-sm text-white/85 capitalize mt-1'>{day.toFormat('LLLL yyyy')}</p>
+          <p className='text-6xl font-primary-medium leading-none mt-1.5'>{day.day}</p>
+          <p className='text-sm text-white/50 capitalize mt-1.5'>{day.toFormat('LLLL yyyy')}</p>
         </div>
 
-        <div className='flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 bg-[#FBE8EA]/40'>
+        <div className='flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 bg-[#FAFAFA] pb-[calc(1rem+env(safe-area-inset-bottom))]'>
           {classes.map((c) => {
             const mine = isMine(c);
             const confirmedMine = mine && c.mySignup!.status === 'CONFIRMED';
@@ -110,17 +128,17 @@ export function DayClassesModal({
                 : { band: 'bg-[#8b1538]', chip: 'bg-[#FBE8EA] text-[#8b1538]', label: 'Anotada · pendiente de confirmación', Icon: Hourglass }
               : c.status === 'CONFIRMED'
                 ? { band: 'bg-[#22C55E]', chip: 'bg-[#DCFCE7] text-[#166534]', label: 'Fecha confirmada', Icon: CheckCircle2 }
-                : { band: 'bg-[#F59E0B]', chip: 'bg-[#FEF3C7] text-[#92400E]', label: 'Fecha tentativa', Icon: Sparkles };
+                : { band: 'bg-[#F59E0B]', chip: 'bg-[#FEF3C7] text-[#78350F]', label: 'Fecha tentativa', Icon: Sparkles };
             const Icon = tone.Icon;
             const disabled = !mine && hasActiveSignup;
             return (
-              <div key={c.id} className='rounded-2xl bg-white shadow-sm ring-1 ring-[#F9BBC4]/40 overflow-hidden'>
+              <div key={c.id} className='rounded-2xl bg-white shadow-md shadow-black/[0.04] ring-1 ring-black/[0.06] overflow-hidden'>
                 <div className={`h-1.5 ${tone.band}`} />
                 <div className='p-4'>
-                  <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${tone.chip}`}>
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${tone.chip}`}>
                     <Icon className='w-3.5 h-3.5' /> {tone.label}
                   </span>
-                  <h3 className='mt-2.5 text-base font-bold text-[#2B2B2B] leading-snug'>{c.title}</h3>
+                  <h3 className='mt-3 text-base font-primary-medium text-[#2B2B2B] leading-snug'>{c.title}</h3>
                   <p className='mt-1 inline-flex items-center gap-1.5 text-sm text-[#2B2B2B]/70'>
                     <Clock className='w-4 h-4 text-[#8b1538]' />
                     {hourLabel(c.startHour)} a {hourLabel(c.endHour)} hs

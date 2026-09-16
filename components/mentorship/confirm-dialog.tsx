@@ -26,13 +26,21 @@ export function ConfirmDialog({
   onClose: () => void;
 }>) {
   const [busy, setBusy] = useState(false);
+  const [closing, setClosing] = useState(false);
+
+  // Cierre con animación de salida (con fallback para prefers-reduced-motion).
+  const requestClose = () => {
+    if (busy || closing) return;
+    setClosing(true);
+    window.setTimeout(onClose, 240);
+  };
 
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.body.classList.add('hide-rag-widget');
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !busy) onClose();
+      if (e.key === 'Escape') requestClose();
     };
     window.addEventListener('keydown', onKey);
     return () => {
@@ -40,7 +48,8 @@ export function ConfirmDialog({
       document.body.classList.remove('hide-rag-widget');
       window.removeEventListener('keydown', onKey);
     };
-  }, [onClose, busy]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleConfirm() {
     setBusy(true);
@@ -56,10 +65,13 @@ export function ConfirmDialog({
       <button
         type='button'
         aria-label='Cerrar'
-        onClick={() => !busy && onClose()}
-        className='absolute inset-0 bg-black/50'
+        onClick={requestClose}
+        className={`absolute inset-0 bg-black/50 animate-overlay-in ${closing ? 'is-closing' : ''}`}
       />
-      <div className='relative w-full sm:max-w-sm bg-[#1c1c1e] text-white rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:pb-5'>
+      <div
+        onAnimationEnd={() => closing && onClose()}
+        className={`relative w-full sm:max-w-sm bg-[#1c1c1e] text-white rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:pb-5 animate-sheet-in sm:animate-pop-in ${closing ? 'is-closing' : ''}`}
+      >
         <div className='flex items-start gap-3'>
           <span
             className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center ${
@@ -81,9 +93,9 @@ export function ConfirmDialog({
         <div className='mt-5 flex gap-2'>
           <button
             type='button'
-            onClick={() => !busy && onClose()}
+            onClick={requestClose}
             disabled={busy}
-            className='flex-1 py-2.5 rounded-lg border border-white/15 text-sm font-medium text-white/80 hover:text-white hover:border-white/30 disabled:opacity-50 transition-colors'
+            className='flex-1 py-2.5 rounded-lg border border-white/15 text-sm font-medium text-white/80 hover:text-white hover:border-white/30 disabled:opacity-50 transition-colors active:scale-[0.98]'
           >
             {cancelLabel}
           </button>

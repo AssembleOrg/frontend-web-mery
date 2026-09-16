@@ -5,7 +5,7 @@ import { useAdminStore } from '@/stores';
 import CourseForm from '@/components/admin/course-form';
 import { useRouter, useParams } from 'next/navigation';
 import { CourseCreateInput } from '@/types/course';
-import { ArrowLeft } from 'lucide-react';
+import { BackButton } from '@/components/ui/back-button';
 import { useModal } from '@/contexts/modal-context';
 import { toast } from 'react-hot-toast';
 
@@ -78,13 +78,7 @@ export default function NuevoCursoPage() {
   return (
     <div className='space-y-6'>
       {/* Back Button */}
-      <button
-        onClick={handleCancel}
-        className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
-      >
-        <ArrowLeft className='w-3.5 h-3.5' />
-        Volver a lista de cursos
-      </button>
+      <BackButton onClick={handleCancel} label='Volver a lista de cursos' />
 
       {/* Page Header */}
       <div>

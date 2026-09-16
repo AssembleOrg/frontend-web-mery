@@ -5,7 +5,6 @@ import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import {
-  ArrowLeft,
   PlusCircle,
   Edit,
   Trash2,
@@ -18,6 +17,7 @@ import {
 import { toast } from 'react-hot-toast';
 import type { CreateVideoInput } from '@/lib/api-client';
 import { VideoManagementSkeleton } from '@/components/admin/video-management-skeleton';
+import { BackButton } from '@/components/ui/back-button';
 import { useModal } from '@/contexts/modal-context';
 
 export default function CursoVideosPage() {
@@ -315,13 +315,7 @@ export default function CursoVideosPage() {
   if (!course) {
     return (
       <div className='space-y-6'>
-        <button
-          onClick={handleBack}
-          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
-        >
-          <ArrowLeft className='w-3.5 h-3.5' />
-          Volver a cursos
-        </button>
+        <BackButton onClick={handleBack} label='Volver a cursos' />
         <div className='bg-white rounded-lg shadow-lg p-12 text-center'>
           <p className='text-gray-600'>Curso no encontrado</p>
         </div>
@@ -333,13 +327,7 @@ export default function CursoVideosPage() {
     <div className='space-y-6 font-admin'>
       {/* Header */}
       <div className='space-y-3'>
-        <button
-          onClick={handleBack}
-          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
-        >
-          <ArrowLeft className='w-3.5 h-3.5' />
-          Volver a cursos
-        </button>
+        <BackButton onClick={handleBack} label='Volver a cursos' />
         <div className='flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3'>
           <div>
             <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>

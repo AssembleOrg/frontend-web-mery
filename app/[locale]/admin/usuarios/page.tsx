@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { FaSearch, FaGift, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { BackButton } from '@/components/ui/back-button';
 import { toast } from 'react-hot-toast';
 import {
   mentorshipApi,
@@ -445,13 +446,7 @@ export default function AdminUsuariosPage() {
     <div className='space-y-6 font-admin'>
       {/* Header */}
       <div className='space-y-3'>
-        <button
-          onClick={() => router.push(`/${locale}/admin`)}
-          className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 px-3 py-1.5 rounded-lg transition-all'
-        >
-          <ArrowLeft className='w-3.5 h-3.5' />
-          Volver al Dashboard
-        </button>
+        <BackButton onClick={() => router.push(`/${locale}/admin`)} label='Volver al Dashboard' />
         <div>
           <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>
             Gestión de Usuarios
