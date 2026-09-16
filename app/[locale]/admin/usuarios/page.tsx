@@ -10,6 +10,7 @@ import {
   type MentorshipProduct,
   type MentorshipCredit,
 } from '@/lib/mentorship-api';
+import { AdminUserNotes } from '@/components/notes/admin-user-notes';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -818,6 +819,9 @@ export default function AdminUsuariosPage() {
                   )}
                 </div>
               </div>
+
+              {/* Apuntes con marca de tiempo que dejó mientras veía los videos */}
+              <AdminUserNotes userId={selectedUser.id} />
             </>
           ) : (
             <div className='flex flex-col items-center justify-center h-full text-gray-500 py-20'>

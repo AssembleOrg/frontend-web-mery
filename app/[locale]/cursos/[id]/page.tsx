@@ -19,7 +19,8 @@ import { GraduationCap } from 'lucide-react';
 import { useCourseStore } from '@/stores';
 import { useAuth } from '@/hooks/useAuth';
 import { getUserCourses as getUserCoursesService } from '@/services/user-courses.service';
-import VimeoPlayer from '@/components/vimeo-player';
+import VimeoPlayer, { type VimeoPlayerHandle } from '@/components/vimeo-player';
+import { VideoNotesPanel } from '@/components/notes/video-notes-panel';
 import LessonContent from '@/components/lesson-content';
 import CourseSidebar from '@/components/course-sidebar';
 import { CursoPlayerSkeleton } from '@/components/cursos/CursoPlayerSkeleton';
@@ -49,6 +50,11 @@ export default function CursoDetallePage() {
   // al elegir una hay que subir la vista: si no, el video cambia fuera de
   // pantalla y parece que no pasó nada.
   const playerRef = useRef<HTMLDivElement | null>(null);
+  // Control del reproductor para los apuntes (segundo actual / saltar).
+  const vimeoRef = useRef<VimeoPlayerHandle | null>(null);
+  // Segundo al que arrancar el próximo video (apunte de otro video).
+  const [startAt, setStartAt] = useState<number | null>(null);
+  const pendingStartRef = useRef<number | null>(null);
 
   // Race condition prevention: AbortController para cancelar requests
   const loadCourseAbortController = useRef<AbortController | null>(null);
@@ -76,6 +82,8 @@ export default function CursoDetallePage() {
 
       setSelectedLesson(lesson);
       setCurrentLesson(lesson);
+      setStartAt(pendingStartRef.current);
+      pendingStartRef.current = null;
 
       // Solo cuando el layout está apilado (abajo de xl); en desktop el
       // reproductor ya está a la vista, al lado de la lista.
@@ -411,9 +419,11 @@ export default function CursoDetallePage() {
                             ) : streamUrl ? (
                               // Importante: Pasamos streamUrl como una nueva prop a VimeoPlayer
                               <VimeoPlayer
+                                ref={vimeoRef}
                                 vimeoSrcUrl={streamUrl}
                                 courseId={courseId}
                                 lessonId={selectedLesson.id}
+                                startAt={startAt}
                                 className='w-full shadow-2xl aspect-video'
                               />
                             ) : (
@@ -430,6 +440,23 @@ export default function CursoDetallePage() {
                         </div>
 
                         {/* Información de la lección - Eliminado el bloque de duración */}
+
+                        {/* Apuntes con marca de tiempo */}
+                        <div className='max-w-4xl mx-auto'>
+                          <VideoNotesPanel
+                            courseId={courseId}
+                            videoId={selectedLesson.id}
+                            videoTitle={selectedLesson.title}
+                            getCurrentTime={() => vimeoRef.current?.getCurrentTime() ?? 0}
+                            onSeek={(s) => void vimeoRef.current?.seekTo(s, true)}
+                            onOpenVideo={(videoId, seconds) => {
+                              const target = course?.lessons?.find((l) => l.id === videoId);
+                              if (!target) return;
+                              pendingStartRef.current = seconds;
+                              void handleLessonSelect(target);
+                            }}
+                          />
+                        </div>
 
                         {/* Contenido adicional de la lección */}
                         <div className='max-w-4xl mx-auto'>

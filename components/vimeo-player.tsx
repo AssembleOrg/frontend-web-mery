@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import Player from '@vimeo/player';
 import { useCourseStore } from '@/stores';
 import { getVideoProgress, updateVideoProgress } from '@/lib/api-client';
@@ -11,6 +17,16 @@ interface VimeoPlayerProps {
   lessonId: string;
   className?: string;
   autoPlay?: boolean;
+  /** Segundo desde el que arrancar al cargar (tiene prioridad sobre el progreso guardado). */
+  startAt?: number | null;
+  /** Se llama con el segundo actual mientras reproduce (throttle del propio player). */
+  onTimeUpdate?: (seconds: number) => void;
+}
+
+/** Control mínimo del player desde afuera (apuntes con marca de tiempo). */
+export interface VimeoPlayerHandle {
+  getCurrentTime: () => number;
+  seekTo: (seconds: number, play?: boolean) => Promise<void>;
 }
 
 const PROGRESS_SYNC_INTERVAL_MS = 10_000;
@@ -32,15 +48,25 @@ function buildEmbedUrl(vimeoSrcUrl: string, autoPlay: boolean): string {
   return url.toString();
 }
 
-export default function VimeoPlayer({
-  vimeoSrcUrl,
-  courseId,
-  lessonId,
-  className = '',
-  autoPlay = false,
-}: Readonly<VimeoPlayerProps>) {
+const VimeoPlayer = forwardRef<VimeoPlayerHandle, VimeoPlayerProps>(function VimeoPlayer(
+  {
+    vimeoSrcUrl,
+    courseId,
+    lessonId,
+    className = '',
+    autoPlay = false,
+    startAt = null,
+    onTimeUpdate: onTimeUpdateProp,
+  },
+  ref,
+) {
   const containerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player | null>(null);
+  const startAtRef = useRef<number | null>(startAt);
+  const onTimeUpdateRef = useRef(onTimeUpdateProp);
+  startAtRef.current = startAt;
+  onTimeUpdateRef.current = onTimeUpdateProp;
+
   const [isCompleted, setIsCompleted] = useState(false);
   const [playerError, setPlayerError] = useState<string | null>(null);
 
@@ -52,6 +78,21 @@ export default function VimeoPlayer({
   const completedSentRef = useRef(false);
   // Los handlers del player se registran una sola vez: leen la lección actual de acá.
   const lessonRef = useRef({ courseId, lessonId, isCompleted: completed });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getCurrentTime: () => latestSecondsRef.current,
+      seekTo: async (seconds: number, play = true) => {
+        const player = playerRef.current;
+        if (!player) return;
+        await player.setCurrentTime(Math.max(0, seconds));
+        latestSecondsRef.current = Math.max(0, seconds);
+        if (play) await player.play().catch(() => {});
+      },
+    }),
+    [],
+  );
 
   useEffect(() => {
     setIsCompleted(completed);
@@ -95,6 +136,7 @@ export default function VimeoPlayer({
 
     const onTimeUpdate = (data: { seconds: number; duration: number }) => {
       latestSecondsRef.current = data.seconds;
+      onTimeUpdateRef.current?.(data.seconds);
       const progress = data.duration
         ? (data.seconds / data.duration) * 100
         : 0;
@@ -124,6 +166,18 @@ export default function VimeoPlayer({
     };
 
     const resumeFromSavedProgress = async (player: Player) => {
+      // Un apunte pide arrancar en un segundo puntual: gana sobre el progreso.
+      const requested = startAtRef.current;
+      if (requested !== null && requested !== undefined && requested > 0) {
+        try {
+          await player.setCurrentTime(requested);
+          latestSecondsRef.current = requested;
+          await player.play().catch(() => {});
+        } catch {
+          /* si falla el seek, arranca desde cero */
+        }
+        return;
+      }
       try {
         const res = await getVideoProgress(lessonRef.current.lessonId);
         const saved = res.data;
@@ -261,4 +315,6 @@ export default function VimeoPlayer({
       )}
     </div>
   );
-}
+});
+
+export default VimeoPlayer;
