@@ -301,10 +301,12 @@ const VimeoPlayer = forwardRef<VimeoPlayerHandle, VimeoPlayerProps>(function Vim
 
   return (
     <div className={`relative ${className}`}>
+      {/* Sin padding propio: el embed responsive de Vimeo ya trae su wrapper
+          con padding-top 56.25%; sumarle otro duplicaba la altura y dejaba
+          un hueco negro debajo del video. */}
       <div
         ref={containerRef}
         className='relative w-full rounded-lg overflow-hidden'
-        style={{ paddingBottom: '56.25%' }}
       />
       {isCompleted && (
         <div className='mt-3 p-2 bg-green-50 border border-green-200 rounded-lg'>
