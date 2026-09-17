@@ -38,8 +38,6 @@ export async function POST(req: NextRequest) {
     const {
       items,
       locale,
-      userEmail,
-      userId,
       couponCode,
       installments: requestedInstallments,
     } = await req.json();
@@ -52,29 +50,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: 'Email de usuario requerido.' },
-        { status: 400 }
-      );
-    }
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'ID de usuario requerido.' },
-        { status: 400 }
-      );
-    }
 
     // BLINDAJE DE PRECIO: no se confía en el precio que manda el cliente. El
     // backend es la autoridad: calcula los line-items desde la DB, valida el
     // cupón (vigencia, categorías, propiedad del cupón personal) y resuelve las
     // cuotas. Acá solo se arma la preference de MP con esos precios.
-    const categoryIds = items.map((item: any) => String(item.id));
+    const requestedCategoryIds = items.map((item: any) => String(item.id));
     const authToken = req.cookies.get('auth_token')?.value;
     const apiBase = process.env.NEXT_PUBLIC_API_URL?.startsWith('http')
       ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')
       : `${(process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '')}/api`;
+
+    if (!authToken) {
+      return NextResponse.json({ error: 'Iniciá sesión para comprar.' }, { status: 401 });
+    }
+
+    // La compradora sale de la sesión, nunca del body: si no, se podía pagar
+    // y hacer que el acceso se otorgue a otra cuenta.
+    const meRes = await fetch(`${apiBase}/auth/me`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+    if (!meRes.ok) {
+      return NextResponse.json({ error: 'Tu sesión expiró. Volvé a iniciar sesión.' }, { status: 401 });
+    }
+    const meJson = await meRes.json().catch(() => ({}));
+    const me = meJson?.data?.user ?? meJson?.data ?? meJson?.user;
+    const userId: string | undefined = me?.id;
+    const userEmail: string | undefined = me?.email;
+    if (!userId || !userEmail) {
+      return NextResponse.json({ error: 'No pudimos identificar tu cuenta.' }, { status: 401 });
+    }
 
     const quoteRes = await fetch(`${apiBase}/checkout/quote`, {
       method: 'POST',
@@ -83,7 +88,7 @@ export async function POST(req: NextRequest) {
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       },
       body: JSON.stringify({
-        categoryIds,
+        categoryIds: requestedCategoryIds,
         couponCode: couponCode || undefined,
         installments: requestedInstallments,
       }),
@@ -133,7 +138,11 @@ export async function POST(req: NextRequest) {
         metadata: {
           user_id: userId,
           user_email: userEmail,
-          category_ids: JSON.stringify(categoryIds),
+          // Solo lo que el backend cotizó (y por lo tanto se cobra). Los ids
+          // que el quote descarta (inactivos, solo USD) no deben otorgarse.
+          category_ids: JSON.stringify(
+            quote.items.map((item: any) => String(item.categoryId))
+          ),
           coupon_id: couponId || '',
         },
         external_reference: `${userId}_${Date.now()}`,
