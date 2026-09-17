@@ -728,10 +728,13 @@ export default function MiCuentaPage() {
 
                   <Link
                     href='/es/presencialidad'
-                    className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left bg-[#8b1538] text-white hover:bg-[#660e1b] transition-colors duration-200'
+                    className='w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-foreground hover:bg-muted transition-colors duration-200'
                   >
                     <MapPin className='w-5 h-5' />
                     Presencialidad
+                    <span className='ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-[#2B2B2B] text-[#F9BBC4]'>
+                      ¡Nuevo!
+                    </span>
                   </Link>
 
                   {isAdmin && (

@@ -2,24 +2,40 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Link } from '@/i18n/routing';
+import type { ComponentProps } from 'react';
 import {
   User as UserIcon,
   Settings,
   LogOut,
   ChevronDown,
-  Users,
-  Gift,
-  ClipboardList,
   MapPin,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams, useRouter } from 'next/navigation';
 
 interface UserMenuProps {
   onNavigate?: () => void;
+  /** Render the items as a flat list (used inside the mobile panel, no floating dropdown). */
+  inline?: boolean;
 }
 
-export function UserMenu({ onNavigate }: UserMenuProps = {}) {
+interface MenuItem {
+  href: ComponentProps<typeof Link>['href'];
+  label: string;
+  icon: LucideIcon;
+  /** Highlight with brand color (new/featured items). */
+  highlight?: boolean;
+  adminOnly?: boolean;
+}
+
+const MENU_ITEMS: MenuItem[] = [
+  { href: '/admin', label: 'Panel Admin', icon: Settings, adminOnly: true },
+  { href: '/mi-cuenta', label: 'Mi Cuenta', icon: UserIcon },
+  { href: '/presencialidad', label: 'Presencialidad', icon: MapPin, highlight: true },
+];
+
+export function UserMenu({ onNavigate, inline = false }: UserMenuProps = {}) {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -62,11 +78,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
   const handleLogout = async () => {
     try {
       await logout();
-      setIsOpen(false);
-      onNavigate?.();
-      window.location.href = `/${locale}`;
-    } catch (_error) {
-      // Forzar limpieza local y redirección incluso si hay error
+    } finally {
       setIsOpen(false);
       onNavigate?.();
       window.location.href = `/${locale}`;
@@ -85,6 +97,73 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
       setIsOpen(!isOpen);
     }
   };
+
+  const items = MENU_ITEMS.filter((item) => !item.adminOnly || isAdmin);
+
+  const roleBadge = (
+    <span
+      className={`text-xs px-2 py-0.5 rounded-full ${
+        isAdmin
+          ? 'bg-[#EBA2A8]/20 text-[#660e1b] dark:bg-[#EBA2A8]/30 dark:text-[#EBA2A8]'
+          : 'bg-[#FBE8EA] text-[#660e1b] dark:bg-[#F7CBCB]/30 dark:text-[#F7CBCB]'
+      }`}
+    >
+      {isAdmin ? 'Administrador' : 'Estudiante'}
+    </span>
+  );
+
+  const menuItems = (
+    <>
+      <div className='py-1'>
+        {items.map(({ href, label, icon: Icon, highlight }) => (
+          <Link
+            key={label}
+            href={href}
+            onClick={handleMenuItemClick}
+            className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
+          >
+            <Icon className='w-5 h-5 shrink-0' />
+            <span className='font-medium'>{label}</span>
+            {highlight && (
+              <span className='ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-[#2B2B2B] text-[#F9BBC4]'>
+                ¡Nuevo!
+              </span>
+            )}
+          </Link>
+        ))}
+      </div>
+
+      <div className='my-1 border-t border-border' />
+
+      <button
+        onClick={handleLogout}
+        className='w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-muted transition-colors active:bg-muted/80'
+      >
+        <LogOut className='w-5 h-5 shrink-0' />
+        <span className='font-medium'>Cerrar Sesión</span>
+      </button>
+    </>
+  );
+
+  // Inline mode: flat list rendered directly in the mobile panel (no floating dropdown).
+  if (inline) {
+    return (
+      <div className='w-full rounded-lg border border-border overflow-hidden'>
+        <div className='flex items-center gap-3 px-4 py-3 border-b border-border'>
+          <div className='w-9 h-9 rounded-full bg-[#f9bbc4] text-white flex items-center justify-center text-sm font-semibold shrink-0'>
+            {initials}
+          </div>
+          <div className='min-w-0'>
+            <p className='text-sm font-medium text-foreground truncate'>
+              {displayName}
+            </p>
+            <div className='mt-0.5'>{roleBadge}</div>
+          </div>
+        </div>
+        {menuItems}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -114,15 +193,7 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
           <span className='text-sm font-medium text-foreground'>
             {displayName}
           </span>
-          <span
-            className={`text-xs px-2 py-0.5 rounded-full ${
-              isAdmin
-                ? 'bg-[#EBA2A8]/20 text-[#660e1b] dark:bg-[#EBA2A8]/30 dark:text-[#EBA2A8]'
-                : 'bg-[#FBE8EA] text-[#660e1b] dark:bg-[#F7CBCB]/30 dark:text-[#F7CBCB]'
-            }`}
-          >
-            {isAdmin ? 'Administrador' : 'Estudiante'}
-          </span>
+          {roleBadge}
         </div>
 
         <ChevronDown
@@ -134,94 +205,8 @@ export function UserMenu({ onNavigate }: UserMenuProps = {}) {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className='absolute right-0 mt-2 w-full sm:w-72 bg-card border border-border rounded-lg shadow-lg py-2 z-50'>
-          {/* User Info (visible on mobile) */}
-          <div className='md:hidden px-4 py-3 border-b border-border'>
-            <p className='text-sm font-medium text-foreground'>{displayName}</p>
-            <p className='text-xs text-muted-foreground mt-1'>{user.email}</p>
-            <span
-              className={`inline-block mt-2 text-xs px-2 py-1 rounded-full ${
-                isAdmin
-                  ? 'bg-[#EBA2A8]/20 text-[#660e1b] dark:bg-[#EBA2A8]/30 dark:text-[#EBA2A8]'
-                  : 'bg-[#FBE8EA] text-[#660e1b] dark:bg-[#F7CBCB]/30 dark:text-[#F7CBCB]'
-              }`}
-            >
-              {isAdmin ? 'Administrador' : 'Estudiante'}
-            </span>
-          </div>
-
-          {/* Menu Items */}
-          <div className='py-1'>
-            {/* Admin: Panel Admin */}
-            {isAdmin && (
-              <>
-                <Link
-                  href='/admin'
-                  onClick={handleMenuItemClick}
-                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-                >
-                  <Settings className='w-5 h-5' />
-                  <span className='font-medium'>Panel Admin</span>
-                </Link>
-
-                <Link
-                  href='/admin/usuarios'
-                  onClick={handleMenuItemClick}
-                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-                >
-                  <Users className='w-5 h-5' />
-                  <span className='font-medium'>Asignar Cursos</span>
-                </Link>
-
-                <Link
-                  href='/admin/cupones'
-                  onClick={handleMenuItemClick}
-                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-                >
-                  <Gift className='w-5 h-5' />
-                  <span className='font-medium'>Cupones</span>
-                </Link>
-
-                <Link
-                  href='/admin/formularios'
-                  onClick={handleMenuItemClick}
-                  className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-                >
-                  <ClipboardList className='w-5 h-5' />
-                  <span className='font-medium'>Formularios</span>
-                </Link>
-              </>
-            )}
-
-            <Link
-              href='/mi-cuenta'
-              onClick={handleMenuItemClick}
-              className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-            >
-              <UserIcon className='w-5 h-5' />
-              <span className='font-medium'>Mi Cuenta</span>
-            </Link>
-            <Link
-              href='/presencialidad'
-              onClick={handleMenuItemClick}
-              className='flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors active:bg-muted/80'
-            >
-              <MapPin className='w-5 h-5 text-[#8b1538]' />
-              <span className='font-medium'>Presencialidad</span>
-            </Link>
-          </div>
-
-          {/* Separator */}
-          <div className='my-1 border-t border-border' />
-
-          {/* Logout */}
-          <button
-            onClick={handleLogout}
-            className='w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-muted transition-colors active:bg-muted/80'
-          >
-            <LogOut className='w-5 h-5' />
-            <span className='font-medium'>Cerrar Sesión</span>
-          </button>
+        <div className='absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-6rem)] overflow-y-auto bg-card border border-border rounded-lg shadow-lg py-2 z-50'>
+          {menuItems}
         </div>
       )}
     </div>

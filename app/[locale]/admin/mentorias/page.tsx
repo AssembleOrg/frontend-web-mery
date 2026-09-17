@@ -155,23 +155,23 @@ export default function AdminMentoriasPage() {
   };
 
   return (
-    <div className='mx-auto w-full max-w-4xl px-3 py-4 sm:px-4 sm:py-6'>
-      <h1 className='text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 mb-5'>
+    <div className='mx-auto w-full max-w-4xl px-3 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-4 sm:py-6 min-h-[100dvh]'>
+      <h1 className='text-lg sm:text-xl font-primary-medium font-bold text-foreground flex items-center gap-2 mb-5'>
         <CalendarClock className='w-5 h-5 sm:w-6 sm:h-6 text-[#EBA2A8]' />
         Mentoría / Presencialidad
       </h1>
 
       {/* Tabs */}
-      <div className='flex gap-1 mb-5 overflow-x-auto rounded-xl bg-muted/50 p-1'>
+      <div className='flex gap-1 mb-5 overflow-x-auto rounded-2xl bg-[#1c1c1e] p-1.5 shadow-sm'>
         {TABS.map((t) => (
           <button
             key={t.key}
             type='button'
             onClick={() => setTab(t.key)}
-            className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+            className={`px-3.5 py-2 text-xs sm:text-sm font-medium rounded-xl whitespace-nowrap transition-all active:scale-95 ${
               tab === t.key
-                ? 'bg-[#2B2B2B] text-white'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-[#EBA2A8] text-[#1c1c1e] shadow-sm'
+                : 'text-white/60 hover:text-white hover:bg-white/10'
             }`}
           >
             {t.label}
@@ -472,16 +472,16 @@ function MeetLinkPopover({ url }: Readonly<{ url: string }>) {
         <Video className='w-4 h-4' />
       </button>
       {open && (
-        <div className='fixed inset-0 z-[80] flex items-center justify-center p-4'>
+        <div className='fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-4'>
           <button
             type='button'
             aria-label='Cerrar'
             onClick={() => setOpen(false)}
-            className='absolute inset-0 bg-black/50'
+            className='absolute inset-0 bg-black/50 animate-overlay-in'
           />
           <div
             ref={ref}
-            className='relative w-full max-w-sm overflow-hidden rounded-2xl bg-[#1c1c1e] text-white shadow-2xl p-4'
+            className='relative w-full sm:max-w-sm overflow-hidden rounded-t-2xl sm:rounded-2xl bg-[#1c1c1e] text-white shadow-2xl p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-4 animate-sheet-in sm:animate-pop-in'
           >
             <div className='flex items-center justify-between mb-2'>
               <span className='text-[11px] font-semibold uppercase tracking-wider text-white/70'>

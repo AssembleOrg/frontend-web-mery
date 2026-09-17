@@ -189,6 +189,12 @@
     overscroll-behavior-y: none;
   }
 
+  /* Checkboxes/radios en rosa de marca (evita el azul nativo del navegador) */
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: var(--mg-pink);
+  }
+
   body {
     @apply bg-background text-foreground font-primary font-light;
     /* Safari fallback: explicit font-family as backup */

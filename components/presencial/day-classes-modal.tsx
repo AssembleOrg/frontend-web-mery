@@ -101,21 +101,23 @@ export function DayClassesModal({
         onAnimationEnd={() => closing && onClose()}
         className={`relative w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[92dvh] overflow-hidden animate-sheet-in sm:animate-pop-in ${closing ? 'is-closing' : ''}`}
       >
-        {/* Header dark premium con fecha grande */}
-        <div className='bg-[#1c1c1e] text-white px-6 pt-7 pb-6 shrink-0'>
+        {/* Header dark premium, compacto: número grande + fecha al lado */}
+        <div className='bg-[#1c1c1e] text-white px-6 py-4 shrink-0 flex items-center gap-4'>
+          <p className='text-5xl font-primary-medium leading-none text-[#EBA2A8]'>{day.day}</p>
+          <div className='min-w-0'>
+            <p className='text-[11px] uppercase tracking-[0.28em] text-white/55 capitalize'>
+              {day.toFormat('cccc')}
+            </p>
+            <p className='text-sm text-white/60 capitalize mt-0.5'>{day.toFormat('LLLL yyyy')}</p>
+          </div>
           <button
             type='button'
             onClick={requestClose}
             aria-label='Cerrar'
-            className='absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors active:scale-95'
+            className='ml-auto shrink-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors active:scale-95'
           >
             <X className='w-5 h-5' />
           </button>
-          <p className='text-[11px] uppercase tracking-[0.28em] text-white/55 capitalize'>
-            {day.toFormat('cccc')}
-          </p>
-          <p className='text-6xl font-primary-medium leading-none mt-1.5'>{day.day}</p>
-          <p className='text-sm text-white/50 capitalize mt-1.5'>{day.toFormat('LLLL yyyy')}</p>
         </div>
 
         <div className='flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 bg-[#FAFAFA] pb-[calc(1rem+env(safe-area-inset-bottom))]'>
@@ -124,29 +126,30 @@ export function DayClassesModal({
             const confirmedMine = mine && c.mySignup!.status === 'CONFIRMED';
             const tone = mine
               ? confirmedMine
-                ? { band: 'bg-[#16A34A]', chip: 'bg-[#DCFCE7] text-[#166534]', label: 'Tu lugar está confirmado', Icon: CheckCircle2 }
-                : { band: 'bg-[#8b1538]', chip: 'bg-[#FBE8EA] text-[#8b1538]', label: 'Anotada · pendiente de confirmación', Icon: Hourglass }
+                ? { bar: 'bg-[#DCFCE7] text-[#166534]', label: 'Tu lugar está confirmado', Icon: CheckCircle2 }
+                : { bar: 'bg-[#FBE8EA] text-[#8b1538]', label: 'Anotada · pendiente', Icon: Hourglass }
               : c.status === 'CONFIRMED'
-                ? { band: 'bg-[#22C55E]', chip: 'bg-[#DCFCE7] text-[#166534]', label: 'Fecha confirmada', Icon: CheckCircle2 }
-                : { band: 'bg-[#F59E0B]', chip: 'bg-[#FEF3C7] text-[#78350F]', label: 'Fecha tentativa', Icon: Sparkles };
+                ? { bar: 'bg-[#DCFCE7] text-[#166534]', label: 'Confirmada', Icon: CheckCircle2 }
+                : { bar: 'bg-[#FEF3C7] text-[#78350F]', label: 'Fecha tentativa', Icon: Sparkles };
             const Icon = tone.Icon;
             const disabled = !mine && hasActiveSignup;
             return (
               <div key={c.id} className='rounded-2xl bg-white shadow-md shadow-black/[0.04] ring-1 ring-black/[0.06] overflow-hidden'>
-                <div className={`h-1.5 ${tone.band}`} />
+                {/* Barra de status a lo ancho (reemplaza border-top + pill) */}
+                <div className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold ${tone.bar}`}>
+                  <Icon className='w-3.5 h-3.5' /> {tone.label}
+                </div>
                 <div className='p-4'>
-                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${tone.chip}`}>
-                    <Icon className='w-3.5 h-3.5' /> {tone.label}
-                  </span>
-                  <h3 className='mt-3 text-base font-primary-medium text-[#2B2B2B] leading-snug'>{c.title}</h3>
-                  <p className='mt-1 inline-flex items-center gap-1.5 text-sm text-[#2B2B2B]/70'>
-                    <Clock className='w-4 h-4 text-[#8b1538]' />
+                  <h3 className='text-base font-primary-medium text-[#2B2B2B] leading-snug'>{c.title}</h3>
+                  {/* Flag del horario: sale del borde izquierdo de la card */}
+                  <span className='mt-2 -ml-4 inline-flex items-center gap-1.5 text-xs font-medium pl-3 pr-3 py-1 rounded-r-full bg-[#8b1538] text-white shadow-sm'>
+                    <Clock className='w-3.5 h-3.5' />
                     {hourLabel(c.startHour)} a {hourLabel(c.endHour)} hs
-                  </p>
+                  </span>
                   {c.categories.length > 0 && (
                     <div className='mt-2.5 flex flex-wrap gap-1.5'>
                       {c.categories.map((x) => (
-                        <span key={x.id} className='text-[11px] px-2 py-0.5 rounded-full bg-[#FBE8EA] text-[#8b1538] font-medium'>
+                        <span key={x.id} className='text-[11px] px-2.5 py-0.5 rounded-full bg-[#1c1c1e] text-white font-medium'>
                           {x.name}
                         </span>
                       ))}

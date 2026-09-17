@@ -26,7 +26,7 @@ export function MobileMenu() {
       <Button
         variant='ghost'
         size='icon'
-        className='xl:hidden shrink-0'
+        className='2xl:hidden shrink-0'
         onClick={toggleMenu}
         aria-label='Toggle menu'
       >
@@ -40,7 +40,7 @@ export function MobileMenu() {
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div
-          className='fixed inset-0 bg-black/50 z-40 xl:hidden'
+          className='fixed inset-0 bg-black/50 z-40 2xl:hidden'
           onClick={closeMenu}
         />
       )}
@@ -49,11 +49,11 @@ export function MobileMenu() {
       <div
         className={`
         fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white dark:bg-background
-        border-l shadow-xl z-50 xl:hidden transform transition-transform duration-300 ease-in-out
+        border-l shadow-xl z-50 2xl:hidden transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : 'translate-x-full'}
       `}
       >
-        <div className='p-6'>
+        <div className='p-6 h-full overflow-y-auto'>
           {/* Close Button */}
           <div className='flex justify-end mb-8'>
             <Button
@@ -131,31 +131,28 @@ export function MobileMenu() {
             </Button>
             
             {/* Cart and User Menu */}
-            <div className='flex items-center justify-between gap-3'>
-              <div className='flex-1'>
-                {isAuthenticated ? (
-                  <UserMenu onNavigate={closeMenu} />
-                ) : (
-                  <Button
-                    variant='outline'
-                    className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
-                    onClick={() => {
-                      router.push(`/${locale}/login`);
-                      closeMenu();
-                    }}
-                  >
-                    INICIAR SESIÓN
-                  </Button>
-                )}
-              </div>
-              <div className='flex items-center'>
-                <CartIcon />
-              </div>
-            </div>
+            {isAuthenticated ? (
+              <UserMenu
+                onNavigate={closeMenu}
+                inline
+              />
+            ) : (
+              <Button
+                variant='outline'
+                className='w-full border-primary text-primary hover:bg-primary hover:text-white text-sm font-medium'
+                onClick={() => {
+                  router.push(`/${locale}/login`);
+                  closeMenu();
+                }}
+              >
+                INICIAR SESIÓN
+              </Button>
+            )}
           </div>
 
-          {/* Theme and Language toggles */}
-          <div className='mt-8 pt-6 border-t flex justify-center space-x-4'>
+          {/* Cart + Theme and Language toggles */}
+          <div className='mt-8 pt-6 border-t flex justify-center items-center space-x-4'>
+            <CartIcon />
             <LanguageToggle />
             <ModeToggle />
           </div>
