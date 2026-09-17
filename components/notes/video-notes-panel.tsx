@@ -7,7 +7,9 @@ import {
   Loader2,
   NotebookPen,
   Pencil,
+  RotateCcw,
   Trash2,
+  X,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
@@ -83,7 +85,14 @@ export function VideoNotesPanel({
   }, [videoId]);
 
   const captureTime = () => {
-    setDraftTime(Math.floor(getCurrentTime()));
+    const t = Math.floor(getCurrentTime());
+    setDraftTime(t);
+    if (draftTime !== null) toast.success(`Momento actualizado: ${formatSeconds(t)}`);
+    textareaRef.current?.focus();
+  };
+
+  const clearTime = () => {
+    setDraftTime(null);
     textareaRef.current?.focus();
   };
 
@@ -199,26 +208,48 @@ export function VideoNotesPanel({
           <p className='text-xs text-gray-400 truncate'>
             Anotá algo de <span className='text-gray-200'>{videoTitle}</span>
           </p>
-          <button
-            type='button'
-            onClick={captureTime}
-            title='Marcar el segundo actual del video'
-            className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium tabular-nums transition-colors ${
-              draftTime === null
-                ? 'bg-[#1a1a1a] text-[#f9bbc4] border border-[#f9bbc4]/40 hover:bg-[#f9bbc4]/10'
-                : 'bg-[#f9bbc4]/20 text-[#f9bbc4] border border-[#f9bbc4]/60'
-            }`}
-          >
-            <Clock3 className='w-3.5 h-3.5' />
-            {draftTime === null ? 'Marcar momento' : timeLabel}
-          </button>
+          {draftTime === null ? (
+            <button
+              type='button'
+              onClick={captureTime}
+              title='Marcar el segundo actual del video'
+              className='inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium bg-[#1a1a1a] text-[#f9bbc4] border border-[#f9bbc4]/40 hover:bg-[#f9bbc4]/10 transition-colors'
+            >
+              <Clock3 className='w-3.5 h-3.5' />
+              Marcar momento
+            </button>
+          ) : (
+            <div className='inline-flex items-stretch rounded-md border border-[#f9bbc4]/60 bg-[#f9bbc4]/20 text-[#f9bbc4] text-xs font-medium overflow-hidden'>
+              <button
+                type='button'
+                onClick={captureTime}
+                title='Volver a marcar con el momento actual del video'
+                className='inline-flex items-center gap-1.5 px-2 py-1 tabular-nums hover:bg-[#f9bbc4]/20 transition-colors'
+              >
+                <Clock3 className='w-3.5 h-3.5' />
+                {timeLabel}
+                <RotateCcw className='w-3 h-3 opacity-70' />
+              </button>
+              <button
+                type='button'
+                onClick={clearTime}
+                aria-label='Quitar la marca de tiempo'
+                title='Quitar la marca (se vuelve a tomar al guardar)'
+                className='inline-flex items-center px-1.5 border-l border-[#f9bbc4]/40 hover:bg-[#f9bbc4]/20 transition-colors'
+              >
+                <X className='w-3 h-3' />
+              </button>
+            </div>
+          )}
         </div>
         <textarea
           ref={textareaRef}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onFocus={() => {
-            if (draftTime === null) setDraftTime(Math.floor(getCurrentTime()));
+            // Marca automática solo al empezar a escribir; si la usuaria quitó
+            // la marca a propósito (ya hay texto), se toma recién al guardar.
+            if (draftTime === null && !draft.trim()) setDraftTime(Math.floor(getCurrentTime()));
           }}
           onKeyDown={(e) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') void save();
@@ -231,8 +262,10 @@ export function VideoNotesPanel({
         <div className='flex items-center justify-between gap-2'>
           <span className='text-[11px] text-gray-500'>
             {draftTime === null
-              ? 'Al escribir se marca el momento actual.'
-              : 'Ctrl + Enter para guardar.'}
+              ? draft.trim()
+                ? 'Sin marca: se toma el momento actual al guardar.'
+                : 'Al escribir se marca el momento actual.'
+              : 'Tocá la hora para actualizarla · Ctrl + Enter guarda.'}
           </span>
           <button
             type='button'
