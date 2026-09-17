@@ -29,7 +29,7 @@ export function Navigation() {
           >
             <SimpleLogo />
           </Link>
-          <div className='hidden xl:flex items-center space-x-4 2xl:space-x-6'>
+          <div className='hidden 2xl:flex items-center space-x-3 2xl:space-x-6'>
             <Link
               href='/'
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
@@ -63,7 +63,7 @@ export function Navigation() {
             {isAuthenticated && (
               <Link
                 href='/presencialidad'
-                className='text-sm font-primary font-medium transition-colors hover:text-primary text-[#8b1538] dark:text-[#F9BBC4] whitespace-nowrap'
+                className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
               >
                 PRESENCIALIDAD
               </Link>
@@ -72,10 +72,10 @@ export function Navigation() {
 
           {/* Right side controls */}
           <div className='flex items-center space-x-2'>
-            <div className='hidden xl:flex items-center'>
+            <div className='hidden 2xl:flex items-center'>
               <Button
                 size='sm'
-                className='bg-primary hover:bg-primary/90 text-white text-xs xl:text-sm font-primary font-medium whitespace-nowrap px-3 xl:px-4'
+                className='bg-primary hover:bg-primary/90 text-white text-xs 2xl:text-sm font-primary font-medium whitespace-nowrap px-3 2xl:px-4'
                 asChild
               >
                 <a
@@ -89,20 +89,20 @@ export function Navigation() {
             </div>
 
             {/* Cart Icon */}
-            <div className='hidden xl:flex items-center ml-2'>
+            <div className='hidden 2xl:flex items-center ml-2'>
               <CartIcon />
             </div>
 
             {/* Chat notifications */}
             {isAuthenticated && (
-              <div className='hidden xl:flex items-center ml-1 gap-0.5'>
+              <div className='hidden 2xl:flex items-center ml-1 gap-0.5'>
                 <NotificationBell />
                 <ChatNotificationBell />
               </div>
             )}
 
             {/* User Menu / Login Button */}
-            <div className='hidden xl:flex items-center ml-2'>
+            <div className='hidden 2xl:flex items-center ml-2'>
               {isAuthenticated ? (
                 <UserMenu />
               ) : (
@@ -121,7 +121,7 @@ export function Navigation() {
               <LanguageToggle />
               <ModeToggle />
             </div>
-            <div className='xl:hidden flex items-center gap-0.5'>
+            <div className='2xl:hidden flex items-center gap-0.5'>
               {isAuthenticated && <NotificationBell />}
               <MobileMenu />
             </div>

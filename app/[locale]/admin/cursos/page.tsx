@@ -91,17 +91,19 @@ export default function AdminCursosPage() {
         </div>
         <div className='flex flex-col sm:flex-row gap-2'>
           <button
-            onClick={() => {
-              if (
-                confirm(
-                  '¿Limpiar caché del navegador? Esto recargará la página.'
-                )
-              ) {
-                localStorage.removeItem('course-progress-storage');
-                localStorage.removeItem('user-courses-storage');
-                toast.success('Caché limpiado');
-                window.location.reload();
-              }
+            onClick={async () => {
+              const confirmed = await showConfirm({
+                title: 'Limpiar caché',
+                message: '¿Limpiar caché del navegador? Esto recargará la página.',
+                type: 'warning',
+                confirmText: 'Limpiar',
+                cancelText: 'Cancelar',
+              });
+              if (!confirmed) return;
+              localStorage.removeItem('course-progress-storage');
+              localStorage.removeItem('user-courses-storage');
+              toast.success('Caché limpiado');
+              window.location.reload();
             }}
             className='inline-flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-sm'
             title='Limpiar caché de cursos del navegador'

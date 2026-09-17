@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { DateTime } from 'luxon';
-import { ArrowLeft, CheckCircle2, Hourglass, MapPin, CalendarDays, Ban } from 'lucide-react';
+import { CheckCircle2, Hourglass, MapPin, CalendarDays, Ban } from 'lucide-react';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
+import { BackButton } from '@/components/ui/back-button';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { StudentCalendar } from '@/components/presencial/student-calendar';
 import { DayClassesModal } from '@/components/presencial/day-classes-modal';
@@ -79,18 +80,12 @@ export default function PresencialidadPage() {
 
   return (
     <ProtectedRoute>
-      <div className='min-h-screen bg-background'>
+      <div className='min-h-screen bg-[#FAFAFA]'>
         <Navigation />
 
         <main className='max-w-3xl mx-auto px-4 sm:px-6 pt-8 pb-16'>
           {/* Volver */}
-          <button
-            type='button'
-            onClick={goBack}
-            className='mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[#8b1538] hover:text-[#660e1b] transition-colors'
-          >
-            <ArrowLeft className='w-4 h-4' /> Volver
-          </button>
+          <BackButton onClick={goBack} className='mb-5' />
 
           {/* Título */}
           <div className='mb-6'>

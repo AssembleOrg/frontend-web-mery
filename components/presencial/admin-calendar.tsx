@@ -196,44 +196,15 @@ export function AdminCalendar() {
 
   return (
     <div className='space-y-4'>
-      {/* Toolbar */}
-      <div className='flex flex-wrap items-center justify-between gap-2'>
-        <div className='flex items-center gap-1'>
-          <button
-            type='button'
-            onClick={() => setCursor((c) => c.minus({ months: 1 }))}
-            className='p-1.5 rounded-lg border border-border hover:border-[#EBA2A8]'
-            aria-label='Mes anterior'
-          >
-            <ChevronLeft className='w-4 h-4' />
-          </button>
-          <button
-            type='button'
-            onClick={() => setCursor(DateTime.now().setZone(TZ).startOf('month'))}
-            className='px-2.5 py-1.5 text-xs rounded-lg border border-border hover:border-[#EBA2A8]'
-          >
-            Hoy
-          </button>
-          <button
-            type='button'
-            onClick={() => setCursor((c) => c.plus({ months: 1 }))}
-            className='p-1.5 rounded-lg border border-border hover:border-[#EBA2A8]'
-            aria-label='Mes siguiente'
-          >
-            <ChevronRight className='w-4 h-4' />
-          </button>
-          <h3 className='ml-2 text-sm font-bold capitalize'>
-            {cursor.setLocale('es').toFormat('LLLL yyyy')}
-          </h3>
-          {loading && <Loader2 className='w-4 h-4 animate-spin text-muted-foreground ml-1' />}
-        </div>
-
+      {/* Toolbar: filtros + acción (la navegación de mes vive dentro del calendario) */}
+      <div className='flex flex-wrap items-center justify-end gap-2'>
         <div className='flex items-center gap-2 text-xs'>
           <label className='flex items-center gap-1.5 cursor-pointer'>
             <input
               type='checkbox'
               checked={filters.mentorias}
               onChange={(e) => setFilters((f) => ({ ...f, mentorias: e.target.checked }))}
+              className='accent-[#EBA2A8]'
             />
             <span className='inline-block w-2.5 h-2.5 rounded-sm bg-[#2B2B2B]' /> Mentorías
           </label>
@@ -242,6 +213,7 @@ export function AdminCalendar() {
               type='checkbox'
               checked={filters.presenciales}
               onChange={(e) => setFilters((f) => ({ ...f, presenciales: e.target.checked }))}
+              className='accent-[#EBA2A8]'
             />
             <span className='inline-block w-2.5 h-2.5 rounded-sm bg-[#EBA2A8]' /> Presenciales
           </label>
@@ -266,6 +238,38 @@ export function AdminCalendar() {
       <div className='grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4'>
         {/* Grilla */}
         <div className='rounded-2xl border border-border bg-white dark:bg-card overflow-hidden'>
+          {/* Navegación de mes, pegada al calendario */}
+          <div className='flex items-center justify-between gap-2 px-3 py-2.5 border-b border-border'>
+            <button
+              type='button'
+              onClick={() => setCursor((c) => c.minus({ months: 1 }))}
+              className='p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors active:scale-95'
+              aria-label='Mes anterior'
+            >
+              <ChevronLeft className='w-4 h-4' />
+            </button>
+            <div className='flex items-center gap-2'>
+              <h3 className='text-sm font-primary-medium capitalize'>
+                {cursor.setLocale('es').toFormat('LLLL yyyy')}
+              </h3>
+              <button
+                type='button'
+                onClick={() => setCursor(DateTime.now().setZone(TZ).startOf('month'))}
+                className='px-2 py-0.5 text-[11px] rounded-full border border-border text-muted-foreground hover:border-[#EBA2A8] hover:text-foreground transition-colors'
+              >
+                Hoy
+              </button>
+              {loading && <Loader2 className='w-3.5 h-3.5 animate-spin text-muted-foreground' />}
+            </div>
+            <button
+              type='button'
+              onClick={() => setCursor((c) => c.plus({ months: 1 }))}
+              className='p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors active:scale-95'
+              aria-label='Mes siguiente'
+            >
+              <ChevronRight className='w-4 h-4' />
+            </button>
+          </div>
           <div className='grid grid-cols-7 text-[11px] font-semibold text-muted-foreground border-b border-border'>
             {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((d) => (
               <div key={d} className='px-2 py-1.5 text-center'>{d}</div>

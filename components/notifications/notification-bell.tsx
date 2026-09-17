@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bell, BellRing, Check, Download, Loader2, Smartphone } from 'lucide-react';
+import { Bell, BellRing, Check, Clock, Download, Loader2, Smartphone } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/stores/auth-store';
 import { useNotificationsStore } from '@/stores/notifications-store';
@@ -210,28 +210,31 @@ export function NotificationBell() {
           <Bell className='w-5 h-5 text-foreground' />
         )}
         {unread > 0 && (
-          <span className='absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8b1538] text-white text-[10px] font-bold flex items-center justify-center'>
+          <span className='absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#EBA2A8] text-[#2B2B2B] text-[10px] font-bold flex items-center justify-center'>
             {unread > 99 ? '99+' : unread}
           </span>
         )}
       </button>
 
       {open && (
-        <div className='absolute right-0 mt-2 w-[min(92vw,360px)] rounded-2xl border border-border bg-white dark:bg-card shadow-2xl z-[60] overflow-hidden'>
-          <div className='flex items-center justify-between px-4 py-3 border-b border-border'>
-            <p className='text-sm font-semibold'>Notificaciones</p>
+        <div className='fixed inset-x-3 top-[calc(env(safe-area-inset-top)+4rem)] mx-auto max-w-[380px] sm:absolute sm:inset-x-auto sm:top-auto sm:right-0 sm:mt-2 sm:mx-0 sm:w-[360px] rounded-2xl border border-border bg-white dark:bg-card shadow-2xl z-[60] overflow-hidden animate-pop-in'>
+          <div className='flex items-center justify-between px-4 py-3 bg-[#1c1c1e] text-white'>
+            <p className='text-sm font-primary-medium'>
+              Notificaciones
+              {unread > 0 && <span className='ml-1.5 text-[#EBA2A8]'>· {unread}</span>}
+            </p>
             {unread > 0 && (
               <button
                 type='button'
                 onClick={readAll}
-                className='text-[11px] text-muted-foreground hover:text-foreground inline-flex items-center gap-1'
+                className='text-[11px] text-white/60 hover:text-white inline-flex items-center gap-1 transition-colors'
               >
                 <Check className='w-3 h-3' /> Marcar todas leídas
               </button>
             )}
           </div>
 
-          <div className='max-h-[55vh] overflow-y-auto'>
+          <div className='max-h-[60dvh] overflow-y-auto overscroll-contain'>
             {loading && items.length === 0 ? (
               <div className='py-8 flex justify-center'>
                 <Loader2 className='w-5 h-5 animate-spin text-muted-foreground' />
@@ -246,31 +249,33 @@ export function NotificationBell() {
                   key={n.id}
                   type='button'
                   onClick={() => openItem(n)}
-                  className={`w-full text-left px-4 py-3 border-b border-border/60 last:border-0 hover:bg-muted/50 transition-colors ${
-                    n.readAt ? '' : 'bg-[#fbe8ea]/40'
+                  className={`w-full text-left px-4 py-3 border-b border-border/60 last:border-0 overflow-hidden hover:bg-muted/50 transition-colors ${
+                    n.readAt ? '' : 'bg-[#EBA2A8]/10'
                   }`}
                 >
                   <div className='flex items-start gap-2'>
+                    <p className={`text-sm leading-snug flex-1 min-w-0 ${n.readAt ? 'text-foreground/80' : 'font-primary-medium'}`}>
+                      {n.title}
+                    </p>
                     {!n.readAt && (
-                      <span className='mt-1.5 w-2 h-2 rounded-full bg-[#8b1538] shrink-0' />
+                      <span className='mt-1.5 w-2 h-2 rounded-full bg-[#EBA2A8] shrink-0' />
                     )}
-                    <div className='min-w-0 flex-1'>
-                      <p className={`text-sm leading-snug ${n.readAt ? 'text-foreground/80' : 'font-semibold'}`}>
-                        {n.title}
-                      </p>
-                      {n.body && (
-                        <p className='text-xs text-muted-foreground mt-0.5 line-clamp-2'>{n.body}</p>
-                      )}
-                      <p className='text-[10px] text-muted-foreground mt-1'>{timeAgo(n.createdAt)}</p>
-                    </div>
                   </div>
+                  {n.body && (
+                    /* Flag con fecha/hora: sale del borde izquierdo del panel (igual que la card) */
+                    <span className='mt-2 -ml-4 inline-flex items-center gap-1.5 text-xs font-medium pl-3 pr-3 py-1 rounded-r-full bg-[#8b1538] text-white shadow-sm'>
+                      <Clock className='w-3.5 h-3.5' />
+                      {n.body}
+                    </span>
+                  )}
+                  <p className='text-[10px] text-muted-foreground mt-1.5'>{timeAgo(n.createdAt)}</p>
                 </button>
               ))
             )}
           </div>
 
           {/* Push + instalar */}
-          <div className='border-t border-border px-4 py-3 space-y-2 bg-muted/30'>
+          <div className='border-t border-border px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:pb-3 space-y-2 bg-muted/30'>
             {pushOn === null ? null : pushOn ? (
               <button
                 type='button'

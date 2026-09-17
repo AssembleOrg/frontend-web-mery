@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, BarChart3, Link2, Save } from 'lucide-react';
+import { BarChart3, Link2, Save } from 'lucide-react';
+import { BackButton } from '@/components/ui/back-button';
 import { toast } from 'react-hot-toast';
 import { FormBuilder, type FormBuilderValue } from '@/components/admin/form-builder';
 import {
@@ -124,13 +125,7 @@ export default function EditarFormularioPage() {
       {/* Header */}
       <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4'>
         <div className='flex items-start gap-3 min-w-0'>
-          <button
-            onClick={() => router.push(`/${locale}/admin/formularios`)}
-            className='p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors flex-shrink-0'
-            title='Volver'
-          >
-            <ArrowLeft className='w-5 h-5' />
-          </button>
+          <BackButton onClick={() => router.push(`/${locale}/admin/formularios`)} className='flex-shrink-0' />
           <div className='min-w-0'>
             <div className='flex flex-wrap items-center gap-2'>
               <h1 className='text-xl sm:text-2xl font-bold text-gray-900 truncate'>
