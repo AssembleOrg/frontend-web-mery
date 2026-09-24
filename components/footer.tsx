@@ -123,11 +123,11 @@ export function Footer() {
           <div className='flex items-center'>
             <p className='font-secondary mr-2'>Desarrollado by</p>
             <a
-              href='https://wa.me/5491138207230?text=Hola%20Pistech,%20me%20comunico%20a%20través%20de%20merygarcia%20web.%20Me%20gustaría%20saber%20más%20sobre%20sus%20servicios%20digitales%20que%20ofrecen.'
+              href='https://pistech.com.ar'
               target='_blank'
               rel='noopener noreferrer'
               className='font-secondary font-semibold whatsapp-button'
-              title='Contactar a Pistech por WhatsApp'
+              title='Pistech: desarrollo de software a medida'
             >
               Pistech
             </a>
