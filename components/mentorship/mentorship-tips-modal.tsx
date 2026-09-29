@@ -17,18 +17,22 @@ const COLLAGE = [
 const TIPS = [
   'Repasá los videos teóricos y prácticos del curso.',
   'Al realizar tus prácticas, considerá las líneas A y B (paralelas) y las proporciones de caja y densidad del capítulo "Estructura".',
-  'Presentá tus prácticas tal cual indica el tutorial "Cómo presento y cómo preparo mis prácticas".',
-  'Traé 3 fotos de diseños de cejas que SÍ te gusten y 3 que NO te gusten. Ninguna puede ser un trabajo de M.G ni de su staff.',
+  'Presentá tus prácticas tal cual indica el tutorial "Cómo presento y preparo mis prácticas".',
 ];
+
+// El ítem de fotos cambia según el servicio del curso (labios vs. cejas).
+const photosTip = (categoryName: string) =>
+  `Traé 3 fotos de diseños de ${/lip|labio/i.test(categoryName) ? 'labios' : 'cejas'} que NO te gusten y 3 que SÍ te gusten. Las que SÍ te gusten no pueden ser trabajos nuestros ✨`;
 
 /**
  * Popup previo a reservar la mentoría (mismo lenguaje visual que el flyer de la
  * landing). Solo deja continuar tras confirmar la lectura.
  */
 export function MentorshipTipsModal({
+  categoryName,
   onAccept,
   onClose,
-}: Readonly<{ onAccept: () => void; onClose: () => void }>) {
+}: Readonly<{ categoryName: string; onAccept: () => void; onClose: () => void }>) {
   const [read, setRead] = useState(false);
 
   // Bloquear scroll de fondo, esconder el bot externo y cerrar con Escape.
@@ -138,7 +142,7 @@ export function MentorshipTipsModal({
               className='tips-rise mt-4 space-y-1.5 text-[12px] leading-snug text-white/90 sm:mt-6 sm:space-y-2.5 sm:text-[14px]'
               style={{ animationDelay: '0.44s' }}
             >
-              {TIPS.map((tip) => (
+              {[...TIPS, photosTip(categoryName)].map((tip) => (
                 <li key={tip} className='flex gap-2'>
                   <span aria-hidden className='mt-[0.45em] h-1 w-1 shrink-0 rounded-full bg-[#F9BBC4]' />
                   <span>{tip}</span>

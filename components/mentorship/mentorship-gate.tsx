@@ -100,6 +100,7 @@ export function MentorshipGate({
         </p>
         {tips && (
           <MentorshipTipsModal
+            categoryName={categoryName}
             onClose={() => setTips(false)}
             onAccept={() => {
               setTips(false);
