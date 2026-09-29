@@ -10,6 +10,7 @@ import {
   type MentorshipEligibility,
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
+import { MentorshipTipsModal } from './mentorship-tips-modal';
 
 interface Props {
   categoryId: string;
@@ -28,6 +29,7 @@ export function MentorshipGate({
   const [elig, setElig] = useState<MentorshipEligibility | null>(null);
   const [loading, setLoading] = useState(true);
   const [picker, setPicker] = useState(false);
+  const [tips, setTips] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -87,7 +89,7 @@ export function MentorshipGate({
       <>
         <button
           type='button'
-          onClick={() => setPicker(true)}
+          onClick={() => setTips(true)}
           className='mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2B2B2B] text-white hover:bg-[#1f1f1f] text-sm font-primary font-medium transition-colors'
         >
           <CalendarClock className='w-4 h-4 text-[#EBA2A8]' />
@@ -96,6 +98,15 @@ export function MentorshipGate({
         <p className='mt-2 text-[11px] text-center text-muted-foreground'>
           Aprobaste el examen. Reservá tu mentoría para activar el chat.
         </p>
+        {tips && (
+          <MentorshipTipsModal
+            onClose={() => setTips(false)}
+            onAccept={() => {
+              setTips(false);
+              setPicker(true);
+            }}
+          />
+        )}
         {picker && (
           <SlotPickerModal
             categoryId={categoryId}

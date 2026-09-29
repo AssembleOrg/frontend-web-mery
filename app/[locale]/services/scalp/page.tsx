@@ -18,7 +18,7 @@ export default function ScalpPage() {
       {/* Hero Section */}
       <section className='relative h-96 overflow-hidden'>
         <Image
-          src='/img-home/home-3.webp'
+          src='/Img-home/Lip-blush-1.webp'
           alt={t('hero.title')}
           fill
           className='object-cover'

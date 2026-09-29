@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaFilePdf, FaWhatsapp } from 'react-icons/fa';
 
 const Separator = () => (
   <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
@@ -70,14 +70,37 @@ export default function EpitesisAftercarePage() {
           padding: '20px',
         }}
       >
-        <Image
-          src='/mery-garcia-aftercare.svg'
-          alt='Mery García Aftercare'
-          width={300}
-          height={150}
-          priority
-          style={{ animation: 'slideInFromLeft 0.8s ease-out' }}
-        />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            animation: 'slideInFromLeft 0.8s ease-out',
+          }}
+        >
+          {/* PNG blanco: brightness(0) lo pasa a gris oscuro sobre el fondo rosa */}
+          <Image
+            src='/Img-home/mery-blanco-logo.png'
+            alt='Mery García Epítesis'
+            width={300}
+            height={37}
+            priority
+            style={{ filter: 'brightness(0)', opacity: 0.75 }}
+          />
+          <span
+            style={{
+              marginTop: '4px',
+              fontSize: '22px',
+              fontWeight: 'bold',
+              fontStyle: 'italic',
+              letterSpacing: '1px',
+              lineHeight: 1,
+              color: '#414042',
+            }}
+          >
+            Epítesis
+          </span>
+        </div>
         <button
           onClick={() => {
             const content = document.getElementById('content');
@@ -109,19 +132,19 @@ export default function EpitesisAftercarePage() {
           lineHeight: '1.8',
         }}
       >
-        {/* Service title (no hay logo SVG de epítesis todavía) */}
         <h1
           style={{
             textAlign: 'center',
             marginBottom: '40px',
-            fontSize: '32px',
+            fontSize: '22px',
             fontWeight: 'bold',
-            letterSpacing: '4px',
-            color: '#EBA2A8',
+            letterSpacing: '2px',
+            color: '#B85C66',
             animation: 'fadeIn 0.8s ease-in forwards',
           }}
         >
-          EPÍTESIS CAP
+          SOBRE EL USO Y EL CUIDADO DE TU EPÍTESIS CAP ESPECIALMENTE CREADA
+          PARA VOS
         </h1>
 
         <p
@@ -132,7 +155,7 @@ export default function EpitesisAftercarePage() {
             marginBottom: '10px',
           }}
         >
-          Felicitaciones por tu nueva pieza!
+          ¡Gracias por confiar en nosotras para crear tu pieza!
         </p>
         <Separator />
 
@@ -246,15 +269,17 @@ export default function EpitesisAftercarePage() {
         </p>
         <Separator />
         <p style={paragraph}>
-          <span style={stepTitle}>Primera entrega de 1 par de piezas</span>
-          Con retoque de detalles finales a cargo de Mery.
+          <span style={stepTitle}>
+            1 pieza epítesis CAP 100% customizada
+          </span>
+          Incluye kit con adhesivos de adhesión media y estuche protector.
           <br />
-          Valor: USD 650 precio de lista / USD 500 en efectivo.
+          Valor: USD 350 precio de lista / USD 300 en efectivo.
         </p>
         <Separator />
         <p style={paragraph}>
-          <span style={stepTitle}>Reposición de 1 par</span>
-          Valor: USD 550 precio de lista / USD 450 en efectivo.
+          <span style={stepTitle}>1 pieza epítesis CAP con reposición</span>
+          Valor: USD 250 precio de lista / USD 200 en efectivo.
         </p>
         <Separator />
         <p style={paragraph}>
@@ -273,6 +298,29 @@ export default function EpitesisAftercarePage() {
           50% del valor total, la cual es <strong>NO REEMBOLSABLE</strong> sin
           excepción.
         </p>
+
+        {/* PDF descargable */}
+        <div style={{ textAlign: 'center', margin: '30px 0' }}>
+          <a
+            href={`/downloable/formaciones/${encodeURIComponent('CAP cuidados epitesis Septiembre (2).pdf')}`}
+            download
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              backgroundColor: '#2B2B2B',
+              color: 'white',
+              padding: '14px 24px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              letterSpacing: '1px',
+              borderRadius: '4px',
+            }}
+          >
+            <FaFilePdf style={{ width: '22px', height: '22px' }} />
+            DESCARGAR GUÍA DE CUIDADOS
+          </a>
+        </div>
 
         {/* Contacto */}
         <Separator />

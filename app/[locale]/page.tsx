@@ -27,7 +27,7 @@ export default async function HomePage() {
     // {
     //   key: 'scalp',
     //   href: '/services/scalp',
-    //   image: '/Img-home/home-3.webp',
+    //   image: '/Img-home/Lip-blush-1.webp',
     // },
     {
       key: 'freckles',
