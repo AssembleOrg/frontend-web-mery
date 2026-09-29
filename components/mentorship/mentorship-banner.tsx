@@ -81,6 +81,9 @@ export function MentorshipBanner({
             <p className='mt-1 text-sm text-white/60 capitalize'>
               {formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs
             </p>
+            <p className='mt-1.5 inline-flex items-center rounded-full bg-[#EBA2A8]/15 px-2.5 py-0.5 text-[11px] font-medium text-[#EBA2A8]'>
+              Sujeta a confirmación de Mery García
+            </p>
 
             <div className='mt-3 flex flex-wrap items-center gap-2'>
               {m.meetLink && (
@@ -121,8 +124,8 @@ export function MentorshipBanner({
       </div>
 
       <p className='px-5 pb-4 pt-1 text-[11px] text-white/40'>
-        Podés reprogramar (1 vez) o cancelar hasta 72 hs antes. El chat del curso se activa
-        después de la mentoría.
+        La mentoría queda sujeta a confirmación de Mery García. Podés reprogramar (1 vez) o
+        cancelar hasta 72 hs antes. El chat del curso se activa después de la mentoría.
       </p>
 
       {picker && (

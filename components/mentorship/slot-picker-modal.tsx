@@ -91,7 +91,9 @@ export function SlotPickerModal({
           start: selected,
           meetingEmail: email.trim(),
         });
-        toast.success('Mentoría reservada');
+        toast.success('Solicitud enviada. La mentoría queda sujeta a confirmación de Mery García.', {
+          duration: 6000,
+        });
       }
       window.dispatchEvent(new CustomEvent('mentorship:changed'));
       onDone();
@@ -205,6 +207,13 @@ export function SlotPickerModal({
           </div>
         </div>
 
+        {mode === 'book' && (
+          <p className='mx-4 mb-1 mt-2 rounded-lg bg-[#FBE8EA] px-3 py-2 text-xs leading-relaxed text-[#8b1538] shrink-0'>
+            <strong className='font-semibold'>Sujeta a confirmación.</strong> Tu solicitud queda
+            pendiente hasta que Mery García confirme el horario.
+          </p>
+        )}
+
         <div className='flex items-center justify-end gap-2 px-4 py-3 border-t border-border shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))]'>
           <button
             type='button'
@@ -224,7 +233,7 @@ export function SlotPickerModal({
             ) : (
               <Check className='w-4 h-4' />
             )}
-            {mode === 'reschedule' ? 'Reprogramar' : 'Confirmar reserva'}
+            {mode === 'reschedule' ? 'Reprogramar' : 'Solicitar mentoría'}
           </button>
         </div>
       </div>

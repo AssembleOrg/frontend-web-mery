@@ -81,7 +81,7 @@ export function MentorshipGate({
           <span className='text-white/60'> · </span>
           <span className='capitalize text-white/80'>{formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs</span>
           <p className='text-[11px] text-white/40 mt-0.5'>
-            Gestionala desde el bloque de arriba.
+            Sujeta a confirmación de Mery García. Gestionala desde el bloque de arriba.
           </p>
         </div>
       </div>
@@ -101,7 +101,8 @@ export function MentorshipGate({
           Reservá tu mentoría
         </button>
         <p className='mt-2 text-[11px] text-center text-muted-foreground'>
-          Aprobaste el examen. Reservá tu mentoría para activar el chat.
+          Aprobaste el examen. Reservá tu mentoría para activar el chat. La mentoría queda
+          sujeta a confirmación de Mery García.
         </p>
         {tips && (
           <MentorshipTipsModal
