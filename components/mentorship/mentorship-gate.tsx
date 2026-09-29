@@ -20,6 +20,11 @@ interface Props {
   defaultEmail: string;
   /** Se llama tras reservar/reagendar/cancelar, para refrescar el estado del chat. */
   onChanged?: () => void;
+  /**
+   * Con el chat ya abierto: mostrar solo lo accionable (reservar o la mentoría
+   * agendada) y nada mientras carga ni cuando no corresponde.
+   */
+  soloAccionable?: boolean;
 }
 
 export function MentorshipGate({
@@ -27,6 +32,7 @@ export function MentorshipGate({
   categoryName,
   defaultEmail,
   onChanged,
+  soloAccionable = false,
 }: Readonly<Props>) {
   const [elig, setElig] = useState<MentorshipEligibility | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,6 +66,7 @@ export function MentorshipGate({
   };
 
   if (loading) {
+    if (soloAccionable) return null;
     return (
       <div className='mt-3 flex justify-center py-2'>
         <Loader2 className='w-5 h-5 animate-spin text-muted-foreground' />
@@ -101,8 +108,9 @@ export function MentorshipGate({
           Reservá tu mentoría
         </button>
         <p className='mt-2 text-[11px] text-center text-muted-foreground'>
-          Aprobaste el examen. Reservá tu mentoría para activar el chat. La mentoría queda
-          sujeta a confirmación de Mery García.
+          {soloAccionable
+            ? 'Tenés una mentoría de cortesía disponible. La mentoría queda sujeta a confirmación de Mery García.'
+            : 'Aprobaste el examen. Reservá tu mentoría para activar el chat. La mentoría queda sujeta a confirmación de Mery García.'}
         </p>
         {tips && (
           <MentorshipTipsModal
@@ -141,6 +149,9 @@ export function MentorshipGate({
       </>
     );
   }
+
+  // Con el chat abierto no se muestran avisos de "no disponible".
+  if (soloAccionable) return null;
 
   // Ya usó su mentoría gratuita (una por cuenta).
   if (elig.blockedByOtherCourse || elig.needsPurchase) {

@@ -215,6 +215,17 @@ export function CourseChatButton({ categoryId, categoryName }: Readonly<Props>) 
           Esta conversación se cerró: queda solo lectura.
         </p>
       )}
+      {/* El chat puede estar abierto sin que la alumna haya tenido la mentoría
+          (chats viejos, o una mentoría que se le repuso). Si todavía puede
+          reservarla, le mostramos el botón acá también. */}
+      {!room.blocked && room.status === 'ACTIVE' && user?.role === 'USER' && (
+        <MentorshipGate
+          categoryId={categoryId}
+          categoryName={categoryName}
+          defaultEmail={user?.email ?? ''}
+          soloAccionable
+        />
+      )}
       {open && (
         <CourseChatModal
           room={room}
