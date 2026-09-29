@@ -75,11 +75,11 @@ export default function ProblemReportWidget() {
       <div className='fixed right-0 top-1/2 z-[120] flex -translate-y-1/2 items-center'>
         <div
           aria-hidden={!isPanelOpen}
-          className={`mr-[-8px] rounded-l-xl bg-white py-4 pl-4 pr-6 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-300 ease-out ${
+          className={`mr-[-8px] rounded-l-xl bg-white py-3 pl-3 pr-5 sm:py-4 sm:pl-4 sm:pr-6 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-300 ease-out ${
             isPanelOpen ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-6 opacity-0'
           }`}
         >
-          <p className='mb-3 whitespace-nowrap text-sm text-[#2B2B2B]'>¿Tuviste algún problema? Contanos</p>
+          <p className='mb-2 whitespace-nowrap text-xs text-[#2B2B2B] sm:mb-3 sm:text-sm'>¿Tuviste algún problema? Contanos</p>
           <button
             type='button'
             tabIndex={isPanelOpen ? 0 : -1}
@@ -87,7 +87,7 @@ export default function ProblemReportWidget() {
               setIsPanelOpen(false);
               setIsOpen(true);
             }}
-            className='w-full rounded-lg bg-[#2B2B2B] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-black active:scale-[0.98]'
+            className='w-full rounded-lg bg-[#2B2B2B] px-3 py-2 text-xs font-semibold sm:px-4 sm:py-2.5 sm:text-sm text-white transition hover:bg-black active:scale-[0.98]'
           >
             Reportar problema
           </button>
@@ -98,11 +98,11 @@ export default function ProblemReportWidget() {
           aria-label='Ayuda'
           aria-expanded={isPanelOpen}
           onClick={() => setIsPanelOpen((v) => !v)}
-          className='relative flex flex-col items-center gap-2 rounded-l-xl bg-black px-2.5 py-4 text-white shadow-lg transition-all duration-300 hover:px-3.5 select-none'
+          className='relative flex flex-col items-center gap-1.5 rounded-l-lg bg-black px-1.5 py-3 text-white shadow-lg transition-all duration-300 sm:gap-2 sm:rounded-l-xl sm:px-2.5 sm:py-4 sm:hover:px-3.5 select-none'
         >
-          <span className='rotate-180 text-xs font-medium tracking-[0.2em] [writing-mode:vertical-rl]'>AYUDA</span>
+          <span className='rotate-180 text-[10px] font-medium tracking-[0.2em] sm:text-xs [writing-mode:vertical-rl]'>AYUDA</span>
           <Headset
-            className={`h-4 w-4 transition-transform duration-300 ${isPanelOpen ? 'rotate-0' : '-rotate-90'}`}
+            className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 ${isPanelOpen ? 'rotate-0' : '-rotate-90'}`}
           />
         </button>
       </div>

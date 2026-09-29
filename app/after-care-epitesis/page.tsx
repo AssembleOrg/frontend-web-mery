@@ -70,37 +70,17 @@ export default function EpitesisAftercarePage() {
           padding: '20px',
         }}
       >
-        <div
+        <Image
+          src='/Img-home/mery-epitesis.png'
+          alt='Mery García Epítesis'
+          width={340}
+          height={125}
+          priority
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
             animation: 'slideInFromLeft 0.8s ease-out',
+            mixBlendMode: 'multiply',
           }}
-        >
-          {/* PNG blanco: brightness(0) lo pasa a gris oscuro sobre el fondo rosa */}
-          <Image
-            src='/Img-home/mery-blanco-logo.png'
-            alt='Mery García Epítesis'
-            width={300}
-            height={37}
-            priority
-            style={{ filter: 'brightness(0)', opacity: 0.75 }}
-          />
-          <span
-            style={{
-              marginTop: '4px',
-              fontSize: '22px',
-              fontWeight: 'bold',
-              fontStyle: 'italic',
-              letterSpacing: '1px',
-              lineHeight: 1,
-              color: '#414042',
-            }}
-          >
-            Epítesis
-          </span>
-        </div>
+        />
         <button
           onClick={() => {
             const content = document.getElementById('content');

@@ -6,19 +6,19 @@ import { X } from 'lucide-react';
 
 const DIN = { fontFamily: 'var(--font-din-condensed)' } as const;
 
-// Collage escalonado al costado (2 cols x 3 filas) en todos los tamaños.
+// Collage al costado: en mobile 3 apiladas; desde sm una alta + dos a la derecha.
+// IMAGEN3 tiene un "1/2" arriba a la derecha → se ancla abajo a la izquierda.
 const COLLAGE = [
-  { src: '/Img-home/handcraft.webp', area: 'col-start-1 row-start-1 row-span-2', pos: 'object-center' },
-  { src: '/Img-home/home-5.webp', area: 'col-start-2 row-start-1', pos: 'object-center' },
-  { src: '/Img-home/nanoblading.webp', area: 'col-start-2 row-start-2 row-span-2', pos: 'object-[30%_center]' },
-  { src: '/Img-home/Lip-blush-1.webp', area: 'col-start-1 row-start-3', pos: 'object-center' },
+  { src: '/IMAGEN3.webp', area: 'sm:col-start-1 sm:row-start-1 sm:row-span-2', pos: 'object-left-bottom' },
+  { src: '/IMAGEN1.webp', area: 'sm:col-start-2 sm:row-start-1', pos: 'object-center' },
+  { src: '/IMAGEN2.webp', area: 'sm:col-start-2 sm:row-start-2', pos: 'object-[35%_center]' },
 ];
 
 const TIPS = [
-  'Repasá los videos prácticos del curso.',
+  'Repasá los videos teóricos y prácticos del curso.',
   'Al realizar tus prácticas, considerá las líneas A y B (paralelas) y las proporciones de caja y densidad del capítulo "Estructura".',
   'Presentá tus prácticas tal cual indica el tutorial "Cómo presento y cómo preparo mis prácticas".',
-  'Traé 3 diseños de cejas que SÍ te gusten y 3 que NO, que no sean trabajos de M.G.',
+  'Traé 3 fotos de diseños de cejas que SÍ te gusten y 3 que NO te gusten. Ninguna puede ser un trabajo de M.G ni de su staff.',
 ];
 
 /**
@@ -83,7 +83,7 @@ export function MentorshipTipsModal({
 
         <div className='relative flex max-h-[88dvh] overflow-hidden rounded-[20px] bg-black shadow-2xl'>
           {/* Collage */}
-          <div className='grid w-[36%] flex-shrink-0 grid-cols-2 grid-rows-3 gap-1 p-1 sm:w-[40%] sm:gap-1.5 sm:p-1.5'>
+          <div className='grid w-[32%] flex-shrink-0 grid-cols-1 grid-rows-3 gap-1 p-1 sm:w-[40%] sm:grid-cols-2 sm:grid-rows-2 sm:gap-1.5 sm:p-1.5'>
             {COLLAGE.map((img, i) => (
               <div
                 key={img.src}
@@ -94,7 +94,7 @@ export function MentorshipTipsModal({
                   src={img.src}
                   alt=''
                   fill
-                  sizes='(min-width: 640px) 140px, 18vw'
+                  sizes='(min-width: 640px) 140px, 32vw'
                   className={`object-cover grayscale ${img.pos}`}
                 />
               </div>
