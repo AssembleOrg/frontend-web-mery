@@ -75,6 +75,7 @@ export default async function HomePage() {
               <div className='w-full max-w-[320px] sm:max-w-[360px]'>
                 <VideoShowcase
                   vimeoId={HOME_VIDEO_ID}
+                  posterSrc='/portada1.png'
                   title="I didn't choose the brow life. The brow life chose me."
                   durationLabel={t('duration')}
                   playLabel={t('playLabel')}
