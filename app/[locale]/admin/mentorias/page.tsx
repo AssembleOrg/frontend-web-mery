@@ -15,6 +15,7 @@ import {
   Copy,
   Check,
   X,
+  FileText,
 } from 'lucide-react';
 import {
   mentorshipApi,
@@ -25,6 +26,38 @@ import {
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from '@/components/mentorship/slot-picker-modal';
 import { ConfirmDialog } from '@/components/mentorship/confirm-dialog';
+import {
+  getForms,
+  getFormResponses,
+  type FormAnswers,
+  type FormAnswerValue,
+  type FormField,
+} from '@/lib/forms-api';
+
+/** Fichas del form previo a la mentoría (slug `mentoria`), indexadas por email. */
+type Fichas = { fields: FormField[]; byEmail: Map<string, FormAnswers> };
+
+async function loadFichas(): Promise<Fichas> {
+  try {
+    const { data } = await getForms({ search: 'mentoria' });
+    const form = data.find((f) => f.slug === 'mentoria');
+    if (!form) return { fields: [], byEmail: new Map() };
+    // ponytail: últimas 200 respuestas; paginar o filtrar por email si se supera.
+    const res = await getFormResponses(form.id, { limit: 200 });
+    const byEmail = new Map<string, FormAnswers>();
+    for (const r of res.data.responses) if (r.email) byEmail.set(r.email.toLowerCase(), r.answers);
+    return { fields: res.data.form.fields, byEmail };
+  } catch {
+    return { fields: [], byEmail: new Map() };
+  }
+}
+
+function formatAnswer(field: FormField, v: FormAnswerValue): string {
+  const label = (id: string) => field.options?.find((o) => o.id === id)?.label ?? id;
+  if (Array.isArray(v)) return v.map(label).join(', ');
+  if (typeof v === 'object') return (v.value ? 'Sí' : 'No') + (v.context ? ` — ${v.context}` : '');
+  return field.options ? label(v) : v;
+}
 
 function hhmmToMin(v: string): number {
   const [h, m] = v.split(':').map(Number);
@@ -38,6 +71,7 @@ function studentName(u: AdminMentorship['user']): string {
 export default function AdminMentoriasPage() {
   const [avail, setAvail] = useState<MentorshipAvailability[]>([]);
   const [bookings, setBookings] = useState<AdminMentorship[]>([]);
+  const [fichas, setFichas] = useState<Fichas>({ fields: [], byEmail: new Map() });
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('SCHEDULED');
 
@@ -55,12 +89,14 @@ export default function AdminMentoriasPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [a, b] = await Promise.all([
+      const [a, b, f] = await Promise.all([
         mentorshipApi.adminAvailability(),
         mentorshipApi.adminCalendar({ status: statusFilter || undefined }),
+        loadFichas(),
       ]);
       setAvail(a);
       setBookings(b);
+      setFichas(f);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -285,6 +321,8 @@ export default function AdminMentoriasPage() {
                     <BookingRow
                       key={b.id}
                       booking={b}
+                      fields={fichas.fields}
+                      answers={fichas.byEmail.get(b.user.email.toLowerCase())}
                       onReschedule={() => setRescheduleFor(b)}
                       onCancel={() => setCancelFor(b)}
                     />
@@ -341,10 +379,14 @@ export default function AdminMentoriasPage() {
 
 function BookingRow({
   booking: b,
+  fields,
+  answers,
   onReschedule,
   onCancel,
 }: Readonly<{
   booking: AdminMentorship;
+  fields: FormField[];
+  answers?: FormAnswers;
   onReschedule: () => void;
   onCancel: () => void;
 }>) {
@@ -375,6 +417,9 @@ function BookingRow({
             {b.category.name} · {b.user.email}
           </div>
         </div>
+        {answers && (
+          <FichaPopover name={studentName(b.user)} fields={fields} answers={answers} />
+        )}
         {b.status === 'SCHEDULED' && (
           <div className='flex items-center gap-1 shrink-0'>
             {b.meetLink && <MeetLinkPopover url={b.meetLink} />}
@@ -398,6 +443,64 @@ function BookingRow({
         )}
       </div>
     </div>
+  );
+}
+
+function FichaPopover({
+  name,
+  fields,
+  answers,
+}: Readonly<{ name: string; fields: FormField[]; answers: FormAnswers }>) {
+  const [open, setOpen] = useState(false);
+  const rows = fields.filter(
+    (f) => f.type !== 'info' && f.type !== 'email' && answers[f.id] !== undefined,
+  );
+
+  return (
+    <>
+      <button
+        type='button'
+        onClick={() => setOpen(true)}
+        title='Ver ficha'
+        className='p-2 rounded-lg hover:bg-muted text-muted-foreground shrink-0'
+      >
+        <FileText className='w-4 h-4' />
+      </button>
+      {open && (
+        <div className='fixed inset-0 z-[80] flex items-center justify-center p-4'>
+          <button
+            type='button'
+            aria-label='Cerrar'
+            onClick={() => setOpen(false)}
+            className='absolute inset-0 bg-black/50'
+          />
+          <div className='relative w-full max-w-md max-h-[85dvh] overflow-y-auto rounded-2xl bg-white dark:bg-card shadow-2xl p-5'>
+            <div className='flex items-center justify-between mb-4'>
+              <span className='text-sm font-semibold text-foreground'>Ficha · {name}</span>
+              <button
+                type='button'
+                onClick={() => setOpen(false)}
+                className='text-muted-foreground hover:text-foreground'
+              >
+                <X className='w-4 h-4' />
+              </button>
+            </div>
+            <dl className='space-y-3'>
+              {rows.map((f) => (
+                <div key={f.id}>
+                  <dt className='text-[11px] font-semibold uppercase tracking-wider text-muted-foreground'>
+                    {f.label}
+                  </dt>
+                  <dd className='text-sm text-foreground whitespace-pre-line break-words'>
+                    {formatAnswer(f, answers[f.id])}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

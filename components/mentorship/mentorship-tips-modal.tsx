@@ -22,7 +22,7 @@ const TIPS = [
 
 // El ítem de fotos cambia según el servicio del curso (labios vs. cejas).
 const photosTip = (categoryName: string) =>
-  `Traé 3 fotos de diseños de ${/lip|labio/i.test(categoryName) ? 'labios' : 'cejas'} que NO te gusten y 3 que SÍ te gusten. Las que SÍ te gusten no pueden ser trabajos nuestros ✨`;
+  `Recorda traer 3 fotos de diseños de ${/lip|labio/i.test(categoryName) ? 'labios' : 'cejas'} que NO te gusten y 3 que SÍ te gusten. Las que SÍ te gusten no pueden ser trabajos nuestros ✨`;
 
 /**
  * Popup previo a reservar la mentoría (mismo lenguaje visual que el flyer de la

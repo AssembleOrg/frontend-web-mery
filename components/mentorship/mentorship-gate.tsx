@@ -11,6 +11,8 @@ import {
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
 import { MentorshipTipsModal } from './mentorship-tips-modal';
+import { MentorshipFormModal, saveMentorshipForm } from './mentorship-form-modal';
+import type { FormAnswers } from '@/lib/forms-api';
 
 interface Props {
   categoryId: string;
@@ -30,6 +32,9 @@ export function MentorshipGate({
   const [loading, setLoading] = useState(true);
   const [picker, setPicker] = useState(false);
   const [tips, setTips] = useState(false);
+  const [form, setForm] = useState(false);
+  // Respuestas del form previo: se guardan solo si la reserva se confirma.
+  const [answers, setAnswers] = useState<FormAnswers>();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -104,6 +109,17 @@ export function MentorshipGate({
             onClose={() => setTips(false)}
             onAccept={() => {
               setTips(false);
+              setForm(true);
+            }}
+          />
+        )}
+        {form && (
+          <MentorshipFormModal
+            email={defaultEmail}
+            onClose={() => setForm(false)}
+            onDone={(a) => {
+              setAnswers(a);
+              setForm(false);
               setPicker(true);
             }}
           />
@@ -115,6 +131,7 @@ export function MentorshipGate({
             mode='book'
             onClose={() => setPicker(false)}
             onDone={() => {
+              if (answers) void saveMentorshipForm(answers);
               setPicker(false);
               refresh();
             }}

@@ -262,15 +262,42 @@ export default function EpitesisAftercarePage() {
           Valor: USD 250 precio de lista / USD 200 en efectivo.
         </p>
         <Separator />
-        <p style={paragraph}>
-          Mery cuenta con una agenda <strong>Special Pass</strong>, pensada
-          especialmente para clientas que nos visitan desde el interior o el
-          exterior. Son disponibilidades exclusivas con horarios y honorarios
-          diferenciales. Podés consultarnos valores y tiempo de entrega para la
-          realización de las piezas el mismo día o en el plazo de 24 hs.
-          (Incluye seguimiento y ajustes en etapa de prueba.)
-        </p>
-        <Separator />
+        {/* Special Pass banner */}
+        <div
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.6)',
+            border: '1px solid #EBA2A8',
+            borderRadius: '8px',
+            padding: '24px 20px',
+            margin: '10px 0 20px',
+            textAlign: 'center',
+          }}
+        >
+          <span
+            style={{
+              display: 'block',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              letterSpacing: '3px',
+              color: '#B85C66',
+              marginBottom: '10px',
+            }}
+          >
+            SPECIAL PASS
+          </span>
+          <p style={{ marginBottom: '10px' }}>
+            Un servicio exclusivo pensado para quienes necesitan resolver su
+            pieza con celeridad, 100% customizado por Mery García. Incluye
+            consulta personalizada, toma de medidas, molde y todo lo necesario
+            para crear tu pieza hiperrealista, cuidando cada detalle y
+            manteniendo la esencia de nuestro trabajo.
+          </p>
+          <p style={{ fontSize: '14px', fontStyle: 'italic', margin: 0 }}>
+            Ideal si nos visitás desde el interior o el exterior. Consultanos
+            valores y disponibilidad para tener tu pieza el mismo día o en 24
+            hs.
+          </p>
+        </div>
         <p style={{ marginBottom: '20px' }}>
           La elaboración de las piezas implica dedicación, planificación y
           trabajo especializado. Por ello, para iniciar el encargo es necesario

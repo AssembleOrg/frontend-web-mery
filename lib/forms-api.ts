@@ -74,6 +74,7 @@ export interface FormResponseDto {
   id: string;
   formId: string;
   answers: FormAnswers;
+  email?: string | null;
   status: FormResponseStatus;
   invitationSentAt: string | null;
   createdAt: string;
