@@ -197,33 +197,33 @@ export default function ExpressConsultationPage() {
       id: 1,
       icon: Scissors,
       titleKey: 'eyebrowModeling',
-      price: 'AR$ 50,000',
+      price: 'AR$ 52,500',
       hasRecommendation: true,
     },
     {
       id: 2,
       icon: RefreshCw,
       titleKey: 'browRefill',
-      price: 'AR$ 50,000',
+      price: 'AR$ 52,500',
       isNew: true,
     },
     {
       id: 3,
       icon: Brush,
       titleKey: 'eyebrowLamination',
-      price: 'AR$ 50,000',
+      price: 'AR$ 52,500',
     },
     {
       id: 4,
       icon: Palette,
       titleKey: 'eyebrowTint',
-      price: 'AR$ 42,000',
+      price: 'AR$ 44,100',
     },
     {
       id: 5,
       icon: Eye,
       titleKey: 'eyelashTint',
-      price: 'AR$ 42,000',
+      price: 'AR$ 44,100',
     },
   ];
 
