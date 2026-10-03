@@ -72,11 +72,11 @@ export default function ProblemReportWidget() {
     <>
       {isPanelOpen && <div className='fixed inset-0 z-[119]' onClick={() => setIsPanelOpen(false)} />}
 
-      <div className='fixed right-0 top-1/2 z-[120] flex -translate-y-1/2 items-center'>
+      <div className='fixed right-0 top-1/2 z-[120] flex -translate-y-1/2 items-center pointer-events-none'>
         <div
           aria-hidden={!isPanelOpen}
           className={`mr-[-8px] rounded-l-xl bg-white py-3 pl-3 pr-5 sm:py-4 sm:pl-4 sm:pr-6 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-300 ease-out ${
-            isPanelOpen ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-6 opacity-0'
+            isPanelOpen ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-6 opacity-0'
           }`}
         >
           <p className='mb-2 whitespace-nowrap text-xs text-[#2B2B2B] sm:mb-3 sm:text-sm'>¿Tuviste algún problema? Contanos</p>
@@ -98,7 +98,7 @@ export default function ProblemReportWidget() {
           aria-label='Ayuda'
           aria-expanded={isPanelOpen}
           onClick={() => setIsPanelOpen((v) => !v)}
-          className='relative flex flex-col items-center gap-1.5 rounded-l-lg bg-black px-1.5 py-3 text-white shadow-lg transition-all duration-300 sm:gap-2 sm:rounded-l-xl sm:px-2.5 sm:py-4 sm:hover:px-3.5 select-none'
+          className='pointer-events-auto relative flex flex-col items-center gap-1.5 rounded-l-lg bg-black px-1.5 py-3 text-white shadow-lg transition-all duration-300 sm:gap-2 sm:rounded-l-xl sm:px-2.5 sm:py-4 sm:hover:px-3.5 select-none'
         >
           <span className='rotate-180 text-[10px] font-medium tracking-[0.2em] sm:text-xs [writing-mode:vertical-rl]'>AYUDA</span>
           <Headset
