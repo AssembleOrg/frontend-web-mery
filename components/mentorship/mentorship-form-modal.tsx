@@ -162,9 +162,11 @@ export function MentorshipFormModal({
                     ...Object.fromEntries(emailFields.map((f) => [f.id, email])),
                   };
                   // El cupón no debe frenar la reserva: si falla, se sigue igual.
+                  // Un reintento por si se cortó la red: el backend devuelve
+                  // siempre el mismo código para la cuenta, no se duplica.
                   setClaiming(true);
                   try {
-                    setCoupon(await claimNewCourseCoupon());
+                    setCoupon(await claimNewCourseCoupon().catch(() => claimNewCourseCoupon()));
                     setPending(full);
                   } catch {
                     onDone(full);
