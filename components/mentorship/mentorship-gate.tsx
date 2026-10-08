@@ -1,17 +1,21 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { CalendarClock, Loader2 } from 'lucide-react';
+import { CalendarClock, ImagePlus, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
   mentorshipApi,
   formatSlot,
   formatTime,
+  materialProgress,
+  MATERIAL_TOTAL,
+  type Mentorship,
   type MentorshipEligibility,
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
 import { MentorshipTipsModal } from './mentorship-tips-modal';
 import { MentorshipFormModal, saveMentorshipForm } from './mentorship-form-modal';
+import { MentorshipMaterialModal } from './mentorship-material-modal';
 import type { FormAnswers } from '@/lib/forms-api';
 
 interface Props {
@@ -41,6 +45,8 @@ export function MentorshipGate({
   const [form, setForm] = useState(false);
   // Respuestas del form previo: se guardan solo si la reserva se confirma.
   const [answers, setAnswers] = useState<FormAnswers>();
+  // Recién reservada y pide material (Estilismo): se abre la carga al toque.
+  const [materialFor, setMaterialFor] = useState<Mentorship | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -65,6 +71,19 @@ export function MentorshipGate({
     onChanged?.();
   };
 
+  // Modal a pantalla completa: mientras está abierta tapa al gate igual.
+  if (materialFor) {
+    return (
+      <MentorshipMaterialModal
+        mentorship={materialFor}
+        onClose={() => {
+          setMaterialFor(null);
+          void load();
+        }}
+      />
+    );
+  }
+
   if (loading) {
     if (soloAccionable) return null;
     return (
@@ -83,13 +102,24 @@ export function MentorshipGate({
     return (
       <div className='mt-3 flex items-start gap-2.5 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
         <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
-        <div className='text-xs leading-relaxed'>
+        <div className='min-w-0 flex-1 text-xs leading-relaxed'>
           <span className='font-semibold'>Mentoría agendada</span>
           <span className='text-white/60'> · </span>
           <span className='capitalize text-white/80'>{formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs</span>
           <p className='text-[11px] text-white/40 mt-0.5'>
             Sujeta a confirmación de Mery García. Gestionala desde el bloque de arriba.
           </p>
+          {m.materialRequired && !m.materialComplete && (
+            <button
+              type='button'
+              onClick={() => setMaterialFor(m)}
+              className='mt-2 inline-flex items-center gap-1.5 bg-[#F9BBC4] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-colors hover:bg-white'
+              style={{ fontFamily: 'var(--font-din-condensed)' }}
+            >
+              <ImagePlus className='h-3.5 w-3.5' />
+              Cargar material · {materialProgress(m.material)}/{MATERIAL_TOTAL}
+            </button>
+          )}
         </div>
       </div>
     );
@@ -139,9 +169,10 @@ export function MentorshipGate({
             defaultEmail={defaultEmail}
             mode='book'
             onClose={() => setPicker(false)}
-            onDone={() => {
+            onDone={(booked) => {
               if (answers) void saveMentorshipForm(answers);
               setPicker(false);
+              if (booked?.materialRequired) setMaterialFor(booked);
               refresh();
             }}
           />

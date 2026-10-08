@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { CalendarClock, Video, RefreshCw, Ban } from 'lucide-react';
+import { CalendarClock, Video, RefreshCw, Ban, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
   mentorshipApi,
@@ -10,6 +10,7 @@ import {
   type Mentorship,
 } from '@/lib/mentorship-api';
 import { SlotPickerModal } from './slot-picker-modal';
+import { MaterialPendingCta, MentorshipMaterialModal } from './mentorship-material-modal';
 import { ConfirmDialog } from './confirm-dialog';
 
 /**
@@ -24,6 +25,7 @@ export function MentorshipBanner({
   const [items, setItems] = useState<Mentorship[] | null>(null);
   const [picker, setPicker] = useState<null | { id: string; categoryId: string; email: string }>(null);
   const [cancelId, setCancelId] = useState<string | null>(null);
+  const [materialId, setMaterialId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -85,7 +87,20 @@ export function MentorshipBanner({
               Sujeta a confirmación de Mery García
             </p>
 
+            {m.materialRequired && !m.materialComplete && (
+              <MaterialPendingCta mentorship={m} onOpen={() => setMaterialId(m.id)} />
+            )}
+
             <div className='mt-3 flex flex-wrap items-center gap-2'>
+              {m.materialRequired && m.materialComplete && (
+                <button
+                  type='button'
+                  onClick={() => setMaterialId(m.id)}
+                  className='inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 text-white hover:bg-white/15 transition-colors'
+                >
+                  <CheckCircle2 className='w-3.5 h-3.5 text-[#EBA2A8]' /> Material completo
+                </button>
+              )}
               {m.meetLink && (
                 <a
                   href={m.meetLink}
@@ -139,6 +154,13 @@ export function MentorshipBanner({
             setPicker(null);
             void load();
           }}
+        />
+      )}
+
+      {materialId && items.some((m) => m.id === materialId) && (
+        <MentorshipMaterialModal
+          mentorship={items.find((m) => m.id === materialId)!}
+          onClose={() => setMaterialId(null)}
         />
       )}
 

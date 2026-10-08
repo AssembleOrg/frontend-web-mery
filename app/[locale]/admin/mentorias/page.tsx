@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import {
   CalendarClock,
@@ -16,11 +16,18 @@ import {
   Check,
   X,
   FileText,
+  Images,
+  ChevronRight,
 } from 'lucide-react';
 import {
   mentorshipApi,
   WEEKDAYS,
   minutesToHHMM,
+  formatSlot,
+  formatTime,
+  materialProgress,
+  MATERIAL_SECTIONS,
+  MATERIAL_TOTAL,
   type MentorshipAvailability,
   type AdminMentorship,
 } from '@/lib/mentorship-api';
@@ -377,6 +384,10 @@ export default function AdminMentoriasPage() {
   );
 }
 
+/**
+ * Card de una reserva. Toda la card abre el detalle (material, ficha, link y
+ * acciones): así en mobile no compite el nombre con una fila de íconos.
+ */
 function BookingRow({
   booking: b,
   fields,
@@ -390,135 +401,132 @@ function BookingRow({
   onReschedule: () => void;
   onCancel: () => void;
 }>) {
+  const [open, setOpen] = useState(false);
   const time = new Date(b.scheduledStart).toLocaleTimeString('es-AR', {
     hour: '2-digit',
     minute: '2-digit',
     timeZone: 'America/Argentina/Buenos_Aires',
   });
-  const rescheduled = b.rescheduleCount >= 1;
-
-  return (
-    <div className='rounded-xl border border-border bg-white dark:bg-card p-3'>
-      <div className='flex items-center gap-3'>
-        <div className='shrink-0 flex flex-col items-start gap-1'>
-          <span className='font-mono font-semibold text-sm text-[#2B2B2B] dark:text-[#EBA2A8]'>
-            {time}
-          </span>
-          <StatusBadge status={b.status} />
-          {rescheduled && b.status === 'SCHEDULED' && (
-            <span className='inline-flex items-center gap-1 text-[10px] rounded-full px-1.5 py-0.5 bg-[#EBA2A8]/15 text-[#b06b72]'>
-              <RefreshCw className='w-2.5 h-2.5' /> Reprogramada
-            </span>
-          )}
-        </div>
-        <div className='min-w-0 flex-1'>
-          <div className='font-medium text-foreground truncate'>{studentName(b.user)}</div>
-          <div className='text-xs text-muted-foreground truncate'>
-            {b.category.name} · {b.user.email}
-          </div>
-        </div>
-        {answers && (
-          <FichaPopover name={studentName(b.user)} fields={fields} answers={answers} />
-        )}
-        {b.status === 'SCHEDULED' && (
-          <div className='flex items-center gap-1 shrink-0'>
-            {b.meetLink && <MeetLinkPopover url={b.meetLink} />}
-            <button
-              type='button'
-              onClick={onReschedule}
-              title='Reprogramar'
-              className='p-2 rounded-lg hover:bg-muted text-muted-foreground'
-            >
-              <RefreshCw className='w-4 h-4' />
-            </button>
-            <button
-              type='button'
-              onClick={onCancel}
-              title='Cancelar'
-              className='p-2 rounded-lg hover:bg-red-50 text-red-500'
-            >
-              <Ban className='w-4 h-4' />
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function FichaPopover({
-  name,
-  fields,
-  answers,
-}: Readonly<{ name: string; fields: FormField[]; answers: FormAnswers }>) {
-  const [open, setOpen] = useState(false);
-  const rows = fields.filter(
-    (f) => f.type !== 'info' && f.type !== 'email' && answers[f.id] !== undefined,
-  );
+  const showMaterial = b.materialRequired && b.status !== 'CANCELLED';
+  const progress = materialProgress(b.material);
 
   return (
     <>
       <button
         type='button'
         onClick={() => setOpen(true)}
-        title='Ver ficha'
-        className='p-2 rounded-lg hover:bg-muted text-muted-foreground shrink-0'
+        className='group w-full text-left rounded-xl border border-border bg-white dark:bg-card p-3 sm:p-4 transition-colors hover:border-[#EBA2A8] hover:bg-[#FBE8EA]/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EBA2A8]'
       >
-        <FileText className='w-4 h-4' />
-      </button>
-      {open && (
-        <div className='fixed inset-0 z-[80] flex items-center justify-center p-4'>
-          <button
-            type='button'
-            aria-label='Cerrar'
-            onClick={() => setOpen(false)}
-            className='absolute inset-0 bg-black/50'
-          />
-          <div className='relative w-full max-w-md max-h-[85dvh] overflow-y-auto rounded-2xl bg-white dark:bg-card shadow-2xl p-5'>
-            <div className='flex items-center justify-between mb-4'>
-              <span className='text-sm font-semibold text-foreground'>Ficha · {name}</span>
-              <button
-                type='button'
-                onClick={() => setOpen(false)}
-                className='text-muted-foreground hover:text-foreground'
-              >
-                <X className='w-4 h-4' />
-              </button>
+        <div className='flex items-start gap-3'>
+          <span className='shrink-0 pt-0.5 font-mono font-semibold text-sm text-[#2B2B2B] dark:text-[#EBA2A8]'>
+            {time}
+          </span>
+          <div className='min-w-0 flex-1'>
+            <div className='font-medium text-foreground leading-snug break-words'>
+              {studentName(b.user)}
             </div>
-            <dl className='space-y-3'>
-              {rows.map((f) => (
-                <div key={f.id}>
-                  <dt className='text-[11px] font-semibold uppercase tracking-wider text-muted-foreground'>
-                    {f.label}
-                  </dt>
-                  <dd className='text-sm text-foreground whitespace-pre-line break-words'>
-                    {formatAnswer(f, answers[f.id])}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <div className='text-xs text-muted-foreground leading-snug break-words'>
+              {b.category.name}
+            </div>
+            <div className='text-xs text-muted-foreground/80 leading-snug break-all'>{b.user.email}</div>
+
+            <div className='mt-2 flex flex-wrap items-center gap-1.5'>
+              <StatusBadge status={b.status} />
+              {b.rescheduleCount >= 1 && b.status === 'SCHEDULED' && (
+                <Chip className='bg-[#EBA2A8]/15 text-[#b06b72]'>
+                  <RefreshCw className='w-2.5 h-2.5' /> Reprogramada
+                </Chip>
+              )}
+              {showMaterial && (
+                <Chip
+                  className={
+                    b.materialComplete
+                      ? 'bg-emerald-50 text-emerald-700'
+                      : progress
+                        ? 'bg-[#EBA2A8]/15 text-[#b06b72]'
+                        : 'bg-muted text-muted-foreground'
+                  }
+                >
+                  <Images className='w-2.5 h-2.5' /> Material {progress}/{MATERIAL_TOTAL}
+                </Chip>
+              )}
+              {answers && (
+                <Chip className='bg-muted text-muted-foreground'>
+                  <FileText className='w-2.5 h-2.5' /> Ficha
+                </Chip>
+              )}
+            </div>
           </div>
+          <ChevronRight className='w-4 h-4 mt-1 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5' />
         </div>
+      </button>
+
+      {open && (
+        <BookingDetail
+          booking={b}
+          fields={fields}
+          answers={answers}
+          onClose={() => setOpen(false)}
+          onReschedule={() => {
+            setOpen(false);
+            onReschedule();
+          }}
+          onCancel={() => {
+            setOpen(false);
+            onCancel();
+          }}
+        />
       )}
     </>
   );
 }
 
-function MeetLinkPopover({ url }: Readonly<{ url: string }>) {
-  const [open, setOpen] = useState(false);
+function Chip({ className, children }: Readonly<{ className: string; children: React.ReactNode }>) {
+  return (
+    <span className={`inline-flex items-center gap-1 text-[10px] font-medium rounded-full px-2 py-0.5 ${className}`}>
+      {children}
+    </span>
+  );
+}
+
+/**
+ * Detalle de la reserva: hoja que sube desde abajo en mobile y modal centrado
+ * en desktop. Junta todo lo que antes eran popovers sueltos.
+ */
+function BookingDetail({
+  booking: b,
+  fields,
+  answers,
+  onClose,
+  onReschedule,
+  onCancel,
+}: Readonly<{
+  booking: AdminMentorship;
+  fields: FormField[];
+  answers?: FormAnswers;
+  onClose: () => void;
+  onReschedule: () => void;
+  onCancel: () => void;
+}>) {
   const [copied, setCopied] = useState(false);
-  const ref = useRef<HTMLDivElement | null>(null);
+  const showMaterial = b.materialRequired && b.status !== 'CANCELLED';
+  const progress = materialProgress(b.material);
+  const fichaRows = answers
+    ? fields.filter((f) => f.type !== 'info' && f.type !== 'email' && answers[f.id] !== undefined)
+    : [];
 
   useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [open]);
+  }, [onClose]);
 
-  async function copy() {
+  async function copyLink(url: string) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -529,64 +537,166 @@ function MeetLinkPopover({ url }: Readonly<{ url: string }>) {
   }
 
   return (
-    <>
-      <button
-        type='button'
-        onClick={() => setOpen(true)}
-        title='Videollamada'
-        className={`p-2 rounded-lg hover:bg-muted ${open ? 'text-[#EBA2A8]' : 'text-muted-foreground'}`}
-      >
-        <Video className='w-4 h-4' />
-      </button>
-      {open && (
-        <div className='fixed inset-0 z-[80] flex items-center justify-center p-4'>
+    <div className='fixed inset-0 z-[80] flex items-end sm:items-center justify-center sm:p-4' role='dialog' aria-modal='true'>
+      <button type='button' aria-label='Cerrar' onClick={onClose} className='absolute inset-0 bg-black/50' />
+      <div className='relative flex w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] flex-col rounded-t-2xl sm:rounded-2xl bg-white dark:bg-card shadow-2xl animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200'>
+        {/* Cabecera fija */}
+        <div className='flex items-start gap-3 border-b border-border p-4 sm:p-5'>
+          <div className='min-w-0 flex-1'>
+            <p className='font-semibold text-foreground leading-snug break-words'>{studentName(b.user)}</p>
+            <p className='text-xs text-muted-foreground break-all'>{b.user.email}</p>
+            <p className='mt-1.5 text-sm text-foreground'>{b.category.name}</p>
+            <p className='text-sm text-muted-foreground capitalize'>
+              {formatSlot(b.scheduledStart)} – {formatTime(b.scheduledEnd)} hs
+            </p>
+            <div className='mt-2 flex flex-wrap gap-1.5'>
+              <StatusBadge status={b.status} />
+              {b.rescheduleCount >= 1 && b.status === 'SCHEDULED' && (
+                <Chip className='bg-[#EBA2A8]/15 text-[#b06b72]'>
+                  <RefreshCw className='w-2.5 h-2.5' /> Reprogramada
+                </Chip>
+              )}
+            </div>
+          </div>
           <button
             type='button'
+            onClick={onClose}
             aria-label='Cerrar'
-            onClick={() => setOpen(false)}
-            className='absolute inset-0 bg-black/50'
-          />
-          <div
-            ref={ref}
-            className='relative w-full max-w-sm overflow-hidden rounded-2xl bg-[#1c1c1e] text-white shadow-2xl p-4'
+            className='p-1.5 -m-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground'
           >
-            <div className='flex items-center justify-between mb-2'>
-              <span className='text-[11px] font-semibold uppercase tracking-wider text-white/70'>
-                Link de la videollamada
-              </span>
-              <button
-                type='button'
-                onClick={() => setOpen(false)}
-                className='text-white/50 hover:text-white'
-              >
-                <X className='w-4 h-4' />
-              </button>
-            </div>
-            <p
-              className='text-xs text-white/80 leading-relaxed'
-              style={{ wordBreak: 'break-all', overflowWrap: 'anywhere' } as React.CSSProperties}
-            >
-              {url}
-            </p>
+            <X className='w-5 h-5' />
+          </button>
+        </div>
+
+        {/* Contenido */}
+        <div className='flex-1 overflow-y-auto p-4 sm:p-5 space-y-6'>
+          {b.meetLink && (
+            <section>
+              <SectionTitle>Videollamada</SectionTitle>
+              <div className='flex flex-wrap gap-2'>
+                <a
+                  href={b.meetLink}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-[#2B2B2B] text-white hover:bg-black'
+                >
+                  <Video className='w-3.5 h-3.5 text-[#EBA2A8]' /> Abrir Meet
+                </a>
+                <button
+                  type='button'
+                  onClick={() => void copyLink(b.meetLink!)}
+                  className='inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg border border-border hover:bg-muted'
+                >
+                  {copied ? (
+                    <>
+                      <Check className='w-3.5 h-3.5 text-green-600' /> Copiado
+                    </>
+                  ) : (
+                    <>
+                      <Copy className='w-3.5 h-3.5' /> Copiar link
+                    </>
+                  )}
+                </button>
+              </div>
+            </section>
+          )}
+
+          {showMaterial && (
+            <section>
+              <SectionTitle>
+                Material · {progress}/{MATERIAL_TOTAL}
+                {b.materialComplete && <span className='ml-1.5 text-emerald-600'>completo</span>}
+              </SectionTitle>
+              {b.material?.notStaff && (
+                <p className='mb-3 text-xs text-muted-foreground'>
+                  ✓ Confirmó que las referencias no son trabajos del staff.
+                </p>
+              )}
+              <div className='space-y-4'>
+                {MATERIAL_SECTIONS.map((s) => {
+                  const items = b.material?.[s.group] ?? [];
+                  return (
+                    <div key={s.group}>
+                      <p className='text-xs font-medium text-foreground'>
+                        {s.title} <span className='text-muted-foreground'>· {items.length}</span>
+                      </p>
+                      {items.length === 0 ? (
+                        <p className='mt-1 text-xs text-muted-foreground'>Sin cargar</p>
+                      ) : (
+                        <div className='mt-1.5 grid grid-cols-3 sm:grid-cols-4 gap-2'>
+                          {items.map((img) => (
+                            <a
+                              key={img.key}
+                              href={img.url}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='block aspect-square overflow-hidden rounded-lg bg-muted'
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={img.url} alt='' className='h-full w-full object-cover transition-transform hover:scale-105' />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {fichaRows.length > 0 && answers && (
+            <section>
+              <SectionTitle>Ficha</SectionTitle>
+              <dl className='space-y-3'>
+                {fichaRows.map((f) => (
+                  <div key={f.id}>
+                    <dt className='text-[11px] font-semibold uppercase tracking-wider text-muted-foreground'>
+                      {f.label}
+                    </dt>
+                    <dd className='text-sm text-foreground whitespace-pre-line break-words'>
+                      {formatAnswer(f, answers[f.id])}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          {!b.meetLink && !showMaterial && fichaRows.length === 0 && (
+            <p className='text-sm text-muted-foreground'>Sin información adicional para esta reserva.</p>
+          )}
+        </div>
+
+        {/* Acciones fijas abajo (al alcance del pulgar en mobile) */}
+        {b.status === 'SCHEDULED' && (
+          <div className='flex gap-2 border-t border-border p-3 sm:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]'>
             <button
               type='button'
-              onClick={() => void copy()}
-              className='mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-white/10 hover:bg-white/15 transition-colors'
+              onClick={onReschedule}
+              className='flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-sm font-medium rounded-lg border border-border hover:bg-muted'
             >
-              {copied ? (
-                <>
-                  <Check className='w-3.5 h-3.5 text-green-400' /> Copiado
-                </>
-              ) : (
-                <>
-                  <Copy className='w-3.5 h-3.5 text-[#EBA2A8]' /> Copiar link
-                </>
-              )}
+              <RefreshCw className='w-4 h-4' /> Reprogramar
+            </button>
+            <button
+              type='button'
+              onClick={onCancel}
+              className='flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-sm font-medium rounded-lg border border-red-200 text-red-600 hover:bg-red-50'
+            >
+              <Ban className='w-4 h-4' /> Cancelar
             </button>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SectionTitle({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <h3 className='mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground'>
+      {children}
+    </h3>
   );
 }
 
