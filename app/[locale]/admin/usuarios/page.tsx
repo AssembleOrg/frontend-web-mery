@@ -10,6 +10,7 @@ import {
   type MentorshipProduct,
   type MentorshipCredit,
 } from '@/lib/mentorship-api';
+import { useAuth } from '@/hooks/useAuth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -59,6 +60,7 @@ export default function AdminUsuariosPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'es';
+  const { user: currentUser } = useAuth();
 
   const [users, setUsers] = useState<User[]>([]);
   const [categories, setCategories] = useState<VideoCategory[]>([]);
@@ -164,6 +166,35 @@ export default function AdminUsuariosPage() {
       await mentorshipApi.adminRevokeCredit(id);
       toast.success('Crédito borrado');
       await loadUserCredits(selectedUser.id);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
+  // Solo ADMIN ve el selector; el backend valida lo mismo (users.service.ts)
+  const handleRoleChange = async (role: string) => {
+    if (!selectedUser || role === selectedUser.role) return;
+    if (!window.confirm(`¿Cambiar el rol de ${selectedUser.email} a ${role}?`)) return;
+    try {
+      const token = getAuthToken();
+      const response = await fetch(`${API_BASE_URL}/users/${selectedUser.id}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({ role }),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.message || 'Error al cambiar el rol');
+      }
+      setSelectedUser({ ...selectedUser, role });
+      setUsers((prev) =>
+        prev.map((u) => (u.id === selectedUser.id ? { ...u, role } : u))
+      );
+      toast.success('Rol actualizado');
     } catch (e) {
       toast.error((e as Error).message);
     }
@@ -525,7 +556,7 @@ export default function AdminUsuariosPage() {
                       <div className='flex items-center gap-2 mt-1'>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full ${
-                            user.role === 'ADMIN'
+                            user.role === 'ADMIN' || user.role === 'SUBADMIN'
                               ? 'bg-purple-100 text-purple-700'
                               : 'bg-gray-100 text-gray-700'
                           }`}
@@ -585,6 +616,21 @@ export default function AdminUsuariosPage() {
                     : selectedUser.name || 'Usuario'}
                 </h2>
                 <p className='text-gray-600 break-words'>{selectedUser.email}</p>
+                {currentUser?.role === 'ADMIN' && (
+                  <div className='mt-3'>
+                    <label className='block text-sm text-gray-700 mb-1'>Rol:</label>
+                    <select
+                      value={selectedUser.role}
+                      onChange={(e) => handleRoleChange(e.target.value)}
+                      disabled={selectedUser.id === currentUser.id}
+                      className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--mg-pink)] focus:border-transparent disabled:opacity-50'
+                    >
+                      <option value='USER'>USER</option>
+                      <option value='SUBADMIN'>SUBADMIN</option>
+                      <option value='ADMIN'>ADMIN</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               {/* Asignar nuevo curso */}
