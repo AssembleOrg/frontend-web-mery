@@ -151,14 +151,14 @@ export function SlotPickerModal({
                 className='w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EBA2A8]'
               />
               <p className='text-[11px] text-muted-foreground mt-1'>
-                Te llega la invitación de Google Meet a este email.
+                Te llega la confirmación con el link de Google Meet a este email.
               </p>
             </div>
           )}
 
           <div>
             <p className='text-xs font-medium text-muted-foreground mb-2'>
-              Elegí un horario
+              Elegí un horario (hora de Argentina)
             </p>
             {slots === null ? (
               <div className='py-6 flex justify-center'>
