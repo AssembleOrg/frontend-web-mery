@@ -10,6 +10,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Cookies from 'js-cookie';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function useAuthInterceptor() {
@@ -20,6 +21,13 @@ export function useAuthInterceptor() {
 
   useEffect(() => {
     const handleUnauthorized = (event: Event) => {
+      // Un 401 de un pedido que salió con otra sesión (ej. lanzado antes de
+      // iniciar sesión y respondido después) es viejo: se ignora.
+      const detail = (event as CustomEvent).detail as { tokenAlEnviar?: string | null } | undefined;
+      if (detail && 'tokenAlEnviar' in detail && (detail.tokenAlEnviar ?? null) !== (Cookies.get('auth_token') ?? null)) {
+        return;
+      }
+
       // Clear auth state
       clearAuth();
 
