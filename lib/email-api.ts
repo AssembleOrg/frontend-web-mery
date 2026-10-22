@@ -15,10 +15,17 @@ export interface CampaignResult {
   failed: Array<{ email: string; error: string }>;
 }
 
+export type CampaignName = 'formaciones' | 'mentorias-free';
+
 export const emailApi = {
-  formacionesCampaign: (limit = 150, confirm = false, recipients?: CampaignRecipient[]) =>
+  sendCampaign: (
+    campaign: CampaignName,
+    limit = 150,
+    confirm = false,
+    recipients?: CampaignRecipient[],
+  ) =>
     apiRequest<CampaignResult>('/email/campaigns/formaciones/send', {
       method: 'POST',
-      body: JSON.stringify({ limit, confirm, recipients }),
+      body: JSON.stringify({ campaign, limit, confirm, recipients }),
     }),
 };
