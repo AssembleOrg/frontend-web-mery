@@ -16,6 +16,7 @@ import {
   Package,
   MoreHorizontal,
   X,
+  Store,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/navigation';
@@ -31,6 +32,7 @@ const navItems = [
   { href: 'admin/chats', label: 'Chats', icon: MessageCircle },
   { href: 'admin/mentorias', label: 'Mentorías', icon: CalendarClock },
   { href: 'admin/productos-mentoria', label: 'Productos mentoría', icon: Package },
+  { href: 'admin/tienda-mentorias', label: 'Tienda de mentorías', icon: Store },
   { href: 'admin/formularios', label: 'Formularios', icon: FileText },
   { href: 'admin/emails', label: 'Emails', icon: Mail },
   { href: 'admin/configuracion', label: 'Config', icon: Settings },
