@@ -9,6 +9,7 @@ import {
   LogOut,
   ChevronDown,
   MapPin,
+  CalendarCheck,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -33,6 +34,7 @@ const MENU_ITEMS: MenuItem[] = [
   { href: '/admin', label: 'Panel Admin', icon: Settings, adminOnly: true },
   { href: '/mi-cuenta', label: 'Mi Cuenta', icon: UserIcon },
   { href: '/presencialidad', label: 'Presencialidad', icon: MapPin, highlight: true },
+  { href: '/mentorias/mis-mentorias', label: 'Mis mentorías', icon: CalendarCheck },
 ];
 
 export function UserMenu({ onNavigate, inline = false }: UserMenuProps = {}) {

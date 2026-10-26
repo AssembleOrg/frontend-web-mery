@@ -55,6 +55,12 @@ export function Navigation() {
               GIFTCARD
             </Link>
             <Link
+              href='/mentorias'
+              className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
+            >
+              MENTORÍAS
+            </Link>
+            <Link
               href='/contact'
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'
             >

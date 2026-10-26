@@ -67,6 +67,8 @@ export const routing = defineRouting({
     },
     '/formaciones': '/formaciones',
     '/presencialidad': '/presencialidad',
+    '/mentorias': '/mentorias',
+    '/mentorias/mis-mentorias': '/mentorias/mis-mentorias',
     '/ofertas-especiales': {
       es: '/ofertas-especiales',
       en: '/ofertas-especiales',
@@ -112,6 +114,7 @@ export const routing = defineRouting({
     '/admin/usuarios': '/admin/usuarios',
     '/admin/cupones': '/admin/cupones',
     '/admin/formularios': '/admin/formularios',
+    '/admin/tienda-mentorias': '/admin/tienda-mentorias',
   },
 });
 

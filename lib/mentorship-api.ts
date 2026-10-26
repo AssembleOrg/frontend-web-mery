@@ -161,7 +161,7 @@ export const mentorshipApi = {
   eligibility: (categoryId: string) =>
     api<MentorshipEligibility>(`/mentorship/eligibility/${categoryId}`),
   mine: () => api<Mentorship[]>('/mentorship/mine'),
-  book: (payload: { categoryId: string; start: string; meetingEmail: string }) =>
+  book: (payload: { categoryId: string; start: string; meetingEmail: string; creditId?: string }) =>
     api<Mentorship>('/mentorship/book', {
       method: 'POST',
       body: JSON.stringify(payload),

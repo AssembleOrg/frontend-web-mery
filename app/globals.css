@@ -596,3 +596,7 @@
 body.hide-rag-widget #rag-root {
   display: none !important;
 }
+/* El botón "Ayuda" (reporte de problemas) también se esconde con un modal abierto. */
+body.hide-rag-widget [data-help-widget] {
+  display: none !important;
+}
