@@ -122,6 +122,9 @@ export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
+  // Con qué sesión salió el pedido: un 401 de un pedido viejo no debe cerrar una
+  // sesión iniciada mientras tanto (ver useAuthInterceptor).
+  const tokenAlEnviar = getAuthToken() ?? null;
   const headers = {
     ...getAuthHeaders(),
     ...options.headers,
@@ -150,7 +153,7 @@ export async function apiRequest<T>(
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
           new CustomEvent('auth:unauthorized', {
-            detail: { status: response.status, endpoint, error: errorData },
+            detail: { status: response.status, endpoint, error: errorData, tokenAlEnviar },
           })
         );
       }

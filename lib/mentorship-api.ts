@@ -21,6 +21,41 @@ export interface Mentorship {
   meetingEmail: string;
   meetLink: string | null;
   category?: { id: string; name: string; slug?: string };
+  /** El curso pide material previo (Estilismo). */
+  materialRequired?: boolean;
+  material?: MentorshipMaterial | null;
+  materialComplete?: boolean;
+}
+
+export type MaterialGroup = 'box' | 'sheet' | 'dislike' | 'like';
+export interface MaterialImage {
+  url: string;
+  key: string;
+}
+export type MentorshipMaterial = Record<MaterialGroup, MaterialImage[]> & {
+  notStaff: boolean;
+  updatedAt?: string;
+};
+
+/** Grupos del material previo. min = para estar completo (espejo del backend). */
+export const MATERIAL_SECTIONS: Array<{
+  group: MaterialGroup;
+  title: string;
+  hint: string;
+  min: number;
+  max: number;
+}> = [
+  { group: 'box', title: 'Prácticas de cajas', hint: 'Al menos 2 trabajos, en personas o revistas.', min: 2, max: 6 },
+  { group: 'sheet', title: 'Hoja de prácticas', hint: 'Descargá la hoja, completala a mano y subí una foto.', min: 1, max: 3 },
+  { group: 'dislike', title: '3 trabajos que NO te gustan', hint: 'Diseños de cejas que no te gustan.', min: 3, max: 3 },
+  { group: 'like', title: '3 trabajos que SÍ te gustan', hint: 'Diseños de cejas que te gustan. No pueden ser trabajos del staff.', min: 3, max: 3 },
+];
+export const MATERIAL_TOTAL = MATERIAL_SECTIONS.reduce((n, s) => n + s.min, 0);
+
+/** Imágenes que cuentan para el progreso (x/9). */
+export function materialProgress(m?: MentorshipMaterial | null): number {
+  if (!m) return 0;
+  return MATERIAL_SECTIONS.reduce((n, s) => n + Math.min(m[s.group]?.length ?? 0, s.min), 0);
 }
 
 export interface MentorshipEligibility {
@@ -85,7 +120,7 @@ export interface AdminMentorship extends Mentorship {
     lastName: string | null;
     email: string;
   };
-  category: { id: string; name: string };
+  category: { id: string; name: string; slug?: string };
 }
 
 export interface MentorshipAvailability {
@@ -138,6 +173,33 @@ export const mentorshipApi = {
     }),
   cancel: (id: string) =>
     api<{ cancelled: boolean }>(`/mentorship/${id}/cancel`, { method: 'POST' }),
+  uploadMaterialImage: async (id: string, file: File) => {
+    const token = Cookies.get('auth_token');
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${API_BASE_URL}/mentorship/${id}/material/images`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: form,
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error((data as { message?: string }).message || 'No se pudo subir la imagen');
+    }
+    return ((await res.json()) as { data: MaterialImage }).data;
+  },
+  saveMaterial: (id: string, m: MentorshipMaterial) =>
+    api<Mentorship>(`/mentorship/${id}/material`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        box: m.box.map((i) => i.key),
+        sheet: m.sheet.map((i) => i.key),
+        dislike: m.dislike.map((i) => i.key),
+        like: m.like.map((i) => i.key),
+        notStaff: m.notStaff,
+      }),
+    }),
 
   // Productos pagos (público) + créditos del alumno
   products: () => api<MentorshipProduct[]>('/mentorship/products'),

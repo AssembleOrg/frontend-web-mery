@@ -3,7 +3,22 @@
 import { ChangeEvent, useState } from 'react';
 import { AlertTriangle, CheckCircle2, FileUp, Mail, Send, Users } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { emailApi, CampaignResult } from '@/lib/email-api';
+import { emailApi, CampaignName, CampaignResult } from '@/lib/email-api';
+
+const CAMPAIGNS: Record<CampaignName, { label: string; title: string; subtitle: string; notice: string }> = {
+  formaciones: {
+    label: 'Promoción Formaciones 40% OFF',
+    title: 'Campaña #FormacionesMG',
+    subtitle: 'Envío personalizado con el nombre de cada cliente',
+    notice: 'Se enviará únicamente a clientes activos con email verificado. Revisá la vista previa antes de confirmar.',
+  },
+  'mentorias-free': {
+    label: 'Aclaración Mentorías FREE',
+    title: 'Aclaración Mentorías FREE',
+    subtitle: 'Alumnas de Estilismo de Cejas (Módulo 1) y Microblading Módulo 2, con acceso vigente o vencido',
+    notice: 'Cada alumna aparece una sola vez aunque tenga ambos cursos. Destildá las cuentas de prueba antes de enviar.',
+  },
+};
 
 function parseCsv(text: string) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
@@ -20,6 +35,7 @@ function parseCsv(text: string) {
 }
 
 export default function AdminEmailsPage() {
+  const [campaign, setCampaign] = useState<CampaignName>('formaciones');
   const [limit, setLimit] = useState(150);
   const [preview, setPreview] = useState<CampaignResult | null>(null);
   const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
@@ -29,11 +45,11 @@ export default function AdminEmailsPage() {
   const loadPreview = async () => {
     try {
       setIsLoading(true);
-      const response = await emailApi.formacionesCampaign(limit, false);
+      const response = await emailApi.sendCampaign(campaign, limit, false);
       setPreview(response.data);
       setSelectedEmails(new Set(response.data.recipients.map((recipient) => recipient.email)));
       setConfirmed(false);
-      toast.success(`Se encontraron ${response.data.total} clientes elegibles`);
+      toast.success(`Se encontraron ${response.data.total} destinatarias elegibles`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'No se pudo cargar la vista previa');
     } finally {
@@ -77,10 +93,10 @@ export default function AdminEmailsPage() {
         toast.error('Seleccioná al menos un destinatario');
         return;
       }
-      const response = await emailApi.formacionesCampaign(recipients.length, true, recipients);
+      const response = await emailApi.sendCampaign(campaign, recipients.length, true, recipients);
       setPreview(response.data);
       setConfirmed(false);
-      toast.success(`Campaña enviada a ${response.data.sent} clientes`);
+      toast.success(`Campaña enviada a ${response.data.sent} destinatarias`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'No se pudo enviar la campaña');
     } finally {
@@ -92,14 +108,25 @@ export default function AdminEmailsPage() {
     <div className='space-y-6'>
       <div>
         <p className='text-xs font-semibold uppercase tracking-widest text-[#EBA2A8]'>Comunicaciones</p>
-        <h1 className='mt-1 text-2xl sm:text-3xl font-bold text-gray-900'>Enviar promoción</h1>
-        <p className='mt-1 text-sm text-gray-500'>Campaña de Formaciones · 40% OFF</p>
+        <h1 className='mt-1 text-2xl sm:text-3xl font-bold text-gray-900'>Enviar campaña</h1>
+        <div className='mt-3 flex flex-wrap gap-2'>
+          {(Object.keys(CAMPAIGNS) as CampaignName[]).map((key) => (
+            <button
+              key={key}
+              type='button'
+              onClick={() => { setCampaign(key); setPreview(null); setSelectedEmails(new Set()); setConfirmed(false); }}
+              className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${campaign === key ? 'border-[#5f0001] bg-[#5f0001] text-white' : 'border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+            >
+              {CAMPAIGNS[key].label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className='rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900'>
         <div className='flex gap-3'>
           <AlertTriangle className='mt-0.5 h-5 w-5 flex-shrink-0' />
-          <p>Se enviará únicamente a clientes activos con email verificado. Revisá la vista previa antes de confirmar.</p>
+          <p>{CAMPAIGNS[campaign].notice}</p>
         </div>
       </div>
 
@@ -109,8 +136,8 @@ export default function AdminEmailsPage() {
             <Mail className='h-5 w-5 text-[#EBA2A8]' />
           </div>
           <div>
-            <h2 className='font-semibold text-gray-900'>Campaña #FormacionesMG</h2>
-            <p className='text-sm text-gray-500'>Envío personalizado con el nombre de cada cliente</p>
+            <h2 className='font-semibold text-gray-900'>{CAMPAIGNS[campaign].title}</h2>
+            <p className='text-sm text-gray-500'>{CAMPAIGNS[campaign].subtitle}</p>
           </div>
         </div>
 
@@ -157,7 +184,7 @@ export default function AdminEmailsPage() {
 
           <div className='mt-4 max-h-64 overflow-y-auto rounded-xl bg-gray-50 p-3 text-sm'>
             <div className='mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 pb-2'>
-              <span className='text-xs text-gray-500'>Elegí quiénes recibirán la promoción</span>
+              <span className='text-xs text-gray-500'>Elegí quiénes recibirán el mail</span>
               <div className='flex gap-2'>
                 <button
                   type='button'
@@ -195,7 +222,7 @@ export default function AdminEmailsPage() {
                   onChange={(event) => setConfirmed(event.target.checked)}
                   className='mt-0.5 h-4 w-4 accent-[#5f0001]'
                 />
-                <span>Revisé los destinatarios seleccionados y confirmo el envío de esta promoción.</span>
+                <span>Revisé los destinatarios seleccionados y confirmo el envío de esta campaña.</span>
               </label>
               <button
                 type='button'

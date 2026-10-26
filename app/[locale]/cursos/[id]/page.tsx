@@ -101,8 +101,10 @@ export default function CursoDetallePage() {
         });
       }
 
-      // Solo intentamos cargar el video si hay token (usuario autenticado)
-      if (!token) {
+      // Solo intentamos cargar el video con sesión iniciada. Se mira el usuario y no
+      // el token en memoria: la sesión también viaja en la cookie, y el token puede
+      // faltar (ej. tras recargar) aunque la sesión sea válida.
+      if (!user) {
         return;
       }
 
@@ -132,11 +134,11 @@ export default function CursoDetallePage() {
         }
       }
     },
-    [setCurrentLesson, token]
+    [setCurrentLesson, user]
   );
 
   const loadCourse = useCallback(async () => {
-    if (!user || !token) {
+    if (!user) {
       return;
     }
 
@@ -265,7 +267,7 @@ export default function CursoDetallePage() {
   const courseCompleted = lessonsTotal > 0 && lessonsDone >= lessonsTotal;
 
   useEffect(() => {
-    if (!token || !courseCompleted) return;
+    if (!user || !courseCompleted) return;
     let cancelled = false;
     getCourseQuiz(courseId)
       .then((res) => {
@@ -287,7 +289,7 @@ export default function CursoDetallePage() {
     return () => {
       cancelled = true;
     };
-  }, [token, courseCompleted, courseId]);
+  }, [user, courseCompleted, courseId]);
 
   const quizPending =
     !!quizInfo?.required && !quizInfo.status.passed;

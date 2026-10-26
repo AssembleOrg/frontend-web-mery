@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CalendarClock, Loader2, X, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { mentorshipApi, type MentorshipSlot } from '@/lib/mentorship-api';
+import { mentorshipApi, type Mentorship, type MentorshipSlot } from '@/lib/mentorship-api';
 
 export function SlotPickerModal({
   categoryId,
@@ -24,7 +24,8 @@ export function SlotPickerModal({
   /** Línea secundaria bajo el título (ej. "Juana Pérez · Nanoblading"). */
   subtitle?: string;
   onClose: () => void;
-  onDone: () => void;
+  /** En una reserva nueva recibe la mentoría creada. */
+  onDone: (booked?: Mentorship) => void;
 }>) {
   const [slots, setSlots] = useState<MentorshipSlot[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -79,6 +80,7 @@ export function SlotPickerModal({
       return;
     }
     setSaving(true);
+    let booked: Mentorship | undefined;
     try {
       if (mode === 'reschedule' && mentorshipId) {
         await (admin
@@ -86,15 +88,17 @@ export function SlotPickerModal({
           : mentorshipApi.reschedule(mentorshipId, selected));
         toast.success('Mentoría reprogramada');
       } else {
-        await mentorshipApi.book({
+        booked = await mentorshipApi.book({
           categoryId,
           start: selected,
           meetingEmail: email.trim(),
         });
-        toast.success('Mentoría reservada');
+        toast.success('Solicitud enviada. La mentoría queda sujeta a confirmación de Mery García.', {
+          duration: 6000,
+        });
       }
       window.dispatchEvent(new CustomEvent('mentorship:changed'));
-      onDone();
+      onDone(booked);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -147,14 +151,14 @@ export function SlotPickerModal({
                 className='w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EBA2A8]'
               />
               <p className='text-[11px] text-muted-foreground mt-1'>
-                Te llega la invitación de Google Meet a este email.
+                Te llega la confirmación con el link de Google Meet a este email.
               </p>
             </div>
           )}
 
           <div>
             <p className='text-xs font-medium text-muted-foreground mb-2'>
-              Elegí un horario
+              Elegí un horario (hora de Argentina)
             </p>
             {slots === null ? (
               <div className='py-6 flex justify-center'>
@@ -205,6 +209,13 @@ export function SlotPickerModal({
           </div>
         </div>
 
+        {mode === 'book' && (
+          <p className='mx-4 mb-1 mt-2 rounded-lg bg-[#FBE8EA] px-3 py-2 text-xs leading-relaxed text-[#8b1538] shrink-0'>
+            <strong className='font-semibold'>Sujeta a confirmación.</strong> Tu solicitud queda
+            pendiente hasta que Mery García confirme el horario.
+          </p>
+        )}
+
         <div className='flex items-center justify-end gap-2 px-4 py-3 border-t border-border shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))]'>
           <button
             type='button'
@@ -224,7 +235,7 @@ export function SlotPickerModal({
             ) : (
               <Check className='w-4 h-4' />
             )}
-            {mode === 'reschedule' ? 'Reprogramar' : 'Confirmar reserva'}
+            {mode === 'reschedule' ? 'Reprogramar' : 'Solicitar mentoría'}
           </button>
         </div>
       </div>

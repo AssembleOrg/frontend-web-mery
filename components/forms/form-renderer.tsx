@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Check, Loader2, Calendar, MapPin, Clock, ExternalLink } from 'lucide-react';
 import { PhoneInput } from '@/components/ui/phone-input';
 import type { FormAnswers, FormField, YesNoAnswer } from '@/lib/forms-api';
@@ -14,6 +14,8 @@ interface FormRendererProps {
   submitting?: boolean;
   /** Modo preview: deshabilita el submit real */
   preview?: boolean;
+  /** Contenido extra debajo de un campo (ej. el aviso del cupón en mentoría). */
+  renderAfterField?: (field: FormField) => ReactNode;
 }
 
 const inputClasses =
@@ -25,6 +27,7 @@ export function FormRenderer({
   onSubmit,
   submitting = false,
   preview = false,
+  renderAfterField,
 }: FormRendererProps) {
   const [answers, setAnswers] = useState<FormAnswers>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -113,6 +116,7 @@ export function FormRenderer({
               onChange={(v) => setAnswer(field.id, v)}
             />
           )}
+          {renderAfterField?.(field)}
         </div>
       ))}
 

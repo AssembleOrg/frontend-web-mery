@@ -5,6 +5,7 @@ import { Play, Volume2 } from 'lucide-react';
 
 interface VideoShowcaseProps {
   vimeoId: string;
+  posterSrc?: string;
   title: string;
   durationLabel?: string;
   playLabel?: string;
@@ -13,6 +14,7 @@ interface VideoShowcaseProps {
 
 export function VideoShowcase({
   vimeoId,
+  posterSrc,
   title,
   durationLabel = '30 seg',
   playLabel = 'Reproducir video',
@@ -43,7 +45,7 @@ export function VideoShowcase({
 
   if (!vimeoId) return null;
 
-  const posterUrl = `https://vumbnail.com/${vimeoId}.jpg`;
+  const posterUrl = posterSrc || `https://vumbnail.com/${vimeoId}.jpg`;
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0&color=f9bbc4&dnt=1`;
 
   return (

@@ -72,15 +72,20 @@ export function useAuth() {
         resolveVerify = resolve;
       });
 
+      // Si mientras esta verificación viajaba alguien inició sesión, su "no hay
+      // sesión" ya es viejo: no puede borrar la sesión nueva. Pasaba al loguearse
+      // rápido (autocompletado, backend lento) y dejaba el token en null.
+      const tokenAlEmpezar = useAuthStore.getState().token;
+      const sesionCambio = () => useAuthStore.getState().token !== tokenAlEmpezar;
       try {
         const response = await meService();
         if (response && response.user) {
           setAuth(response.user, response.token || null);
-        } else {
+        } else if (!sesionCambio()) {
           clearAuth();
         }
       } catch (err) {
-        clearAuth();
+        if (!sesionCambio()) clearAuth();
       } finally {
         setSharedLoading(false);
         resolveVerify();

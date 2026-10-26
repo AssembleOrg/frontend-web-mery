@@ -21,12 +21,11 @@ export class UserCoursesServiceError extends Error {
  * Get user's enrolled courses
  * Requires authentication token
  */
-export const getUserCourses = async (token: string): Promise<UserCourse[]> => {
-  // Use the backend categories endpoint which returns hasAccess field for authenticated users
+export const getUserCourses = async (token?: string | null): Promise<UserCourse[]> => {
+  // Use the backend categories endpoint which returns hasAccess field for authenticated users.
+  // Sin token en memoria alcanza la cookie de sesión: no mandar "Bearer null".
   const response = await fetch(`${API_BASE_URL}/categories`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     credentials: 'include',
   });
 
