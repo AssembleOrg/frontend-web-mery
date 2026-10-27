@@ -97,13 +97,6 @@ export function MobileMenu() {
               GIFTCARD
             </Link>
             <Link
-              href='/mentorias'
-              className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
-              onClick={closeMenu}
-            >
-              MENTORÍAS
-            </Link>
-            <Link
               href='/contact'
               className='block text-lg font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300'
               onClick={closeMenu}

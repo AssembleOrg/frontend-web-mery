@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Copy, Check } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
-export const BANK_DATA = {
+const BANK_DATA = {
   ARS: {
     banco: 'Banco Galicia',
     titular: 'María Martha García Tello',
@@ -21,7 +21,7 @@ export const BANK_DATA = {
   },
 } as const;
 
-export const WA_URL = 'https://wa.me/5491153336627';
+const WA_URL = 'https://wa.me/5491153336627';
 
 interface BankTransferModalProps {
   isOpen: boolean;

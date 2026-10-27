@@ -1,6 +1,5 @@
 'use client';
 
-import { Link } from '@/i18n/routing';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { X, CheckCircle2, RotateCcw, Clock, GraduationCap, Loader2, CalendarClock } from 'lucide-react';
 import {
@@ -264,11 +263,7 @@ export function CourseQuizModal({
                         </p>
                         <p className='mt-1 text-[13px] leading-relaxed text-white/60'>
                           La mentoría gratuita es una por cuenta y ya la aprovechaste
-                          en otra formación. Podés sumar más desde la{' '}
-                          <Link href='/mentorias' className='font-semibold text-[#EBA2A8] underline underline-offset-2'>
-                            tienda de mentorías
-                          </Link>
-                          .
+                          en otra formación.
                         </p>
                       </>
                     ) : (

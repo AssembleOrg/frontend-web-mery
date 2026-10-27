@@ -12,7 +12,6 @@ export function SlotPickerModal({
   mentorshipId,
   admin = false,
   subtitle,
-  creditId,
   onClose,
   onDone,
 }: Readonly<{
@@ -24,8 +23,6 @@ export function SlotPickerModal({
   admin?: boolean;
   /** Línea secundaria bajo el título (ej. "Juana Pérez · Nanoblading"). */
   subtitle?: string;
-  /** Crédito de la tienda de mentorías a consumir (reserva sin exigir el curso). */
-  creditId?: string;
   onClose: () => void;
   /** En una reserva nueva recibe la mentoría creada. */
   onDone: (booked?: Mentorship) => void;
@@ -95,7 +92,6 @@ export function SlotPickerModal({
           categoryId,
           start: selected,
           meetingEmail: email.trim(),
-          ...(creditId ? { creditId } : {}),
         });
         toast.success('Solicitud enviada. La mentoría queda sujeta a confirmación de Mery García.', {
           duration: 6000,
@@ -152,9 +148,7 @@ export function SlotPickerModal({
                 type='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                autoComplete='email'
-                inputMode='email'
-                className='w-full px-3 py-2 text-base sm:text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EBA2A8]'
+                className='w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EBA2A8]'
               />
               <p className='text-[11px] text-muted-foreground mt-1'>
                 Te llega la confirmación con el link de Google Meet a este email.
@@ -197,7 +191,7 @@ export function SlotPickerModal({
                             key={s.start}
                             type='button'
                             onClick={() => setSelected(s.start)}
-                            className={`min-h-11 px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+                            className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
                               active
                                 ? 'bg-[#2B2B2B] text-white border-[#2B2B2B]'
                                 : 'border-border text-foreground hover:border-[#EBA2A8]'

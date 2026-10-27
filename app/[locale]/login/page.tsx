@@ -46,14 +46,10 @@ export default function LoginPage() {
       toast.success(
         `¡Bienvenida de nuevo, ${result.user.firstName || 'Estudiante'}!`
       );
-      // Volver a donde estaba (ej. el carrito de mentorías). Solo rutas internas.
-      const redirect = new URLSearchParams(window.location.search).get('redirect');
-      const safeRedirect =
-        redirect && /^\/(?![/\\])/.test(redirect) ? redirect : null;
       if (result.user.role === 'admin') {
         router.push(`/${locale}/admin/cursos`);
       } else {
-        router.push(safeRedirect ?? `/${locale}/mi-cuenta`);
+        router.push(`/${locale}/mi-cuenta`);
       }
     }
   };

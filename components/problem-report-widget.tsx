@@ -72,7 +72,7 @@ export default function ProblemReportWidget() {
     <>
       {isPanelOpen && <div className='fixed inset-0 z-[119]' onClick={() => setIsPanelOpen(false)} />}
 
-      <div data-help-widget className='fixed right-0 top-1/2 z-[120] flex -translate-y-1/2 items-center pointer-events-none'>
+      <div className='fixed right-0 top-1/2 z-[120] flex -translate-y-1/2 items-center pointer-events-none'>
         <div
           aria-hidden={!isPanelOpen}
           className={`mr-[-8px] rounded-l-xl bg-white py-3 pl-3 pr-5 sm:py-4 sm:pl-4 sm:pr-6 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-300 ease-out ${
