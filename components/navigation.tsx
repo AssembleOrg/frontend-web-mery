@@ -28,7 +28,7 @@ export function Navigation() {
           >
             <SimpleLogo />
           </Link>
-          <div className='hidden xl:flex items-center space-x-4 2xl:space-x-6'>
+          <div className='hidden xl:flex items-center mx-4 space-x-3 2xl:space-x-6'>
             <Link
               href='/'
               className='text-sm font-primary font-medium transition-colors hover:text-primary text-gray-600 dark:text-gray-300 whitespace-nowrap'

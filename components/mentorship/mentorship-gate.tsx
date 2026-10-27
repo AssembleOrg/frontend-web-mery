@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { CalendarClock, ImagePlus, Loader2 } from 'lucide-react';
+import { CalendarClock, ImagePlus, Loader2, ShoppingBag } from 'lucide-react';
+import { Link } from '@/i18n/routing';
 import toast from 'react-hot-toast';
 import {
   mentorshipApi,
@@ -184,17 +185,24 @@ export function MentorshipGate({
   // Con el chat abierto no se muestran avisos de "no disponible".
   if (soloAccionable) return null;
 
-  // Ya usó su mentoría gratuita (una por cuenta).
+  // Ya usó su mentoría gratuita (una por cuenta): las siguientes se compran en
+  // la tienda de mentorías.
   if (elig.blockedByOtherCourse || elig.needsPurchase) {
     return (
       <div className='mt-3 flex items-start gap-2.5 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
         <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
         <div className='text-xs leading-relaxed'>
-          <span className='font-semibold'>Mentoría no disponible</span>
+          <span className='font-semibold'>Ya usaste tu mentoría gratuita</span>
           <p className='text-[11px] text-white/60 mt-0.5'>
-            La mentoría gratuita es una sola por cuenta y ya la usaste en otra
-            formación.
+            Es una sola por cuenta. Podés sumar más mentorías desde la tienda.
           </p>
+          <Link
+            href='/mentorias'
+            className='mt-2 inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#EBA2A8] px-3 text-xs font-semibold text-white transition-colors hover:bg-[#d89196]'
+          >
+            <ShoppingBag className='w-3.5 h-3.5' aria-hidden='true' />
+            Comprar mentorías
+          </Link>
         </div>
       </div>
     );
