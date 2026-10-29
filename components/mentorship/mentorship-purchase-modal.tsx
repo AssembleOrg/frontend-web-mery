@@ -9,6 +9,8 @@ import {
   type MentorshipVariant,
 } from '@/lib/mentorship-api';
 import { BankTransferModal } from '@/components/bank-transfer-modal';
+import { isMentorship3x2Active } from '@/lib/mentorship-promo';
+import { MentorshipPromo3x2 } from './mentorship-promo-3x2';
 
 interface Props {
   /** Si viene, filtra los productos de ese curso (más los genéricos sin curso). */
@@ -25,6 +27,8 @@ function formatAmount(v: MentorshipVariant): string {
 
 export function MentorshipPurchaseModal({ categoryId, onClose }: Readonly<Props>) {
   const [products, setProducts] = useState<MentorshipProduct[]>([]);
+  // La promo 3x2 combina mentorías de cualquier curso: va con el catálogo entero.
+  const [promoProducts, setPromoProducts] = useState<MentorshipProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [transfer, setTransfer] = useState<{
     currency: 'ARS' | 'USD';
@@ -40,6 +44,7 @@ export function MentorshipPurchaseModal({ categoryId, onClose }: Readonly<Props>
         ? all.filter((p) => !p.categoryId || p.categoryId === categoryId)
         : all;
       setProducts(filtered);
+      setPromoProducts(all.filter((p) => p.type === 'MENTORSHIP'));
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -91,6 +96,10 @@ export function MentorshipPurchaseModal({ categoryId, onClose }: Readonly<Props>
           </div>
 
           <div className='px-5 py-4 space-y-4'>
+            {!loading && isMentorship3x2Active() && (
+              <MentorshipPromo3x2 products={promoProducts} onBuy={setTransfer} />
+            )}
+
             {loading ? (
               <div className='flex justify-center py-8'>
                 <Loader2 className='h-6 w-6 animate-spin text-muted-foreground' />
