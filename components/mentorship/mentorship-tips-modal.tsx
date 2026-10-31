@@ -114,7 +114,7 @@ export function MentorshipTipsModal({
 
           {/* Flag rosa "Antes de reservar" — sale del borde derecho, como el flyer */}
           <span
-            className='tips-rise absolute right-0 top-6 z-40 whitespace-nowrap bg-[#F9BBC4] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-black sm:top-9sm:px-4 sm:py-1.5 sm:text-[12px]'
+            className='tips-rise absolute right-0 top-6 z-40 whitespace-nowrap bg-[#F9BBC4] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-black sm:top-9 sm:px-4 sm:py-1.5 sm:text-[12px]'
             style={{ ...DIN, animationDelay: '0.3s' }}
           >
             Antes de reservar

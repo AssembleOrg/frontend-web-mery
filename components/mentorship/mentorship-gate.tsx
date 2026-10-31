@@ -18,6 +18,7 @@ import { MentorshipFormModal, saveMentorshipForm } from './mentorship-form-modal
 import { MentorshipMaterialModal } from './mentorship-material-modal';
 import { MentorshipPurchaseModal } from './mentorship-purchase-modal';
 import type { FormAnswers } from '@/lib/forms-api';
+import { isMentorship3x2Active } from '@/lib/mentorship-promo';
 
 interface Props {
   categoryId: string;
@@ -73,6 +74,23 @@ export function MentorshipGate({
     onChanged?.();
   };
 
+  // Comprar más mentorías (con el 3x2 mientras dure) aunque tenga la FREE o ya
+  // tenga una agendada.
+  const buyMore = (
+    <>
+      <button
+        type='button'
+        onClick={() => setPurchase(true)}
+        className='mt-2 w-full text-center text-[11px] font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground'
+      >
+        {isMentorship3x2Active() ? 'Sumá más mentorías · 3x2' : 'Sumá más mentorías'}
+      </button>
+      {purchase && (
+        <MentorshipPurchaseModal categoryId={categoryId} onClose={() => setPurchase(false)} />
+      )}
+    </>
+  );
+
   // Modal a pantalla completa: mientras está abierta tapa al gate igual.
   if (materialFor) {
     return (
@@ -102,28 +120,33 @@ export function MentorshipGate({
   // Acá dejamos solo una nota mínima que la referencia.
   if (m && m.status === 'SCHEDULED') {
     return (
-      <div className='mt-3 flex items-start gap-2.5 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
-        <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
-        <div className='min-w-0 flex-1 text-xs leading-relaxed'>
-          <span className='font-semibold'>Mentoría agendada</span>
-          <span className='text-white/60'> · </span>
-          <span className='capitalize text-white/80'>{formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs</span>
-          <p className='text-[11px] text-white/40 mt-0.5'>
-            Sujeta a confirmación de Mery García. Gestionala desde el bloque de arriba.
-          </p>
-          {m.materialRequired && !m.materialComplete && (
-            <button
-              type='button'
-              onClick={() => setMaterialFor(m)}
-              className='mt-2 inline-flex items-center gap-1.5 bg-[#F9BBC4] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-colors hover:bg-white'
-              style={{ fontFamily: 'var(--font-din-condensed)' }}
-            >
-              <ImagePlus className='h-3.5 w-3.5' />
-              Cargar material · {materialProgress(m.material)}/{MATERIAL_TOTAL}
-            </button>
-          )}
+      <>
+        <div className='mt-3 flex items-start gap-2.5 rounded-xl bg-[#1c1c1e] text-white px-3.5 py-3'>
+          <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
+          <div className='min-w-0 flex-1 text-xs leading-relaxed'>
+            <span className='font-semibold'>Mentoría agendada</span>
+            <span className='text-white/60'> · </span>
+            <span className='capitalize text-white/80'>
+              {formatSlot(m.scheduledStart)} – {formatTime(m.scheduledEnd)} hs
+            </span>
+            <p className='text-[11px] text-white/40 mt-0.5'>
+              Sujeta a confirmación de Mery García. Gestionala desde el bloque de arriba.
+            </p>
+            {m.materialRequired && !m.materialComplete && (
+              <button
+                type='button'
+                onClick={() => setMaterialFor(m)}
+                className='mt-2 inline-flex items-center gap-1.5 bg-[#F9BBC4] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-colors hover:bg-white'
+                style={{ fontFamily: 'var(--font-din-condensed)' }}
+              >
+                <ImagePlus className='h-3.5 w-3.5' />
+                Cargar material · {materialProgress(m.material)}/{MATERIAL_TOTAL}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+        {buyMore}
+      </>
     );
   }
 
@@ -141,9 +164,10 @@ export function MentorshipGate({
         </button>
         <p className='mt-2 text-[11px] text-center text-muted-foreground'>
           {soloAccionable
-            ? 'Tenés una mentoría de cortesía disponible. La mentoría queda sujeta a confirmación de Mery García.'
+            ? 'Tenés tu mentoría FREE disponible. La mentoría queda sujeta a confirmación de Mery García.'
             : 'Aprobaste el examen. Reservá tu mentoría para activar el chat. La mentoría queda sujeta a confirmación de Mery García.'}
         </p>
+        {buyMore}
         {tips && (
           <MentorshipTipsModal
             categoryName={categoryName}
@@ -194,10 +218,10 @@ export function MentorshipGate({
           <div className='flex items-start gap-2.5'>
             <CalendarClock className='w-4 h-4 mt-0.5 shrink-0 text-[#EBA2A8]' />
             <div className='text-xs leading-relaxed'>
-              <span className='font-semibold'>Mentoría de cortesía ya utilizada</span>
+              <span className='font-semibold'>Ya usaste tu mentoría FREE</span>
               <p className='text-[11px] text-white/60 mt-0.5'>
-                La mentoría gratuita es una por cuenta. Podés comprar una mentoría
-                adicional para reservar otra.
+                La mentoría gratuita es una por cuenta. Podés comprar una mentoría adicional para
+                reservar otra.
               </p>
             </div>
           </div>
@@ -210,10 +234,7 @@ export function MentorshipGate({
           </button>
         </div>
         {purchase && (
-          <MentorshipPurchaseModal
-            categoryId={categoryId}
-            onClose={() => setPurchase(false)}
-          />
+          <MentorshipPurchaseModal categoryId={categoryId} onClose={() => setPurchase(false)} />
         )}
       </>
     );

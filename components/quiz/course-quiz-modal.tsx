@@ -250,10 +250,10 @@ export function CourseQuizModal({
                       <>
                         <p className='flex items-center gap-2 text-sm font-semibold text-white'>
                           <CalendarClock className='w-4 h-4 text-[#EBA2A8]' />
-                          Tenés una mentoría de cortesía disponible
+                          Tenés tu mentoría FREE disponible
                         </p>
                         <p className='mt-1 text-[13px] leading-relaxed text-white/60'>
-                          Cada cuenta cuenta con una mentoría gratuita. Reservá tu
+                          Tu formación incluye una mentoría FREE. Reservá tu
                           horario para coordinarla y desbloquear el chat del curso.
                         </p>
                       </>
@@ -261,7 +261,7 @@ export function CourseQuizModal({
                       <>
                         <p className='flex items-center gap-2 text-sm font-semibold text-white'>
                           <CalendarClock className='w-4 h-4 text-[#EBA2A8]' />
-                          Ya usaste tu mentoría de cortesía
+                          Ya usaste tu mentoría FREE
                         </p>
                         <p className='mt-1 text-[13px] leading-relaxed text-white/60'>
                           La mentoría gratuita es una por cuenta y ya la aprovechaste
