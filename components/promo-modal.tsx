@@ -184,7 +184,7 @@ export default function PromoModal() {
           {/* Botón cerrar */}
           <button
             onClick={handleClose}
-            className='absolute top-2 right-2 md:top-4 md:right-4 text-gray-500 hover:text-gray-700 transition-colors z-10'
+            className='absolute top-2 right-2 md:top-4 md:right-4 text-gray-500 hover:text-gray-700 transition-colors z-20'
             aria-label='Cerrar'
           >
             <X className='w-5 h-5 md:w-6 md:h-6' />
@@ -195,7 +195,7 @@ export default function PromoModal() {
             {/* Badge de descuento */}
             <div className='inline-flex items-center justify-center'>
               <div className='bg-[#8b1538] text-white px-4 py-1 md:px-6 md:py-2 rounded-full text-xs md:text-sm font-bold tracking-wider'>
-                ¡OFERTA ESPECIAL!
+                {PROMO_CONFIG.TEXTS.modalBadge}
               </div>
             </div>
 
@@ -215,11 +215,11 @@ export default function PromoModal() {
             {/* Mensaje motivacional */}
             <div className='space-y-1'>
               <p className='text-xs md:text-base text-[var(--mg-dark)]'>
-                Empezá el año con una oportunidad de llevar tu profesión a otro nivel.
+                {PROMO_CONFIG.TEXTS.modalMessage}
               </p>
               <p className='text-xs md:text-lg font-black text-[var(--mg-dark)]'>
                 <span className='animated-underline-dark'>
-                  Incluye Nanoblading & Camuflaje
+                  {PROMO_CONFIG.TEXTS.modalHighlight}
                 </span>
               </p>
             </div>

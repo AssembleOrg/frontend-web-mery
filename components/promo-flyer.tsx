@@ -7,6 +7,7 @@ import NextLink from 'next/link';
 import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { isMentorship3x2Active } from '@/lib/mentorship-promo';
+import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
 import { useAuthStore } from '@/stores/auth-store';
 import { MentorshipPurchaseModal } from '@/components/mentorship/mentorship-purchase-modal';
 
@@ -45,10 +46,34 @@ export default function PromoFlyer() {
 
   useEffect(() => {
     if (!isMentorship3x2Active()) return;
-    const timer = setTimeout(() => {
+    const show = () => {
       if (!sessionStorage.getItem(STORAGE_KEY)) setIsOpen(true);
-    }, OPEN_DELAY_MS);
-    return () => clearTimeout(timer);
+    };
+    // Con la promo de formaciones activa, su popup (cuenta regresiva) sale
+    // primero y este espera a que lo cierren: uno después del otro.
+    let promoModalOpen = false;
+    let due = false;
+    let afterClose: ReturnType<typeof setTimeout> | undefined;
+    const onOpened = () => {
+      promoModalOpen = true;
+    };
+    const onClosed = () => {
+      promoModalOpen = false;
+      if (due) afterClose = setTimeout(show, OPEN_DELAY_MS);
+    };
+    window.addEventListener('promo-modal-opened', onOpened);
+    window.addEventListener('promo-modal-closed', onClosed);
+    const delay = isPromoActive() ? PROMO_CONFIG.MODAL_INITIAL_DELAY + 500 : OPEN_DELAY_MS;
+    const timer = setTimeout(() => {
+      due = true;
+      if (!promoModalOpen) show();
+    }, delay);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(afterClose);
+      window.removeEventListener('promo-modal-opened', onOpened);
+      window.removeEventListener('promo-modal-closed', onClosed);
+    };
   }, []);
 
   useEffect(() => {

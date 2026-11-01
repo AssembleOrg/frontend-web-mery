@@ -12,27 +12,28 @@ import { DateTime } from 'luxon';
 
 export const PROMO_CONFIG = {
   // Fechas de inicio y fin de la promoción (GMT-3, Buenos Aires)
-  // Promoción del 7 al 13 de septiembre de 2026 inclusive (termina el 13/9 a las 23:59)
+  // MG Celebration: del 1 al 9 de noviembre de 2026 inclusive (termina el 9/11 a las 23:59).
+  // Los precios de la BD los restaura solo el backend (setting promo.autoCloseAt).
   START_DATE: DateTime.fromObject(
-    { year: 2026, month: 9, day: 7, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 11, day: 1, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   END_DATE: DateTime.fromObject(
-    { year: 2026, month: 9, day: 13, hour: 23, minute: 59, second: 59 },
+    { year: 2026, month: 11, day: 9, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Fecha de desactivación completa (después de esta fecha se bloquea todo)
   DISABLE_DATE: DateTime.fromObject(
-    { year: 2026, month: 9, day: 14, hour: 0, minute: 1, second: 0 },
+    { year: 2026, month: 11, day: 10, hour: 0, minute: 1, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Período de compra activo
   PURCHASE_START: DateTime.fromObject(
-    { year: 2026, month: 9, day: 7, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 11, day: 1, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   PURCHASE_END: DateTime.fromObject(
-    { year: 2026, month: 9, day: 13, hour: 23, minute: 59, second: 59 },
+    { year: 2026, month: 11, day: 9, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
 
@@ -48,14 +49,17 @@ export const PROMO_CONFIG = {
 
   // Textos configurables
   TEXTS: {
+    modalBadge: 'MG CELEBRATION',
     modalTitle: '40% OFF',
     modalSubtitle: 'en todas las formaciones',
-    modalDateRange: 'Del 7 al 13 de Septiembre inclusive',
+    modalDateRange: 'Hasta el 9 de Noviembre inclusive · 2 cuotas sin interés',
+    modalMessage: 'Incluye tu mentoría FREE.',
+    modalHighlight: 'Incluye Nanoblading & Camuflaje',
     modalCTA: 'Ver Formaciones',
     modalDescription:
       'No dejes pasar esta oportunidad para sumar nuevos servicios y/o perfeccionar tus resultados',
 
-    pageTitle: '40% OFF',
+    pageTitle: 'MG Celebration · 40% OFF',
     pageSubtitle: 'En todas las formaciones',
     pageSubtitleExtra: '( Incluye Nanoblading & Camuflaje )',
     pageDescription:
