@@ -176,7 +176,7 @@ export default function SimpleCourseModal({
     : null;
   const isAutostylism = isAutostylismCourse(course.slug, course.title);
   // Cursos ARS regulares (no autostyling, no USD-only, no gratis) tienen
-  // 20% OFF al pagar por transferencia. Autostyling tiene su propio 10%.
+  // 10% OFF al pagar por transferencia. Autostyling tiene su propio 10%.
   const isRegularArsCourse =
     !isUSDCourse && !isAutostylism && !isFreeCourse && course.priceARS > 0;
   const handleAutostylingReserva = () => {
@@ -194,10 +194,10 @@ export default function SimpleCourseModal({
         'Hola, ya transferí para esta formación, quiero un turno para mi clase presencial también. Adjunto transferencia realizada.'
       );
     } else if (isRegularArsCourse) {
-      const discounted = Math.round(course.priceARS * 0.8);
+      const discounted = Math.round(course.priceARS * 0.9);
       setBankModalAmount(`$${discounted.toLocaleString('es-AR')}`);
       setBankModalListAmount(displayPrice ?? undefined);
-      setBankModalDiscountPercent(20);
+      setBankModalDiscountPercent(10);
       setBankModalWhatsappMessage(undefined);
     } else {
       setBankModalAmount(showFakeDiscount && finalPrice ? finalPrice : (displayPrice ?? ''));
@@ -443,7 +443,7 @@ export default function SimpleCourseModal({
                     )}
                     {isRegularArsCourse && (
                       <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
-                        20% OFF pagando por transferencia
+                        10% OFF pagando por transferencia
                       </p>
                     )}
                     {!isAutostylism && (
@@ -576,7 +576,7 @@ export default function SimpleCourseModal({
                     )}
                     {isRegularArsCourse && (
                       <p className='text-[#660e1b] text-xs font-primary-medium mt-1 text-center'>
-                        20% OFF pagando por transferencia
+                        10% OFF pagando por transferencia
                       </p>
                     )}
                     {!isAutostylism && (

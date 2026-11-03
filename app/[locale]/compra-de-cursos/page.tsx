@@ -9,7 +9,7 @@ import { Trash2, ShoppingBag, Loader2, Landmark } from 'lucide-react';
 import { useState } from 'react';
 import { BankTransferModal } from '@/components/bank-transfer-modal';
 
-const TRANSFER_DISCOUNT_PERCENT = 20;
+const TRANSFER_DISCOUNT_PERCENT = 10;
 // Convención del sistema (ver components/simple-course-modal.tsx,
 // app/[locale]/formaciones/page.tsx): priceARS === 99999999 marca un curso
 // USD-only (Nanoblading, Camuflaje Senior). El backend del cart suma estos
