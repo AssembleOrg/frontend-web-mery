@@ -18,6 +18,7 @@ import {
   CircleDot,
   CheckSquare,
   ToggleLeft,
+  ImagePlus,
   Info,
   X,
 } from 'lucide-react';
@@ -48,6 +49,7 @@ const FIELD_TYPES: { type: FormFieldType; label: string; icon: typeof Type; hint
   { type: 'radio', label: 'Opción única', icon: CircleDot, hint: 'Elige solo una (ej: horarios)' },
   { type: 'checkbox', label: 'Opción múltiple', icon: CheckSquare, hint: 'Puede marcar varias' },
   { type: 'yesno', label: 'Sí / No', icon: ToggleLeft, hint: 'Con aclaración opcional' },
+  { type: 'media', label: 'Fotos o links', icon: ImagePlus, hint: 'Suben imágenes o pegan links' },
   { type: 'info', label: 'Bloque de info', icon: Info, hint: 'Texto fijo, no es pregunta' },
 ];
 

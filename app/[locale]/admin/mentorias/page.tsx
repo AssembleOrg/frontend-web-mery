@@ -62,6 +62,7 @@ async function loadFichas(): Promise<Fichas> {
 function formatAnswer(field: FormField, v: FormAnswerValue): string {
   const label = (id: string) => field.options?.find((o) => o.id === id)?.label ?? id;
   if (Array.isArray(v)) return v.map(label).join(', ');
+  if (typeof v === 'object' && 'images' in v) return [...v.images, ...v.links].join(', ');
   if (typeof v === 'object') return (v.value ? 'Sí' : 'No') + (v.context ? ` — ${v.context}` : '');
   return field.options ? label(v) : v;
 }

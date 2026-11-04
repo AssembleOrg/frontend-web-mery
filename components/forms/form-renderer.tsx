@@ -3,7 +3,8 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Check, Loader2, Calendar, MapPin, Clock, ExternalLink } from 'lucide-react';
 import { PhoneInput } from '@/components/ui/phone-input';
-import type { FormAnswers, FormField, YesNoAnswer } from '@/lib/forms-api';
+import { MediaInput, isValidLink } from '@/components/forms/media-input';
+import type { FormAnswers, FormField, MediaAnswer, YesNoAnswer } from '@/lib/forms-api';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -18,6 +19,8 @@ interface FormRendererProps {
   renderAfterField?: (field: FormField) => ReactNode;
   /** Botón rosa de marca en lugar del negro (formularios propios, sin partners). */
   brandSubmit?: boolean;
+  /** Slug público: habilita la subida de imágenes en los campos "media". */
+  slug?: string;
 }
 
 const inputClasses =
@@ -31,7 +34,10 @@ export function FormRenderer({
   preview = false,
   renderAfterField,
   brandSubmit = false,
+  slug,
 }: FormRendererProps) {
+  const [uploading, setUploading] = useState(0);
+  const trackUpload = (delta: number) => setUploading((n) => n + delta);
   const [answers, setAnswers] = useState<FormAnswers>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -59,11 +65,18 @@ export function FormRenderer({
         value === undefined ||
         value === null ||
         (typeof value === 'string' && value.trim() === '') ||
-        (Array.isArray(value) && value.length === 0);
+        (Array.isArray(value) && value.length === 0) ||
+        (field.type === 'media' &&
+          (value as MediaAnswer).images.length === 0 &&
+          (value as MediaAnswer).links.length === 0);
 
       if (isEmpty) {
         if (field.required) newErrors[field.id] = 'Este campo es obligatorio';
         continue;
+      }
+
+      if (field.type === 'media' && !(value as MediaAnswer).links.every(isValidLink)) {
+        newErrors[field.id] = 'Revisá que los links estén bien escritos';
       }
 
       if (field.type === 'yesno' && field.contextOnYes) {
@@ -124,6 +137,8 @@ export function FormRenderer({
               value={answers[field.id]}
               error={errors[field.id]}
               onChange={(v) => setAnswer(field.id, v)}
+              slug={preview ? undefined : slug}
+              onUploadChange={trackUpload}
             />
           )}
           {renderAfterField?.(field)}
@@ -132,13 +147,13 @@ export function FormRenderer({
 
       <button
         type='submit'
-        disabled={submitting}
+        disabled={submitting || uploading > 0}
         className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-white text-sm font-semibold tracking-wide active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
           brandSubmit ? 'bg-[#eba2a8] hover:bg-[#d89196]' : 'bg-[#2b2b2b] hover:bg-black'
         }`}
       >
         {submitting && <Loader2 className='w-4 h-4 animate-spin' />}
-        {submitLabel || 'Confirmar mi lugar'}
+        {uploading > 0 ? 'Subiendo imágenes…' : submitLabel || 'Confirmar mi lugar'}
       </button>
     </form>
   );
@@ -241,11 +256,15 @@ function FieldBlock({
   value,
   error,
   onChange,
+  slug,
+  onUploadChange,
 }: {
   field: FormField;
   value: FormAnswers[string] | undefined;
   error?: string;
   onChange: (value: FormAnswers[string]) => void;
+  slug?: string;
+  onUploadChange: (delta: number) => void;
 }) {
   return (
     <div>
@@ -257,7 +276,17 @@ function FieldBlock({
         <p className='text-[13px] text-[#3a3a3a] mb-2 whitespace-pre-line'>{field.description}</p>
       )}
 
-      <FieldInput field={field} value={value} onChange={onChange} hasError={!!error} />
+      {field.type === 'media' ? (
+        <MediaInput
+          fieldId={field.id}
+          slug={slug}
+          value={value as MediaAnswer | undefined}
+          onChange={onChange}
+          onUploadChange={onUploadChange}
+        />
+      ) : (
+        <FieldInput field={field} value={value} onChange={onChange} hasError={!!error} />
+      )}
 
       {error && <p className='mt-1.5 text-xs text-red-500'>{error}</p>}
     </div>

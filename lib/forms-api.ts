@@ -16,6 +16,7 @@ export type FormFieldType =
   | 'radio'
   | 'checkbox'
   | 'yesno'
+  | 'media'
   | 'info';
 
 export interface FormFieldOption {
@@ -67,7 +68,8 @@ export interface PublicForm {
 }
 
 export type YesNoAnswer = { value: boolean; context?: string };
-export type FormAnswerValue = string | string[] | YesNoAnswer;
+export type MediaAnswer = { images: string[]; links: string[] };
+export type FormAnswerValue = string | string[] | YesNoAnswer | MediaAnswer;
 export type FormAnswers = Record<string, FormAnswerValue>;
 
 export type FormResponseStatus = 'pending' | 'accepted' | 'rejected';
@@ -183,6 +185,22 @@ export async function submitFormResponse(
     method: 'POST',
     body: JSON.stringify({ answers }),
   });
+}
+
+/** Sube una imagen de un campo "media" y devuelve su URL pública. */
+export async function uploadFormImage(slug: string, fieldId: string, file: Blob): Promise<string> {
+  const body = new FormData();
+  body.append('file', file, 'imagen');
+  const response = await fetch(
+    `${API_BASE_URL}/forms/public/${encodeURIComponent(slug)}/fields/${encodeURIComponent(fieldId)}/images`,
+    { method: 'POST', body },
+  );
+  const json = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message = response.status === 413 ? 'La imagen pesa demasiado' : json?.message;
+    throw new FormsApiError(response.status, message || 'No pudimos subir la imagen');
+  }
+  return json.data.url as string;
 }
 
 // ============ Admin ============

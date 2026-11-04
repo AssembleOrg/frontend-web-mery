@@ -27,6 +27,7 @@ import {
   type FormField,
   type FormResponseDto,
   type FormResponseStatus,
+  type MediaAnswer,
   type YesNoAnswer,
 } from '@/lib/forms-api';
 
@@ -70,6 +71,15 @@ function formatAnswer(field: FormField, value: unknown): string {
     const v = value as YesNoAnswer;
     return `${v.value ? 'Sí' : 'No'}${v.context ? ` — ${v.context}` : ''}`;
   }
+  if (field.type === 'media') {
+    const { images, links } = value as MediaAnswer;
+    return [
+      images.length && `${images.length} ${images.length === 1 ? 'imagen' : 'imágenes'}`,
+      links.length && `${links.length} ${links.length === 1 ? 'link' : 'links'}`,
+    ]
+      .filter(Boolean)
+      .join(' y ');
+  }
   if (Array.isArray(value)) {
     return value
       .map((optId) => field.options?.find((o) => o.id === optId)?.label || String(optId))
@@ -79,6 +89,29 @@ function formatAnswer(field: FormField, value: unknown): string {
     return field.options?.find((o) => o.id === value)?.label || String(value);
   }
   return String(value);
+}
+
+/** Miniaturas y links de un campo "media", abren en otra pestaña. */
+function MediaAnswerView({ value }: Readonly<{ value: MediaAnswer }>) {
+  return (
+    <div className='space-y-2 mt-1'>
+      {value.images.length > 0 && (
+        <div className='flex flex-wrap gap-2'>
+          {value.images.map((url) => (
+            <a key={url} href={url} target='_blank' rel='noopener noreferrer'>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={url} alt='Imagen adjunta' className='h-24 w-24 rounded-lg object-cover border border-gray-200' />
+            </a>
+          ))}
+        </div>
+      )}
+      {value.links.map((url) => (
+        <a key={url} href={url} target='_blank' rel='noopener noreferrer' className='block break-all text-[#d4787f] underline'>
+          {url}
+        </a>
+      ))}
+    </div>
+  );
 }
 
 export default function RespuestasFormularioPage() {
@@ -416,7 +449,11 @@ export default function RespuestasFormularioPage() {
                           <div key={field.id}>
                             <dt className='text-xs font-medium text-gray-500'>{field.label}</dt>
                             <dd className='text-sm text-gray-800 whitespace-pre-line mt-0.5'>
-                              {formatAnswer(field, response.answers[field.id])}
+                              {field.type === 'media' && response.answers[field.id] ? (
+                                <MediaAnswerView value={response.answers[field.id] as MediaAnswer} />
+                              ) : (
+                                formatAnswer(field, response.answers[field.id])
+                              )}
                             </dd>
                           </div>
                         ))}

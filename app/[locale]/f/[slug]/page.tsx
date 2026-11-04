@@ -182,6 +182,7 @@ export default function PublicFormPage() {
                 onSubmit={handleSubmit}
                 submitting={submitting}
                 brandSubmit={!partner}
+                slug={slug}
               />
               {submitError && (
                 <p className='mt-4 text-sm text-red-500 text-center'>{submitError}</p>
