@@ -16,10 +16,12 @@ interface FormRendererProps {
   preview?: boolean;
   /** Contenido extra debajo de un campo (ej. el aviso del cupón en mentoría). */
   renderAfterField?: (field: FormField) => ReactNode;
+  /** Botón rosa de marca en lugar del negro (formularios propios, sin partners). */
+  brandSubmit?: boolean;
 }
 
 const inputClasses =
-  'w-full px-4 py-3 rounded-xl border border-[#f7cbcb]/70 bg-white text-sm text-[#2b2b2b] placeholder:text-[#545454]/50 focus:outline-none focus:ring-2 focus:ring-[#eba2a8] focus:border-transparent transition-shadow';
+  'w-full px-4 py-3 rounded-xl border border-[#f7cbcb]/70 bg-white text-base sm:text-sm text-[#2b2b2b] placeholder:text-[#545454]/50 focus:outline-none focus:ring-2 focus:ring-[#eba2a8] focus:border-transparent transition-shadow';
 
 export function FormRenderer({
   fields,
@@ -28,6 +30,7 @@ export function FormRenderer({
   submitting = false,
   preview = false,
   renderAfterField,
+  brandSubmit = false,
 }: FormRendererProps) {
   const [answers, setAnswers] = useState<FormAnswers>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -61,6 +64,13 @@ export function FormRenderer({
       if (isEmpty) {
         if (field.required) newErrors[field.id] = 'Este campo es obligatorio';
         continue;
+      }
+
+      if (field.type === 'yesno' && field.contextOnYes) {
+        const yesNo = value as YesNoAnswer;
+        if (yesNo.value && !yesNo.context?.trim()) {
+          newErrors[field.id] = 'Contanos este dato para continuar';
+        }
       }
 
       if (field.type === 'email' && typeof value === 'string' && !EMAIL_REGEX.test(value.trim())) {
@@ -123,7 +133,9 @@ export function FormRenderer({
       <button
         type='submit'
         disabled={submitting}
-        className='w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#2b2b2b] text-white text-sm font-semibold tracking-wide hover:bg-black active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed'
+        className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-white text-sm font-semibold tracking-wide active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
+          brandSubmit ? 'bg-[#eba2a8] hover:bg-[#d89196]' : 'bg-[#2b2b2b] hover:bg-black'
+        }`}
       >
         {submitting && <Loader2 className='w-4 h-4 animate-spin' />}
         {submitLabel || 'Confirmar mi lugar'}
@@ -400,7 +412,8 @@ function FieldInput({
     case 'yesno': {
       const current = value as YesNoAnswer | undefined;
       const setValue = (v: boolean) => {
-        onChange({ value: v, ...(current?.context ? { context: current.context } : {}) });
+        const keepContext = current?.context && (v || !field.contextOnYes);
+        onChange({ value: v, ...(keepContext ? { context: current.context } : {}) });
       };
       return (
         <div>
@@ -427,7 +440,23 @@ function FieldInput({
               );
             })}
           </div>
-          {field.allowContext && current !== undefined && (
+          {field.contextOnYes && current?.value === true && (
+            <div className='mt-3'>
+              <label htmlFor={`${field.id}-context`} className='block text-sm font-medium text-[#2b2b2b] mb-1.5'>
+                {field.contextLabel || 'Contanos más'}
+                <span className='text-[#eba2a8] ml-0.5'>*</span>
+              </label>
+              <input
+                id={`${field.id}-context`}
+                type='text'
+                value={current.context || ''}
+                onChange={(e) => onChange({ value: true, context: e.target.value })}
+                placeholder={field.placeholder}
+                className={inputClasses + errorClasses}
+              />
+            </div>
+          )}
+          {field.allowContext && !field.contextOnYes && current !== undefined && (
             <textarea
               value={current?.context || ''}
               onChange={(e) => onChange({ value: current!.value, context: e.target.value })}

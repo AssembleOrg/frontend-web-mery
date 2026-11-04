@@ -33,6 +33,8 @@ export interface FormField {
   options?: FormFieldOption[];
   allowContext?: boolean;
   contextLabel?: string;
+  /** yesno: el dato extra aparece solo al responder "Sí" y ahí es obligatorio. */
+  contextOnYes?: boolean;
 }
 
 export type FormStatus = 'draft' | 'published' | 'closed';

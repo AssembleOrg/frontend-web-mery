@@ -15,9 +15,41 @@ import {
 
 type PageState = 'loading' | 'ready' | 'closed' | 'not-found' | 'success';
 
+/** Banner y logos de partners: solo los formularios de la masterclass con Juleriaque. */
+const isPartnerForm = (slug: string) => slug.startsWith('masterclass-autostyling');
+
+function FormHero({ partner }: Readonly<{ partner: boolean }>) {
+  if (partner) {
+    return (
+      <Image
+        src='/form/aver1.jpg'
+        alt='Mery García'
+        width={564}
+        height={562}
+        priority
+        className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
+      />
+    );
+  }
+  return (
+    <div className='flex justify-center bg-[#fbe8ea]/50 px-6 pt-8 pb-1'>
+      <Image
+        src='/form/merygarcia_brow_artist_gris_transparente_centrado_clean.png'
+        alt='Mery García Brow Artist'
+        width={520}
+        height={180}
+        priority
+        className='w-52 sm:w-60 h-auto'
+        style={{ objectFit: 'contain' }}
+      />
+    </div>
+  );
+}
+
 export default function PublicFormPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const partner = isPartnerForm(slug);
 
   const [form, setForm] = useState<PublicForm | null>(null);
   const [state, setState] = useState<PageState>('loading');
@@ -60,11 +92,11 @@ export default function PublicFormPage() {
 
   return (
     <div className='min-h-screen bg-[#fbe8ea]'>
-      <div className='max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16'>
+      <div className={`max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16 ${partner ? 'lg:max-w-6xl' : ''}`}>
         {/* Layout: logos de partners flanqueando el form (solo desktop) — 25% / 50% / 25% */}
-        <div className='lg:grid lg:grid-cols-[1fr_2fr_1fr] lg:items-center lg:gap-6 xl:gap-10'>
+        <div className={partner ? 'lg:grid lg:grid-cols-[1fr_2fr_1fr] lg:items-center lg:gap-6 xl:gap-10' : ''}>
           {/* Partner izquierda: Anastasia Beverly Hills */}
-          <div className='hidden lg:flex justify-center px-2'>
+          {partner && <div className='hidden lg:flex justify-center px-2'>
             <Image
               src='/form/anastasia-logo-wide.png'
               alt='Anastasia Beverly Hills'
@@ -73,7 +105,7 @@ export default function PublicFormPage() {
               className='w-full max-w-[240px] lg:max-w-[260px] h-auto opacity-95'
               style={{ objectFit: 'contain' }}
             />
-          </div>
+          </div>}
 
           {/* Columna central: el formulario */}
           <div className='w-full'>
@@ -99,15 +131,7 @@ export default function PublicFormPage() {
 
         {state === 'closed' && form && (
           <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
-            {/* Banner hero — mismo ancho del form, pegado, sin margen */}
-            <Image
-              src='/form/aver1.jpg'
-              alt='Mery García'
-              width={564}
-              height={562}
-              priority
-              className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
-            />
+            <FormHero partner={partner} />
             <div className='p-10 text-center'>
               <div className='mx-auto w-12 h-12 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-4'>
                 <Lock className='w-5 h-5 text-[#2b2b2b]' />
@@ -120,15 +144,7 @@ export default function PublicFormPage() {
 
         {state === 'success' && (
           <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
-            {/* Banner hero — mismo ancho del form, pegado, sin margen */}
-            <Image
-              src='/form/aver1.jpg'
-              alt='Mery García'
-              width={564}
-              height={562}
-              priority
-              className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
-            />
+            <FormHero partner={partner} />
             <div className='p-10 sm:p-12 text-center'>
               <div className='mx-auto w-16 h-16 rounded-full bg-[#fbe8ea] flex items-center justify-center mb-5'>
                 <CheckCircle2 className='w-8 h-8 text-[#2b2b2b]' />
@@ -145,15 +161,7 @@ export default function PublicFormPage() {
 
         {state === 'ready' && form && (
           <div className='bg-white rounded-3xl shadow-xl shadow-[#2b2b2b]/10 overflow-hidden'>
-            {/* Banner hero — mismo ancho del form, pegado, sin margen */}
-            <Image
-              src='/form/aver1.jpg'
-              alt='Mery García'
-              width={564}
-              height={562}
-              priority
-              className='block w-full h-44 sm:h-56 object-cover object-[center_30%]'
-            />
+            <FormHero partner={partner} />
 
             {/* Encabezado del formulario */}
             <div className='px-6 sm:px-9 pt-8 pb-6 border-b border-[#fbe8ea]'>
@@ -173,6 +181,7 @@ export default function PublicFormPage() {
                 submitLabel={form.submitLabel}
                 onSubmit={handleSubmit}
                 submitting={submitting}
+                brandSubmit={!partner}
               />
               {submitError && (
                 <p className='mt-4 text-sm text-red-500 text-center'>{submitError}</p>
@@ -184,7 +193,7 @@ export default function PublicFormPage() {
           {/* /Columna central */}
 
           {/* Partner derecha: Juleriaque */}
-          <div className='hidden lg:flex justify-center px-2'>
+          {partner && <div className='hidden lg:flex justify-center px-2'>
             <Image
               src='/form/juleriaque.png'
               alt='Juleriaque'
@@ -193,7 +202,7 @@ export default function PublicFormPage() {
               className='w-full max-w-[220px] h-auto opacity-95'
               style={{ objectFit: 'contain' }}
             />
-          </div>
+          </div>}
         </div>
         {/* /Layout partners */}
 
