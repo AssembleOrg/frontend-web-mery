@@ -36,6 +36,17 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-icons',
     ],
   },
+  // www siempre al dominio principal
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.merygarcia.com.ar' }],
+        destination: 'https://merygarcia.com.ar/:path*',
+        permanent: true,
+      },
+    ];
+  },
   // Proxy to backend API
   async rewrites() {
     // Development: proxy a localhost para evitar CORS

@@ -7,9 +7,20 @@ import { LearnMoreSection } from '@/components/learn-more-section';
 import { VideoShowcase } from '@/components/video-showcase';
 import { Footer } from '@/components/footer';
 import { getTranslations } from 'next-intl/server';
+import { JsonLd } from '@/components/json-ld';
+import { businessJsonLd, seoMetadata } from '@/lib/seo';
 
 const HOME_VIDEO_ID =
   process.env.NEXT_PUBLIC_HOME_VIDEO_ID || '1214844591';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return seoMetadata('home', locale);
+}
 
 export default async function HomePage() {
   const t = await getTranslations('home.videoShowcase');
@@ -53,6 +64,7 @@ export default async function HomePage() {
 
   return (
     <div className='min-h-screen-dvh bg-background'>
+      <JsonLd data={businessJsonLd()} />
       <PromoFlyer />
       {/* <AbhPromoModal /> */}
       <Navigation />

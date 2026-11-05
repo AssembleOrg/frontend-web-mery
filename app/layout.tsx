@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Poppins } from 'next/font/google';
+import Script from 'next/script';
+import { GA_MEASUREMENT_ID } from '@/lib/seo';
 import { dinLight, dinRegular, dinMedium, dinCondensed, avantGardeAdmin } from '@/lib/fonts';
 
 const poppins = Poppins({
@@ -12,7 +14,10 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://merygarcia.com.ar'),
-  title: 'Mery García - Tatuaje Cosmético',
+  title: {
+    default: 'Mery García - Tatuaje Cosmético',
+    template: '%s | Mery García',
+  },
   description:
     'Artista del tatuaje cosmético con más de 20 años de experiencia. Servicios de nanoblading, lip blush, styling de cejas & formaciones profesionales.',
   openGraph: {
@@ -63,6 +68,17 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         {children}
+        {process.env.NODE_ENV === 'production' && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy='afterInteractive'
+            />
+            <Script id='ga4' strategy='afterInteractive'>
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
