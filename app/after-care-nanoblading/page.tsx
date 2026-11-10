@@ -22,6 +22,7 @@ export default function NanobladingAftercarePage() {
       className='min-h-screen-dvh'
       style={{ backgroundColor: 'var(--mg-pink-lighter)' }}
     >
+      <h1 className='sr-only'>Cuidados después del nanoblading</h1>
       <style>{`
         @keyframes slideInFromLeft {
           from {

@@ -45,6 +45,24 @@ const nextConfig: NextConfig = {
         destination: 'https://merygarcia.com.ar/:path*',
         permanent: true,
       },
+      // Direcciones del sitio viejo (WordPress) que Google y links externos
+      // todavía piden y daban 404 (Search Console, nov-2026).
+      { source: '/producto/:slug*', destination: '/formaciones', permanent: true },
+      { source: '/en/producto/:slug*', destination: '/en/formaciones', permanent: true },
+      { source: '/home', destination: '/', permanent: true },
+      { source: '/en/home', destination: '/en', permanent: true },
+      { source: '/styling-de-cejas', destination: '/servicios/diseno-cejas', permanent: true },
+      { source: '/en/styling-de-cejas', destination: '/en/services/eyebrow-design', permanent: true },
+      {
+        source: '/microblading-camuflaje-2',
+        destination: '/servicios/microblading-camuflaje',
+        permanent: true,
+      },
+      {
+        source: '/en/microblading-camuflaje-2',
+        destination: '/en/services/microblading-camouflage',
+        permanent: true,
+      },
     ];
   },
   // Proxy to backend API

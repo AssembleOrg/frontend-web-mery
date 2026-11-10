@@ -1,9 +1,6 @@
-import type { Metadata } from 'next';
+import { aftercareMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Aftercare Epítesis | Mery García',
-  description: 'Información y cuidados de tu epítesis de complejo areola–pezón',
-};
+export const metadata = aftercareMetadata('after-care-epitesis');
 
 export default function AftercareEpitesisLayout({
   children,

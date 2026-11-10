@@ -1,9 +1,6 @@
-import type { Metadata } from 'next';
+import { aftercareMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Aftercare Lip Blush | Mery García',
-  description: 'Cuidados posteriores para tu procedimiento de Lip Blush',
-};
+export const metadata = aftercareMetadata('after-care-lip-blush');
 
 export default function AftercareLipBlushLayout({
   children,

@@ -225,17 +225,195 @@ export function pageAlternates(path: string) {
   };
 }
 
-/** Metadata de una página: título, descripción, canónica, hreflang y redes. */
-export function seoMetadata(key: SeoPageKey, rawLocale: string): Metadata {
-  const page = SEO_PAGES[key];
+/**
+ * Páginas públicas que no van al sitemap (promos, eventos, textos legales) pero
+ * necesitan título, descripción y canónica propios: sin eso Google las toma
+ * como duplicadas o les muestra la descripción genérica del sitio.
+ */
+export const EXTRA_PAGES = {
+  ofertas: {
+    path: '/ofertas-especiales',
+    title: { es: 'Ofertas especiales en formaciones', en: 'Special offers on courses' },
+    description: {
+      es: 'Promociones vigentes en las formaciones de Mery García: estilismo de cejas, microblading, nanoblading, lip blush y camuflaje.',
+      en: 'Current promotions on Mery García courses: brow styling, microblading, nanoblading, lip blush and camouflage.',
+    },
+  },
+  masterclass: {
+    path: '/first-masterclass-nanoblading',
+    title: { es: 'First Masterclass de Nanoblading', en: 'First Nanoblading Masterclass' },
+    description: {
+      es: 'La First Masterclass de Nanoblading de Mery García: programa, modalidad y detalles del encuentro.',
+      en: 'The First Nanoblading Masterclass by Mery García: program, format and details of the event.',
+    },
+  },
+  terminos: {
+    path: '/terminos-y-condiciones-formaciones-mery-garcia',
+    title: {
+      es: 'Términos y condiciones de las formaciones',
+      en: 'Course terms and conditions',
+    },
+    description: {
+      es: 'Términos y condiciones de compra y uso de las formaciones de Mery García.',
+      en: 'Terms and conditions for purchasing and using Mery García courses.',
+    },
+  },
+  cancelaciones: {
+    path: '/politica-de-cancelaciones',
+    title: { es: 'Política de cancelaciones', en: 'Cancellation policy' },
+    description: {
+      es: 'Política de cancelación y reprogramación de turnos del estudio de Mery García.',
+      en: 'Appointment cancellation and rescheduling policy at Mery García studio.',
+    },
+  },
+} satisfies Record<string, { path: string; title: Localized; description: Localized }>;
+
+/** Metadata de una página fuera del sitemap (ver EXTRA_PAGES). */
+export function extraPageMetadata(key: keyof typeof EXTRA_PAGES, rawLocale: string): Metadata {
+  const page = EXTRA_PAGES[key];
   const locale = toLocale(rawLocale);
-  const url = localizedUrl(page.path, locale);
-  const title = page.title[locale];
-  const description = page.description[locale];
+  return buildMetadata(page.path, page.title[locale], page.description[locale], locale, false);
+}
+
+/**
+ * Páginas de cuidados posteriores (solo en castellano, fuera de [locale]). Las
+ * mandan por WhatsApp después del turno y también llegan desde Google.
+ */
+export const AFTERCARE_PAGES = {
+  'after-care-nanoblading': {
+    title: 'Cuidados después del nanoblading',
+    description:
+      'Cuidados posteriores al nanoblading: qué esperar y qué cuidados seguir en los días posteriores al procedimiento, según el estudio de Mery García.',
+  },
+  'after-care-microblading': {
+    title: 'Cuidados después del microblading',
+    description:
+      'Cuidados posteriores al microblading: qué esperar y qué cuidados seguir en los días posteriores al procedimiento, según el estudio de Mery García.',
+  },
+  'after-care-lip-blush': {
+    title: 'Cuidados después del lip blush',
+    description:
+      'Cuidados posteriores al lip blush: qué esperar y qué cuidados seguir en los días posteriores al tatuaje de labios, según el estudio de Mery García.',
+  },
+  'after-care-lashes-line': {
+    title: 'Cuidados después del lash line',
+    description:
+      'Cuidados posteriores al lash line y al camuflaje de pestañas: qué esperar y qué cuidados seguir en los días posteriores, según el estudio de Mery García.',
+  },
+  'after-care-camouflage': {
+    title: 'Cuidados después del camuflaje',
+    description:
+      'Cuidados posteriores al camuflaje: qué esperar y qué cuidados seguir en los días posteriores al procedimiento, según el estudio de Mery García.',
+  },
+  'after-care-epitesis': {
+    title: 'Cuidados de tu epítesis de areola y pezón',
+    description:
+      'Información y cuidados de tu epítesis de complejo areola–pezón, del estudio de Mery García.',
+  },
+} as const;
+
+export type AftercareSlug = keyof typeof AFTERCARE_PAGES;
+
+export function aftercareMetadata(slug: AftercareSlug): Metadata {
+  const page = AFTERCARE_PAGES[slug];
+  const url = `${SITE_URL}/${slug}`;
   return {
-    title: key === 'home' ? { absolute: title } : title,
+    title: page.title,
+    description: page.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: page.title,
+      description: page.description,
+      url,
+      siteName: BUSINESS.name,
+      type: 'article',
+      locale: 'es_AR',
+      images: [{ url: '/og-image.png', width: 500, height: 500, alt: BUSINESS.name }],
+    },
+  };
+}
+
+/** Páginas de cuenta (login, registro…): Google las puede leer pero no las muestra. */
+export const NO_INDEX_METADATA: Metadata = {
+  robots: { index: false, follow: true },
+};
+
+type CourseForSeo = {
+  name: string;
+  description?: string | null;
+  slug: string;
+  priceARS?: number | string | null;
+  priceUSD?: number | string | null;
+  isFree?: boolean;
+  isActive?: boolean;
+};
+
+/** Precio centinela de los cursos que solo se venden en dólares. */
+const USD_ONLY_ARS = 99999999;
+
+/** Datos estructurados de la lista de formaciones, con el precio vigente. */
+export function coursesJsonLd(courses: CourseForSeo[], rawLocale: string) {
+  const locale = toLocale(rawLocale);
+  const url = localizedUrl('/formaciones', locale);
+  const items = courses
+    .filter((c) => c.isActive !== false && c.name?.trim())
+    .map((c, i) => {
+      const ars = Number(c.priceARS) || 0;
+      const usd = Number(c.priceUSD) || 0;
+      const offer =
+        c.isFree
+          ? null
+          : ars > 0 && ars !== USD_ONLY_ARS
+            ? { price: ars, priceCurrency: 'ARS' }
+            : usd > 0
+              ? { price: usd, priceCurrency: 'USD' }
+              : null;
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'Course',
+          name: c.name.trim(),
+          ...(c.description?.trim() ? { description: c.description.trim() } : {}),
+          url: `${url}#${c.slug}`,
+          inLanguage: 'es',
+          provider: { '@type': 'Organization', name: BUSINESS.name, sameAs: SITE_URL },
+          ...(offer
+            ? {
+                offers: {
+                  '@type': 'Offer',
+                  category: 'Paid',
+                  availability: 'https://schema.org/InStock',
+                  url,
+                  ...offer,
+                },
+              }
+            : {}),
+        },
+      };
+    });
+  if (!items.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: SEO_PAGES.formaciones.title[locale],
+    url,
+    itemListElement: items,
+  };
+}
+
+function buildMetadata(
+  path: string,
+  title: string,
+  description: string,
+  locale: Locale,
+  isHome: boolean,
+): Metadata {
+  const url = localizedUrl(path, locale);
+  return {
+    title: isHome ? { absolute: title } : title,
     description,
-    alternates: { canonical: url, languages: pageAlternates(page.path) },
+    alternates: { canonical: url, languages: pageAlternates(path) },
     openGraph: {
       title,
       description,
@@ -252,6 +430,13 @@ export function seoMetadata(key: SeoPageKey, rawLocale: string): Metadata {
       images: ['/og-image.png'],
     },
   };
+}
+
+/** Metadata de una página: título, descripción, canónica, hreflang y redes. */
+export function seoMetadata(key: SeoPageKey, rawLocale: string): Metadata {
+  const page = SEO_PAGES[key];
+  const locale = toLocale(rawLocale);
+  return buildMetadata(page.path, page.title[locale], page.description[locale], locale, key === 'home');
 }
 
 /** Datos estructurados del negocio. */

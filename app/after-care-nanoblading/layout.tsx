@@ -1,9 +1,6 @@
-import type { Metadata } from 'next';
+import { aftercareMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Aftercare Nanoblading | Mery García',
-  description: 'Cuidados posteriores para tu procedimiento de Nanoblading',
-};
+export const metadata = aftercareMetadata('after-care-nanoblading');
 
 export default function AftercareNanobladingLayout({
   children,

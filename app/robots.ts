@@ -1,13 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo';
 
+// /login, /register, /reset-password y /verify-email NO van acá: si están
+// bloqueadas Google no lee su noindex y las muestra igual (pasaba con /login).
 const PRIVATE_PATHS = [
   '/admin',
   '/mi-cuenta',
-  '/login',
-  '/register',
-  '/reset-password',
-  '/verify-email',
   '/checkout',
   '/finalizar-compra',
   '/compra-de-cursos',

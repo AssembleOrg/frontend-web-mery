@@ -1,0 +1,272 @@
+'use client';
+
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
+import SimpleCourseCard from '@/components/simple-course-card';
+import SimpleCourseModal from '@/components/simple-course-modal';
+import { FormacionesSkeleton } from '@/components/formaciones/FormacionesSkeleton';
+import { FilterBanner } from '@/components/formaciones/FilterBanner';
+import { HeroBanner } from '@/components/formaciones/HeroBanner';
+import { useState, useEffect, useMemo } from 'react';
+import { Course } from '@/types/course';
+import { useAdminStore } from '@/stores';
+import { getCourseImage, isAutostylismCourse } from '@/lib/utils';
+import { PROMO_CONFIG, isPromoActive } from '@/lib/promo-config';
+import type { Category } from '@/lib/api-client';
+
+type CourseFilter = 'all' | 'professional' | 'autostylism';
+
+/**
+ * Parte interactiva de /formaciones. Arranca con los cursos que trajo el servidor
+ * (así Google ve nombres, descripciones y precios en el HTML) y después los
+ * refresca en el navegador como antes.
+ */
+export default function FormacionesClient({
+  initialCategories = [],
+}: {
+  initialCategories?: Category[];
+}) {
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(initialCategories.length === 0);
+  const [filter, setFilter] = useState<CourseFilter>('all');
+
+  const storeCategories = useAdminStore((state) => state.categories);
+  const categories =
+    storeCategories.length > 0 ? storeCategories : initialCategories;
+  const fetchCategories = useAdminStore((state) => state.fetchCategories);
+
+  const courses = useMemo(() => {
+    return categories.filter((cat) => cat.isActive).map((cat): Course => {
+      return {
+        id: cat.id,
+        title: cat.name,
+        description: cat.description || '',
+        long_description: cat.long_description || '',
+        long_description_en: cat.long_description_en || '',
+        target: cat.target || '',
+        target_en: cat.target_en || '',
+        modalidad: cat.modalidad || '',
+        modalidad_en: cat.modalidad_en || '',
+        learn: cat.learn || '',
+        learn_en: cat.learn_en || '',
+        includes_category: cat.includes_category || [],
+        includes_category_en: cat.includes_category_en || [],
+        image: getCourseImage(cat.slug, cat.image),
+        price: cat.priceARS || 0,
+        priceARS: cat.priceARS || 0,
+        priceUSD: cat.priceUSD || 0,
+        isFree: cat.isFree || false,
+        priceDisplay: cat.isFree
+          ? ''
+          : cat.priceARS > 0
+          ? `$${cat.priceARS.toLocaleString('es-AR')}`
+          : cat.priceUSD > 0
+          ? `U$S ${cat.priceUSD}`
+          : '',
+        currency: 'ARS' as 'ARS' | 'USD',
+        slug: cat.slug,
+        isPublished: cat.isActive,
+        order: cat.order || 0,
+        isActive: cat.isActive,
+      };
+    });
+  }, [categories]);
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        await fetchCategories();
+      } catch (_error) {
+        // Error handled silently
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCourses();
+  }, [fetchCategories]);
+
+  const handleCourseClick = (course: Course) => {
+    setSelectedCourse(course);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedCourse(null);
+  };
+
+  const autostylismCourses = useMemo(
+    () => courses.filter((c) => isAutostylismCourse(c.slug, c.title)),
+    [courses]
+  );
+
+  const professionalCourses = useMemo(
+    () => courses.filter((c) => !isAutostylismCourse(c.slug, c.title)),
+    [courses]
+  );
+
+  const filteredCourses = useMemo(() => {
+    if (filter === 'professional') return professionalCourses;
+    if (filter === 'autostylism') return autostylismCourses;
+    return courses;
+  }, [filter, courses, professionalCourses, autostylismCourses]);
+
+  const sortedCourses = useMemo(() => {
+    return [...filteredCourses].sort((a, b) => {
+      const orderA = a.order ?? Infinity;
+      const orderB = b.order ?? Infinity;
+      if (orderA === orderB) return 0;
+
+      return orderA - orderB;
+    });
+  }, [filteredCourses]);
+
+  const coursesWithDisplayPrice = useMemo(
+    () => {
+      const promoActive = isPromoActive();
+      const discountMultiplier = 100 / (100 - PROMO_CONFIG.DISCOUNT_PERCENTAGE);
+
+      return sortedCourses.map((course) => {
+        let priceDisplay: string;
+        let originalPriceDisplay: string | undefined;
+
+        const isSpecialUSDCourse =
+          course.title.toLowerCase().includes('nanoblading') ||
+          course.slug.toLowerCase().includes('nanoblading') ||
+          course.title.toLowerCase().includes('camuflaje senior') ||
+          course.slug.toLowerCase().includes('camuflaje senior') ||
+          course.title.toLowerCase().includes('camuflaje señor') ||
+          course.slug.toLowerCase().includes('camuflaje señor');
+
+        if (course.isFree) {
+          priceDisplay = '';
+          originalPriceDisplay = undefined;
+        } else if (course.priceARS === 99999999) {
+          const realPrice = course.priceUSD;
+          if (promoActive && isSpecialUSDCourse && realPrice > 0) {
+            const inflatedPrice = Math.round(realPrice * discountMultiplier);
+            priceDisplay = `USD ${realPrice.toLocaleString('en-US')}`;
+            originalPriceDisplay = `USD ${inflatedPrice.toLocaleString('en-US')}`;
+          } else {
+            priceDisplay = realPrice > 0
+              ? `USD ${realPrice.toLocaleString('en-US')}`
+              : 'Consultar';
+            originalPriceDisplay = undefined;
+          }
+        } else {
+          const realPrice = course.priceARS;
+          if (promoActive && realPrice > 0) {
+            const inflatedPrice = Math.round(realPrice * discountMultiplier);
+            priceDisplay = `$${realPrice.toLocaleString('es-AR')}`;
+            originalPriceDisplay = `$${inflatedPrice.toLocaleString('es-AR')}`;
+          } else {
+            priceDisplay = realPrice > 0
+              ? `$${realPrice.toLocaleString('es-AR')}`
+              : '';
+            originalPriceDisplay = undefined;
+          }
+        }
+        const isAutostylism = isAutostylismCourse(course.slug, course.title);
+        return { ...course, priceDisplay, originalPriceDisplay, isAutostylism };
+      });
+    },
+    [sortedCourses]
+  );
+
+  if (isLoading) {
+    return (
+      <>
+        <Navigation />
+        <FormacionesSkeleton />
+        <Footer />
+      </>
+    );
+  }
+
+  return (
+    <div
+      className='min-h-screen bg-background'
+      suppressHydrationWarning
+    >
+      <Navigation />
+      <section className='w-full'>
+        <div className='container mx-auto px-4 max-w-7xl mt-2'>
+          <HeroBanner />
+        </div>
+      </section>
+      <section
+        className={`container mx-auto px-4 max-w-7xl pt-8 ${
+          filter !== 'all' ? 'pb-2' : 'pb-8'
+        }`}
+      >
+        <div className='flex items-stretch gap-4 md:grid md:grid-cols-2 md:gap-6'>
+          <FilterBanner
+            title='Formaciones Profesionales'
+            description='Técnicas avanzadas para tu negocio'
+            image='/Img-home/home-1.webp'
+            onClick={() =>
+              setFilter(filter === 'professional' ? 'all' : 'professional')
+            }
+            isActive={filter === 'professional'}
+          />
+          <FilterBanner
+            title='Auto Styling'
+            description='Diseña tus cejas en casa'
+            image='/Img-home/autostyling-gris.webp'
+            onClick={() =>
+              setFilter(filter === 'autostylism' ? 'all' : 'autostylism')
+            }
+            isActive={filter === 'autostylism'}
+            imageClassName='object-[center_100%]'
+          />
+        </div>
+        {filter !== 'all' && (
+          <div className='flex justify-center mt-4 mb-2'>
+            <button
+              onClick={() => setFilter('all')}
+              className='inline-flex items-center gap-1.5 px-5 py-1.5 rounded-full ring-1 ring-[#EBA2A8]/50 text-[#EBA2A8] text-sm font-primary-medium tracking-wide bg-transparent hover:bg-[#EBA2A8]/[0.08] hover:ring-[#EBA2A8]/70 transition-all duration-200'
+            >
+              <span className='text-base leading-none'>×</span>
+              Ver Todos
+            </button>
+          </div>
+        )}
+      </section>
+      <section
+        className={`container mx-auto px-4 max-w-7xl pb-16 ${
+          filter !== 'all' ? 'pt-2' : 'pt-8'
+        }`}
+        suppressHydrationWarning
+      >
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+          {coursesWithDisplayPrice.map((course) => (
+            <SimpleCourseCard
+              key={course.id}
+              image={course.image}
+              title={course.title}
+              price={course.priceDisplay}
+              originalPrice={course.originalPriceDisplay}
+              description={course.description}
+              slug={course.slug}
+              isAutostylism={course.isAutostylism}
+              onCourseClick={() => handleCourseClick(course)}
+            />
+          ))}
+        </div>
+      </section>
+      <Footer />
+      {selectedCourse && (
+        <SimpleCourseModal
+          course={{
+            ...selectedCourse,
+            // Asegurar que el precio mostrado en el modal sea el real (no inflado)
+            // El modal ya maneja displayPrice correctamente
+          }}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
+    </div>
+  );
+}

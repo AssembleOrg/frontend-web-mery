@@ -1,9 +1,6 @@
-import type { Metadata } from 'next';
+import { aftercareMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Aftercare Microblading | Mery García',
-  description: 'Cuidados posteriores para tu procedimiento de Microblading',
-};
+export const metadata = aftercareMetadata('after-care-microblading');
 
 export default function AftercareMicrobladingLayout({
   children,

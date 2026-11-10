@@ -22,6 +22,7 @@ export default function CamouflageAftercarePage() {
       className='min-h-screen-dvh'
       style={{ backgroundColor: 'var(--mg-pink-lighter)' }}
     >
+      <h1 className='sr-only'>Cuidados después del camuflaje</h1>
       <style>{`
         @keyframes slideInFromLeft {
           from {

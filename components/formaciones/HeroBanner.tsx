@@ -19,9 +19,13 @@ export function HeroBanner() {
 
         {/* Texto */}
         <div className='flex-1 flex flex-col items-start justify-start pt-4 pb-3 sm:justify-center sm:py-0 px-5 sm:px-10 md:px-14 lg:px-20 gap-2 sm:gap-4'>
-          <h2 className='text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-primary-medium font-bold tracking-[0.15em] text-[#2B2B2B] uppercase leading-none'>
+          <h1 className='text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-primary-medium font-bold tracking-[0.15em] text-[#2B2B2B] uppercase leading-none'>
             ACADEMIA
-          </h2>
+            <span className='sr-only'>
+              {' '}
+              de Mery García: formaciones online y presenciales de cejas y tatuaje cosmético
+            </span>
+          </h1>
           <div className='w-8 sm:w-12 h-0.5 bg-[#EBA2A8] rounded-full' />
           <span className='text-[11px] sm:text-sm tracking-[0.3em] text-[#EBA2A8] font-primary-medium uppercase'>
             Mery García
