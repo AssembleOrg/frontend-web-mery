@@ -12,28 +12,29 @@ import { DateTime } from 'luxon';
 
 export const PROMO_CONFIG = {
   // Fechas de inicio y fin de la promoción (GMT-3, Buenos Aires)
-  // MG Celebration: del 1 al 9 de noviembre de 2026 inclusive (termina el 9/11 a las 23:59).
+  // MG Celebration extendida: del 10 al 20 de noviembre de 2026 inclusive (termina el 20/11 a las 23:59).
+  // Primera etapa: del 1 al 9/11.
   // Los precios de la BD los restaura solo el backend (setting promo.autoCloseAt).
   START_DATE: DateTime.fromObject(
-    { year: 2026, month: 11, day: 1, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 11, day: 10, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   END_DATE: DateTime.fromObject(
-    { year: 2026, month: 11, day: 9, hour: 23, minute: 59, second: 59 },
+    { year: 2026, month: 11, day: 20, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Fecha de desactivación completa (después de esta fecha se bloquea todo)
   DISABLE_DATE: DateTime.fromObject(
-    { year: 2026, month: 11, day: 10, hour: 0, minute: 1, second: 0 },
+    { year: 2026, month: 11, day: 21, hour: 0, minute: 1, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   // Período de compra activo
   PURCHASE_START: DateTime.fromObject(
-    { year: 2026, month: 11, day: 1, hour: 0, minute: 0, second: 0 },
+    { year: 2026, month: 11, day: 10, hour: 0, minute: 0, second: 0 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
   PURCHASE_END: DateTime.fromObject(
-    { year: 2026, month: 11, day: 9, hour: 23, minute: 59, second: 59 },
+    { year: 2026, month: 11, day: 20, hour: 23, minute: 59, second: 59 },
     { zone: 'America/Argentina/Buenos_Aires' }
   ),
 
@@ -52,7 +53,7 @@ export const PROMO_CONFIG = {
     modalBadge: 'MG CELEBRATION',
     modalTitle: '40% OFF',
     modalSubtitle: 'en todas las formaciones',
-    modalDateRange: 'Hasta el 9 de Noviembre inclusive · 2 cuotas sin interés',
+    modalDateRange: 'Hasta el 20 de Noviembre inclusive · 2 cuotas sin interés',
     modalMessage: 'Incluye tu mentoría FREE.',
     modalHighlight: 'Incluye Nanoblading & Camuflaje',
     modalCTA: 'Ver Formaciones',
