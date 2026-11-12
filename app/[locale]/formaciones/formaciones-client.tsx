@@ -7,7 +7,7 @@ import SimpleCourseModal from '@/components/simple-course-modal';
 import { FormacionesSkeleton } from '@/components/formaciones/FormacionesSkeleton';
 import { FilterBanner } from '@/components/formaciones/FilterBanner';
 import { HeroBanner } from '@/components/formaciones/HeroBanner';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Course } from '@/types/course';
 import { useAdminStore } from '@/stores';
 import { getCourseImage, isAutostylismCourse } from '@/lib/utils';
@@ -90,6 +90,21 @@ export default function FormacionesClient({
     setSelectedCourse(course);
     setIsModalOpen(true);
   };
+
+  // Enlace directo a un curso (lo usan los anuncios de Google Ads):
+  // /formaciones?curso=<slug> o /formaciones#<slug> abre esa formación.
+  const openedFromLink = useRef(false);
+  useEffect(() => {
+    if (openedFromLink.current || courses.length === 0) return;
+    const wanted = (
+      new URLSearchParams(window.location.search).get('curso') ||
+      decodeURIComponent(window.location.hash.slice(1))
+    ).toLowerCase();
+    if (!wanted) return;
+    openedFromLink.current = true;
+    const match = courses.find((c) => c.slug.toLowerCase() === wanted);
+    if (match) handleCourseClick(match);
+  }, [courses]);
 
   const closeModal = () => {
     setIsModalOpen(false);

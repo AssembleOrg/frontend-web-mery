@@ -3,20 +3,34 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
+import { readPaymentId, toGa4Purchase } from '@/lib/analytics/purchase';
 
 export default function CheckoutSuccessPage() {
   const params = useParams();
   const locale = params.locale as string;
 
-  // Google Analytics: compra aprobada, para saber qué canal trae ventas.
+  // Google Analytics: compra aprobada con monto y cursos, para saber qué
+  // canal (y qué anuncio de Google Ads) trae ventas. Una sola vez por pago.
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const transactionId = query.get('payment_id') ?? query.get('collection_id');
     const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void })
       .gtag;
-    gtag?.('event', 'purchase', {
-      ...(transactionId ? { transaction_id: transactionId } : {}),
-    });
+    if (!gtag) return;
+    const paymentId = readPaymentId(window.location.search);
+    if (!paymentId) return;
+    const sentKey = `ga_purchase_${paymentId}`;
+    if (localStorage.getItem(sentKey)) return;
+
+    fetch(`/api/checkout/payment-summary?payment_id=${paymentId}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .catch(() => null)
+      .then((summary) => {
+        // Si Mercado Pago dice que el pago no está aprobado, no es venta.
+        if (summary && summary.status !== 'approved') return;
+        // Sin resumen (falló la consulta) se cuenta igual, sin monto.
+        const purchase = toGa4Purchase(paymentId, summary);
+        gtag('event', 'purchase', purchase ?? { transaction_id: paymentId });
+        localStorage.setItem(sentKey, '1');
+      });
   }, []);
 
   return (
